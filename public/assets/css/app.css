@@ -1,0 +1,280 @@
+@font-face {
+  font-family: OpenRunde;
+  font-style: normal;
+  src: url("../fonts/OpenRunde-Bold-BF64ee9c62a2035.otf"),
+    url("../fonts/OpenRunde-Bold-BF64ee9c696534f.woff"),
+    url("../fonts/OpenRunde-Medium-BF64ee9c62ad3ad.otf"),
+    url("../fonts/OpenRunde-Medium-BF64ee9c695513a.woff"),
+    url("../fonts//OpenRunde-Regular-BF64ee9c627e5b6.otf"),
+    url("../fonts/OpenRunde-Regular-BF64ee9c6978988.woff"),
+    url("../fonts/OpenRunde-Regular-BF64ee9c6978988.woff"),
+    url("../fonts/OpenRunde-Semibold-BF64ee9c629e0a5.otf")
+      url("../fonts/OpenRunde-Semibold-BF64ee9c69788f3.woff");
+}
+@font-face {
+  font-family: AntroVectra;
+  font-style: normal;
+  src: url("../fonts/Antro_Vectra.otf"), url("../fonts/Antro_Vectra_Bolder.otf");
+}
+@import url("https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap");
+
+:root {
+  --text-color: #ffffff;
+  --text-black: #000000;
+  --eerie-black: #1c1c1e;
+  --comic: "Comic Neue", cursive;
+  --hover-text-color: #000000;
+  --Rich-black: #130f10;
+  --grayish-blue: #2b2a34;
+  --hover-bg-color: #ffffff;
+  --partially-transparent-black: #00000099;
+  --semiTransparentBlack: #000000b2;
+  --weight-700: 700;
+}
+
+body {
+  font-size: 14px;
+
+  color: var(--text-color);
+
+  background: #f7f7ff;
+
+  overflow-x: hidden;
+
+  font-family: OpenRunde, sans-serif;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+header {
+  position: absolute;
+  width: 100%;
+}
+a {
+  text-decoration: none;
+}
+
+.w-700 {
+  font-weight: 700;
+}
+.mt-40 {
+  margin-top: 40px;
+}
+.m-20 {
+  margin: 20px;
+}
+.nav_cootle > button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bg-main {
+  background-image: url("../images/bg-theme/bg-gradient.webp");
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.navbar-cootle {
+  padding: 24px 64px 24px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav_cootle {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.nav_cootle > h2 {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.94px;
+  cursor: pointer;
+}
+
+.nav_cootle > button > span {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16.94px;
+  color: var(--text-color);
+  transition: color 0.3s;
+}
+
+.nav_cootle > button {
+  background: var(--eerie-black);
+  border-radius: 8px;
+  text-align: center;
+  padding: 10px 18px;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.nav_cootle > button:hover {
+  background: var(--hover-bg-color);
+}
+
+.nav_cootle > button:hover > span {
+  color: var(--hover-text-color);
+}
+.nav_cootle > button:disabled,
+.nav_cootle > button:disabled:hover {
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.nav_cootle > button:disabled > span {
+  color: var(--text-color);
+}
+
+.cootle-container {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.cootle-text {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 0;
+  text-align: left;
+  margin: 0;
+}
+
+.auth_main_heading {
+  font-size: 55px;
+  font-weight: 500;
+  line-height: 66.56px;
+  text-align: left;
+}
+.auth_main_heading > span > img {
+  margin-left: 16px;
+}
+.auth_main_heading > span > button {
+  position: relative;
+  top: -7px;
+  margin-left: 5px;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 33.89px;
+  text-align: center;
+  color: var(--text-black);
+  background-color: var(--text-color);
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 14px 28px;
+}
+.img-software {
+  padding-top: 55px;
+}
+
+.heading {
+  padding: 140px 0 0 0;
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+}
+.thanks-text {
+  font-family: AntroVectra;
+  font-size: 60px;
+  font-weight: 700;
+  line-height: 100px;
+  letter-spacing: -1.5px;
+  text-align: left;
+  margin-top: 41px;
+}
+
+.verify-box {
+  border-radius: 24px;
+  border: none;
+  background: var(--text-color);
+  padding: 32px 60px 45px 60px;
+  height: 100%;
+}
+
+.verify-heading {
+  color: var(--grayish-blue);
+  font-size: 50px;
+  font-weight: 700;
+  line-height: 60px;
+  text-align: center;
+}
+.form-control:disabled {
+  background-color: var(--text-color);
+}
+
+.verify-email {
+  border: 1px solid var(--partially-transparent-black);
+  border-radius: 16px;
+  padding: 16px 0 16px 14px;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 32px;
+  text-align: left;
+  color: var(--text-black);
+}
+.verify-email::placeholder {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 32px;
+  text-align: left;
+  color: var(--partially-transparent-black);
+}
+.yup-text {
+  color: var(--Rich-black);
+}
+
+.submit-btn {
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  background: var(--Rich-black);
+  padding: 17px 0;
+  margin-top: 16px;
+  width: 100%;
+}
+
+.submit-btn > span {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 14px;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.note {
+  font-size: 10px;
+  color: var(--semiTransparentBlack);
+  font-weight: 400;
+  line-height: 13px;
+  text-align: center;
+  margin-top: 24px;
+}
+
+.hover-underline {
+  text-decoration: underline;
+  cursor: pointer;
+  color: var(--semiTransparentBlack);
+}
+
+.comic-passdetail {
+  font-family: var(--comic);
+
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  margin-top: 8px;
+  text-align: center;
+  color: var(--text-black);
+}
