@@ -72,7 +72,7 @@ const LoginPage = () => {
                   Easily <span className="w-700">define</span> ,
                   <span className="w-700">track</span> and
                   <span className="w-700"> improve </span>
-                  <br /> the value of product design in your <br /> organisation
+                  the <br /> value of product design in your <br /> organisation
                   <span>
                     <img src="/assets/images/mark/arrow.png" alt="arrow-img" />
                   </span>
@@ -84,7 +84,7 @@ const LoginPage = () => {
                   <img src="/assets/images/mark/software.webp" alt="" />
                 </div>
                 <div>
-                  <h2 className="thanks-text">Thanks for checking on us.</h2>
+                  <h2 className="thanks-text ">Thanks for checking on us.</h2>
                 </div>
               </div>
             </div>

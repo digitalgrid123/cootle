@@ -278,3 +278,9 @@ a {
   text-align: center;
   color: var(--text-black);
 }
+
+@media (min-width: 1900px) {
+  .navbar-cootle {
+    padding: 24px 64px 24px 110px;
+  }
+}
