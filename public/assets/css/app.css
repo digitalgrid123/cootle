@@ -1,21 +1,59 @@
+/* OpenRunde Regular */
 @font-face {
-  font-family: OpenRunde;
+  font-family: "OpenRunde";
+  font-weight: normal;
   font-style: normal;
-  src: url("../fonts/OpenRunde-Bold-BF64ee9c62a2035.otf"),
-    url("../fonts/OpenRunde-Bold-BF64ee9c696534f.woff"),
-    url("../fonts/OpenRunde-Medium-BF64ee9c62ad3ad.otf"),
-    url("../fonts/OpenRunde-Medium-BF64ee9c695513a.woff"),
-    url("../fonts//OpenRunde-Regular-BF64ee9c627e5b6.otf"),
-    url("../fonts/OpenRunde-Regular-BF64ee9c6978988.woff"),
-    url("../fonts/OpenRunde-Regular-BF64ee9c6978988.woff"),
-    url("../fonts/OpenRunde-Semibold-BF64ee9c629e0a5.otf")
-      url("../fonts/OpenRunde-Semibold-BF64ee9c69788f3.woff");
+  src: url("../fonts/OpenRunde-Regular.woff2") format("woff2"),
+    url("../fonts/OpenRunde-Regular.woff") format("woff"),
+    url("../fonts/OpenRunde-Regular.otf") format("opentype");
 }
+
+/* OpenRunde Bold */
 @font-face {
-  font-family: AntroVectra;
+  font-family: "OpenRunde";
+  font-weight: bold;
   font-style: normal;
-  src: url("../fonts/Antro_Vectra.otf"), url("../fonts/Antro_Vectra_Bolder.otf");
+  src: url("../fonts/OpenRunde-Bold.woff2") format("woff2"),
+    url("../fonts/OpenRunde-Bold.woff") format("woff"),
+    url("../fonts/OpenRunde-Bold.otf") format("opentype");
 }
+
+/* OpenRunde Medium */
+@font-face {
+  font-family: "OpenRunde";
+  font-weight: 500; /* Assuming Medium corresponds to 500 */
+  font-style: normal;
+  src: url("../fonts/OpenRunde-Medium.woff2") format("woff2"),
+    url("../fonts/OpenRunde-Medium.woff") format("woff"),
+    url("../fonts/OpenRunde-Medium.otf") format("opentype");
+}
+
+/* OpenRunde Semibold */
+@font-face {
+  font-family: "OpenRunde";
+  font-weight: 600; /* Assuming Semibold corresponds to 600 */
+  font-style: normal;
+  src: url("../fonts/OpenRunde-Semibold.woff2") format("woff2"),
+    url("../fonts/OpenRunde-Semibold.woff") format("woff"),
+    url("../fonts/OpenRunde-Semibold.otf") format("opentype");
+}
+
+/* AntroVectra Regular */
+@font-face {
+  font-family: "AntroVectra";
+  font-weight: normal;
+  font-style: normal;
+  src: url("../fonts/Antro_Vectra.otf") format("opentype");
+}
+
+/* AntroVectra Bold */
+@font-face {
+  font-family: "AntroVectra";
+  font-weight: bold;
+  font-style: normal;
+  src: url("../fonts/Antro_Vectra_Bolder.otf") format("opentype");
+}
+
 @import url("https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap");
 
 :root {
@@ -23,6 +61,8 @@
   --text-black: #000000;
   --eerie-black: #1c1c1e;
   --comic: "Comic Neue", cursive;
+  --open: "OpenRunde", sans-serif;
+
   --hover-text-color: #000000;
   --Rich-black: #130f10;
   --grayish-blue: #2b2a34;
@@ -40,8 +80,8 @@ body {
   background: #f7f7ff;
 
   overflow-x: hidden;
-
-  font-family: OpenRunde, sans-serif;
+  font-family: var(--open);
+  font-weight: normal;
 }
 h1,
 h2,
@@ -49,6 +89,7 @@ h3,
 h4,
 h5,
 h6 {
+  font-family: var(--open);
   margin: 0;
 }
 header {
@@ -82,7 +123,7 @@ a {
 }
 
 .navbar-cootle {
-  padding: 24px 64px 24px 40px;
+  padding: 24px 64px 24px 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -93,6 +134,8 @@ a {
   gap: 20px;
 }
 .nav_cootle > h2 {
+  font-family: var(--open);
+  font-weight: 500;
   font-size: 14px;
   font-weight: 500;
   line-height: 16.94px;
@@ -100,6 +143,8 @@ a {
 }
 
 .nav_cootle > button > span {
+  font-family: var(--open);
+  font-weight: 600;
   font-size: 14px;
   font-weight: 600;
   line-height: 16.94px;
@@ -108,6 +153,8 @@ a {
 }
 
 .nav_cootle > button {
+  font-family: var(--open);
+  font-weight: 600;
   background: var(--eerie-black);
   border-radius: 8px;
   text-align: center;
@@ -142,6 +189,8 @@ a {
 }
 
 .cootle-text {
+  font-family: var(--open);
+  font-weight: 500;
   font-size: 20px;
   font-weight: 500;
   line-height: 0;
@@ -150,6 +199,7 @@ a {
 }
 
 .auth_main_heading {
+  font-family: var(--open);
   font-size: 55px;
   font-weight: 500;
   line-height: 66.56px;
@@ -159,6 +209,8 @@ a {
   margin-left: 16px;
 }
 .auth_main_heading > span > button {
+  font-family: var(--open);
+  font-weight: 600;
   position: relative;
   top: -7px;
   margin-left: 5px;
@@ -178,20 +230,21 @@ a {
 }
 
 .heading {
-  padding: 140px 0 0 0;
-  display: flex;
+  padding: 140px 0 0 30px;
+  /* display: flex;
   flex-direction: column;
 
-  align-items: center;
+  align-items: center; */
 }
 .thanks-text {
-  font-family: AntroVectra;
+  font-family: "AntroVectra", sans-serif;
   font-size: 60px;
   font-weight: 700;
   line-height: 100px;
   letter-spacing: -1.5px;
   text-align: left;
   margin-top: 41px;
+  text-align: center;
 }
 
 .verify-box {
@@ -203,6 +256,8 @@ a {
 }
 
 .verify-heading {
+  font-family: var(--open);
+
   color: var(--grayish-blue);
   font-size: 50px;
   font-weight: 700;
@@ -214,6 +269,8 @@ a {
 }
 
 .verify-email {
+  font-family: var(--open);
+
   border: 1px solid var(--partially-transparent-black);
   border-radius: 16px;
   padding: 16px 0 16px 14px;
@@ -225,6 +282,8 @@ a {
   color: var(--text-black);
 }
 .verify-email::placeholder {
+  font-family: var(--open);
+
   font-size: 16px;
   font-weight: 500;
   line-height: 32px;
@@ -246,6 +305,8 @@ a {
 }
 
 .submit-btn > span {
+  font-family: var(--open);
+
   font-size: 14px;
   font-weight: 500;
   line-height: 14px;
@@ -260,6 +321,7 @@ a {
   line-height: 13px;
   text-align: center;
   margin-top: 24px;
+  font-family: var(--open);
 }
 
 .hover-underline {
@@ -277,10 +339,4 @@ a {
   margin-top: 8px;
   text-align: center;
   color: var(--text-black);
-}
-
-@media (min-width: 1900px) {
-  .navbar-cootle {
-    padding: 24px 64px 24px 110px;
-  }
 }

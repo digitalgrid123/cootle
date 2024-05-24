@@ -7,8 +7,7 @@ const Navbar = ({ disableGetStarted, onLogin, onsignup, disableLogin }) => {
     <header>
       <div className="container-fluid">
         <div className="row">
-          <div className="col-lg-2"></div>
-          <div className=" col-lg-10">
+          <div className=" col-lg-10 offset-lg-2">
             <div className="navbar-cootle">
               <Link href="/" passHref className="cootle-container">
                 <img src="/assets/images/mark/cootle.svg" alt="logo" />

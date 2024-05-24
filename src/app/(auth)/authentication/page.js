@@ -66,7 +66,7 @@ const LoginPage = () => {
       <section className="bg-main">
         <div className="container-fluid">
           <div className="row">
-            <div className=" col-lg-12">
+            <div className=" col-lg-8 offset-lg-2">
               <div className="heading">
                 <h1 className="auth_main_heading">
                   Easily <span className="w-700">define</span> ,
@@ -81,9 +81,7 @@ const LoginPage = () => {
                   </span>
                 </h1>
                 <div className="img-software">
-                  <img src="/assets/images/mark/software.webp" alt="" />
-                </div>
-                <div>
+                  <img src="/assets/images/mark/software.svg" alt="software" />
                   <h2 className="thanks-text ">Thanks for checking on us.</h2>
                 </div>
               </div>
