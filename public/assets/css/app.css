@@ -116,8 +116,6 @@ a {
 
 .bg-main {
   background-image: url("../images/bg-theme/bg-gradient.webp");
-
-  background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
