@@ -81,7 +81,11 @@ const LoginPage = () => {
                   </span>
                 </h1>
                 <div className="img-software">
-                  <img src="/assets/images/mark/software.svg" alt="software" />
+                  <img
+                    className="img-width"
+                    src="/assets/images/mark/software.webp"
+                    alt="software"
+                  />
                   <h2 className="thanks-text ">Thanks for checking on us.</h2>
                 </div>
               </div>

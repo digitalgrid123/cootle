@@ -151,6 +151,9 @@ a {
   color: var(--text-color);
   transition: color 0.3s;
 }
+.img-width {
+  width: 95%;
+}
 
 .nav_cootle > button {
   font-family: var(--open);
