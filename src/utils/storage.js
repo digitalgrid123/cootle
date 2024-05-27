@@ -10,6 +10,7 @@ export const saveData = (key, value) => {
 export const getData = (key) => {
   try {
     const localEncryptedData = window.localStorage.getItem(key);
+
     if (localEncryptedData) {
       return decodeData(localEncryptedData);
     }

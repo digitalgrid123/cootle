@@ -20,13 +20,9 @@ const DashboardLayout = ({ children }) => {
         <SideNavBar />
       </div>
 
-      <Header />
       <div className="page-wrapper">
         <div className="page-content">{children}</div>
       </div>
-      <div className="overlay toggle-icon"></div>
-      <BackToTop />
-      <Footer />
     </div>
   );
 };

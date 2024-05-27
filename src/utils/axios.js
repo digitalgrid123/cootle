@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: process.env.HOST_API || "",
+  baseURL: process.env.NEXT_PUBLIC_HOST_API || "",
 });
 
 export default axiosInstance;

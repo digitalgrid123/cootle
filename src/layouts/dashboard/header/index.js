@@ -22,26 +22,26 @@ const Header = () => {
 
   return (
     <header>
-      <div className="topbar d-flex align-items-center">
+      {/* <div className="topbar d-flex align-items-center">
         <nav className="navbar navbar-expand gap-3">
           <div className="mobile-toggle-menu" onClick={handleToggleCollapse}>
             <i className="bx bx-menu"></i>
           </div>
-          {/* {is_superuser && selectedRole === USER_ROLES.SURGEON && (
+          {is_superuser && selectedRole === USER_ROLES.SURGEON && (
             <SearchSurgery />
           )}
           {!is_superuser &&
             user &&
-            [USER_ROLES.SURGEON].includes(user.role) && <SearchSurgery />} */}
+            [USER_ROLES.SURGEON].includes(user.role) && <SearchSurgery />}
 
           <div className="top-menu ms-auto">
             <ul className="navbar-nav align-items-center gap-1">
-              {/* {is_superuser && selectedRole === USER_ROLES.SURGEON && (
+              {is_superuser && selectedRole === USER_ROLES.SURGEON && (
                 <Search />
               )}
               {!is_superuser &&
                 user &&
-                [USER_ROLES.SURGEON].includes(user.role) && <Search />} */}
+                [USER_ROLES.SURGEON].includes(user.role) && <Search />}
               {is_superuser &&
                 !selectedRole &&
                 user &&
@@ -53,7 +53,7 @@ const Header = () => {
           </div>
           <UserDetail user={user} />
         </nav>
-      </div>
+      </div> */}
     </header>
   );
 };

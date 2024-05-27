@@ -6,6 +6,8 @@ import RHFEmailInput from "../shared/hook-form/RHFEmailInput";
 import FormHeading from "./FormHeading";
 import { usePathname } from "next/navigation";
 import { PATH_AUTH } from "@/routes/paths";
+import { useAuth, useToaster } from "@/hooks";
+import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 
 const formSchema = yup.object().shape({
   email: yup
@@ -16,6 +18,8 @@ const formSchema = yup.object().shape({
 
 const VerifyEmail = ({ setUserEmail, next }) => {
   const pathname = usePathname();
+  const { register, login } = useAuth();
+  const { toaster } = useToaster();
   const defaultValues = {
     email: "",
   };
@@ -32,11 +36,23 @@ const VerifyEmail = ({ setUserEmail, next }) => {
     formState: { isSubmitting, isValid },
   } = methods;
 
-  const onSubmit = (data) => {
-    console.log("Email submitted:", data.email);
-    setUserEmail(data.email);
-    next();
-    // Handle form submission logic here
+  const onSubmit = async (data, event) => {
+    event.preventDefault();
+    try {
+      const authFunction = pathname === PATH_AUTH.login ? login : register;
+      const res = await authFunction(data.email);
+
+      if (!res.status) {
+        return toaster(res.message, TOAST_TYPES.ERROR);
+      }
+      if (res.status) {
+        toaster(res.message, TOAST_TYPES.SUCCESS);
+        setUserEmail(data.email);
+        next();
+      }
+    } catch (error) {
+      toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);
+    }
   };
 
   return (

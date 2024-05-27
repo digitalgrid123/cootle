@@ -1,7 +1,8 @@
 import { USER_ROLES } from "@/constants/keywords";
 
+const getNormalRoute = (path) => `/${path}/`;
 const getSurgeonRoute = (path) => `surgeon/${path}/`;
-const getUserRoute = (path) => `users/${path}/`;
+const getUserRoute = (path) => `user/${path}/`;
 const getHospitalRoute = (path) => `hospital/${path}`;
 const getAdminRoute = (path) => `superadmin/${path}/`;
 const getSurgeonUpdateRoute = (path) => `hospital/surgeon/${path}/`;
@@ -26,17 +27,43 @@ export const API_ROUTER = {
   SIGNUP: (role) => getRoute(role, "signup"),
 
   VERIFY_CODE: getUserRoute("verify-otp"),
-  REFRESH_TOKEN: getUserRoute("token-refresh"),
+  REFRESH_TOKEN: getNormalRoute("token/refresh"),
   CHANGE_PASSWORD: getUserRoute("change-password"),
   FORGOT_PASSWORD_OTP: getUserRoute("reset-password"),
   FORGOT_PASSWORD: getUserRoute("reset-password/done"),
 
   //Verify Email
   VERIFY_EMAIL: getUserRoute("verify-email"),
+  //REGISTER
+  REGISTER_EMAIL: getUserRoute("register"),
+  //REGISTER VERIFY
+  REGISTER_VERIFY: getUserRoute("verify"),
+
+  //LOGIN VERIFY
+  LOGIN_VERIFY: getUserRoute("login/verify"),
+
+  //UPDATE USER
+  UPDATE_USER: getUserRoute("update"),
+
+  //COMPANY CREATED
+  COMPANY_CREATED: getNormalRoute("company/create"),
+
+  //COMPANY LIST
+  COMPANY_LIST: getNormalRoute("company/list"),
+
+  //USER INFOR
+  USER_INFO: getUserRoute("info"),
+
+  //SURGEON
+
+  //LOGOUT
+
+  //LOGIN EMAIL
+  LOGIN_EMAIL: getUserRoute("login"),
 
   // PROFILE
-  GET_USER: getUserRoute("user-details"),
-  UPDATE_USER: getUserRoute("user-details"),
+  GET_USER: getNormalRoute("dashboard"),
+  // UPDATE_USER: getUserRoute("user-details"),
 
   // HOSPITAL
   GET_SURGERY_TYPES: getHospitalRoute("Surgery-types"),

@@ -7,6 +7,8 @@ import RHFLoginCodeInput from "../shared/hook-form/RHFLoginCodeInput";
 import { usePathname } from "next/navigation";
 import { PATH_AUTH } from "@/routes/paths";
 import FormHeading from "./FormHeading";
+import { useAuth, useToaster } from "@/hooks";
+import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 
 // Define the form schema using yup
 const formSchema = yup.object().shape({
@@ -22,6 +24,8 @@ const formSchema = yup.object().shape({
 
 const VerifyPassCode = ({ userEmail }) => {
   const pathname = usePathname();
+  const { verifyregisterCode, userloginverify } = useAuth();
+  const { toaster } = useToaster();
   // Default values for the form
   const defaultValues = {
     email: userEmail || "",
@@ -40,11 +44,22 @@ const VerifyPassCode = ({ userEmail }) => {
   } = methods;
 
   // Function to handle form submission
-  const onSubmit = (data) => {
-    console.log("Email submitted:", data.email);
-    console.log("Login code submitted:", data.loginCode);
+  const onSubmit = async (data) => {
+    event.preventDefault();
+    try {
+      const authFunction =
+        pathname === PATH_AUTH.login ? userloginverify : verifyregisterCode;
+      const res = await authFunction(data.email, data.loginCode);
 
-    // Handle additional form submission logic here
+      if (!res.status) {
+        return toaster(res.message, TOAST_TYPES.ERROR);
+      }
+      if (res.status) {
+        toaster(res.message, TOAST_TYPES.SUCCESS);
+      }
+    } catch (error) {
+      toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);
+    }
   };
 
   return (

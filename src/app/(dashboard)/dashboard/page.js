@@ -1,58 +1,125 @@
 "use client";
-import React, { useEffect, useState } from "react";
-// import HospitalAdminDashboard from "@/components/dashboard/main/HospitalAdminDashboard";
-// import SuperAdminDashboard from "@/components/dashboard/main/SuperAdminDashboard";
-// import SurgeonDashboard from "@/components/dashboard/main/SurgeonDashboard";
-// import HeaderBreadcrumbs from "@/components/shared/HeaderBreadcrumbs";
+import React, { useEffect, useRef, useState } from "react";
 import PageTitle from "@/components/shared/PageTitle";
 import { USER_ROLES } from "@/constants/keywords";
-import { useAuth } from "@/hooks";
+import { useAuth, useTabs } from "@/hooks";
+import HeaderBreadcrumbs from "@/components/shared/HeaderBreadcrumbs";
+import UserModel from "@/components/shared/model/UserModel";
+import InvitationModel from "@/components/shared/model/InvitationModel";
+import CompanyModel from "@/components/shared/model/CompanyModel";
+import Title from "@/components/Dashboard/Title";
 
 const Dashboard = () => {
-  const { user, selectedRole } = useAuth();
+  const { userinfo } = useAuth();
+  const [user, setUser] = useState(null);
 
-  const { role, is_superuser } = user || {};
+  const [userName, setUserName] = useState(user || "");
+  const [showPopup, setShowPopup] = useState(false);
+  const { currentTab, setCurrentTab } = useTabs(1);
+  const contentRef = useRef();
 
-  // const renderDashboard = () => {
-  //   if (is_superuser) {
-  //     if (selectedRole === USER_ROLES.SURGEON) {
-  //       return <SurgeonDashboard />;
-  //     } else if (selectedRole === USER_ROLES.HOSPITAL) {
-  //       return <HospitalAdminDashboard />;
-  //     } else {
-  //       return <SuperAdminDashboard />;
-  //     }
-  //   } else {
-  //     if (selectedRole === USER_ROLES.SURGEON) {
-  //       return <SurgeonDashboard />;
-  //     } else if (selectedRole === USER_ROLES.HOSPITAL) {
-  //       return <HospitalAdminDashboard />;
-  //     } else {
-  //       return <SuperAdminDashboard />;
-  //     }
-  //   }
-  // };
+  // Fetch user information on component mount
+  useEffect(() => {
+    const fetchUserinfo = async () => {
+      const res = await userinfo();
+
+      if (res && res.status) {
+        setUser(res.data.fullname);
+      }
+    };
+
+    fetchUserinfo();
+  }, [userinfo]);
+
+  // Update userName whenever user is updated
+  useEffect(() => {
+    if (user) {
+      setUserName(user);
+    }
+  }, [user]);
+
+  // Advance to the next tab
+  const next = () => {
+    setCurrentTab((prev) => prev + 1);
+  };
+
+  // Check if the user's name is invalid and toggle popup visibility
+  useEffect(() => {
+    if (!userName || userName.startsWith("User#")) {
+      setShowPopup(true);
+    } else {
+      setShowPopup(false);
+    }
+  }, [userName]);
+
+  // Handle clicks outside the content area to close the popup
+  const handleClickOutside = (event) => {
+    if (
+      contentRef.current &&
+      !contentRef.current.contains(event.target) &&
+      (currentTab === 2 || currentTab === 3)
+    ) {
+      setShowPopup(false);
+    }
+  };
+
+  // Add and remove event listener for clicks outside the content area
+  useEffect(() => {
+    const handleDocumentClick = (event) => {
+      handleClickOutside(event);
+    };
+
+    document.addEventListener("mousedown", handleDocumentClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleDocumentClick);
+    };
+  }, [currentTab]);
+
+  // Render content based on the current tab
+  const renderCurrentTab = (activeTab) => {
+    switch (activeTab) {
+      case 1:
+        return (
+          <UserModel
+            showPopup={showPopup}
+            setShowPopup={setShowPopup}
+            setUserName={setUserName}
+            userName={userName}
+            next={next}
+          />
+        );
+      case 2:
+        return (
+          <InvitationModel
+            showPopup={showPopup}
+            setShowPopup={setShowPopup}
+            setUserName={setUserName}
+            userName={userName}
+            next={next}
+            contentRef={contentRef}
+          />
+        );
+      case 3:
+        return (
+          <CompanyModel
+            showPopup={showPopup}
+            setShowPopup={setShowPopup}
+            setUserName={setUserName}
+            userName={userName}
+            contentRef={contentRef}
+          />
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
       <PageTitle title="Dashboard" />
-      <HeaderBreadcrumbs
-        pageTitle={"Dashboard"}
-        actionElement={
-          <nav aria-label="breadcrumb">
-            <ol className="breadcrumb mb-0 p-0">
-              <li className="breadcrumb-item">
-                <i className="bx bx-home-alt"></i>
-              </li>
-              <li className="breadcrumb-item active" aria-current="page">
-                Dashboard
-              </li>
-            </ol>
-          </nav>
-        }
-      />
-      {/*
-      {renderDashboard(user?.role)} */}
+      <Title title="Value mapping" />
+      {renderCurrentTab(currentTab)}
     </>
   );
 };
