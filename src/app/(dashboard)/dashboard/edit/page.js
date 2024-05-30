@@ -1,11 +1,12 @@
 "use client";
 import Title from "@/components/Dashboard/Title";
+import CompanyEditModel from "@/components/shared/model/CompanyEditModel";
 import CompanySettingModel from "@/components/shared/model/CompanySettingModel";
 import MemberModel from "@/components/shared/model/MemberModel";
 import { useAuth } from "@/hooks";
 import React, { useEffect, useState } from "react";
 
-const createcompany = () => {
+const Edit = () => {
   const [activeTab, setActiveTab] = useState("settings");
   const { userinfo } = useAuth();
   const [user, setUser] = useState(null);
@@ -54,7 +55,7 @@ const createcompany = () => {
             </ul>
           </div>
           <div className="company-content h-100">
-            <CompanySettingModel activeTab={activeTab} />
+            <CompanyEditModel activeTab={activeTab} />
             <MemberModel activeTab={activeTab} />
           </div>
         </div>
@@ -63,4 +64,4 @@ const createcompany = () => {
   );
 };
 
-export default createcompany;
+export default Edit;

@@ -5,20 +5,15 @@ import { PATH_DASHBOARD } from "@/routes/paths";
 import { useRouter } from "next/navigation";
 import { useGlobalCompany } from "@/utils/globalState";
 
-const CompanySettingModel = ({ activeTab, setShowPopup }) => {
+const NewCreateModel = ({ activeTab, setShowPopup }) => {
   const { createcompany, setcompany } = useAuth();
-  const selectedCompany = useGlobalCompany();
-  const [companyName, setCompanyName] = useState(selectedCompany?.name || "");
+
+  const [companyName, setCompanyName] = useState();
   const [logoFile, setLogoFile] = useState(null);
-  const [filePreview, setFilePreview] = useState(selectedCompany?.logo || null);
+  const [filePreview, setFilePreview] = useState();
   const fileInputRef = useRef(null);
   const { push } = useRouter();
   const { toaster } = useToaster();
-
-  useEffect(() => {
-    setCompanyName(selectedCompany?.name || "");
-    setFilePreview(selectedCompany?.logo || null);
-  }, [selectedCompany]);
 
   const handleInputChange = (e) => {
     setCompanyName(e.target.value);
@@ -166,4 +161,4 @@ const CompanySettingModel = ({ activeTab, setShowPopup }) => {
   );
 };
 
-export default CompanySettingModel;
+export default NewCreateModel;

@@ -21,6 +21,7 @@ import { setSession } from "@/utils/jwt";
 import { getData, saveData } from "@/utils/storage";
 import axios from "axios";
 import { useLocalStorage } from "usehooks-ts";
+import { setSelectedCompany } from "@/utils/globalState";
 
 const initialState = {
   isAuthenticated: false,
@@ -102,8 +103,8 @@ AuthProvider.propTypes = {
 
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [company, setcompany] = useState(false);
-  const [useradd, setuseradd] = useState(false);
+  const [company, setcompany] = useState();
+  const [useradd, setuseradd] = useState();
 
   const [hospitalId, setHospitalId] = useState(null);
   const [change, setChange] = useState(null);
@@ -346,15 +347,25 @@ function AuthProvider({ children }) {
     });
   };
 
-  const updateuser = async (fullname) => {
+  const updateuser = async (fullname, profile_pic) => {
     return new Promise(async (resolve) => {
       try {
-        const res = await axiosPut(API_ROUTER.UPDATE_USER, {
-          fullname,
-        });
+        const formData = new FormData();
+        formData.append("fullname", fullname);
+
+        // Check if logo is a file
+        if (profile_pic instanceof File) {
+          formData.append("profile_pic", profile_pic);
+        }
+
+        const res = await axiosPutFile(
+          API_ROUTER.UPDATE_USER,
+          formData,
+          profile_pic instanceof File ? profile_pic : undefined
+        );
 
         if (res.status) {
-          resolve({ status: true, data: "", message: "Thanks for the name" });
+          resolve({ status: true, data: "", message: "User Added" });
         } else {
           resolve({ status: false, data: "", message: "" });
         }
@@ -431,6 +442,38 @@ function AuthProvider({ children }) {
       }
     });
   };
+  const logout = async () => {
+    setSession(null);
+    dispatch({ type: "LOGOUT" });
+    setSelectedCompany(null); // Clear selected company on logout
+  };
+
+  const inviteuser = (email, company) => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosPost(API_ROUTER.INVITE_USER, {
+          email,
+          company,
+        });
+
+        if (res.status) {
+          resolve({
+            status: true,
+            data: "",
+            message: "User Invite Successfully",
+          });
+        } else {
+          resolve({
+            status: false,
+            data: "",
+            message: "Already send invitation to this User",
+          });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
 
   return (
     <AuthContext.Provider
@@ -448,6 +491,8 @@ function AuthProvider({ children }) {
         setcompany,
         useradd,
         setuseradd,
+        logout,
+        inviteuser,
       }}
     >
       {children}

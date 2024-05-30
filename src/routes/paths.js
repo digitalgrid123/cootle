@@ -21,7 +21,10 @@ export const PATH_PAGE = {
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
-  createcompany: { root: path(ROOTS_DASHBOARD, "/createcompany") },
+  createcompany: {
+    root: path(ROOTS_DASHBOARD, "/createcompany"),
+    edit: path(ROOTS_DASHBOARD, "/edit"),
+  },
   calender: {
     root: path(ROOTS_DASHBOARD, "/calendar"),
     addSchedule: path(ROOTS_DASHBOARD, "/calendar/addSchedule"),

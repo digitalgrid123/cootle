@@ -42,10 +42,11 @@ const UserModel = ({ setShowPopup, showPopup, setUserName, next }) => {
 
         if (!res.status) {
           toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);
-          setuseradd(true);
         } else {
           toaster(res.message, TOAST_TYPES.SUCCESS);
-          next();
+          setuseradd(res);
+          setUserName(fullName); // Update the user name
+          next(); // Move to the next tab
         }
       } catch (error) {
         toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);

@@ -1,18 +1,22 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useAuth, useToaster } from "@/hooks";
-import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
+import React, { useState, useEffect, useRef } from "react";
+import { useAuth } from "@/hooks";
 import CompanySettingModel from "./CompanySettingModel";
 import MemberModel from "./MemberModel";
+import NewCreateModel from "./NewCreateModel";
+import { useGlobalCompany } from "@/utils/globalState";
 
-const CompanyModel = ({ showPopup, setShowPopup, contentRef }) => {
+const CreateNewModel = ({ showPopup, setShowPopup, contentRef }) => {
   const [activeTab, setActiveTab] = useState("settings");
   const { userinfo } = useAuth();
   const [user, setUser] = useState(null);
+  const selectedCompany = useGlobalCompany();
+  console.log("🚀 ~ CreateNewModel ~ selectedCompany:", selectedCompany);
+
+  const overlayRef = useRef(null);
 
   useEffect(() => {
     const fetchUserinfo = async () => {
       const res = await userinfo();
-
       if (res && res.status) {
         setUser(res.data);
       }
@@ -21,10 +25,30 @@ const CompanyModel = ({ showPopup, setShowPopup, contentRef }) => {
     fetchUserinfo();
   }, [userinfo]);
 
+  useEffect(() => {
+    if (!selectedCompany) return;
+
+    const handleClickOutside = (event) => {
+      if (
+        overlayRef.current &&
+        overlayRef.current.contains(event.target) &&
+        contentRef.current && // Add null check for contentRef.current
+        !contentRef.current.contains(event.target)
+      ) {
+        setShowPopup(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setShowPopup, selectedCompany, contentRef]);
+
   return (
     <div>
       {showPopup && (
-        <div className="invitation-overlay padding-company">
+        <div ref={overlayRef} className="invitation-overlay padding-company">
           <div ref={contentRef} className="invitation-content w-100 h-100">
             <div className="wrapper-company">
               <div className="company-sidebar h-100">
@@ -53,7 +77,7 @@ const CompanyModel = ({ showPopup, setShowPopup, contentRef }) => {
                 </ul>
               </div>
               <div className="company-content h-100">
-                <CompanySettingModel
+                <NewCreateModel
                   activeTab={activeTab}
                   setShowPopup={setShowPopup}
                 />
@@ -67,4 +91,4 @@ const CompanyModel = ({ showPopup, setShowPopup, contentRef }) => {
   );
 };
 
-export default CompanyModel;
+export default CreateNewModel;

@@ -1,11 +1,6 @@
 import React from "react";
 
-const InvitationModel = ({
-  showPopup,
-  next,
-  contentRef,
-  handleClickOutside,
-}) => {
+const InvitationModel = ({ showPopup, next, contentRef }) => {
   const nextbox = () => {
     next();
   };
@@ -13,7 +8,7 @@ const InvitationModel = ({
   return (
     <div>
       {showPopup && (
-        <div className="invitation-overlay" onClick={handleClickOutside}>
+        <div className="invitation-overlay">
           <div ref={contentRef} className="invitation-content">
             <div className="box-container center">
               <div>

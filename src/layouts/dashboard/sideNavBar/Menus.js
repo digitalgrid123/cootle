@@ -1,57 +1,39 @@
-import Link from "next/link";
 import React, { useEffect, useState, useRef } from "react";
-import {
-  LOGOUT_KEY,
-  NAV_CONFIG_BOTTOM,
-  NAV_CONFIG,
-} from "@/constants/attributes";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks";
-import { USER_ROLES } from "@/constants/keywords";
 import { PATH_DASHBOARD } from "@/routes/paths";
-import { useRouter } from "next/navigation";
-
-const CompanyListItem = ({ company, onClick, isSelected }) => (
-  <li
-    className={`dropdown-list d-flex align-items-center justify-content-start gap-2 cursor-pointer ${
-      isSelected ? "selected" : ""
-    }`}
-    onClick={() => onClick(company)}
-  >
-    <div className="company-dropdown-logo center">
-      {company.logo ? (
-        <img src={company.logo} alt={`${company.name} Logo`} />
-      ) : (
-        <h2>N</h2>
-      )}
-    </div>
-    <h4 className="company-dropdown-name">{company.name}</h4>
-  </li>
-);
+import CompanyLogo from "@/components/Dashboard/CompanyLogo";
+import CompanyListItem from "@/components/Dashboard/CompanyListItem";
+import { setSelectedCompany, useGlobalCompany } from "@/utils/globalState";
+import CreateNewModel from "@/components/shared/model/CreateNewModel";
 
 const Menus = () => {
   const { companylist, company } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+
   const dropdownRef = useRef(null);
-
-  const { push } = useRouter();
+  const popupRef = useRef(null);
   const [list, setList] = useState([]);
-  const [selectedCompany, setSelectedCompany] = useState(null);
-  const [selected, setSelected] = useState("Value mapping"); // Initial state set to 'Value mapping'
+  const contentRef = useRef();
 
-  const handleSelect = (item, path) => {
-    setSelected(item);
-    push(path);
-  };
+  const selectedCompany = useGlobalCompany();
+
+  const [selected, setSelected] = useState();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    const fetchUserinfo = async () => {
+    const fetchUserInfo = async () => {
       try {
         const res = await companylist();
         if (res && res.status) {
           setList(res.data);
-          setSelectedCompany(res.data[0]); // Set the initial selected company to the first one
+          if (res.data.length > 0) {
+            setSelectedCompany(res.data[res.data.length - 1]); // Select the last company
+          }
         } else {
           setError("Failed to fetch company list");
         }
@@ -62,43 +44,42 @@ const Menus = () => {
       }
     };
 
-    fetchUserinfo();
+    fetchUserInfo();
   }, [companylist, company]);
 
   useEffect(() => {
-    function handleClickOutside(event) {
+    const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
       }
-    }
+    };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  useEffect(() => {
+
+  const handleSelect = (item, path) => {
+    setSelected(item);
+    router.push(path);
+  };
+
+  const handleCompanySelect = (company) => {
+    setSelectedCompany(company);
     setDropdownOpen(false);
-  }, [selectedCompany]);
+  };
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
 
-  const handleCompanySelect = (company) => {
-    setSelectedCompany(company);
+  const companyCreatePage = () => {
+    setShowPopup((prevState) => !prevState);
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-  const companycreatepage = () => {
-    push(PATH_DASHBOARD.createcompany.root);
-  };
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <>
@@ -106,20 +87,14 @@ const Menus = () => {
         {selectedCompany ? (
           <li
             onClick={toggleDropdown}
-            className=" selected-dropdown d-flex align-items-center justify-content-start gap-2 cursor-pointer relative w-100"
+            className="selected-dropdown d-flex align-items-center justify-content-start gap-2 cursor-pointer relative w-100"
           >
             <div className="d-flex align-items-center justify-content-between w-100">
               <div className="d-flex align-items-center gap-2">
-                <div className="company-logo center">
-                  {selectedCompany.logo ? (
-                    <img
-                      src={selectedCompany.logo}
-                      alt={`${selectedCompany.name} Logo`}
-                    />
-                  ) : (
-                    <h2>N</h2>
-                  )}
-                </div>
+                <CompanyLogo
+                  logo={selectedCompany.logo}
+                  name={selectedCompany.name}
+                />
                 <h4 className="company-name">{selectedCompany.name}</h4>
               </div>
               <div>
@@ -137,20 +112,22 @@ const Menus = () => {
                     list.length > 2 ? "scroll-height" : ""
                   }`}
                 >
-                  {list.map((company) => (
-                    <CompanyListItem
-                      key={company.id}
-                      company={company}
-                      onClick={handleCompanySelect}
-                      isSelected={selectedCompany.name === company.name}
-                    />
-                  ))}
+                  {list
+                    .slice()
+                    .reverse()
+                    .map((company) => (
+                      <CompanyListItem
+                        key={company.id}
+                        company={company}
+                        onClick={handleCompanySelect}
+                        isSelected={selectedCompany.name === company.name}
+                      />
+                    ))}
                 </div>
-
                 <div
-                  className="create-container d-flex align-items-center "
+                  className="create-container d-flex align-items-center"
                   style={{ gap: "14px" }}
-                  onClick={companycreatepage}
+                  onClick={companyCreatePage}
                 >
                   <img
                     src="/assets/images/mark/second-plus.svg"
@@ -161,7 +138,7 @@ const Menus = () => {
                 <div className="padding-lr-sixteen">
                   <h1 className="invite-heading">Invited Companies</h1>
                   <p className="invite-text">
-                    You have been invited to these <br /> companies, join now:{" "}
+                    You have been invited to these <br /> companies, join now:
                   </p>
                   <a className="show-invitation" href="#">
                     <span className="show-invitation-text">
@@ -177,23 +154,22 @@ const Menus = () => {
           </li>
         ) : (
           <li className="d-flex align-items-center justify-content-start gap-2 cursor-pointer">
-            <div className="company-logo center">
-              <h2>N</h2>
-            </div>
+            <CompanyLogo logo={null} name="No company" />
             <h4 className="company-name">No company</h4>
           </li>
         )}
-
         <div
-          className="d-flex w-100 flex-column "
+          className="d-flex w-100 flex-column"
           style={{ gap: "27px", marginTop: "15px" }}
         >
           <li
             className={`d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100 padding-lr-sixteen ${
-              selected === "Company" ? "navigate-select" : ""
+              pathname === PATH_DASHBOARD.createcompany.edit
+                ? "navigate-select"
+                : ""
             }`}
             onClick={() =>
-              handleSelect("Company", PATH_DASHBOARD.createcompany.root)
+              handleSelect("Company", PATH_DASHBOARD.createcompany.edit)
             }
           >
             <img src="/assets/images/mark/company.svg" alt="company-icon" />
@@ -201,7 +177,7 @@ const Menus = () => {
           </li>
           <li
             className={`d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100 padding-lr-sixteen ${
-              selected === "Value mapping" ? "navigate-select" : ""
+              pathname === PATH_DASHBOARD.root ? "navigate-select" : ""
             }`}
             onClick={() => handleSelect("Value mapping", PATH_DASHBOARD.root)}
           >
@@ -219,6 +195,13 @@ const Menus = () => {
           <h4 className="project">New project</h4>
         </li>
       </ul>
+
+      <CreateNewModel
+        showPopup={showPopup}
+        setShowPopup={setShowPopup}
+        contentRef={contentRef}
+        companyCreatePage={companyCreatePage}
+      />
     </>
   );
 };

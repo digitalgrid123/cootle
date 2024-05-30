@@ -2,12 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
 
-const Navbar = ({ disableGetStarted, onLogin, onsignup, disableLogin }) => {
+const Navbar = ({ disableGetStarted, onLogin, onSignup, disableLogin }) => {
   return (
     <header>
       <div className="container-fluid">
         <div className="row">
-          <div className=" col-lg-10 offset-lg-2">
+          <div className="col-lg-10 offset-lg-2">
             <div className="navbar-cootle">
               <Link href="/" passHref className="cootle-container">
                 <img src="/assets/images/mark/cootle.svg" alt="logo" />
@@ -19,7 +19,7 @@ const Navbar = ({ disableGetStarted, onLogin, onsignup, disableLogin }) => {
                   <span>Log in</span>
                 </button>
 
-                <button disabled={disableGetStarted} onClick={onsignup}>
+                <button disabled={disableGetStarted} onClick={onSignup}>
                   <span>Get started for free</span>
                 </button>
               </div>
@@ -33,7 +33,9 @@ const Navbar = ({ disableGetStarted, onLogin, onsignup, disableLogin }) => {
 
 Navbar.propTypes = {
   disableGetStarted: PropTypes.bool.isRequired,
-  onLogin: PropTypes.func.isRequired,
+  onLogin: PropTypes.func,
+  onSignup: PropTypes.func.isRequired,
+  disableLogin: PropTypes.bool,
 };
 
 export default Navbar;

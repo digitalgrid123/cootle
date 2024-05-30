@@ -61,6 +61,12 @@ export const API_ROUTER = {
   //LOGIN EMAIL
   LOGIN_EMAIL: getUserRoute("login"),
 
+  //Invite User
+
+  INVITE_USER: getNormalRoute("invite"),
+
+  //SURGEON
+
   // PROFILE
   GET_USER: getNormalRoute("dashboard"),
   // UPDATE_USER: getUserRoute("user-details"),

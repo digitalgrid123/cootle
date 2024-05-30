@@ -19,7 +19,7 @@ const login = () => {
     setCurrentTab((prev) => prev + 1);
   };
 
-  const handlesignup = () => {
+  const handleSignup = () => {
     push(PATH_AUTH.signup);
   };
 
@@ -31,14 +31,16 @@ const login = () => {
       case 2:
         return <VerifyPassCode userEmail={userEmail} />;
       default:
-        return "";
+        return null;
     }
   };
+
   return (
     <>
       <Navbar
         disableLogin={pathname === PATH_AUTH.login}
-        onsignup={handlesignup}
+        onSignup={handleSignup}
+        disableGetStarted={false}
       />
       <section className="bg-main vh-100 d-flex justify-content-center align-items-center">
         <div className="container-fluid">

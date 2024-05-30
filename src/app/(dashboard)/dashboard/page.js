@@ -8,12 +8,13 @@ import UserModel from "@/components/shared/model/UserModel";
 import InvitationModel from "@/components/shared/model/InvitationModel";
 import CompanyModel from "@/components/shared/model/CompanyModel";
 import Title from "@/components/Dashboard/Title";
+import CreateNewModel from "@/components/shared/model/CreateNewModel";
+import MainMap from "@/components/Dashboard/valuemapping/MainMap";
 
 const Dashboard = () => {
   const { userinfo } = useAuth();
   const [user, setUser] = useState(null);
 
-  const [userName, setUserName] = useState(user || "");
   const [showPopup, setShowPopup] = useState(false);
   const { currentTab, setCurrentTab } = useTabs(1);
   const contentRef = useRef();
@@ -31,13 +32,6 @@ const Dashboard = () => {
     fetchUserinfo();
   }, [userinfo]);
 
-  // Update userName whenever user is updated
-  useEffect(() => {
-    if (user) {
-      setUserName(user);
-    }
-  }, [user]);
-
   // Advance to the next tab
   const next = () => {
     setCurrentTab((prev) => prev + 1);
@@ -45,36 +39,10 @@ const Dashboard = () => {
 
   // Check if the user's name is invalid and toggle popup visibility
   useEffect(() => {
-    if (!userName || userName.startsWith("User#")) {
+    if (user && user.startsWith("User#")) {
       setShowPopup(true);
-    } else {
-      setShowPopup(false);
     }
-  }, [userName]);
-
-  // Handle clicks outside the content area to close the popup
-  const handleClickOutside = (event) => {
-    if (
-      contentRef.current &&
-      !contentRef.current.contains(event.target) &&
-      (currentTab === 2 || currentTab === 3)
-    ) {
-      setShowPopup(false);
-    }
-  };
-
-  // Add and remove event listener for clicks outside the content area
-  useEffect(() => {
-    const handleDocumentClick = (event) => {
-      handleClickOutside(event);
-    };
-
-    document.addEventListener("mousedown", handleDocumentClick);
-
-    return () => {
-      document.removeEventListener("mousedown", handleDocumentClick);
-    };
-  }, [currentTab]);
+  }, [user]);
 
   // Render content based on the current tab
   const renderCurrentTab = (activeTab) => {
@@ -84,8 +52,8 @@ const Dashboard = () => {
           <UserModel
             showPopup={showPopup}
             setShowPopup={setShowPopup}
-            setUserName={setUserName}
-            userName={userName}
+            setUserName={setUser}
+            userName={user}
             next={next}
           />
         );
@@ -94,31 +62,31 @@ const Dashboard = () => {
           <InvitationModel
             showPopup={showPopup}
             setShowPopup={setShowPopup}
-            setUserName={setUserName}
-            userName={userName}
+            setUserName={setUser}
+            userName={user}
             next={next}
             contentRef={contentRef}
           />
         );
       case 3:
         return (
-          <CompanyModel
+          <CreateNewModel
             showPopup={showPopup}
             setShowPopup={setShowPopup}
-            setUserName={setUserName}
-            userName={userName}
+            setUserName={setUser}
+            userName={user}
             contentRef={contentRef}
           />
         );
       default:
-        return null;
+        return "";
     }
   };
 
   return (
     <>
       <PageTitle title="Dashboard" />
-      <Title title="Value mapping" />
+      <MainMap />
       {renderCurrentTab(currentTab)}
     </>
   );
