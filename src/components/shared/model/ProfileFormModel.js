@@ -3,35 +3,28 @@ import { useAuth, useToaster } from "@/hooks";
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 
 const ProfileFormModel = ({ togglePopup, popupOpen, setPopupOpen }) => {
-  const { userinfo, updateuser, setuseradd } = useAuth();
-  const [firstName, setFirstName] = useState("");
+  const { user, updateuser, setuseradd } = useAuth();
   const { toaster } = useToaster();
-  const [lastName, setLastName] = useState("");
 
-  const [profilePic, setProfilePic] = useState(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [profilePic, setProfilePic] = useState("");
   const [profilePicPreview, setProfilePicPreview] = useState("");
-  const [logoPreview, setLogoPreview] = useState(null); // State to hold the logo preview
-  const [email, setEmail] = useState();
-  console.log("🚀 ~ ProfileFormModel ~ email:", email);
+  const [email, setEmail] = useState("");
+
   const fileInputRef = useRef(null); // Reference for hidden file input
   const formRef = useRef(null); // Reference for the form element
 
   useEffect(() => {
-    const fetchUserinfo = async () => {
-      const res = await userinfo();
-
-      if (res && res.status) {
-        const fullName = res.data.fullname || "";
-        setEmail(res.data.email || "");
-        const nameParts = fullName.split(" ");
-        setFirstName(nameParts[0] || "");
-        setLastName(nameParts[1] || "");
-        setProfilePic(res.data.profile_pic || "");
-      }
-    };
-
-    fetchUserinfo();
-  }, [userinfo]);
+    if (user) {
+      const fullName = user.fullname || "";
+      setEmail(user.email || "");
+      const nameParts = fullName.split(" ");
+      setFirstName(nameParts[0] || "");
+      setLastName(nameParts[1] || "");
+      setProfilePic(user.profile_pic || "");
+    }
+  }, [user]);
 
   useEffect(() => {
     if (profilePic instanceof Blob) {
@@ -167,9 +160,9 @@ const ProfileFormModel = ({ togglePopup, popupOpen, setPopupOpen }) => {
                     <span className="profile-icon">
                       <img
                         className="profile-preview-icon"
-                        src={` ${
+                        src={`${
                           profilePic || "/assets/images/mark/profile.png"
-                        } `}
+                        }`}
                         alt="profile-icon"
                       />
                     </span>

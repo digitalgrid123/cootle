@@ -52,6 +52,10 @@ const ProfileHeader = () => {
     };
   }, []);
 
+  const isValidFullName = (fullname) => {
+    return fullname && !fullname.startsWith("User#");
+  };
+
   return (
     <>
       <div
@@ -78,9 +82,7 @@ const ProfileHeader = () => {
           </div>
           <div>
             <h1 className="profile-name">
-              {user?.fullname && user.fullname !== "User#<built-in function id>"
-                ? user.fullname
-                : ""}
+              {isValidFullName(user?.fullname) ? user.fullname : ""}
             </h1>
             <p className="profile-email">{user?.email}</p>
           </div>

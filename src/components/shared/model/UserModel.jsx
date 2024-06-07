@@ -13,7 +13,13 @@ const formSchema = yup.object().shape({
     .min(2, "Full name must be at least 2 characters"),
 });
 
-const UserModel = ({ setShowPopup, showPopup, setUserName, next }) => {
+const UserModel = ({
+  setShowPopup,
+  showPopup,
+
+  next,
+  selectedCompany,
+}) => {
   const { updateuser, setuseradd } = useAuth();
   const { toaster } = useToaster();
   const defaultValues = {
@@ -44,8 +50,10 @@ const UserModel = ({ setShowPopup, showPopup, setUserName, next }) => {
           toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);
         } else {
           toaster(res.message, TOAST_TYPES.SUCCESS);
+          if (selectedCompany) {
+            setShowPopup(false);
+          }
           setuseradd(res);
-          setUserName(fullName); // Update the user name
           next(); // Move to the next tab
         }
       } catch (error) {
@@ -62,7 +70,7 @@ const UserModel = ({ setShowPopup, showPopup, setUserName, next }) => {
             <h2>Hey there! Welcome to Cootle. </h2>
             <p className="username-note">
               We need your name to get started. <br /> We promise, no autographs
-              required!{" "}
+              required!
               <img src="/assets/images/mark/simple-pen.png" alt="simple-pen" />
               <img src="/assets/images/mark/smily.png" alt="smily" />
             </p>

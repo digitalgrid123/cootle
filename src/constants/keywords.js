@@ -57,6 +57,7 @@ export const STORAGE_KEYS = {
   AUTH_TOKEN: "@accessToken",
   AUTH_REFRESH_TOKEN: "@refreshToken",
   SETTINGS: "@settings",
+  SESSION: "@SESSION",
 };
 
 export const USER_ROLES = {

@@ -5,11 +5,12 @@ import { PATH_DASHBOARD } from "@/routes/paths";
 import { useRouter } from "next/navigation";
 import { useGlobalCompany } from "@/utils/globalState";
 
-const CompanyEditModel = ({ activeTab, setShowPopup }) => {
+const CompanyModel = ({ activeTab }) => {
   const selectedCompany = useGlobalCompany();
+
   const { push } = useRouter();
   const editCompany = () => {
-    push(PATH_DASHBOARD.createcompany.root);
+    push(PATH_DASHBOARD.createcompany.edit);
   };
   return (
     <>
@@ -17,9 +18,11 @@ const CompanyEditModel = ({ activeTab, setShowPopup }) => {
         <>
           <div className="setting-box d-flex align-item-center justify-content-between">
             <h1 className="company-setup-heading">Settings</h1>
-            <button className="save-btn" onClick={editCompany}>
-              <span>Edit</span>
-            </button>
+            {selectedCompany?.is_admin && (
+              <button className="save-btn" onClick={editCompany}>
+                <span>Edit</span>
+              </button>
+            )}
           </div>
           <form>
             <div className="company-container">
@@ -57,4 +60,4 @@ const CompanyEditModel = ({ activeTab, setShowPopup }) => {
   );
 };
 
-export default CompanyEditModel;
+export default CompanyModel;

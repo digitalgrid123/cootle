@@ -1,8 +1,65 @@
-import React from "react";
+import CompanyLogo from "@/components/Dashboard/CompanyLogo";
+import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
+import { useAuth, useToaster } from "@/hooks";
+import React, { useEffect, useState } from "react";
 
-const InvitationModel = ({ showPopup, next, contentRef }) => {
+const InvitationModel = ({ showPopup, next, contentRef, setShowPopup }) => {
+  const { invitation, acceptreject, acceptinvite, setcompany } = useAuth();
+  const [invite, setInvite] = useState(null);
+  const { toaster } = useToaster();
   const nextbox = () => {
     next();
+  };
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const res = await invitation();
+        if (res && res.status) {
+          if (res.data.length > 0) {
+            const sortedInvites = res.data.sort(
+              (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            );
+            setInvite(sortedInvites[0]);
+          } else {
+            setInvite(null);
+          }
+        }
+      } catch (err) {
+        console.error("fetchUserInfo ~ err:", err);
+      }
+    };
+
+    fetchUserInfo();
+  }, [invitation]);
+
+  const handleAccept = async () => {
+    try {
+      const res = await acceptinvite(invite.company);
+
+      if (!res.status) {
+        return toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);
+      }
+      toaster(res?.message, TOAST_TYPES.SUCCESS);
+      setcompany(res);
+      setShowPopup(false);
+    } catch (error) {
+      toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);
+    }
+  };
+
+  const handleReject = async () => {
+    try {
+      const res = await acceptreject(invite.company);
+
+      if (!res.status) {
+        return toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);
+      }
+      toaster(res?.message, TOAST_TYPES.SUCCESS);
+      fetchUserInfo();
+    } catch (error) {
+      toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);
+    }
   };
 
   return (
@@ -14,7 +71,34 @@ const InvitationModel = ({ showPopup, next, contentRef }) => {
               <div>
                 <h1 className="invitation-heading">Join a Company</h1>
                 <div className="invitation-detail">
-                  <p className="invite-content">Currently no company invites</p>
+                  {invite ? (
+                    <div className="invite-content w-100">
+                      <div className="d-flex align-items-center gap-2">
+                        <CompanyLogo
+                          logo={invite.logo_url}
+                          name={invite.company_name}
+                        />
+                        <div className="companyinvite">
+                          {invite.company_name}
+                        </div>
+                      </div>
+                      <p className="invitation_prompt">
+                        You have been invited to join this company
+                      </p>
+                      <div className="invite-actions">
+                        <button onClick={handleAccept} className="accept_btn">
+                          <span>Accept</span>
+                        </button>
+                        <button onClick={handleReject} className="reject_btn">
+                          <span>Reject</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="invite-content">
+                      Currently no company invites
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="line"></div>

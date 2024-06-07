@@ -1,26 +1,15 @@
 "use client";
 import Title from "@/components/Dashboard/Title";
-import CompanySettingModel from "@/components/shared/model/CompanySettingModel";
+import CompanyModel from "@/components/shared/model/CompanyModel";
+
 import MemberModel from "@/components/shared/model/MemberModel";
 import { useAuth } from "@/hooks";
+import { useGlobalCompany } from "@/utils/globalState";
 import React, { useEffect, useState } from "react";
 
 const createcompany = () => {
   const [activeTab, setActiveTab] = useState("settings");
-  const { userinfo } = useAuth();
-  const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const fetchUserinfo = async () => {
-      const res = await userinfo();
-
-      if (res && res.status) {
-        setUser(res.data);
-      }
-    };
-
-    fetchUserinfo();
-  }, [userinfo]);
   return (
     <div className="h-100">
       <div className="mb-20 ">
@@ -40,21 +29,21 @@ const createcompany = () => {
                 <img src="/assets/images/mark/setting.svg" alt="" />
                 <h2 className="menutext">Settings</h2>
               </li>
-              {user?.is_admin && (
-                <li
-                  className={`d-flex align-items-center justify-content-start gap-2 ${
-                    activeTab === "members" ? "active" : ""
-                  }`}
-                  onClick={() => setActiveTab("members")}
-                >
-                  <img src="/assets/images/mark/member.svg" alt="" />
-                  <h2 className="menutext">Members</h2>
-                </li>
-              )}
+
+              <li
+                className={`d-flex align-items-center justify-content-start gap-2 ${
+                  activeTab === "members" ? "active" : ""
+                }`}
+                onClick={() => setActiveTab("members")}
+              >
+                <img src="/assets/images/mark/member.svg" alt="" />
+                <h2 className="menutext">Members</h2>
+              </li>
             </ul>
           </div>
           <div className="company-content h-100">
-            <CompanySettingModel activeTab={activeTab} />
+            <CompanyModel activeTab={activeTab} />
+
             <MemberModel activeTab={activeTab} />
           </div>
         </div>

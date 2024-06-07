@@ -48,8 +48,28 @@ export const API_ROUTER = {
   //COMPANY CREATED
   COMPANY_CREATED: getNormalRoute("company/create"),
 
+  //COMPANY SET
+  COMPANY_SET: getNormalRoute("company/set"),
+
+  //ACCEPT USER
+  ACCEPT_USER: getNormalRoute("accept"),
+
+  //ACCEPT INVITATION
+  ACCEPT_INVITE: getNormalRoute("invite/accept"),
+
+  //REJECT INVITATION
+  REJECT_INVITE: getNormalRoute("invite/reject"),
+
+  //Edit COMPANY
+  COMPANY_EDIT: getNormalRoute("company/edit"),
   //COMPANY LIST
   COMPANY_LIST: getNormalRoute("company/list"),
+
+  //Invitation User
+  INVITATION: getNormalRoute("invitations"),
+
+  //MEMBER INVIATION LIST
+  INVITATION_USER: getNormalRoute("invitations/list"),
 
   //USER INFOR
   USER_INFO: getUserRoute("info"),

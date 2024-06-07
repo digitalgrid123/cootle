@@ -54,11 +54,10 @@ const NewCreateModel = ({ activeTab, setShowPopup }) => {
       }
 
       const response = await createcompany(companyName, logoToSend);
-      console.log("🚀 ~ handleSave ~ response:", response);
 
       if (response.status) {
         toaster(response.message, TOAST_TYPES.SUCCESS);
-        push(PATH_DASHBOARD.createcompany.edit);
+        push(PATH_DASHBOARD.createcompany.root);
         setcompany(response);
         setShowPopup(true);
       } else {

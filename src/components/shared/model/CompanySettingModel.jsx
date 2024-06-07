@@ -3,11 +3,12 @@ import { useAuth, useToaster } from "@/hooks";
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import { useRouter } from "next/navigation";
-import { useGlobalCompany } from "@/utils/globalState";
+import { setSelectedCompany, useGlobalCompany } from "@/utils/globalState";
 
 const CompanySettingModel = ({ activeTab, setShowPopup }) => {
-  const { createcompany, setcompany } = useAuth();
+  const { createcompany, editcompany } = useAuth();
   const selectedCompany = useGlobalCompany();
+
   const [companyName, setCompanyName] = useState(selectedCompany?.name || "");
   const [logoFile, setLogoFile] = useState(null);
   const [filePreview, setFilePreview] = useState(selectedCompany?.logo || null);
@@ -54,18 +55,22 @@ const CompanySettingModel = ({ activeTab, setShowPopup }) => {
 
     try {
       let logoToSend = logoFile;
-      if (!logoFile) {
-        logoToSend = null;
+
+      // If logoFile is null, send an empty string to indicate removal
+      if (logoFile === null) {
+        logoToSend = "";
       }
 
-      const response = await createcompany(companyName, logoToSend);
-      console.log("🚀 ~ handleSave ~ response:", response);
+      const response = await editcompany(companyName, logoToSend);
 
       if (response.status) {
         toaster(response.message, TOAST_TYPES.SUCCESS);
-        push(PATH_DASHBOARD.createcompany.edit);
-        setcompany(response);
-        setShowPopup(true);
+        push(PATH_DASHBOARD.createcompany.root);
+        setSelectedCompany({
+          ...selectedCompany,
+          name: companyName,
+          logo: logoToSend ? URL.createObjectURL(logoFile) : null,
+        });
       } else {
         toaster(response.message, TOAST_TYPES.ERROR);
       }

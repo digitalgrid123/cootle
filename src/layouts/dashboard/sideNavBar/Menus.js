@@ -6,6 +6,7 @@ import CompanyLogo from "@/components/Dashboard/CompanyLogo";
 import CompanyListItem from "@/components/Dashboard/CompanyListItem";
 import { setSelectedCompany, useGlobalCompany } from "@/utils/globalState";
 import CreateNewModel from "@/components/shared/model/CreateNewModel";
+import InvitationList from "@/components/shared/model/InvitationList";
 
 const Menus = () => {
   const { companylist, company } = useAuth();
@@ -15,6 +16,7 @@ const Menus = () => {
   const dropdownRef = useRef(null);
   const popupRef = useRef(null);
   const [list, setList] = useState([]);
+
   const contentRef = useRef();
 
   const selectedCompany = useGlobalCompany();
@@ -24,6 +26,7 @@ const Menus = () => {
   const [error, setError] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [showInvite, setShowInvite] = useState(false);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -78,8 +81,20 @@ const Menus = () => {
     setShowPopup((prevState) => !prevState);
   };
 
+  const invitebox = () => {
+    setShowInvite((prevState) => !prevState);
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
+
+  if (
+    !selectedCompany?.is_admin &&
+    pathname === PATH_DASHBOARD.createcompany.root
+  ) {
+    router.push(PATH_DASHBOARD.root);
+    return null;
+  }
 
   return (
     <>
@@ -140,7 +155,7 @@ const Menus = () => {
                   <p className="invite-text">
                     You have been invited to these <br /> companies, join now:
                   </p>
-                  <a className="show-invitation" href="#">
+                  <a className="show-invitation" href="#" onClick={invitebox}>
                     <span className="show-invitation-text">
                       See invitations
                     </span>
@@ -162,19 +177,22 @@ const Menus = () => {
           className="d-flex w-100 flex-column"
           style={{ gap: "27px", marginTop: "15px" }}
         >
-          <li
-            className={`d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100 padding-lr-sixteen ${
-              pathname === PATH_DASHBOARD.createcompany.edit
-                ? "navigate-select"
-                : ""
-            }`}
-            onClick={() =>
-              handleSelect("Company", PATH_DASHBOARD.createcompany.edit)
-            }
-          >
-            <img src="/assets/images/mark/company.svg" alt="company-icon" />
-            <h4 className="mapping">Company</h4>
-          </li>
+          {selectedCompany?.is_admin && (
+            <li
+              className={`d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100 padding-lr-sixteen ${
+                pathname === PATH_DASHBOARD.createcompany.root ||
+                pathname === PATH_DASHBOARD.createcompany.edit
+                  ? "navigate-select"
+                  : ""
+              }`}
+              onClick={() =>
+                handleSelect("Company", PATH_DASHBOARD.createcompany.root)
+              }
+            >
+              <img src="/assets/images/mark/company.svg" alt="company-icon" />
+              <h4 className="mapping">Company</h4>
+            </li>
+          )}
           <li
             className={`d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100 padding-lr-sixteen ${
               pathname === PATH_DASHBOARD.root ? "navigate-select" : ""
@@ -195,6 +213,7 @@ const Menus = () => {
           <h4 className="project">New project</h4>
         </li>
       </ul>
+      <InvitationList showInvite={showInvite} setShowInvite={setShowInvite} />
 
       <CreateNewModel
         showPopup={showPopup}

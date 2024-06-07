@@ -18,7 +18,7 @@ import {
 import axiosInstance from "@/utils/axios";
 import { getRole } from "@/utils/helper";
 import { setSession } from "@/utils/jwt";
-import { getData, saveData } from "@/utils/storage";
+import { getData, getSessionIdFromCookies, saveData } from "@/utils/storage";
 import axios from "axios";
 import { useLocalStorage } from "usehooks-ts";
 import { setSelectedCompany } from "@/utils/globalState";
@@ -158,7 +158,7 @@ function AuthProvider({ children }) {
             handleTokenExpiration,
             handleRTExpiration
           );
-          const response = await axiosGet(API_ROUTER.GET_USER);
+          const response = await axiosGet(API_ROUTER.USER_INFO);
 
           if (response.status) {
             dispatch({
@@ -448,12 +448,11 @@ function AuthProvider({ children }) {
     setSelectedCompany(null); // Clear selected company on logout
   };
 
-  const inviteuser = (email, company) => {
+  const inviteuser = (emails) => {
     return new Promise(async (resolve) => {
       try {
         const res = await axiosPost(API_ROUTER.INVITE_USER, {
-          email,
-          company,
+          emails,
         });
 
         if (res.status) {
@@ -468,6 +467,160 @@ function AuthProvider({ children }) {
             data: "",
             message: "Already send invitation to this User",
           });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+
+  const companyset = (id) => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosPost(API_ROUTER.COMPANY_SET, {
+          company_id: id,
+        });
+
+        if (res.status) {
+          resolve({ status: true, data: res });
+          saveData(STORAGE_KEYS.SESSION, res.session_id);
+        } else {
+          resolve({ status: false, data: "" });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+  const editcompany = (name, logo) => {
+    return new Promise(async (resolve) => {
+      try {
+        const formData = new FormData();
+        formData.append("name", name);
+
+        // Check if logo is a file
+        if (logo instanceof File) {
+          formData.append("logo", logo);
+        } else if (logo === "") {
+          formData.append("logo", ""); // Indicate removal
+        }
+
+        const res = await axiosPutFile(
+          API_ROUTER.COMPANY_EDIT,
+          formData,
+          logo instanceof File ? logo : undefined
+        );
+
+        if (res.status) {
+          resolve({
+            status: true,
+            data: "",
+            message: "Company Updated Successfully",
+          });
+        } else {
+          resolve({
+            status: false,
+            data: "",
+            message: res?.data?.response?.data?.name[0],
+          });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "", message: "" });
+      }
+    });
+  };
+
+  const acceptuser = (email, token) => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosPost(API_ROUTER.ACCEPT_USER, {
+          token,
+          email,
+        });
+
+        if (res.status) {
+          resolve({
+            status: true,
+            data: res.data,
+            message: "Invitation accept Successfully",
+          });
+        } else {
+          resolve({ status: false, data: "" });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+
+  const invitation = async () => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosGet(API_ROUTER.INVITATION);
+
+        if (res.status) {
+          resolve({ status: true, data: res.data });
+        } else {
+          resolve({ status: false, data: "" });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+  const acceptinvite = (company) => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosPost(API_ROUTER.ACCEPT_INVITE, {
+          company,
+        });
+
+        if (res.status) {
+          resolve({
+            status: true,
+            data: res.data,
+            message: "Invitation accept Successfully",
+          });
+        } else {
+          resolve({ status: false, data: "" });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+  const acceptreject = (company) => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosPost(API_ROUTER.REJECT_INVITE, {
+          company,
+        });
+
+        if (res.status) {
+          resolve({
+            status: true,
+            data: res.data,
+            message: "Invitation Rejected Successfully",
+          });
+        } else {
+          resolve({ status: false, data: "" });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+
+  const member = async () => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosGet(API_ROUTER.INVITATION_USER);
+        
+
+        if (res.status) {
+          resolve({ status: true, data: res.data });
+        } else {
+          resolve({ status: false, data: "" });
         }
       } catch (error) {
         resolve({ status: false, data: "" });
@@ -493,6 +646,13 @@ function AuthProvider({ children }) {
         setuseradd,
         logout,
         inviteuser,
+        companyset,
+        editcompany,
+        acceptuser,
+        invitation,
+        acceptinvite,
+        acceptreject,
+        member,
       }}
     >
       {children}

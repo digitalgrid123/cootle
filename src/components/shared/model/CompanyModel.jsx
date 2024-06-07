@@ -6,20 +6,7 @@ import MemberModel from "./MemberModel";
 
 const CompanyModel = ({ showPopup, setShowPopup, contentRef }) => {
   const [activeTab, setActiveTab] = useState("settings");
-  const { userinfo } = useAuth();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const fetchUserinfo = async () => {
-      const res = await userinfo();
-
-      if (res && res.status) {
-        setUser(res.data);
-      }
-    };
-
-    fetchUserinfo();
-  }, [userinfo]);
+  const { user } = useAuth();
 
   return (
     <div>

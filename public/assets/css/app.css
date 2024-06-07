@@ -765,6 +765,52 @@ input:focus {
   bottom: 0;
   right: 0;
 }
+.accept_btn {
+  background-color: #130f10;
+  border: none;
+  border-radius: 16px;
+  width: 100%;
+  padding: 13px 0;
+}
+.accept_btn > span {
+  font-family: var(--open);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 14px;
+  text-align: center;
+  color: var(--text-color);
+}
+.invite-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.reject_btn > span {
+  font-family: var(--open);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 14px;
+  text-align: center;
+  color: #130f10;
+}
+.reject_btn {
+  background-color: var(--text-color);
+  border: none;
+  border-radius: 16px;
+  width: 100%;
+  padding: 13px 0;
+}
+.invitation_prompt {
+  margin-top: 16px;
+  margin-bottom: 25px;
+  font-family: var(--open);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20.3px;
+  letter-spacing: -0.03em;
+  text-align: left;
+  color: #130f10;
+}
 .company-sidebar > ul > li {
   margin-bottom: 32px;
   cursor: pointer;
@@ -773,6 +819,15 @@ input:focus {
 .bottom-profile {
   position: fixed !important;
   bottom: 0;
+}
+.companyinvite {
+  font-family: var(--open);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: -0.03em;
+  text-align: left;
+  color: #010330;
 }
 .wrapper-company {
   display: flex;
@@ -950,6 +1005,29 @@ input:focus {
   gap: 40px;
   padding: 24px 24px 55px 24px;
 }
+.box-invitation {
+  background: #9999a14d;
+  height: 100%;
+  border-radius: 24px;
+  padding: 20px;
+}
+.member-text {
+  font-family: var(--open);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: -0.03em;
+  text-align: left;
+  color: #010330;
+}
+.member-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 40px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #01033033;
+}
 .line {
   margin-top: 50px;
   width: 6px;
@@ -957,6 +1035,50 @@ input:focus {
   border: none;
   border-radius: 10px;
   background: var(--text-color);
+}
+.member_row {
+  border-bottom: 1px solid #01033033;
+
+  height: 34px;
+}
+.text-status {
+  font-family: var(--open);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.94px;
+  letter-spacing: -0.03em;
+}
+.status-active {
+  color: #343559; /* Or any style you want for active status */
+}
+
+.status-invitation {
+  color: #ff536a; /* Or any style you want for invitation sent status */
+}
+.member-title {
+  margin-right: 4px;
+  font-family: var(--open);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.94px;
+  letter-spacing: -0.03em;
+  text-align: left;
+  color: #343559;
+}
+.member_email {
+  font-family: var(--open);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 14px;
+  letter-spacing: -0.03em;
+  text-align: left;
+
+  color: #343559;
+}
+.member-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .invitation-heading {
   font-family: var(--open);
@@ -1130,6 +1252,7 @@ input:focus {
   text-align: left;
   color: #130f1099;
   padding-left: 20px;
+  padding-right: 20px;
 }
 
 .verify-username {
