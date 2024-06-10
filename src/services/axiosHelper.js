@@ -162,6 +162,7 @@ export const axiosDelete = async (
       headers: {
         "Content-Type": contentType,
       },
+      data: data, // Pass the data parameter here
     });
     response = result.data;
     response.status = [200, 201].includes(result.status);

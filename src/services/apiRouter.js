@@ -71,6 +71,9 @@ export const API_ROUTER = {
   //MEMBER INVIATION LIST
   INVITATION_USER: getNormalRoute("invitations/list"),
 
+  //REMOVE MEMBER
+  REMOVE_MEMBER: getNormalRoute("members/remove"),
+
   //USER INFOR
   USER_INFO: getUserRoute("info"),
 
@@ -233,11 +236,11 @@ export const API_ROUTER = {
   UPDATE_PARTIAL_SURGERY: (role) => getRoute(role, "update-surgery"),
 
   // NOTIFICATIONS
-  GET_NOTIFICATIONS: getUserRoute("notifications"),
+  GET_NOTIFICATIONS: getNormalRoute("notifications"),
   GET_MARK_AS_READ: getUserRoute("notification/mark-as-read"),
   UPDATE_MARK_AS_READ: getUserRoute("notification/mark-as-read"),
   PARTIAL_UPDATE_MARK_AS_READ: getUserRoute("notification/mark-as-read"),
-  DELETE_MARK_AS_READ: getUserRoute("notification/mark-as-read"),
+  DELETE_MARK_AS_READ: getNormalRoute("notifications/mark-read"),
 
   // COMMENT
   ADD_COMMENT: getSurgeonRoute("add-comment"),

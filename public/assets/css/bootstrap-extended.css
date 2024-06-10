@@ -21,10 +21,6 @@ a {
   white-space: nowrap;
 }
 
-/* .table-overflow {
-  max-height: 350px;
-} */
-
 .form-check-input:checked {
   background-color: #008cff;
   border-color: #008cff;

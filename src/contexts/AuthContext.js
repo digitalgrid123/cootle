@@ -3,10 +3,11 @@
 import PropTypes from "prop-types";
 import { createContext, useEffect, useReducer, useState } from "react";
 // utils
-import { STORAGE_KEYS } from "@/constants/keywords";
+import { STORAGE_KEYS, USER_ROLES } from "@/constants/keywords";
 import { useSetting } from "@/hooks";
 import { API_ROUTER } from "@/services/apiRouter";
 import {
+  axiosDelete,
   axiosGet,
   axiosPatch,
   axiosPatchFile,
@@ -353,9 +354,11 @@ function AuthProvider({ children }) {
         const formData = new FormData();
         formData.append("fullname", fullname);
 
-        // Check if logo is a file
+        // Check if profile_pic is a file
         if (profile_pic instanceof File) {
           formData.append("profile_pic", profile_pic);
+        } else if (profile_pic === null) {
+          formData.append("profile_pic", ""); // Indicate removal
         }
 
         const res = await axiosPutFile(
@@ -484,6 +487,7 @@ function AuthProvider({ children }) {
         if (res.status) {
           resolve({ status: true, data: res });
           saveData(STORAGE_KEYS.SESSION, res.session_id);
+          saveData(USER_ROLES.SUPER_ADMIN, res.is_admin);
         } else {
           resolve({ status: false, data: "" });
         }
@@ -615,10 +619,30 @@ function AuthProvider({ children }) {
     return new Promise(async (resolve) => {
       try {
         const res = await axiosGet(API_ROUTER.INVITATION_USER);
-        
 
         if (res.status) {
           resolve({ status: true, data: res.data });
+        } else {
+          resolve({ status: false, data: "" });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+  const removeMember = async (memberId) => {
+    console.log("🚀 ~ removeMember ~ memberId:", memberId);
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosDelete(API_ROUTER.REMOVE_MEMBER, {
+          member_id: memberId,
+        }); // Pass memberId in the request payload
+        if (res.status) {
+          resolve({
+            status: true,
+            data: res.data,
+            message: "Member Removed",
+          });
         } else {
           resolve({ status: false, data: "" });
         }
@@ -653,6 +677,7 @@ function AuthProvider({ children }) {
         acceptinvite,
         acceptreject,
         member,
+        removeMember,
       }}
     >
       {children}

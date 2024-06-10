@@ -70,7 +70,7 @@ const VerifyPassCode = ({ userEmail }) => {
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="w-100 mt-40">
           <RHFEmailInput name="email" disabled={!!userEmail} />
-          <p className="comic-passdetail">
+          <p className="comic-passdetail weight-400">
             We just catapulted a password-pigeon your way! Check your inbox
             before it demands breadcrumbs as a delivery fee.
             <span>
@@ -86,12 +86,12 @@ const VerifyPassCode = ({ userEmail }) => {
             type="submit"
             disabled={isSubmitting || !isValid}
           >
-            <span>Continue with log in code</span>
+            <span className="weight-500">Continue with log in code</span>
           </button>
         </form>
       </FormProvider>
       <div>
-        <p className="note">
+        <p className="note weight-400">
           By clicking “Continue”, you agree to the Cootle{" "}
           <a href="#" className="hover-underline">
             TOS

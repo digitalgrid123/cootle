@@ -9,27 +9,29 @@ const InvitationList = ({ setShowInvite, showInvite }) => {
   const { toaster } = useToaster();
   const overlayRef = useRef(null);
 
-  useEffect(() => {
-    const fetchInvitations = async () => {
-      try {
-        const res = await invitation();
-        if (res && res.status) {
-          setInvitations(
-            res.data.sort(
-              (a, b) => new Date(b.created_at) - new Date(a.created_at)
-            )
-          );
-        } else {
-          setInvitations([]);
-        }
-      } catch (err) {
-        console.error("Error fetching invitations:", err);
-        toaster("Failed to load invitations", "error");
+  const fetchInvitations = async () => {
+    try {
+      const res = await invitation();
+      if (res && res.status) {
+        setInvitations(
+          res.data.sort(
+            (a, b) => new Date(b.created_at) - new Date(a.created_at)
+          )
+        );
+      } else {
+        setInvitations([]);
       }
-    };
+    } catch (err) {
+      console.error("Error fetching invitations:", err);
+      toaster("Failed to load invitations", "error");
+    }
+  };
 
+  useEffect(() => {
     fetchInvitations();
-  }, [invitation]);
+    const interval = setInterval(() => fetchInvitations(), 20000);
+    return () => clearInterval(interval);
+  }, []);
 
   useOutsideClick(overlayRef, () => {
     if (showInvite) {
@@ -79,45 +81,44 @@ const InvitationList = ({ setShowInvite, showInvite }) => {
     <div>
       {showInvite && (
         <div ref={overlayRef} className="invitation-overlay padding-company">
-          <div className="company-content w-100 h-100">
+          <div className="company-content w-100 h-100 ">
             <div className="box-invitation">
-              <div
-                className="d-flex align-item-center justify-content-between setting-box"
-                style={{ marginBottom: "24px" }}
-              >
-                <h1 className="company-setup-heading">Invitations</h1>
+              <div className="d-flex align-item-center justify-content-between setting-box border_bottom_Semi-Transparent_navy ">
+                <h1 className="company-setup-heading weight-600">
+                  Invitations
+                </h1>
                 <button className="save-btn" onClick={handleClose}>
-                  <span>Close</span>
+                  <span className="weight-600">Close</span>
                 </button>
               </div>
               {invitations.length > 0 ? (
                 invitations.map((invite) => (
                   <div
                     key={invite.company}
-                    className="d-flex align-items-center justify-content-between invitationlist"
+                    className="d-flex align-items-center justify-content-between invitationlist margin-11"
                   >
                     <div className="d-flex align-items-center gap-2 ">
                       <CompanyLogo
                         logo={invite.logo}
                         name={invite.company_name}
                       />
-                      <h3 className="companyinvite">{invite.company_name}</h3>
+                      <h3 className="companyinvite weight-500">
+                        {invite.company_name}
+                      </h3>
                     </div>
 
                     <div className="d-flex align-items-center gap-4">
                       <button
                         onClick={() => handleAccept(invite.company)}
                         className="accept_btn"
-                        style={{ padding: "13px 67px" }}
                       >
-                        <span>Accept</span>
+                        <span className="weight-500">Accept</span>
                       </button>
                       <button
                         onClick={() => handleReject(invite.company)}
                         className="reject_btn"
-                        style={{ padding: "13px 67px" }}
                       >
-                        <span>Reject</span>
+                        <span className="weight-500">Reject</span>
                       </button>
                     </div>
                   </div>

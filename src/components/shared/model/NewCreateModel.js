@@ -81,15 +81,18 @@ const NewCreateModel = ({ activeTab, setShowPopup }) => {
     <>
       {activeTab === "settings" && (
         <>
-          <div className="setting-box d-flex align-item-center justify-content-between">
-            <h1 className="company-setup-heading">Settings</h1>
+          <div className="setting-box d-flex align-item-center justify-content-between border_bottom_Semi-Transparent_navy ">
+            <h1 className="company-setup-heading weight-600">Settings</h1>
             <button className="save-btn" onClick={handleSave}>
-              <span>Save</span>
+              <span className="weight-600">Save</span>
             </button>
           </div>
           <form onSubmit={handleFormSubmit}>
-            <div className="company-container">
-              <label className="label-company" htmlFor="companyName">
+            <div className="company-container border_bottom_Semi-Transparent_navy ">
+              <label
+                className="label-company weight-500 "
+                htmlFor="companyName"
+              >
                 Company Name
               </label>
               <input
@@ -104,7 +107,10 @@ const NewCreateModel = ({ activeTab, setShowPopup }) => {
               />
             </div>
             <div>
-              <label className="label-company margin-11" htmlFor="logoFile">
+              <label
+                className="label-company weight-500  margin-11"
+                htmlFor="logoFile"
+              >
                 Icon
               </label>
               <div className="custom-file-input">
@@ -119,7 +125,7 @@ const NewCreateModel = ({ activeTab, setShowPopup }) => {
                     </div>
                     <button
                       type="button"
-                      className="remove-file-button"
+                      className="remove-file-button weight-500"
                       onClick={handleRemoveFile}
                     >
                       Remove Icon
@@ -128,7 +134,7 @@ const NewCreateModel = ({ activeTab, setShowPopup }) => {
                 ) : (
                   <button
                     type="button"
-                    className="custom-file-button"
+                    className="custom-file-button weight-500 border-pale "
                     onClick={() => fileInputRef.current.click()}
                   >
                     <span className="plus-icon">
@@ -149,7 +155,7 @@ const NewCreateModel = ({ activeTab, setShowPopup }) => {
                   style={{ display: "none" }}
                 />
               </div>
-              <p className="organization-note">
+              <p className="organization-note weight-400">
                 Upload your company logo in PNG format.
               </p>
             </div>

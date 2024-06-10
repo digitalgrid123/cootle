@@ -4,7 +4,7 @@ const CompanyLogo = ({ logo, name }) => (
     {logo ? (
       <img className="w-100" src={logo} alt={`${name} Logo`} />
     ) : (
-      <h2>{name?.charAt(0).toUpperCase()}</h2>
+      <h2 className="weight-600">{name?.charAt(0).toUpperCase()}</h2>
     )}
   </div>
 );

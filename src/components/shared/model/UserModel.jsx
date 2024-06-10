@@ -66,9 +66,9 @@ const UserModel = ({
     <div>
       {showPopup && (
         <div className="popup-overlay">
-          <div className="popup-content">
+          <div className="popup-content weight-700">
             <h2>Hey there! Welcome to Cootle. </h2>
-            <p className="username-note">
+            <p className="username-note weight-400">
               We need your name to get started. <br /> We promise, no autographs
               required!
               <img src="/assets/images/mark/simple-pen.png" alt="simple-pen" />
@@ -86,7 +86,7 @@ const UserModel = ({
                   type="submit"
                   disabled={isSubmitting || !isValid}
                 >
-                  <span>Continue</span>
+                  <span className="weight-500">Continue</span>
                 </button>
               </form>
             </FormProvider>

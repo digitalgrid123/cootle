@@ -9,18 +9,32 @@ import MainMap from "@/components/Dashboard/valuemapping/MainMap";
 import { useGlobalCompany } from "@/utils/globalState";
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { userinfo } = useAuth();
+  const [user, setUser] = useState(null);
   const selectedCompany = useGlobalCompany();
   const [showPopup, setShowPopup] = useState(false);
   const { currentTab, setCurrentTab } = useTabs(1);
   const contentRef = useRef();
 
+  // Fetch user information on component mount
   useEffect(() => {
-    const shouldShowPopup =
-      user && user?.fullname?.startsWith("User#") && !selectedCompany;
-    setShowPopup(shouldShowPopup);
-  }, [user, selectedCompany]);
+    const fetchUserinfo = async () => {
+      const res = await userinfo();
+      if (res && res.status) {
+        setUser(res.data.fullname);
+      }
+    };
 
+    fetchUserinfo();
+  }, [userinfo]);
+
+  useEffect(() => {
+    if (user && user.startsWith("User#")) {
+      setShowPopup(true);
+    }
+  }, [user]);
+
+  // Advance to the next tab
   const next = () => {
     setCurrentTab((prev) => prev + 1);
   };
@@ -38,7 +52,7 @@ const Dashboard = () => {
       case 2:
         return (
           <InvitationModel
-            showPopup={showPopup && !selectedCompany}
+            showPopup={showPopup}
             setShowPopup={setShowPopup}
             next={next}
             contentRef={contentRef}
@@ -47,7 +61,7 @@ const Dashboard = () => {
       case 3:
         return (
           <CreateNewModel
-            showPopup={showPopup && !selectedCompany}
+            showPopup={showPopup}
             setShowPopup={setShowPopup}
             contentRef={contentRef}
           />

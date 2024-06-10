@@ -11,16 +11,16 @@ const Navbar = ({ disableGetStarted, onLogin, onSignup, disableLogin }) => {
             <div className="navbar-cootle">
               <Link href="/" passHref className="cootle-container">
                 <img src="/assets/images/mark/cootle.svg" alt="logo" />
-                <h4 className="cootle-text">Cootle</h4>
+                <h4 className="cootle-text m-0 weight-500">Cootle</h4>
               </Link>
               <div className="nav_cootle">
-                <h2>Contact sales</h2>
+                <h2 className="weight-500">Contact sales</h2>
                 <button disabled={disableLogin} onClick={onLogin}>
-                  <span>Log in</span>
+                  <span className="weight-600">Log in</span>
                 </button>
 
                 <button disabled={disableGetStarted} onClick={onSignup}>
-                  <span>Get started for free</span>
+                  <span className="weight-600">Get started for free</span>
                 </button>
               </div>
             </div>

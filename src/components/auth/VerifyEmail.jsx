@@ -75,12 +75,12 @@ const VerifyEmail = ({ setUserEmail, next }) => {
             type="submit"
             disabled={isSubmitting || !isValid}
           >
-            <span>Continue with email</span>
+            <span className="weight-500">Continue with email</span>
           </button>
         </form>
       </FormProvider>
       <div>
-        <p className="note">
+        <p className="note weight-400">
           By clicking “Continue with Email”, you agree to the Cootle{" "}
           <a href="#" className="hover-underline">
             TOS

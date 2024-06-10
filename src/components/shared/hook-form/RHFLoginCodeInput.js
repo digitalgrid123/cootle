@@ -31,7 +31,7 @@ export default function RHFLoginCodeInput({
             type="text"
             id={id}
             placeholder={placeholder}
-            className="verify-email"
+            className="verify-email f-16 weight-500"
             disabled={disabled}
             isInvalid={!!error}
             {...field}

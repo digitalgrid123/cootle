@@ -66,36 +66,38 @@ const InvitationModel = ({ showPopup, next, contentRef, setShowPopup }) => {
     <div>
       {showPopup && (
         <div className="invitation-overlay">
-          <div ref={contentRef} className="invitation-content">
+          <div ref={contentRef} className="invitation-content ">
             <div className="box-container center">
               <div>
-                <h1 className="invitation-heading">Join a Company</h1>
+                <h1 className="invitation-heading weight-600">
+                  Join a Company
+                </h1>
                 <div className="invitation-detail">
                   {invite ? (
-                    <div className="invite-content w-100">
+                    <div className="invite-content w-100 weight-500">
                       <div className="d-flex align-items-center gap-2">
                         <CompanyLogo
                           logo={invite.logo_url}
                           name={invite.company_name}
                         />
-                        <div className="companyinvite">
+                        <div className="companyinvite weight-500">
                           {invite.company_name}
                         </div>
                       </div>
-                      <p className="invitation_prompt">
+                      <p className="invitation_prompt weight-500">
                         You have been invited to join this company
                       </p>
                       <div className="invite-actions">
                         <button onClick={handleAccept} className="accept_btn">
-                          <span>Accept</span>
+                          <span className="weight-500">Accept</span>
                         </button>
                         <button onClick={handleReject} className="reject_btn">
-                          <span>Reject</span>
+                          <span className="weight-500">Reject</span>
                         </button>
                       </div>
                     </div>
                   ) : (
-                    <p className="invite-content">
+                    <p className="invite-content weight-500">
                       Currently no company invites
                     </p>
                   )}
@@ -103,14 +105,18 @@ const InvitationModel = ({ showPopup, next, contentRef, setShowPopup }) => {
               </div>
               <div className="line"></div>
               <div>
-                <h1 className="invitation-heading">Create Your Own</h1>
+                <h1 className="invitation-heading weight-600">
+                  Create Your Own
+                </h1>
                 <div className="company-detail" onClick={nextbox}>
-                  <div className="center" style={{ gap: "14px" }}>
+                  <div className="center gap-3">
                     <img
                       src="/assets/images/mark/second-plus.svg"
                       alt="plus-icon"
                     />
-                    <p className="company-content-text">Create a new company</p>
+                    <p className="company-content-text m-0 weight-500">
+                      Create a new company
+                    </p>
                   </div>
                 </div>
               </div>

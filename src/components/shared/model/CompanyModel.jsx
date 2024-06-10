@@ -15,7 +15,9 @@ const CompanyModel = ({ showPopup, setShowPopup, contentRef }) => {
           <div ref={contentRef} className="invitation-content w-100 h-100">
             <div className="wrapper-company">
               <div className="company-sidebar h-100">
-                <h1 className="company-setup-heading">Company setup</h1>
+                <h1 className="company-setup-heading weight-600">
+                  Company setup
+                </h1>
                 <ul className="">
                   <li
                     className={`d-flex align-items-center justify-content-start gap-2 ${
@@ -24,7 +26,7 @@ const CompanyModel = ({ showPopup, setShowPopup, contentRef }) => {
                     onClick={() => setActiveTab("settings")}
                   >
                     <img src="/assets/images/mark/setting.svg" alt="" />
-                    <h2 className="menutext">Settings</h2>
+                    <h2 className="menutext f-16  weight-500">Settings</h2>
                   </li>
                   {user?.is_admin && (
                     <li
@@ -34,7 +36,7 @@ const CompanyModel = ({ showPopup, setShowPopup, contentRef }) => {
                       onClick={() => setActiveTab("members")}
                     >
                       <img src="/assets/images/mark/member.svg" alt="" />
-                      <h2 className="menutext">Members</h2>
+                      <h2 className="menutext f-16  weight-500">Members</h2>
                     </li>
                   )}
                 </ul>

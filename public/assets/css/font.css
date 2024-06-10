@@ -1,0 +1,57 @@
+/* fonts.css */
+
+/* OpenRunde Regular */
+@font-face {
+  font-family: "OpenRunde";
+  font-weight: normal;
+  font-style: normal;
+  src: url("../fonts/OpenRunde-Regular.woff2") format("woff2"),
+    url("../fonts/OpenRunde-Regular.woff") format("woff"),
+    url("../fonts/OpenRunde-Regular.otf") format("opentype");
+}
+
+/* OpenRunde Bold */
+@font-face {
+  font-family: "OpenRunde";
+  font-weight: bold;
+  font-style: normal;
+  src: url("../fonts/OpenRunde-Bold.woff2") format("woff2"),
+    url("../fonts/OpenRunde-Bold.woff") format("woff"),
+    url("../fonts/OpenRunde-Bold.otf") format("opentype");
+}
+
+/* OpenRunde Medium */
+@font-face {
+  font-family: "OpenRunde";
+  font-weight: 500; /* Assuming Medium corresponds to 500 */
+  font-style: normal;
+  src: url("../fonts/OpenRunde-Medium.woff2") format("woff2"),
+    url("../fonts/OpenRunde-Medium.woff") format("woff"),
+    url("../fonts/OpenRunde-Medium.otf") format("opentype");
+}
+
+/* OpenRunde Semibold */
+@font-face {
+  font-family: "OpenRunde";
+  font-weight: 600; /* Assuming Semibold corresponds to 600 */
+  font-style: normal;
+  src: url("../fonts/OpenRunde-Semibold.woff2") format("woff2"),
+    url("../fonts/OpenRunde-Semibold.woff") format("woff"),
+    url("../fonts/OpenRunde-Semibold.otf") format("opentype");
+}
+
+/* AntroVectra Regular */
+@font-face {
+  font-family: "AntroVectra";
+  font-weight: normal;
+  font-style: normal;
+  src: url("../fonts/Antro_Vectra.otf") format("opentype");
+}
+
+/* AntroVectra Bold */
+@font-face {
+  font-family: "AntroVectra";
+  font-weight: bold;
+  font-style: normal;
+  src: url("../fonts/Antro_Vectra_Bolder.otf") format("opentype");
+}

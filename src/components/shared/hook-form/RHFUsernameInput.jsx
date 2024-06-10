@@ -31,7 +31,7 @@ export default function RHFUsernameInput({
             type="text"
             id={id}
             placeholder={placeholder}
-            className="verify-username"
+            className="verify-username f-16 weight-500"
             disabled={disabled}
             isInvalid={!!error}
             {...(focus ? { autoFocus: true } : {})}

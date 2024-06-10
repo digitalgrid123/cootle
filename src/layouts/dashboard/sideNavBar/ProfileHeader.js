@@ -62,7 +62,7 @@ const ProfileHeader = () => {
         className="metismenu-profile bottom-profile d-flex align-items-center flex-row cursor-pointer justify-content-between"
         onClick={toggleDropdown}
       >
-        <div className="d-flex align-items-center" style={{ gap: "11px" }}>
+        <div className="d-flex align-items-center gap-2">
           <div className="profile-img relative">
             <img
               className="w-100 h-100"
@@ -81,14 +81,18 @@ const ProfileHeader = () => {
             />
           </div>
           <div>
-            <h1 className="profile-name">
+            <h1 className="profile-name weight-600">
               {isValidFullName(user?.fullname) ? user.fullname : ""}
             </h1>
-            <p className="profile-email">{user?.email}</p>
+            <p className="profile-email m-0 weight-500 ">{user?.email}</p>
           </div>
         </div>
         <div>
-          <img src="/assets/images/mark/dropdown.svg" alt="dropdown-icon" />
+          <img
+            src="/assets/images/mark/dropdown.svg"
+            alt="dropdown-icon"
+            className={dropdownOpen ? "dropdown-icon open" : "dropdown-icon"}
+          />
         </div>
       </div>
 
@@ -97,9 +101,11 @@ const ProfileHeader = () => {
           ref={dropdownRef}
           className="profile-dropdown d-flex gap-2 flex-column"
         >
-          <h2 className="account_text">My account setting</h2>
+          <h2 className="account_text border_bottom_bluish weight-500">
+            My account setting
+          </h2>
           <div
-            className=" border-profile d-flex align-items-center justify-content-between w-100"
+            className=" border-profile d-flex align-items-center justify-content-between w-100 border_bottom_bluish"
             onClick={togglePopup}
           >
             <div className="profile-setting_container">
@@ -107,15 +113,15 @@ const ProfileHeader = () => {
                 src="/assets/images/mark/setting_profile.svg"
                 alt="profile-settings"
               />
-              <h4 className="cursor-pointer">Name & email update</h4>
+              <h4 className="cursor-pointer weight-500">Name & email update</h4>
             </div>
             <div>
               <img src="/assets/images/mark/arrowright.svg" alt="arrow-right" />
             </div>
           </div>
-          <div className="logout_container cursor-pointer" onClick={logout}>
+          <div className="logout_container cursor-pointer " onClick={logout}>
             <img src="/assets/images/mark/logout.svg" alt="logout" />
-            <h1 className="logout-text">Logout</h1>
+            <h1 className="logout-text weight-500">Logout</h1>
           </div>
         </ul>
       )}

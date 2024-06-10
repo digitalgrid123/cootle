@@ -5,7 +5,7 @@ import ProfileHeader from "./ProfileHeader";
 
 const SideNavBar = () => {
   return (
-    <div className="sidebar-wrapper">
+    <div className="sidebar-wrapper border_bottom_Light">
       <SidebarHeader />
       <Menus />
       <ProfileHeader />

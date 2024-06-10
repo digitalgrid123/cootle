@@ -31,7 +31,7 @@ export default function RHFEmailInput({
             type="email"
             id={id}
             placeholder={placeholder}
-            className="verify-email"
+            className="verify-email f-16 weight-500"
             disabled={disabled}
             isInvalid={!!error}
             {...(focus ? { autoFocus: true } : {})}

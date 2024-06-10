@@ -1,12 +1,14 @@
 import React, { useState, useRef } from "react";
 import { useAuth, useToaster } from "@/hooks";
-import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
+import { TOAST_ALERTS, TOAST_TYPES, USER_ROLES } from "@/constants/keywords";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import { useRouter } from "next/navigation";
 import { useGlobalCompany } from "@/utils/globalState";
+import { getData } from "@/utils/storage";
 
 const CompanyModel = ({ activeTab }) => {
   const selectedCompany = useGlobalCompany();
+  const isAdmin = getData(USER_ROLES.SUPER_ADMIN);
 
   const { push } = useRouter();
   const editCompany = () => {
@@ -16,28 +18,36 @@ const CompanyModel = ({ activeTab }) => {
     <>
       {activeTab === "settings" && (
         <>
-          <div className="setting-box d-flex align-item-center justify-content-between">
-            <h1 className="company-setup-heading">Settings</h1>
-            {selectedCompany?.is_admin && (
+          <div className="setting-box d-flex align-item-center justify-content-between border_bottom_Semi-Transparent_navy ">
+            <h1 className="company-setup-heading weight-600">Settings</h1>
+            {isAdmin && (
               <button className="save-btn" onClick={editCompany}>
-                <span>Edit</span>
+                <span className="weight-600">Edit</span>
               </button>
             )}
           </div>
           <form>
-            <div className="company-container">
-              <label className="label-company" htmlFor="companyName">
+            <div className="company-container border_bottom_Semi-Transparent_navy ">
+              <label
+                className="label-company weight-500 "
+                htmlFor="companyName"
+              >
                 Company Name
               </label>
-              <h2 className="selected_company">{selectedCompany?.name}</h2>
+              <h2 className="selected_company weight-600">
+                {selectedCompany?.name}
+              </h2>
             </div>
             <div>
-              <label className="label-company margin-11" htmlFor="logoFile">
+              <label
+                className="label-company weight-500  margin-11"
+                htmlFor="logoFile"
+              >
                 Icon
               </label>
               <div className="custom-file-input">
                 {selectedCompany?.logo ? (
-                  <div className="selected_logo">
+                  <div className="selected_logo border-pale ">
                     <img
                       className="w-100"
                       src={selectedCompany.logo}
@@ -45,8 +55,8 @@ const CompanyModel = ({ activeTab }) => {
                     />
                   </div>
                 ) : (
-                  <div className="no_logo_container">
-                    <h2 className="no_logo">
+                  <div className="no_logo_container border-pale ">
+                    <h2 className="no_logo weight-500">
                       {selectedCompany?.name?.charAt(0).toUpperCase()}
                     </h2>
                   </div>

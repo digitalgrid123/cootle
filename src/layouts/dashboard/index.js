@@ -1,7 +1,5 @@
 "use client";
-import BackToTop from "./backToTop";
-import Footer from "./footer";
-import Header from "./header";
+
 import SideNavBar from "./sideNavBar";
 import { useCollapseDrawer } from "@/hooks";
 

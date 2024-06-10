@@ -49,25 +49,25 @@ const LoginPage = () => {
           <div className="row">
             <div className="col-lg-8 offset-lg-2">
               <div className="heading">
-                <h1 className="auth_main_heading">
-                  Easily <span className="w-700">define</span>,
-                  <span className="w-700">track</span> and
-                  <span className="w-700">improve</span>
+                <h1 className="auth_main_heading weight-500">
+                  Easily <span className="weight-700">define</span>,
+                  <span className="weight-700">track</span> and
+                  <span className="weight-700">improve </span>
                   the <br /> value of product design in your <br /> organization
                   <span>
                     <img src="/assets/images/mark/arrow.png" alt="arrow-img" />
                   </span>
                   <span>
-                    <button onClick={handleSignup}>Get started</button>
+                    <button className="weight-600" onClick={handleSignup}>
+                      Get started
+                    </button>
                   </span>
                 </h1>
                 <div className="img-software">
-                  <img
-                    className="img-width"
-                    src="/assets/images/mark/software.webp"
-                    alt="software"
-                  />
-                  <h2 className="thanks-text">Thanks for checking on us.</h2>
+                  <img src="/assets/images/mark/software.webp" alt="software" />
+                  <h2 className="thanks-text weight-700">
+                    Thanks for checking on us.
+                  </h2>
                 </div>
               </div>
             </div>

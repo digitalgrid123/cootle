@@ -13,10 +13,7 @@ const HeaderBreadcrumbs = ({
       <div className="breadcrumb-title pe-3">
         {isBackAllow ? (
           <Link href={backPath}>
-            <i
-              className="bx bx-chevron-left fs-3"
-              style={{ verticalAlign: "middle" }}
-            />
+            <i className="bx bx-chevron-left fs-3" />
           </Link>
         ) : (
           ""

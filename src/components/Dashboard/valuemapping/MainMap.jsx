@@ -27,15 +27,12 @@ const MainMap = () => {
 
   return (
     <>
-      <div className="h-100">
-        <div
-          className="d-flex align-items-center justify-content-between"
-          style={{ marginBottom: "18px" }}
-        >
+      <div className="h-100 d-flex flex-column">
+        <div className="d-flex align-items-center justify-content-between mb-3">
           <Title title="Value mapping" />
           <div className="button-group">
             <button
-              className={`mapping_btn ${
+              className={`mapping_btn weight-400 ${
                 selectedMapping === "effort" ? "active" : ""
               }`}
               onClick={() => setSelectedMapping("effort")}
@@ -43,7 +40,7 @@ const MainMap = () => {
               Effort Mapping
             </button>
             <button
-              className={`mapping_btn ${
+              className={`mapping_btn weight-400 ${
                 selectedMapping === "objective" ? "active" : ""
               }`}
               onClick={() => setSelectedMapping("objective")}
@@ -51,7 +48,7 @@ const MainMap = () => {
               Objective Mapping
             </button>
             <button
-              className={`mapping_btn ${
+              className={`mapping_btn weight-400 ${
                 selectedMapping === "value" ? "active" : ""
               }`}
               onClick={() => setSelectedMapping("value")}
@@ -59,7 +56,7 @@ const MainMap = () => {
               Value Mapping
             </button>
             <button
-              className={`mapping_btn ${
+              className={`mapping_btn weight-400 ${
                 selectedMapping === "product" ? "active" : ""
               }`}
               onClick={() => setSelectedMapping("product")}
@@ -74,14 +71,16 @@ const MainMap = () => {
             </button>
             {openDropdown && (
               <ul className="reset-dropdown d-flex gap-2 flex-column">
-                <h2 className="account_text">Action</h2>
+                <h2 className="account_text border_bottom_bluish weight-500">
+                  Action
+                </h2>
                 <div className="reset-profile d-flex align-items-center justify-content-between w-100">
                   <div className="profile-setting_container">
                     <img
                       src="/assets/images/mark/setting_profile.svg"
                       alt="profile-settings"
                     />
-                    <h4 className="cursor-pointer">Reset Mapping</h4>
+                    <h4 className="cursor-pointer weight-500">Reset Mapping</h4>
                   </div>
                 </div>
               </ul>
@@ -89,9 +88,7 @@ const MainMap = () => {
           </div>
         </div>
 
-        <div className="invitation-content" style={{ height: "90%" }}>
-          {renderContent()}
-        </div>
+        <div className="invitation-content">{renderContent()}</div>
       </div>
     </>
   );
