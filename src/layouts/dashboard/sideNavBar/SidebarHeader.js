@@ -38,7 +38,7 @@ const SidebarHeader = () => {
           onClick={handleBellClick}
           style={{ cursor: "pointer" }}
         >
-          <img src="/assets/images/mark/shape.svg" alt="bell" />
+          <img src="/assets/images/mark/shape.png" alt="bell" />
           {count > 0 && <span className="notification-badge"></span>}
         </div>
       </div>
