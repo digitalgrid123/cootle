@@ -59,9 +59,9 @@ body {
 }
 
 body {
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* IE 10 and IE 11 */
-  user-select: none; /* Standard syntax */
+  /* -webkit-user-select: none; Safari */
+  /* -ms-user-select: none; IE 10 and IE 11 */
+  /* user-select: none; Standard syntax */
   color: var(--text-color);
   background: #f7f7ff;
   overflow-x: hidden;
@@ -892,7 +892,7 @@ a {
   border: none;
   box-shadow: var(--box-shadow);
   position: relative;
-  z-index: 12;
+  z-index: 10;
   flex: 1 1;
 }
 .proflie-content {
@@ -1408,7 +1408,7 @@ a {
 }
 
 .notification-container {
-  width: 100%;
+  width: 750px;
   flex: 1 1;
   background: var(--Lavender-Gray);
   border-radius: 24px;

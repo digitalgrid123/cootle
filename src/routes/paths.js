@@ -1,4 +1,3 @@
-import notification from "@/app/(dashboard)/dashboard/notification/page";
 import { add } from "lodash";
 
 function path(root, sublink) {
@@ -24,7 +23,6 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, "/createcompany"),
     edit: path(ROOTS_DASHBOARD, "/edit"),
   },
-  notification: path(ROOTS_DASHBOARD, "/notification"),
 
   surgeries: {
     root: path(ROOTS_DASHBOARD, "/surgeries"),

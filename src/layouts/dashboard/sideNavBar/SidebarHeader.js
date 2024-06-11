@@ -1,24 +1,53 @@
-import React from "react";
-// Assuming this is the path to your Notification component
+import React, { useEffect, useState, useRef } from "react";
 import { useNotifications } from "@/hooks";
 import Link from "next/link";
 import { PATH_DASHBOARD } from "@/routes/paths";
+import NotificationModel from "@/components/shared/model/NotificationModel";
 
 const SidebarHeader = () => {
   const { count } = useNotifications(); // Get the count of unread notifications
+  const [isDropdownOpen, setDropdownOpen] = useState(false); // State to manage the dropdown
+  const dropdownRef = useRef(null); // Ref for the dropdown element
+
+  const handleBellClick = () => {
+    setDropdownOpen((prev) => !prev); // Toggle dropdown state
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="sidebar-header">
       <div className="sidebar-notify d-flex align-items-center justify-content-between w-100 border_bottom_Light">
-        <Link className="cootle-container" href={PATH_DASHBOARD.root}>
+        <div className="cootle-container">
           <img src="/assets/images/mark/logo.svg" alt="logo" />
-        </Link>
+        </div>
 
-        <Link className="relative" href={PATH_DASHBOARD.notification}>
+        <div
+          className="relative"
+          onClick={handleBellClick}
+          style={{ cursor: "pointer" }}
+        >
           <img src="/assets/images/mark/shape.svg" alt="bell" />
           {count > 0 && <span className="notification-badge"></span>}
-        </Link>
+        </div>
       </div>
+
+      <NotificationModel
+        isDropdownOpen={isDropdownOpen}
+        setDropdownOpen={setDropdownOpen}
+        dropdownRef={dropdownRef} // Pass dropdownRef to NotificationModel
+      />
     </div>
   );
 };

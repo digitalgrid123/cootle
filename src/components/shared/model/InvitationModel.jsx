@@ -66,7 +66,11 @@ const InvitationModel = ({ showPopup, next, contentRef, setShowPopup }) => {
     <div>
       {showPopup && (
         <div className="invitation-overlay">
-          <div ref={contentRef} className="invitation-content ">
+          <div
+            ref={contentRef}
+            className="invitation-content "
+            style={{ flex: "0" }}
+          >
             <div className="box-container center">
               <div>
                 <h1 className="invitation-heading weight-600">

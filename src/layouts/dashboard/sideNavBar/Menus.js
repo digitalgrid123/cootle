@@ -66,11 +66,19 @@ const Menus = () => {
     },
     [router]
   );
+  useEffect(() => {
+    if (selectedCompany) {
+      setDropdownOpen(false); // Close the dropdown when a company is selected
+    }
+  }, [selectedCompany]);
 
-  const handleCompanySelect = useCallback((selectedCompany) => {
-    setSelectedCompany(selectedCompany);
-    setDropdownOpen(false);
-  }, []);
+  const handleCompanySelect = useCallback(
+    (selectedCompany) => {
+      setSelectedCompany(selectedCompany);
+      router.push(PATH_DASHBOARD.root); // Navigate to the Value Mapping screen
+    },
+    [router]
+  );
 
   const toggleDropdown = useCallback(() => {
     setDropdownOpen((prev) => !prev);
