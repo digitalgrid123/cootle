@@ -1484,6 +1484,15 @@ a {
   line-height: 32px;
   text-align: right;
 }
+.cross_btn {
+  background-color: transparent;
+  border: none;
+  width: 24px;
+  height: 24px;
+}
+.cross_btn:hover {
+  fill: gray;
+}
 
 .current_effort {
   font-size: 14px;

@@ -240,7 +240,10 @@ export const API_ROUTER = {
   GET_MARK_AS_READ: getUserRoute("notification/mark-as-read"),
   UPDATE_MARK_AS_READ: getUserRoute("notification/mark-as-read"),
   PARTIAL_UPDATE_MARK_AS_READ: getUserRoute("notification/mark-as-read"),
-  DELETE_MARK_AS_READ: getNormalRoute("notifications/mark-read"),
+  DELETE_MARK_AS_READ: getNormalRoute("notifications/remove"),
+  DELETE_ALL_MARK_AS_READ: getNormalRoute("notifications/remove-all"),
+
+  // SURGEON DASHBOARD
 
   // COMMENT
   ADD_COMMENT: getSurgeonRoute("add-comment"),

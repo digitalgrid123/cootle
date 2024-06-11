@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
-import { useAuth, useToaster } from "@/hooks";
+import { useAuth, useToaster, useTabs } from "@/hooks";
 import { useGlobalCompany } from "@/utils/globalState";
 import PaginationComponent from "../table/Pagination";
 

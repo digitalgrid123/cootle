@@ -75,6 +75,7 @@ const Menus = () => {
   const handleCompanySelect = useCallback(
     (selectedCompany) => {
       setSelectedCompany(selectedCompany);
+
       router.push(PATH_DASHBOARD.root); // Navigate to the Value Mapping screen
     },
     [router]

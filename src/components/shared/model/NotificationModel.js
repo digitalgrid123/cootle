@@ -9,7 +9,8 @@ const NotificationModel = ({
   setDropdownOpen,
   dropdownRef,
 }) => {
-  const { notifications, isLoading, clearAll } = useNotifications();
+  const { notifications, isLoading, clearAll, removeall, deleteNotification } =
+    useNotifications();
   const [showInvite, setShowInvite] = useState(false);
   const notificationModelRef = useRef(null);
 
@@ -58,6 +59,9 @@ const NotificationModel = ({
                 <button className="save-btn" onClick={handleShowInvite}>
                   <span>See All Invitations</span>
                 </button>
+                <button className="save-btn" onClick={removeall}>
+                  <span>Clear All</span>
+                </button>
                 <button
                   className="save-btn"
                   onClick={clearAll}
@@ -78,12 +82,25 @@ const NotificationModel = ({
                       notification.is_read ? "read" : "unread"
                     }`}
                   >
-                    <p className="menutext weight-500 m-0">
-                      {notification.message}
-                    </p>
-                    <p className="menutext weight-500 m-0">
-                      {new Date(notification.created_at).toLocaleDateString()}
-                    </p>
+                    <div>
+                      <p className="menutext weight-500 m-0">
+                        {notification.message}
+                      </p>
+                      <p className="menutext weight-500 m-0">
+                        Recevied at:{" "}
+                        {new Date(notification.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+
+                    <button
+                      className="cross_btn"
+                      onClick={() => deleteNotification(notification.id)}
+                    >
+                      <img
+                        src="/assets/images/mark/close.png"
+                        alt="close_btn"
+                      />
+                    </button>
                   </div>
                 ))
               )}
