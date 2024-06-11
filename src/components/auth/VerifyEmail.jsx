@@ -1,10 +1,10 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import * as yup from "yup";
 import RHFEmailInput from "../shared/hook-form/RHFEmailInput";
 import FormHeading from "./FormHeading";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation"; // Remove useSearchParams from import
 import { PATH_AUTH } from "@/routes/paths";
 import { useAuth, useToaster } from "@/hooks";
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
@@ -18,8 +18,6 @@ const formSchema = yup.object().shape({
 
 const VerifyEmail = ({ setUserEmail, next }) => {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
   const { register, login, acceptuser } = useAuth();
   const { toaster } = useToaster();
   const defaultValues = {
@@ -38,16 +36,18 @@ const VerifyEmail = ({ setUserEmail, next }) => {
     formState: { isSubmitting, isValid },
   } = methods;
 
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const token = searchParams.get("token");
+    // Use token as needed
+  }, []);
+
   const onSubmit = async (data, event) => {
     event.preventDefault();
     try {
       let res;
-      if (token) {
-        res = await acceptuser(data.email, token);
-      } else {
-        const authFunction = pathname === PATH_AUTH.login ? login : register;
-        res = await authFunction(data.email);
-      }
+      const authFunction = pathname === PATH_AUTH.login ? login : register;
+      res = await authFunction(data.email);
 
       if (!res.status) {
         return toaster(res.message, TOAST_TYPES.ERROR);
