@@ -49,20 +49,36 @@ const LoginPage = () => {
           <div className="row">
             <div className="col-lg-8 offset-lg-2">
               <div className="heading">
-                <h1 className="auth_main_heading weight-500">
-                  Easily <span className="weight-700">define</span>,
-                  <span className="weight-700">track</span> and
-                  <span className="weight-700">improve </span>
-                  the <br /> value of product design in your <br /> organization
-                  <span>
-                    <img src="/assets/images/mark/arrow.png" alt="arrow-img" />
-                  </span>
-                  <span>
-                    <button className="weight-600" onClick={handleSignup}>
-                      Get started
-                    </button>
-                  </span>
-                </h1>
+                <div className="relative">
+                  <h1
+                    className="auth_main_heading weight-500"
+                    id="main-heading"
+                  >
+                    Easily
+                    <span className="weight-700">define</span>,
+                    <span className="weight-700">track</span> and
+                    <span className="weight-700"> improve </span>
+                    the value of product design in your <br /> organization
+                  </h1>
+                  <div className="content_arrow">
+                    <span>
+                      <img
+                        src="/assets/images/mark/arrow.png"
+                        alt="arrow-img"
+                        id="arrow-img"
+                      />
+                    </span>
+                    <span>
+                      <button
+                        className="started_btn weight-600"
+                        onClick={handleSignup}
+                      >
+                        Get started
+                      </button>
+                    </span>
+                  </div>
+                </div>
+
                 <div className="img-software">
                   <img src="/assets/images/mark/software.webp" alt="software" />
                   <h2 className="thanks-text weight-700">

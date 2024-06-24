@@ -107,16 +107,6 @@ function AuthProvider({ children }) {
   const [company, setcompany] = useState();
   const [useradd, setuseradd] = useState();
 
-  const [hospitalId, setHospitalId] = useState(null);
-  const [change, setChange] = useState(null);
-  const [selectedRole, setSelectedRole] = useLocalStorage("selectedRole", 0);
-
-  const { onChangeMode } = useSetting();
-
-  const setHospital = (id) => {
-    setHospitalId(id);
-  };
-
   const handleRTExpiration = async () => {
     try {
       setSession(null);
@@ -140,15 +130,32 @@ function AuthProvider({ children }) {
 
       if (res.status) {
         setSession(res?.access, rT, handleTokenExpiration, handleRTExpiration);
+
+        // After successful token refresh, retrieve user info again
+        const userInfoResponse = await axiosGet(API_ROUTER.USER_INFO);
+        if (userInfoResponse.status) {
+          dispatch({
+            type: "UPDATE",
+            payload: {
+              user: userInfoResponse.data,
+            },
+          });
+        }
+      } else {
+        // Handle refresh token failure
+        handleRTExpiration();
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error refreshing token:", error);
+      // Handle refresh token error
+      handleRTExpiration();
+    }
   };
 
   useEffect(() => {
     const initialize = async () => {
       try {
         const accessToken = getData(STORAGE_KEYS.AUTH_TOKEN);
-
         const refreshToken = getData(STORAGE_KEYS.AUTH_REFRESH_TOKEN);
         const localAuth = getData(STORAGE_KEYS.AUTH);
 
@@ -159,17 +166,14 @@ function AuthProvider({ children }) {
             handleTokenExpiration,
             handleRTExpiration
           );
-          const response = await axiosGet(API_ROUTER.USER_INFO);
 
-          if (response.status) {
+          const userInfoResponse = await axiosGet(API_ROUTER.USER_INFO);
+          if (userInfoResponse.status) {
             dispatch({
               type: "INITIALIZE",
               payload: {
                 isAuthenticated: true,
-                user: {
-                  ...response.data,
-                  // role: getRole(response.data),
-                },
+                user: userInfoResponse.data,
               },
             });
           } else {
@@ -631,7 +635,6 @@ function AuthProvider({ children }) {
     });
   };
   const removeMember = async (memberId) => {
-    console.log("🚀 ~ removeMember ~ memberId:", memberId);
     return new Promise(async (resolve) => {
       try {
         const res = await axiosDelete(API_ROUTER.REMOVE_MEMBER, {
@@ -652,6 +655,402 @@ function AuthProvider({ children }) {
     });
   };
 
+  const categories = async () => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosGet(API_ROUTER.GET_CATEGORIES);
+
+        if (res.status) {
+          resolve({ status: true, data: res.data });
+        } else {
+          resolve({ status: false, data: "" });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+
+  const getSinglecategory = async (category_id) => {
+    try {
+      const url = `${API_ROUTER.GET_CATEGORIES}${category_id}${API_ROUTER.DESIGN_EFFORT}`;
+      const res = await axiosGet(url);
+
+      if (res.status) {
+        return { status: true, data: res.data };
+      } else {
+        return { status: false, data: "" };
+      }
+    } catch (error) {
+      console.error("Error in getSinglecategory:", error);
+      return { status: false, data: "" };
+    }
+  };
+
+  const designEffort = async () => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosGet(API_ROUTER.DESIGN_EFFORT);
+
+        if (res.status) {
+          resolve({ status: true, data: res.data });
+        } else {
+          resolve({ status: false, data: "" });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+
+  const mappingList = (type) => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosPost(API_ROUTER.MAPPING_LIST, {
+          type,
+        });
+
+        if (res.status) {
+          resolve({
+            status: true,
+            data: res,
+          });
+        } else {
+          resolve({ status: false, data: "" });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+
+  const createmapping = (name, description, type) => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosPost(API_ROUTER.CREATE_MAPPING, {
+          title: name,
+          description,
+          type,
+        });
+
+        if (res.status) {
+          resolve({
+            status: true,
+            data: res.data,
+          });
+        } else {
+          resolve({ status: false, data: "" });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+  const createcategory = (name) => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosPost(API_ROUTER.CREATE_CATEGORY, {
+          name,
+        });
+
+        if (res.status) {
+          resolve({
+            status: true,
+            data: res.data,
+            message: "Category Created Successfully",
+          });
+        } else {
+          resolve({ status: false, data: "" });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+  const createDesignEffort = (category, description, title) => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosPost(API_ROUTER.CREATE_DESIGN_EFFORT, {
+          category,
+          description,
+          title,
+        });
+
+        if (res.status) {
+          resolve({
+            status: true,
+            data: res.data,
+            message: "Effort Created Successfully",
+          });
+        } else {
+          resolve({ status: false, data: "" });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+
+  const updatemapping = (id, name, description, type) => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosPatch(API_ROUTER.MAPPING_UPDATE, {
+          mapping_id: id,
+          title: name,
+          description,
+          type,
+        });
+
+        if (res.status) {
+          resolve({
+            status: true,
+            data: res.data,
+          });
+        } else {
+          resolve({ status: false, data: "" });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+
+  const updateDesignEffort = async (name, description, category, effort_id) => {
+    try {
+      const res = await axiosPatch(API_ROUTER.UPDATE_DESIGN_EFFORT, {
+        title: name,
+        description,
+        category,
+        effort_id,
+      });
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return { status: false, data: "" };
+      }
+    } catch (error) {
+      return { status: false, data: "" };
+    }
+  };
+
+  const removeCategory = async (category_id) => {
+    try {
+      const res = await axiosDelete(API_ROUTER.DELETE_CATEGORY, {
+        category_id,
+      });
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return { status: false, data: "" };
+      }
+    } catch (error) {
+      return { status: false, data: "" };
+    }
+  };
+
+  const addEffortByMapping = async (effort_id, mapping_id, type) => {
+    try {
+      const res = await axiosPost(API_ROUTER.ADD_EFFORT_BY_MAPPING, {
+        mapping_id,
+        effort_id,
+        type,
+      });
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return { status: false, data: "" };
+      }
+    } catch (error) {
+      return { status: false, data: "" };
+    }
+  };
+
+  const removeEffortByMapping = async (effort_id, mapping_id, type) => {
+    try {
+      const res = await axiosDelete(API_ROUTER.REMOVE_EFFORT_BY_MAPPING, {
+        mapping_id,
+        effort_id,
+        type,
+      });
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return { status: false, data: "" };
+      }
+    } catch (error) {
+      return { status: false, data: "" };
+    }
+  };
+
+  const reteriveEffort = async (design_effort_ids) => {
+    try {
+      const res = await axiosPost(API_ROUTER.RETERIVE_EFFORT_BY_IDS, {
+        design_effort_ids,
+      });
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res,
+        };
+      } else {
+        return { status: false, data: "" };
+      }
+    } catch (error) {
+      return { status: false, data: "" };
+    }
+  };
+
+  const defaultmapping = async (json_file) => {
+    try {
+      const res = await axiosPostFile(API_ROUTER.DEFAULT_MAPPING, json_file);
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return { status: false, data: res.data || "" };
+      }
+    } catch (error) {
+      return { status: false, data: "" };
+    }
+  };
+
+  const getdefaultmapping = async () => {
+    try {
+      const res = await axiosGet(API_ROUTER.DEFAULT_MAPPING);
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return { status: false, data: res.data || "" };
+      }
+    } catch (error) {
+      return { status: false, data: "" };
+    }
+  };
+
+  const projectlist = async () => {
+    try {
+      const res = await axiosGet(API_ROUTER.PROJECT_LIST);
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return { status: false, data: res.data || "" };
+      }
+    } catch (error) {
+      return { status: false, data: "" };
+    }
+  };
+
+  const purposelist = async (project_id) => {
+    try {
+      const res = await axiosGet(API_ROUTER.PURPOSE_LIST(project_id));
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return { status: false, data: res.data || "" };
+      }
+    } catch (error) {
+      return { status: false, data: "" };
+    }
+  };
+
+  const resetmapping = async () => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosPost(API_ROUTER.RESET_MAPPING);
+
+        if (res.status) {
+          resolve({ status: true, data: res.data });
+        } else {
+          resolve({ status: false, data: "" });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+
+  const createProject = async (name) => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosPost(API_ROUTER.CREATE_PROJECT, {
+          name,
+        });
+
+        if (res.status) {
+          resolve({
+            status: true,
+            data: res.data,
+            message: "Project added successfully",
+          });
+        } else {
+          resolve({
+            status: false,
+            data: "",
+            message: "Failed to add project",
+          });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+  const createPurpose = async (name) => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosPost(API_ROUTER.CREATE_PURPOSE, {
+          name,
+        });
+
+        if (res.status) {
+          resolve({
+            status: true,
+            data: res.data,
+            message: "Purpose added successfully",
+          });
+        } else {
+          resolve({
+            status: false,
+            data: "",
+            message: "Failed to add purpose",
+          });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
   return (
     <AuthContext.Provider
       value={{
@@ -678,6 +1077,25 @@ function AuthProvider({ children }) {
         acceptreject,
         member,
         removeMember,
+        categories,
+        mappingList,
+        createmapping,
+        updatemapping,
+        designEffort,
+        createcategory,
+        createDesignEffort,
+        getSinglecategory,
+        updateDesignEffort,
+        removeCategory,
+        removeEffortByMapping,
+        addEffortByMapping,
+        reteriveEffort,
+        defaultmapping,
+        resetmapping,
+        getdefaultmapping,
+        createProject,
+        projectlist,
+        purposelist,
       }}
     >
       {children}

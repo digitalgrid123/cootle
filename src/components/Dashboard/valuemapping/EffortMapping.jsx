@@ -1,114 +1,209 @@
-import InvitationModel from "@/components/shared/model/InvitationModel";
+import React, { useEffect, useState, useCallback } from "react";
+import EffortModel from "@/components/shared/model/EffortModel";
 import MapModel from "@/components/shared/model/MapModel";
-import React, { useState } from "react";
+import { useAuth } from "@/hooks";
+import { useGlobalCompany } from "@/utils/globalState";
 
-const tabs = [
-  { name: "User Research", subTabs: ["Interviews", "Surveys", "User Testing"] },
-  { name: "Usability", subTabs: ["Heuristic Evaluation", "Usability Testing"] },
-  { name: "Info Architecture", subTabs: ["Sitemaps", "Wireframes"] },
-  { name: "Design Implementation", subTabs: ["Prototypes", "Design Systems"] },
-  { name: "Collaboration", subTabs: ["Workshops", "Feedback Sessions"] },
-  { name: "UI & Visual Design", subTabs: ["Mockups", "Style Guides"] },
-];
-
-const EffortMapping = () => {
-  // State to manage active tab, sub-tab, content tab, and dropdown visibility
-  const [activeTab, setActiveTab] = useState(tabs[0].name);
-  const [activeSubTab, setActiveSubTab] = useState(tabs[0].subTabs[0]);
+const EffortMapping = ({ reset, isAdmin }) => {
+  const { categories, getSinglecategory, updateDesignEffort } = useAuth();
+  const [categoriesList, setCategoriesList] = useState([]);
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [activeSubTab, setActiveSubTab] = useState(null);
   const [activeContentTab, setActiveContentTab] = useState("Definition");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [designdropdownOpen, setDesignDropdownOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [initialDesignEfforts, setInitialDesignEfforts] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+  const [editTitle, setEditTitle] = useState("");
+  const selectedCompany = useGlobalCompany();
+  const [editDescription, setEditDescription] = useState("");
 
-  // Handlers for tab, sub-tab, and content tab clicks
-  const handleTabClick = (tab) => {
-    setActiveTab(tab.name);
-    setActiveSubTab(tab.subTabs[0]);
-    setActiveContentTab("Definition");
+  useEffect(() => {
+    fetchCategories();
+  }, [categories, selectedCompany, reset]);
+
+  const fetchCategories = async () => {
+    setLoading(true);
+    try {
+      const res = await categories();
+      if (res?.status && res.data.length > 0) {
+        const firstCategory = res.data[0];
+        setCategoriesList(res.data);
+        setActiveCategory(firstCategory);
+        const firstDesignEffort = firstCategory?.design_efforts[0] || null;
+        setActiveSubTab(firstDesignEffort);
+        setInitialDesignEfforts(firstCategory.design_efforts || []);
+      } else {
+        console.error("Failed to fetch categories");
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleCategoryClick = useCallback(
+    async (category) => {
+      setLoading(true);
+      try {
+        const res = await getSinglecategory(category.id);
+        setActiveCategory(category);
+        if (res?.status && res.data.length > 0) {
+          const firstSubTab = res.data[0];
+          setActiveSubTab(firstSubTab);
+          setInitialDesignEfforts(res.data);
+          setActiveContentTab("Definition");
+        } else {
+          setActiveSubTab(null);
+          setInitialDesignEfforts([]);
+          console.error("Failed to fetch category details");
+        }
+      } catch (error) {
+        console.error("Error fetching category details:", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [getSinglecategory]
+  );
 
   const handleSubTabClick = (subTab) => {
     setActiveSubTab(subTab);
     setActiveContentTab("Definition");
+    setEditMode(false); // Exit edit mode if a new sub-tab is clicked
   };
 
   const handleContentTabClick = (contentTab) => {
     setActiveContentTab(contentTab);
+    setEditMode(false); // Exit edit mode if the content tab is switched
   };
 
-  // Function to get data of the active tab
-  const getActiveTabData = () => {
-    return tabs.find((tab) => tab.name === activeTab);
-  };
-
-  // Toggle dropdown visibility
   const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
+    setDropdownOpen((prev) => !prev);
+  };
+
+  const toggleDesignDropdown = () => {
+    setDesignDropdownOpen((prev) => !prev);
+  };
+
+  const handleEditClick = () => {
+    setEditMode(true);
+    setEditTitle(activeSubTab.title);
+    setEditDescription(activeSubTab.description);
+  };
+
+  const handleUpdateClick = async () => {
+    try {
+      const { id: effort_id } = activeSubTab; // Extracting effort_id from activeSubTab
+      const updatedName = editTitle;
+      const updatedDescription = editDescription;
+      const categoryName = activeCategory.name; // Extracting category name
+
+      const res = await updateDesignEffort(
+        updatedName,
+        updatedDescription,
+        categoryName,
+        effort_id
+      );
+
+      if (res.status) {
+        setActiveSubTab({
+          ...activeSubTab,
+          title: updatedName,
+          description: updatedDescription,
+        });
+        setEditMode(false);
+      } else {
+        console.error("Failed to update sub-tab");
+      }
+    } catch (error) {
+      console.error("Error updating sub-tab:", error);
+    }
+  };
+
+  const handleCancelClick = () => {
+    setEditMode(false);
   };
 
   return (
     <>
       <div className="wrapper-company">
-        {/* Sidebar for main tabs */}
-        <div className="company-sidebar ">
-          <div
-            className="d-flex align-items-center w-100 justify-content-between"
-            onClick={toggleDropdown}
-          >
-            <h1 className="company-setup-heading weight-600">Company setup</h1>
-            <div className="cursor-pointer">
-              <img
-                src="/assets/images/mark/second-plus.svg"
-                alt="select-icon"
-              />
-            </div>
+        <div className="company-sidebar">
+          <div className="d-flex align-items-center w-100 justify-content-between">
+            <h1 className="company-setup-heading weight-600">Categories</h1>
+            {isAdmin && (
+              <div className="cursor-pointer" onClick={toggleDropdown}>
+                <img
+                  src="/assets/images/mark/second-plus.svg"
+                  alt="select-icon"
+                />
+              </div>
+            )}
           </div>
-
-          {dropdownOpen && <div className="invitation-content"></div>}
-
-          <ul>
-            {tabs.map((tab) => (
-              <li
-                key={tab.name}
-                className={`d-flex align-items-center justify-content-start gap-2 ${
-                  activeTab === tab.name ? "active" : ""
-                }`}
-                onClick={() => handleTabClick(tab)}
-              >
-                <h2 className="menutext f-16 weight-500">{tab.name}</h2>
-              </li>
-            ))}
-          </ul>
+          {loading ? (
+            <></>
+          ) : (
+            <ul>
+              {categoriesList.map((category) => (
+                <li
+                  key={category.id}
+                  className={`d-flex align-items-center justify-content-start gap-2 ${
+                    activeCategory && activeCategory.id === category.id
+                      ? "active"
+                      : ""
+                  }`}
+                  onClick={() => handleCategoryClick(category)}
+                >
+                  <h2 className="menutext f-16 weight-500">{category.name}</h2>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-
-        {/* Main content area */}
-        <div className="sub-content ">
+        <div className="sub-content">
           <h1 className="company-setup-heading weight-600 mb-20">
-            {activeTab}
+            {activeCategory ? activeCategory.name : ""}
           </h1>
-          <div className="d-flex gap-2 " style={{ flex: "1 1 0" }}>
+          <div className="d-flex gap-2" style={{ flex: "1 1 0" }}>
             <div className="sub_category">
               <div className="d-flex align-items-center w-100 justify-content-between mb-20">
                 <h1 className="company-setup-heading weight-600">Efforts</h1>
-                <div className="cursor-pointer">
-                  <img
-                    src="/assets/images/mark/second-plus.svg"
-                    alt="select-icon"
-                  />
-                </div>
+                {isAdmin && (
+                  <div
+                    className="cursor-pointer"
+                    onClick={toggleDesignDropdown}
+                  >
+                    <img
+                      src="/assets/images/mark/second-plus.svg"
+                      alt="select-icon"
+                    />
+                  </div>
+                )}
               </div>
               <ul className="list-unstyled">
-                {getActiveTabData().subTabs.map((subTab) => (
-                  <li
-                    key={subTab}
-                    className={` ${activeSubTab === subTab ? "active" : ""}`}
-                    onClick={() => handleSubTabClick(subTab)}
-                  >
-                    <h3 className="menutext f-16 weight-400">{subTab}</h3>
-                  </li>
-                ))}
+                {initialDesignEfforts.length > 0 ? (
+                  initialDesignEfforts.map((subTab) => (
+                    <li
+                      key={subTab.id}
+                      className={`${
+                        activeSubTab && activeSubTab.id === subTab.id
+                          ? "active"
+                          : ""
+                      }`}
+                      onClick={() => handleSubTabClick(subTab)}
+                    >
+                      <h3 className="menutext f-16 weight-400">
+                        {subTab.title}
+                      </h3>
+                    </li>
+                  ))
+                ) : (
+                  <li> </li>
+                )}
               </ul>
             </div>
-
-            {/* Content area */}
             <div className="content-area w-100 d-flex gap-4 flex-column">
               <div className="content-tabs">
                 <button
@@ -119,32 +214,98 @@ const EffortMapping = () => {
                 >
                   Definition
                 </button>
-                <button
-                  className={`content-tab weight-500 ${
-                    activeContentTab === "Product Outcomes" ? "active" : ""
-                  }`}
-                  onClick={() => handleContentTabClick("Product Outcomes")}
-                >
-                  Product Outcomes
-                </button>
               </div>
               <div className="content">
-                {activeContentTab === "Definition" ? (
-                  <p>Content for {activeSubTab} - Definition</p>
-                ) : (
-                  <p>Content for {activeSubTab} - Product Outcomes</p>
+                {activeSubTab && activeContentTab === "Definition" && (
+                  <>
+                    {editMode ? (
+                      <>
+                        <div className="d-flex flex-column w-100 content-defination-area">
+                          <div className="d-flex align-item-center justify-content-between w-100">
+                            <input
+                              className="input-company mb-20 b-deepsea"
+                              type="text"
+                              value={editTitle}
+                              onChange={(e) => setEditTitle(e.target.value)}
+                            />
+
+                            {isAdmin && (
+                              <button
+                                onClick={handleCancelClick}
+                                className="edit-button"
+                              >
+                                <img
+                                  src="/assets/images/mark/close_btn.png"
+                                  alt="edit"
+                                />
+                              </button>
+                            )}
+                          </div>
+                          <textarea
+                            className="textarea-input h-300 b-deepsea mb-20"
+                            value={editDescription}
+                            onChange={(e) => setEditDescription(e.target.value)}
+                          />
+                          <button
+                            onClick={handleUpdateClick}
+                            className="send_btn"
+                          >
+                            <span>Update</span>
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="d-flex flex-column w-100 content-defination-area">
+                          <div className="d-flex w-100 align-items-center justify-content-between">
+                            <h1 className="defination-heading">
+                              {activeSubTab.title}
+                            </h1>
+                            <button
+                              onClick={handleEditClick}
+                              className="edit-button"
+                            >
+                              <img
+                                src="/assets/images/mark/edit.svg"
+                                alt="edit"
+                              />
+                            </button>
+                          </div>
+                          <div className="defination-text">
+                            <ul className="defination-text">
+                              {activeSubTab.description
+                                .split("\n")
+                                .map((line, index) => {
+                                  if (/^\d+\.(?!\s)/.test(line)) {
+                                    line = line.replace(/^(\d+\.)\s*/, "$1 ");
+                                  }
+                                  return <li key={index}>{line}</li>;
+                                })}
+                            </ul>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </>
                 )}
               </div>
             </div>
           </div>
         </div>
       </div>
+      <EffortModel
+        toggledesignDropdown={toggleDesignDropdown}
+        designdropdownOpen={designdropdownOpen}
+        activeTab={activeCategory ? activeCategory.name : ""}
+        refreshCategories={fetchCategories}
+      />
       <MapModel
         dropdownOpen={dropdownOpen}
         toggleDropdown={toggleDropdown}
-        tabs={tabs}
-        activeTab={activeTab}
-        handleTabClick={handleTabClick}
+        tabs={categoriesList}
+        activeTab={activeCategory ? activeCategory.name : ""}
+        handleTabClick={handleCategoryClick}
+        refreshCategories={fetchCategories}
       />
     </>
   );

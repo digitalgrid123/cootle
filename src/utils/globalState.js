@@ -27,10 +27,10 @@ export const useGlobalCompany = () => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   // Reset the ref if the company ID changes
-  //   isCurrentCompanyUpdated.current = false;
-  // }, [company?.id]);
+  useEffect(() => {
+    // Reset the ref if the company ID changes
+    isCurrentCompanyUpdated.current = false;
+  }, [company?.id]);
 
   useEffect(() => {
     if (company && company.id && !isCurrentCompanyUpdated.current) {

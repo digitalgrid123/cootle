@@ -13,7 +13,7 @@ const Edit = () => {
       <div className="mb-20 ">
         <Title title="Company" />
       </div>
-      <div className="invitation-content">
+      <div className="box-content">
         <div className="wrapper-company">
           <div className="company-sidebar h-100">
             <h1 className="company-setup-heading weight-600">Company setup</h1>

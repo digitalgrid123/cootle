@@ -74,6 +74,63 @@ export const API_ROUTER = {
   //REMOVE MEMBER
   REMOVE_MEMBER: getNormalRoute("members/remove"),
 
+  //Categories
+  GET_CATEGORIES: getNormalRoute("categories"),
+  //Mapping Listing
+  MAPPING_LIST: getNormalRoute("mapping/list"),
+
+  //CREATE_MAPPING
+  CREATE_MAPPING: getNormalRoute("mapping/create"),
+
+  //MAPPING_UPDATE
+  MAPPING_UPDATE: getNormalRoute("mapping/update"),
+
+  //DESIGN EFFORT
+  DESIGN_EFFORT: getNormalRoute("design-efforts"),
+
+  //CATEGORY CREATE
+  CREATE_CATEGORY: getNormalRoute("category/create"),
+
+  //DESGIN EFFORT CREATED
+  CREATE_DESIGN_EFFORT: getNormalRoute("design-effort/create"),
+
+  //GET SINGLE CATEGORY
+  GET_SINGLE_CATEGORY: getNormalRoute("category"),
+
+  //UPDATE DESIGN EFFORT CATEGORY
+  UPDATE_DESIGN_EFFORT: getNormalRoute("design-effort/update"),
+
+  //Default Value Mapping
+
+  DEFAULT_MAPPING: getNormalRoute("default-mappings"),
+
+  //RESET MAPPING FUNCTIONALITY
+  RESET_MAPPING: getNormalRoute("reset-mapping-data"),
+
+  //CREATE PROJECT
+  CREATE_PROJECT: getNormalRoute("project/create"),
+
+  //CREATE PURPOSE
+  CREATE_PURPOSE: getNormalRoute("purpose/create"),
+
+  //Project list
+  PROJECT_LIST: getNormalRoute("projects"),
+
+  PURPOSE_LIST: (project_id) =>
+    getNormalRoute(`projects/${project_id}/purposes`),
+
+  //DELETE CATEGORY
+  DELETE_CATEGORY: getNormalRoute("category/remove"),
+
+  //ADD EFFORT BY MAPPING
+  ADD_EFFORT_BY_MAPPING: getNormalRoute("mapping/design-effort/add"),
+
+  //REMOVE EFFORT BY MAPPING
+  REMOVE_EFFORT_BY_MAPPING: getNormalRoute("mapping/design-effort/remove"),
+
+  //RETERIVE EFFORT BY ID
+  RETERIVE_EFFORT_BY_IDS: getNormalRoute("design-effort/retrieve"),
+
   //USER INFOR
   USER_INFO: getUserRoute("info"),
 

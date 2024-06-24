@@ -4,32 +4,37 @@ import { useAuth } from "@/hooks";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import CompanyLogo from "@/components/Dashboard/CompanyLogo";
 import CompanyListItem from "@/components/Dashboard/CompanyListItem";
+import ProjectListItem from "@/components/Dashboard/ProjectListItem";
 import { setSelectedCompany, useGlobalCompany } from "@/utils/globalState";
 import CreateNewModel from "@/components/shared/model/CreateNewModel";
 import InvitationList from "@/components/shared/model/InvitationList";
 import { USER_ROLES } from "@/constants/keywords";
 import { getData } from "@/utils/storage";
+import NewProjectModal from "@/components/shared/model/NewProjectModal";
+import classNames from "classnames";
 
 const Menus = () => {
-  const { companylist } = useAuth();
+  const { companylist, projectlist } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const dropdownRef = useRef(null);
-  const [list, setList] = useState([]);
+  const [companyList, setCompanyList] = useState([]);
+  const [projectList, setProjectList] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
-  const [showInvite, setShowInvite] = useState(false);
   const selectedCompany = useGlobalCompany();
   const isAdmin = getData(USER_ROLES.SUPER_ADMIN);
+  const [showPopup, setShowPopup] = useState(false);
+  const [showInvite, setShowInvite] = useState(false);
+  const [showProjectPopup, setShowProjectPopup] = useState(false);
+  const [activeMenuItem, setActiveMenuItem] = useState("");
 
   useEffect(() => {
     const fetchCompanyList = async () => {
       try {
         const res = await companylist();
         if (res?.status) {
-          setList(res.data);
-          const lastCompany = res.data[res.data.length - 1];
-          setSelectedCompany(lastCompany);
+          setCompanyList(res.data);
+          setSelectedCompany(res.data[res.data.length - 1]);
         } else {
           console.error("Failed to fetch company list");
         }
@@ -39,7 +44,23 @@ const Menus = () => {
     };
 
     fetchCompanyList();
-  }, [companylist]);
+  }, [companylist, setSelectedCompany]);
+
+  const fetchProjectList = async () => {
+    try {
+      const res = await projectlist();
+      if (res?.status) {
+        setProjectList(res.data);
+      } else {
+        console.error("Failed to fetch project list");
+      }
+    } catch (err) {
+      console.error("Error fetching project list:", err);
+    }
+  };
+  useEffect(() => {
+    fetchProjectList();
+  }, [projectlist]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -62,39 +83,31 @@ const Menus = () => {
 
   const handleSelect = useCallback(
     (path) => {
+      setActiveMenuItem(path);
       router.push(path);
     },
     [router]
   );
-  useEffect(() => {
-    if (selectedCompany) {
-      setDropdownOpen(false); // Close the dropdown when a company is selected
-    }
-  }, [selectedCompany]);
 
   const handleCompanySelect = useCallback(
     (selectedCompany) => {
       setSelectedCompany(selectedCompany);
-
-      router.push(PATH_DASHBOARD.root); // Navigate to the Value Mapping screen
+      setActiveMenuItem(PATH_DASHBOARD.root);
+      router.push(PATH_DASHBOARD.root);
     },
-    [router]
+    [router, setSelectedCompany]
   );
 
   const toggleDropdown = useCallback(() => {
     setDropdownOpen((prev) => !prev);
   }, []);
 
-  const handleCompanyCreate = useCallback(() => {
-    setShowPopup((prev) => !prev);
-  }, []);
-
-  const handleShowInvite = useCallback(() => {
-    setShowInvite((prev) => !prev);
+  const togglePopup = useCallback((setter) => {
+    setter((prev) => !prev);
   }, []);
 
   const renderCompanyList = () =>
-    list
+    companyList
       .slice()
       .reverse()
       .map((company) => (
@@ -106,13 +119,35 @@ const Menus = () => {
         />
       ));
 
+  const renderProjectList = () => {
+    return projectList.map((project) => {
+      const projectPath = PATH_DASHBOARD.project.view(project.id, project.name);
+      // Extract the base path without query parameters
+      const projectBasePath = projectPath.split("?")[0];
+      const isActive = pathname.startsWith(projectBasePath);
+      return (
+        <ProjectListItem
+          key={project.id}
+          project={project}
+          isActive={isActive}
+          onClick={(id) =>
+            handleSelect(PATH_DASHBOARD.project.view(id, project.name))
+          }
+        />
+      );
+    });
+  };
+
   return (
     <>
       <ul className="metismenu border_bottom_Light" id="menu">
         {selectedCompany ? (
           <li
             onClick={toggleDropdown}
-            className="selected-dropdown d-flex align-items-center justify-content-start gap-2 cursor-pointer relative w-100"
+            className={classNames(
+              "selected-dropdown d-flex align-items-center justify-content-start gap-2 cursor-pointer relative w-100",
+              { "active-dropdown": dropdownOpen }
+            )}
           >
             <div className="d-flex align-items-center justify-content-between w-100">
               <div className="d-flex align-items-center gap-2">
@@ -135,15 +170,16 @@ const Menus = () => {
               <ul ref={dropdownRef} className="dropdown">
                 <h1 className="weight-500">Switch Companies</h1>
                 <div
-                  className={`scroll-property border_bottom_shadowy ${
-                    list.length > 2 ? "scroll-height" : ""
-                  }`}
+                  className={classNames(
+                    "scroll-property border_bottom_shadowy",
+                    { "scroll-height": companyList.length > 2 }
+                  )}
                 >
                   {renderCompanyList()}
                 </div>
                 <div
                   className="create-container d-flex align-items-center gap-2 border_bottom_shadowy"
-                  onClick={handleCompanyCreate}
+                  onClick={() => togglePopup(setShowPopup)}
                 >
                   <img
                     src="/assets/images/mark/second-plus.svg"
@@ -163,7 +199,7 @@ const Menus = () => {
                   <a
                     className="show-invitation"
                     href="#"
-                    onClick={handleShowInvite}
+                    onClick={() => togglePopup(setShowInvite)}
                   >
                     <span className="show-invitation-text weight-500">
                       See invitations
@@ -180,7 +216,7 @@ const Menus = () => {
             )}
           </li>
         ) : (
-          <li className="d-flex align-items-center justify-content-start gap-2 cursor-pointer">
+          <li className="d-flex align-items-center justify-content-start gap-2 cursor-pointer mb-20">
             <CompanyLogo logo={null} name="No company" />
             <h4 className="company-name weight-500">No company</h4>
           </li>
@@ -188,50 +224,76 @@ const Menus = () => {
         <div className="d-flex w-100 flex-column gap-3">
           {isAdmin && (
             <li
-              className={`d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100 padding-lr-sixteen ${
-                pathname === PATH_DASHBOARD.createcompany.root ||
-                pathname === PATH_DASHBOARD.createcompany.edit
-                  ? "navigate-select"
-                  : ""
-              }`}
+              className={classNames(
+                "d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100 padding-lr-sixteen",
+                {
+                  "navigate-select":
+                    activeMenuItem === PATH_DASHBOARD.createcompany.root ||
+                    pathname === PATH_DASHBOARD.createcompany.edit,
+                }
+              )}
               onClick={() => handleSelect(PATH_DASHBOARD.createcompany.root)}
             >
-              <img src="/assets/images/mark/company.svg" alt="company-icon" />
+              <img
+                src={
+                  activeMenuItem === PATH_DASHBOARD.createcompany.root ||
+                  pathname === PATH_DASHBOARD.createcompany.edit
+                    ? "/assets/images/mark/company.svg"
+                    : "/assets/images/mark/inactive-company.svg"
+                }
+                alt="company-icon"
+              />
               <h4 className="mapping f-16 weight-500">Company</h4>
             </li>
           )}
           <li
-            className={`d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100 padding-lr-sixteen ${
-              pathname === PATH_DASHBOARD.root ? "navigate-select" : ""
-            }`}
+            className={classNames(
+              "d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100 padding-lr-sixteen",
+              { "navigate-select": activeMenuItem === PATH_DASHBOARD.root }
+            )}
             onClick={() => handleSelect(PATH_DASHBOARD.root)}
           >
             <img
-              src="/assets/images/mark/value-mapping.svg"
+              src={
+                activeMenuItem === PATH_DASHBOARD.root
+                  ? "/assets/images/mark/value-mapping-active.svg"
+                  : "/assets/images/mark/value-mapping-inactive.svg"
+              }
               alt="Value Mapping"
             />
             <h4 className="mapping f-16 weight-500">Value mapping</h4>
           </li>
         </div>
       </ul>
-      <ul className="metismenu-projects" id="menu">
-        <li className="d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100">
-          <img src="/assets/images/mark/plus.svg" alt="New Project" />
-          <h4 className="project weight-500">New Project</h4>
-        </li>
+      <ul className="projects-menu" id="menu">
+        {isAdmin && (
+          <li
+            className="d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100 mb-16"
+            onClick={() => togglePopup(setShowProjectPopup)}
+          >
+            <img src="/assets/images/mark/plus.svg" alt="New Project" />
+            <h4 className="project weight-500">New Project</h4>
+          </li>
+        )}
+        {renderProjectList()}
       </ul>
       <div>
         <CreateNewModel
-          onClose={handleCompanyCreate}
+          onClose={() => togglePopup(setShowPopup)}
           showPopup={showPopup}
           setShowPopup={setShowPopup}
           contentRef={dropdownRef}
         />
-
         <InvitationList
-          onClose={handleShowInvite}
+          onClose={() => togglePopup(setShowInvite)}
           showInvite={showInvite}
           setShowInvite={setShowInvite}
+        />
+        <NewProjectModal
+          onClose={() => togglePopup(setShowProjectPopup)}
+          showProjectPopup={showProjectPopup}
+          setShowProjectPopup={setShowProjectPopup}
+          fetchProjectList={fetchProjectList}
         />
       </div>
     </>

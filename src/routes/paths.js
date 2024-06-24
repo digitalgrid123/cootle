@@ -23,6 +23,12 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, "/createcompany"),
     edit: path(ROOTS_DASHBOARD, "/edit"),
   },
+  project: {
+    root: path(ROOTS_DASHBOARD, "/project"),
+
+    view: (id, name) =>
+      path(ROOTS_DASHBOARD, `/project/${id}?name=${encodeURIComponent(name)}`),
+  },
 
   surgeries: {
     root: path(ROOTS_DASHBOARD, "/surgeries"),

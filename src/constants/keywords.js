@@ -58,6 +58,7 @@ export const STORAGE_KEYS = {
   AUTH_REFRESH_TOKEN: "@refreshToken",
   SETTINGS: "@settings",
   SESSION: "@SESSION",
+  CSRFTOKEN: "@CSRF",
 };
 
 export const USER_ROLES = {
