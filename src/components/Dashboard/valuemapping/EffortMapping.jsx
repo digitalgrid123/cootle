@@ -3,6 +3,7 @@ import EffortModel from "@/components/shared/model/EffortModel";
 import MapModel from "@/components/shared/model/MapModel";
 import { useAuth } from "@/hooks";
 import { useGlobalCompany } from "@/utils/globalState";
+import { Loader } from "@/components/shared/loader";
 
 const EffortMapping = ({ reset, isAdmin }) => {
   const { categories, getSinglecategory, updateDesignEffort } = useAuth();
@@ -143,7 +144,9 @@ const EffortMapping = ({ reset, isAdmin }) => {
             )}
           </div>
           {loading ? (
-            <></>
+            <div>
+              <Loader />
+            </div>
           ) : (
             <ul>
               {categoriesList.map((category) => (
@@ -296,7 +299,7 @@ const EffortMapping = ({ reset, isAdmin }) => {
       <EffortModel
         toggledesignDropdown={toggleDesignDropdown}
         designdropdownOpen={designdropdownOpen}
-        activeTab={activeCategory ? activeCategory.name : ""}
+        activeTab={activeCategory ? activeCategory.id : ""}
         refreshCategories={fetchCategories}
       />
       <MapModel

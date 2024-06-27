@@ -45,10 +45,6 @@ export const useGlobalCompany = () => {
         .catch((error) => {
           console.error("API call failed:", error);
         });
-    } else {
-      if (company) {
-        console.error("Company ID is required");
-      }
     }
   }, [company, companyset]);
 

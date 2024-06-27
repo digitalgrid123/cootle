@@ -4,8 +4,8 @@ import useOutsideClick from "@/hooks/useOutsideClick";
 import React, { useRef, useState } from "react";
 
 const NewProjectModal = ({
-  showprojectPopup,
-  setprojectShowPopup,
+  showProjectPopup,
+  setShowProjectPopup,
   fetchProjectList,
 }) => {
   const overlayRef = useRef(null);
@@ -14,8 +14,8 @@ const NewProjectModal = ({
   const { toaster } = useToaster();
 
   useOutsideClick(overlayRef, () => {
-    if (showprojectPopup) {
-      setprojectShowPopup(false);
+    if (showProjectPopup) {
+      setShowProjectPopup(false);
     }
   });
 
@@ -34,7 +34,7 @@ const NewProjectModal = ({
 
       if (res.status) {
         toaster(res.message, TOAST_TYPES.SUCCESS);
-        setprojectShowPopup(false);
+        setShowProjectPopup(false);
         fetchProjectList();
       }
     } catch (error) {
@@ -49,7 +49,7 @@ const NewProjectModal = ({
   };
 
   return (
-    showprojectPopup && (
+    showProjectPopup && (
       <div ref={overlayRef} className="invitation-overlay padding-company">
         <div className="company-content w-100 h-100">
           <div className="box-invitation">
@@ -60,7 +60,7 @@ const NewProjectModal = ({
               <div className="d-flex align-items-center gap-3">
                 <button
                   className="close_effort_btn"
-                  onClick={() => setprojectShowPopup(false)}
+                  onClick={() => setShowProjectPopup(false)}
                 >
                   <span>Close</span>
                 </button>

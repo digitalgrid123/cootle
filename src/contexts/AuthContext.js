@@ -767,11 +767,11 @@ function AuthProvider({ children }) {
       }
     });
   };
-  const createDesignEffort = (category, description, title) => {
+  const createDesignEffort = (category_id, description, title) => {
     return new Promise(async (resolve) => {
       try {
         const res = await axiosPost(API_ROUTER.CREATE_DESIGN_EFFORT, {
-          category,
+          category_id,
           description,
           title,
         });
@@ -1026,31 +1026,142 @@ function AuthProvider({ children }) {
       }
     });
   };
-  const createPurpose = async (name) => {
+
+  const createPurpose = async (
+    title,
+    description,
+    project_id,
+    desired_outcomes,
+    design_efforts
+  ) => {
+    try {
+      const res = await axiosPost(API_ROUTER.CREATE_PURPOSE, {
+        title,
+        description,
+        project_id,
+        desired_outcomes,
+        design_efforts,
+      });
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+          message: "Purpose added successfully",
+        };
+      } else {
+        return {
+          status: false,
+          data: "",
+          message: "Failed to add purpose",
+        };
+      }
+    } catch (error) {
+      console.error("Error creating purpose:", error);
+      return {
+        status: false,
+        data: "",
+        message: "An error occurred while adding purpose",
+      };
+    }
+  };
+
+  const createProjecteffort = async (
+    project_id,
+    links,
+    purpose,
+    outcome,
+    design_effort
+  ) => {
+    try {
+      const res = await axiosPost(API_ROUTER.CREATE_PROJECT_EFFORT, {
+        project_id,
+        links,
+        purpose,
+        outcome,
+        design_effort,
+      });
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+          message: "Purpose added successfully",
+        };
+      } else {
+        return {
+          status: false,
+          data: "",
+          message: "Failed to add purpose",
+        };
+      }
+    } catch (error) {
+      console.error("Error creating purpose:", error);
+      return {
+        status: false,
+        data: "",
+        message: "An error occurred while adding purpose",
+      };
+    }
+  };
+
+  const updatePurpose = async (
+    title,
+    description,
+    purpose_id,
+    desired_outcomes,
+    design_efforts
+  ) => {
+    try {
+      const res = await axiosPatch(API_ROUTER.EDIT_PURPOSE, {
+        title,
+        description,
+        purpose_id,
+        desired_outcomes,
+        design_efforts,
+      });
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return {
+          status: false,
+          data: "",
+        };
+      }
+    } catch (error) {
+      console.error("Error creating purpose:", error);
+      return {
+        status: false,
+        data: "",
+        message: "An error occurred while adding purpose",
+      };
+    }
+  };
+  const removePurpose = async (purpose_id) => {
     return new Promise(async (resolve) => {
       try {
-        const res = await axiosPost(API_ROUTER.CREATE_PURPOSE, {
-          name,
-        });
-
+        const res = await axiosDelete(API_ROUTER.REMOVE_PURPOSE, {
+          purpose_id,
+        }); // Pass memberId in the request payload
         if (res.status) {
           resolve({
             status: true,
             data: res.data,
-            message: "Purpose added successfully",
+            message: "Member Removed",
           });
         } else {
-          resolve({
-            status: false,
-            data: "",
-            message: "Failed to add purpose",
-          });
+          resolve({ status: false, data: "" });
         }
       } catch (error) {
         resolve({ status: false, data: "" });
       }
     });
   };
+
   return (
     <AuthContext.Provider
       value={{
@@ -1096,6 +1207,10 @@ function AuthProvider({ children }) {
         createProject,
         projectlist,
         purposelist,
+        createPurpose,
+        updatePurpose,
+        removePurpose,
+        createProjecteffort,
       }}
     >
       {children}

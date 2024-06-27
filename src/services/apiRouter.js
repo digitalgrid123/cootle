@@ -113,6 +113,15 @@ export const API_ROUTER = {
   //CREATE PURPOSE
   CREATE_PURPOSE: getNormalRoute("purpose/create"),
 
+  //CREATE PROJECT EFFORT
+  CREATE_PROJECT_EFFORT: getNormalRoute("project-effort/create"),
+
+  //Edit PURPOSE
+  EDIT_PURPOSE: getNormalRoute("purpose/edit"),
+
+  //REMOVE PURPOSE
+  REMOVE_PURPOSE: getNormalRoute("purpose/remove"),
+
   //Project list
   PROJECT_LIST: getNormalRoute("projects"),
 

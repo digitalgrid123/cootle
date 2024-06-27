@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks"; // Adjust import path as per your project str
 import CreateModel from "@/components/shared/model/CreateModel";
 import DesignEffortModel from "@/components/shared/model/DesignEffortModel";
 import { useGlobalCompany } from "@/utils/globalState";
+import { Loader } from "@/components/shared/loader";
 
 const TABS = {
   DEFINITION: "Definition",
@@ -15,30 +16,25 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
   const [activeContentTab, setActiveContentTab] = useState(TABS.DEFINITION);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [objectives, setObjectives] = useState([]);
-
-  const [activeProductOutcome, setActiveProductOutcome] = useState(null); // State to track currently active design effort
+  const [activeProductOutcome, setActiveProductOutcome] = useState(null);
   const [designdropdownOpen, setDesignDropdownOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editedTitle, setEditedTitle] = useState("");
   const [editedDescription, setEditedDescription] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [reteriveData, setRetrieveData] = useState([]);
   const selectedCompany = useGlobalCompany();
 
-  const toggleDropdown = useCallback(
-    () => setDropdownOpen((prev) => !prev),
-    []
-  );
-  const toggledesignDropdown = useCallback(
-    () => setDesignDropdownOpen((prev) => !prev),
-    []
-  );
+  const toggleDropdown = useCallback(() => setDropdownOpen((prev) => !prev), []);
+  const toggledesignDropdown = useCallback(() => setDesignDropdownOpen((prev) => !prev), []);
 
   const handleTabClick = useCallback((obj) => {
     setActiveTab(obj);
     setActiveContentTab(TABS.DEFINITION);
     setEditMode(false);
+
+    // Store active tab's ID in localStorage to persist across page refresh
+    localStorage.setItem('activeProductOutcomesTabId', obj.id);
   }, []);
 
   const handleContentTabClick = useCallback((contentTab) => {
@@ -74,28 +70,25 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
         // Fetch design efforts for each objective
         const designEffortPromises = objectivesData.map(async (obj) => {
           if (obj.design_efforts.length > 0) {
-            const designEffortData = await fetchDesignEfforts(
-              obj.design_efforts
-            );
+            const designEffortData = await fetchDesignEfforts(obj.design_efforts);
             return { ...obj, design_efforts: designEffortData };
           }
           return obj;
         });
 
-        const objectivesWithDesignEfforts = await Promise.all(
-          designEffortPromises
-        );
+        const objectivesWithDesignEfforts = await Promise.all(designEffortPromises);
 
         setObjectives(objectivesWithDesignEfforts);
 
-        // Set the first objective as active by default
-        setActiveTab(objectivesWithDesignEfforts[0]);
+        // Get active tab id from localStorage if available
+        const storedActiveTabId = localStorage.getItem('activeProductOutcomesTabId');
+        // Set the active tab based on stored ID or default to the first objective
+        const activeTabToSet = objectivesWithDesignEfforts.find(obj => obj.id === Number(storedActiveTabId)) || objectivesWithDesignEfforts[0];
+        setActiveTab(activeTabToSet);
 
-        // Set the first design effort of the first objective as active
-        if (objectivesWithDesignEfforts[0]?.design_efforts.length > 0) {
-          setActiveProductOutcome(
-            objectivesWithDesignEfforts[0].design_efforts[0].title
-          );
+        // Set the first design effort of the active tab as active
+        if (activeTabToSet?.design_efforts.length > 0) {
+          setActiveProductOutcome(activeTabToSet.design_efforts[0].title);
         }
       } else {
         setError("No data found in the response");
@@ -105,13 +98,7 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
     } finally {
       setLoading(false);
     }
-  }, [
-    mappingList,
-    selectedMapping,
-    fetchDesignEfforts,
-    selectedCompany,
-    reset,
-  ]);
+  }, [mappingList, selectedMapping, fetchDesignEfforts, selectedCompany, reset]);
 
   const handleModelAdded = useCallback(async () => {
     await fetchObjectives();
@@ -140,10 +127,8 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
     };
 
     // Optimistic UI update
-    setObjectives((prevObjectives) =>
-      prevObjectives.map((obj) =>
-        obj.id === activeTab.id ? updatedObjective : obj
-      )
+    setObjectives(prevObjectives =>
+      prevObjectives.map(obj => (obj.id === activeTab.id ? updatedObjective : obj))
     );
     setActiveTab(updatedObjective);
 
@@ -169,21 +154,14 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
     } finally {
       setEditMode(false);
     }
-  }, [
-    activeTab,
-    editedTitle,
-    editedDescription,
-    selectedMapping,
-    updatemapping,
+  }, [activeTab, editedTitle, editedDescription, selectedMapping, updatemapping, objectives]);
+
+  const activeTabContent = useMemo(() => objectives.find(obj => obj.id === activeTab?.id), [
     objectives,
+    activeTab,
   ]);
 
-  const activeTabContent = useMemo(
-    () => objectives.find((obj) => obj.id === activeTab?.id),
-    [objectives, activeTab]
-  );
-
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div><Loader/></div>;
   if (error) return <div>{error}</div>;
 
   return (
@@ -194,16 +172,13 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
             <h1 className="company-setup-heading weight-600">Outcomes</h1>
             {isAdmin && (
               <div className="cursor-pointer" onClick={toggleDropdown}>
-                <img
-                  src="/assets/images/mark/second-plus.svg"
-                  alt="select-icon"
-                />
+                <img src="/assets/images/mark/second-plus.svg" alt="select-icon" />
               </div>
             )}
           </div>
 
           <ul>
-            {objectives.map((obj) => (
+            {objectives.map(obj => (
               <li
                 key={obj.id}
                 className={`d-flex align-items-center justify-content-start gap-2 ${
@@ -218,9 +193,7 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
         </div>
 
         <div className="sub-content">
-          <h1 className="company-setup-heading weight-600 mb-20">
-            {activeTab?.title}
-          </h1>
+          <h1 className="company-setup-heading weight-600 mb-20">{activeTab?.title}</h1>
 
           <div className="content-area w-100 d-flex gap-4 flex-column h-100">
             <div className="content-tabs">
@@ -258,10 +231,7 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
                         onClick={handleCloseButtonClick}
                         className="edit-button"
                       >
-                        <img
-                          src="/assets/images/mark/close_btn.png"
-                          alt="edit"
-                        />
+                        <img src="/assets/images/mark/close_btn.png" alt="edit" />
                       </button>
                     </div>
                     <textarea
@@ -288,14 +258,12 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
                     </div>
                     <div className="defination-text">
                       <ul className="defination-text">
-                        {activeTab?.description
-                          .split("\n")
-                          .map((line, index) => {
-                            if (/^\d+\.(?!\s)/.test(line)) {
-                              line = line.replace(/^(\d+\.)\s*/, "$1 ");
-                            }
-                            return <li key={index}>{line}</li>;
-                          })}
+                        {activeTab?.description.split("\n").map((line, index) => {
+                          if (/^\d+\.(?!\s)/.test(line)) {
+                            line = line.replace(/^(\d+\.)\s*/, "$1 ");
+                          }
+                          return <li key={index}>{line}</li>;
+                        })}
                       </ul>
                     </div>
                   </div>
@@ -304,17 +272,9 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
                 <>
                   <div className="product-outcome-tabs h-100 ">
                     <div className="d-flex align-items-center w-100 justify-content-between mb-20">
-                      <h1 className="company-setup-heading weight-600">
-                        Efforts
-                      </h1>
-                      <div
-                        className="cursor-pointer"
-                        onClick={toggledesignDropdown}
-                      >
-                        <img
-                          src="/assets/images/mark/second-plus.svg"
-                          alt="select-icon"
-                        />
+                      <h1 className="company-setup-heading weight-600">Efforts</h1>
+                      <div className="cursor-pointer" onClick={toggledesignDropdown}>
+                        <img src="/assets/images/mark/second-plus.svg" alt="select-icon" />
                       </div>
                     </div>
 
@@ -324,17 +284,11 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
                           <li
                             key={designEffort.id}
                             className={`product-outcome-tab weight-500 d-flex align-items-center justify-content-start gap-2 ${
-                              activeProductOutcome === designEffort.title
-                                ? "active"
-                                : ""
+                              activeProductOutcome === designEffort.title ? "active" : ""
                             }`}
-                            onClick={() =>
-                              handleProductOutcomeClick(designEffort)
-                            }
+                            onClick={() => handleProductOutcomeClick(designEffort)}
                           >
-                            <h2 className="menutext f-16 weight-500">
-                              {designEffort.title}
-                            </h2>
+                            <h2 className="menutext f-16 weight-500">{designEffort.title}</h2>
                           </li>
                         ))
                       ) : (
@@ -345,28 +299,23 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
                   {activeProductOutcome && (
                     <div className="d-flex flex-column w-100">
                       <div>
-                        <h1 className="defination-heading">Defination</h1>
+                        <h1 className="defination-heading">Definition</h1>
                       </div>
                       <div className="product-outcome-content content-defination-area w-100">
                         {activeTab.design_efforts
-                          .filter(
-                            (designEffort) =>
-                              designEffort.title === activeProductOutcome
-                          )
+                          .filter((designEffort) => designEffort.title === activeProductOutcome)
                           .map((designEffort) => (
                             <div key={designEffort.title}>
-                              {designEffort.description
-                                .split("\n")
-                                .map((line, index) => {
-                                  if (/^\d+\.(?!\s)/.test(line)) {
-                                    line = line.replace(/^(\d+\.)\s*/, "$1 ");
-                                  }
-                                  return (
-                                    <p key={index} className="defination-text">
-                                      {line}
-                                    </p>
-                                  );
-                                })}
+                              {designEffort.description.split("\n").map((line, index) => {
+                                if (/^\d+\.(?!\s)/.test(line)) {
+                                  line = line.replace(/^(\d+\.)\s*/, "$1 ");
+                                }
+                                return (
+                                  <p key={index} className="defination-text">
+                                    {line}
+                                  </p>
+                                );
+                              })}
                             </div>
                           ))}
                       </div>

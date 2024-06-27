@@ -1,7 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useAuth, addEffortByMapping, removeEffortByMapping } from "@/hooks";
+import { useAuth } from "@/hooks";
 
-const DesignEffortModel = ({ designdropdownOpen, toggledesignDropdown }) => {
+const DesignEffortModel = ({
+  designdropdownOpen,
+  toggledesignDropdown,
+  type,
+  categoryId,
+  fetchObjectives,
+  DesignEffort,
+}) => {
   const dropdownRef = useRef(null);
   const { designEffort, addEffortByMapping, removeEffortByMapping } = useAuth();
   const [design, setDesign] = useState([]);

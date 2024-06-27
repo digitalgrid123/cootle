@@ -81,7 +81,7 @@ const NewCreateModel = ({ activeTab, setShowPopup }) => {
     <>
       {activeTab === "settings" && (
         <>
-          <div className="setting-box d-flex align-item-center justify-content-between border_bottom_Semi-Transparent_navy ">
+          <div className="setting-box d-flex align-items-center justify-content-between border_bottom_Semi-Transparent_navy ">
             <h1 className="company-setup-heading weight-600">Settings</h1>
             <button className="save-btn" onClick={handleSave}>
               <span className="weight-600">Save</span>

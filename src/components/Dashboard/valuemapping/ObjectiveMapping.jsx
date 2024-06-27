@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks"; // Adjust import path as per your project str
 import CreateModel from "@/components/shared/model/CreateModel";
 import DesignEffortModel from "@/components/shared/model/DesignEffortModel";
 import { useGlobalCompany } from "@/utils/globalState";
+import { Loader } from "@/components/shared/loader";
 
 const TABS = {
   DEFINITION: "Definition",
@@ -15,8 +16,7 @@ const ObjectiveMapping = ({ selectedMapping, reset, isAdmin }) => {
   const [activeContentTab, setActiveContentTab] = useState(TABS.DEFINITION);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [objectives, setObjectives] = useState([]);
-
-  const [activeProductOutcome, setActiveProductOutcome] = useState(null); // State to track currently active design effort
+  const [activeProductOutcome, setActiveProductOutcome] = useState(null);
   const [designdropdownOpen, setDesignDropdownOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editedTitle, setEditedTitle] = useState("");
@@ -39,6 +39,8 @@ const ObjectiveMapping = ({ selectedMapping, reset, isAdmin }) => {
     setActiveTab(obj);
     setActiveContentTab(TABS.DEFINITION);
     setEditMode(false);
+    // Store activeTab's ID in localStorage to persist across page refresh
+    localStorage.setItem("activeTabId", obj.id);
   }, []);
 
   const handleContentTabClick = useCallback((contentTab) => {
@@ -88,14 +90,18 @@ const ObjectiveMapping = ({ selectedMapping, reset, isAdmin }) => {
 
         setObjectives(objectivesWithDesignEfforts);
 
-        // Set the first objective as active by default
-        setActiveTab(objectivesWithDesignEfforts[0]);
+        // Get active tab id from localStorage if available
+        const storedActiveTabId = localStorage.getItem("activeTabId");
+        // Set the active tab based on stored ID or default to the first objective
+        const activeTabToSet =
+          objectivesWithDesignEfforts.find(
+            (obj) => obj.id === Number(storedActiveTabId)
+          ) || objectivesWithDesignEfforts[0];
+        setActiveTab(activeTabToSet);
 
-        // Set the first design effort of the first objective as active
-        if (objectivesWithDesignEfforts[0]?.design_efforts.length > 0) {
-          setActiveProductOutcome(
-            objectivesWithDesignEfforts[0].design_efforts[0].title
-          );
+        // Set the first design effort of the active tab as active
+        if (activeTabToSet?.design_efforts.length > 0) {
+          setActiveProductOutcome(activeTabToSet.design_efforts[0].title);
         }
       } else {
         setError("No data found in the response");
@@ -183,7 +189,12 @@ const ObjectiveMapping = ({ selectedMapping, reset, isAdmin }) => {
     [objectives, activeTab]
   );
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
   if (error) return <div>{error}</div>;
 
   return (

@@ -11,7 +11,6 @@ import InvitationList from "@/components/shared/model/InvitationList";
 import { USER_ROLES } from "@/constants/keywords";
 import { getData } from "@/utils/storage";
 import NewProjectModal from "@/components/shared/model/NewProjectModal";
-import classNames from "classnames";
 
 const Menus = () => {
   const { companylist, projectlist } = useAuth();
@@ -22,6 +21,7 @@ const Menus = () => {
   const [projectList, setProjectList] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const selectedCompany = useGlobalCompany();
+
   const isAdmin = getData(USER_ROLES.SUPER_ADMIN);
   const [showPopup, setShowPopup] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
@@ -34,7 +34,13 @@ const Menus = () => {
         const res = await companylist();
         if (res?.status) {
           setCompanyList(res.data);
-          setSelectedCompany(res.data[res.data.length - 1]);
+          const savedCompany = localStorage.getItem("selectedCompany");
+          if (savedCompany) {
+            const parsedCompany = JSON.parse(savedCompany);
+            setSelectedCompany(parsedCompany);
+          } else {
+            setSelectedCompany(res.data[res.data.length - 1]);
+          }
         } else {
           console.error("Failed to fetch company list");
         }
@@ -44,9 +50,9 @@ const Menus = () => {
     };
 
     fetchCompanyList();
-  }, [companylist, setSelectedCompany]);
+  }, [companylist]);
 
-  const fetchProjectList = async () => {
+  const fetchProjectList = useCallback(async () => {
     try {
       const res = await projectlist();
       if (res?.status) {
@@ -57,10 +63,11 @@ const Menus = () => {
     } catch (err) {
       console.error("Error fetching project list:", err);
     }
-  };
+  }, [projectlist]);
+
   useEffect(() => {
     fetchProjectList();
-  }, [projectlist]);
+  }, [fetchProjectList, selectedCompany]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -79,6 +86,15 @@ const Menus = () => {
     if (!isAdmin && pathname === PATH_DASHBOARD.createcompany.root) {
       router.push(PATH_DASHBOARD.root);
     }
+
+    // Set the active menu item based on the current pathname
+    if (pathname.startsWith(PATH_DASHBOARD.createcompany.root)) {
+      setActiveMenuItem(PATH_DASHBOARD.createcompany.root);
+    } else if (pathname === PATH_DASHBOARD.root) {
+      setActiveMenuItem(PATH_DASHBOARD.root);
+    } else if (pathname.startsWith("/dashboard/project")) {
+      setActiveMenuItem("/dashboard/project");
+    }
   }, [isAdmin, pathname, router]);
 
   const handleSelect = useCallback(
@@ -90,12 +106,13 @@ const Menus = () => {
   );
 
   const handleCompanySelect = useCallback(
-    (selectedCompany) => {
-      setSelectedCompany(selectedCompany);
+    (company) => {
+      setSelectedCompany(company);
+      localStorage.setItem("selectedCompany", JSON.stringify(company));
       setActiveMenuItem(PATH_DASHBOARD.root);
       router.push(PATH_DASHBOARD.root);
     },
-    [router, setSelectedCompany]
+    [router]
   );
 
   const toggleDropdown = useCallback(() => {
@@ -130,8 +147,8 @@ const Menus = () => {
           key={project.id}
           project={project}
           isActive={isActive}
-          onClick={(id) =>
-            handleSelect(PATH_DASHBOARD.project.view(id, project.name))
+          onClick={() =>
+            handleSelect(PATH_DASHBOARD.project.view(project.id, project.name))
           }
         />
       );
@@ -144,10 +161,9 @@ const Menus = () => {
         {selectedCompany ? (
           <li
             onClick={toggleDropdown}
-            className={classNames(
-              "selected-dropdown d-flex align-items-center justify-content-start gap-2 cursor-pointer relative w-100",
-              { "active-dropdown": dropdownOpen }
-            )}
+            className={`selected-dropdown d-flex align-items-center justify-content-start gap-2 cursor-pointer relative w-100 ${
+              dropdownOpen ? "active-dropdown" : ""
+            }`}
           >
             <div className="d-flex align-items-center justify-content-between w-100">
               <div className="d-flex align-items-center gap-2">
@@ -170,10 +186,9 @@ const Menus = () => {
               <ul ref={dropdownRef} className="dropdown">
                 <h1 className="weight-500">Switch Companies</h1>
                 <div
-                  className={classNames(
-                    "scroll-property border_bottom_shadowy",
-                    { "scroll-height": companyList.length > 2 }
-                  )}
+                  className={`scroll-property border_bottom_shadowy ${
+                    companyList.length > 2 ? "scroll-height" : ""
+                  }`}
                 >
                   {renderCompanyList()}
                 </div>
@@ -224,14 +239,12 @@ const Menus = () => {
         <div className="d-flex w-100 flex-column gap-3">
           {isAdmin && (
             <li
-              className={classNames(
-                "d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100 padding-lr-sixteen",
-                {
-                  "navigate-select":
-                    activeMenuItem === PATH_DASHBOARD.createcompany.root ||
-                    pathname === PATH_DASHBOARD.createcompany.edit,
-                }
-              )}
+              className={`d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100 padding-lr-sixteen ${
+                activeMenuItem === PATH_DASHBOARD.createcompany.root ||
+                pathname === PATH_DASHBOARD.createcompany.edit
+                  ? "navigate-select"
+                  : ""
+              }`}
               onClick={() => handleSelect(PATH_DASHBOARD.createcompany.root)}
             >
               <img
@@ -247,10 +260,9 @@ const Menus = () => {
             </li>
           )}
           <li
-            className={classNames(
-              "d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100 padding-lr-sixteen",
-              { "navigate-select": activeMenuItem === PATH_DASHBOARD.root }
-            )}
+            className={`d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100 padding-lr-sixteen ${
+              activeMenuItem === PATH_DASHBOARD.root ? "navigate-select" : ""
+            }`}
             onClick={() => handleSelect(PATH_DASHBOARD.root)}
           >
             <img

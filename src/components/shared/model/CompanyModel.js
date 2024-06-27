@@ -18,7 +18,7 @@ const CompanyModel = ({ activeTab }) => {
     <>
       {activeTab === "settings" && (
         <>
-          <div className="setting-box d-flex align-item-center justify-content-between border_bottom_Semi-Transparent_navy ">
+          <div className="setting-box d-flex align-items-center justify-content-between border_bottom_Semi-Transparent_navy ">
             <h1 className="company-setup-heading weight-600">Settings</h1>
             {isAdmin && (
               <button className="save-btn" onClick={editCompany}>
