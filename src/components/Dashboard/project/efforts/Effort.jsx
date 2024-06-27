@@ -17,20 +17,26 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
     reteriveEffort,
     mappingList,
     createProjecteffort,
+    effortList,
   } = useAuth();
   const params = useParams();
   const [lastIdNumber, setLastIdNumber] = useState(0);
   const [objectives, setObjectives] = useState([]);
+
   const [designdropdownOpen, setDesigndropdownOpen] = useState(false);
   const [designDropdownOpen, setDesignDropdownOpen] = useState(false);
   const [selectedProductOutcomes, setSelectedProductOutcomes] = useState([]);
   const [selectedDesignEfforts, setSelectedDesignEfforts] = useState([]);
 
   const [design, setDesign] = useState([]);
+
   const [purposeListData, setPurposeListData] = useState(null);
+  console.log("🚀 ~ Effort ~ purposeListData:", purposeListData);
   const [purposeToEdit, setPurposeToEdit] = useState(null);
   const [purposedropdownOpen, setPurposeDropdownOpen] = useState(false);
   const [selectedPurpose, setSelectedPurpose] = useState(null);
+  const [effortsListData, setEffortsListData] = useState(null);
+  console.log("🚀 ~ Effort ~ effortsListData:", effortsListData);
 
   const [link, setLink] = useState("");
 
@@ -41,6 +47,25 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   };
 
   const { toaster } = useToaster();
+
+  const fetchEffortData = async () => {
+    try {
+      if (params?.id) {
+        const result = await effortList(params.id);
+        if (result.status) {
+          setEffortsListData(result.data);
+        } else {
+          throw new Error("Failed to fetch purpose list");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching purpose list:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEffortData();
+  }, [params.id, effortList]);
 
   const fetchData = async () => {
     try {
@@ -130,9 +155,13 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
 
   const handleSaveEffort = async () => {
     try {
+      // Extracting URLs from the links array
+      const urls = links.map((link) => link.url);
+
+      // Assuming createProjecteffort expects an array of URLs
       const result = await createProjecteffort(
         params.id,
-        links,
+        urls,
         selectedPurpose,
         selectedProductOutcomes[0],
         selectedDesignEfforts[0]
@@ -140,7 +169,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
 
       if (result.status) {
         toaster("Purpose added successfully", TOAST_TYPES.SUCCESS);
-        fetchData();
+
         setSelectedPurpose(null);
         setSelectedProductOutcomes(null);
         setSelectedDesignEfforts(null);
@@ -176,63 +205,70 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
       <div className="wrapper-company">
         <div className="company-sidebar w-100 d-flex flex-column gap-4">
           <div className="row">
-            <div className="col-lg-6">
-              <NewEffortSection
-                isAdmin={isAdmin}
-                onToggleNewEffort={onToggleNewEffort}
-                showNewEffortInput={showNewEffortInput}
-                generateId={generateId}
-                user={user}
-                getCurrentDate={getCurrentDate}
-                handleSaveEffort={handleSaveEffort}
-                toggledesigndropdown={toggledesigndropdown}
-                selectedProductOutcomes={selectedProductOutcomes}
-                objectives={objectives}
-                toggleDesignDropdown={toggleDesignDropdown}
-                selectedDesignEfforts={selectedDesignEfforts}
-                togglePurposeDropdown={togglePurposeDropdown}
-                selectedPurpose={selectedPurpose}
-                purpose={purposeListData}
-                design={design}
-                link={link}
-                setLink={setLink}
-                links={links}
-                setLinks={setLinks}
-              />
-            </div>
-          </div>
-          {/* {purposeListData &&
-            purposeListData.map((purpose) =>
-              purposeToEdit && purposeToEdit.id === purpose.id ? (
-                {
-                   <EditPurposeSection
-                  key={purpose.id}
-                  purpose={purposeToEdit}
-                  user={user}
-                  handleCancel={handleCancelEdit}
-                  objectives={objectives}
-                  design={design}
-                  setDesign={setDesign}
-                  fetchData={fetchData}
-                  setPurposeToEdit={setPurposeToEdit}
-                /> 
-                }
-              ) : (
-                <div key={purpose.id} className="section-project">
-                  <div className="pb-24 d-flex align-items-center justify-content-between w-100 border-bottom-grey">
-                    <div className="d-flex align-items-center gap-4">
-                      <h1 className="create-id">{`#pur${
-                        purpose?.local_id < 10
-                          ? `00${purpose?.local_id}`
-                          : purpose?.local_id < 100
-                          ? `0${purpose?.local_id}`
-                          : purpose?.local_id
-                      }`}</h1>
-                      <h1 className="create-id">#{purpose?.title}</h1>
+            <NewEffortSection
+              isAdmin={isAdmin}
+              onToggleNewEffort={onToggleNewEffort}
+              showNewEffortInput={showNewEffortInput}
+              generateId={generateId}
+              user={user}
+              getCurrentDate={getCurrentDate}
+              handleSaveEffort={handleSaveEffort}
+              toggledesigndropdown={toggledesigndropdown}
+              selectedProductOutcomes={selectedProductOutcomes}
+              objectives={objectives}
+              toggleDesignDropdown={toggleDesignDropdown}
+              selectedDesignEfforts={selectedDesignEfforts}
+              togglePurposeDropdown={togglePurposeDropdown}
+              selectedPurpose={selectedPurpose}
+              purpose={purposeListData}
+              design={design}
+              link={link}
+              setLink={setLink}
+              links={links}
+              setLinks={setLinks}
+            />
+
+            {effortsListData &&
+              effortsListData.map((effort) =>
+                purposeToEdit && purposeToEdit.id === effort.id ? (
+                  <>
+                    {/* {
+                    <EditPurposeSection
+                      key={purpose.id}
+                      purpose={purposeToEdit}
+                      user={user}
+                      handleCancel={handleCancelEdit}
+                      objectives={objectives}
+                      design={design}
+                      setDesign={setDesign}
+                      setPurposeToEdit={setPurposeToEdit}
+                    />
+                  } */}
+                  </>
+                ) : (
+                  <div key={effort.id} className="section-project col-lg-6">
+                    <div className="pb-24 d-flex align-items-center justify-content-between w-100 border-bottom-grey">
+                      <div className="d-flex align-items-center justify-content-between w-100">
+                        <h1 className="create-id">{`#eff${
+                          effort?.local_id < 10
+                            ? `00${effort?.local_id}`
+                            : effort?.local_id < 100
+                            ? `0${effort?.local_id}`
+                            : effort?.local_id
+                        }`}</h1>
+                        <div className="d-flex align-items-center gap-2">
+                          <h2 className="create-name weight-500">
+                            Created on:
+                          </h2>
+                          <h2 className="create-name">
+                            {new Date(effort.created_at).toLocaleDateString()}
+                          </h2>
+                        </div>
+                      </div>
                     </div>
-                    <div className="d-flex align-items-center gap-2">
-                      <div className="d-flex align-items-center gap-2">
-                        <h2 className="create-name weight-500">Created by:</h2>
+                    <div className="pb-24 d-flex gap-2  justify-content-between flex-column w-100 border-bottom-grey pt-24">
+                      <div className="d-flex align-items-center gap-4">
+                        <h2 className="create-name weight-500">By:</h2>
                         <div className="d-flex align-items-center gap-1">
                           <div className="create_profile">
                             <img
@@ -252,60 +288,78 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                           <h2 className="create-name">{user.fullname}</h2>
                         </div>
                       </div>
-                      <div className="d-flex align-items-center gap-2">
-                        <h2 className="create-name weight-500">Created on:</h2>
-                        <h2 className="create-name">
-                          {new Date(purpose.created_at).toLocaleDateString()}
-                        </h2>
+                      <div className="d-flex align-items-center gap-4">
+                        <h1 className="select-outcome-text">Type:</h1>
+                        {effort.design_effort && (
+                          <li
+                            key={effort.design_effort}
+                            className="p-0 selectedone"
+                          >
+                            <span className="dot black"></span>
+                            {design
+                              .flatMap((category) => category.items)
+                              .find((obj) => obj.id === effort.design_effort)
+                              ?.title || ""}
+                          </li>
+                        )}
                       </div>
-                      <button
-                        className="edit-button"
-                        onClick={() => handleEditClick(purpose)}
-                      >
-                        <img src="/assets/images/mark/edit.svg" alt="" />
-                      </button>
+                      <div className="d-flex align-items-center gap-4">
+                        <h1 className="select-outcome-text">Outcome:</h1>
+                        {effort.outcome && (
+                          <li key={effort.outcome} className="p-0 selectedone">
+                            <span className="dot black"></span>
+                            {objectives.find((obj) => obj.id === effort.outcome)
+                              ?.title || ""}
+                          </li>
+                        )}
+                      </div>
+                    </div>
+                    <div className="pb-24 d-flex gap-2  justify-content-between flex-column w-100 border-bottom-grey pt-24">
+                      <div className="d-flex align-items-center gap-4">
+                        <h1 className="select-outcome-text">Purpose:</h1>
+                        {effort.purpose && (
+                          <li key={effort.purpose} className="p-0 selectedone">
+                            <span className="dot black"></span>
+                            {purposeListData.find(
+                              (obj) => obj.id === effort.purpose
+                            )?.title || ""}
+                          </li>
+                        )}
+                      </div>
+                      {/* <div className="d-flex align-items-center gap-4">
+                          <h1 className="select-outcome-text">Type:</h1>
+                          {effort.design_effort && (
+                            <li
+                              key={effort.design_effort}
+                              className="p-0 selectedone"
+                            >
+                              <span className="dot black"></span>
+                              {design
+                                .flatMap((category) => category.items)
+                                .find((obj) => obj.id === effort.design_effort)
+                                ?.title || ""}
+                            </li>
+                          )}
+                        </div>
+                        <div className="d-flex align-items-center gap-4">
+                          <h1 className="select-outcome-text">Outcome:</h1>
+                          {effort.outcome && (
+                            <li
+                              key={effort.outcome}
+                              className="p-0 selectedone"
+                            >
+                              <span className="dot black"></span>
+                              {objectives.find(
+                                (obj) => obj.id === effort.outcome
+                              )?.title || ""}
+                            </li>
+                          )}
+                        </div> */}
                     </div>
                   </div>
-                  <div className="d-flex align-items-center gap-4 pb-24 border-bottom-grey pt-24">
-                    <h2 className="selectedone weight-500">Problem summary:</h2>
-                    <p className="selectedone m-0">{purpose.description}</p>
-                  </div>
-                  <div className="d-flex align-items-center gap-4 pb-24 border-bottom-grey pt-24">
-                    <h2 className="selectedone weight-500">
-                      Desired outcomes:
-                    </h2>
-                    {purpose?.desired_outcomes.map((effortId) => (
-                      <li key={effortId} className="p-0 selectedone">
-                        <span className="dot black"></span>
-                        {
-                          objectives
-                            .flatMap((obj) => obj.design_efforts)
-                            .find((effort) => effort.id === effortId)?.title
-                        }
-                      </li>
-                    ))}
-                  </div>
-                  <div className="d-flex align-items-center gap-4 pb-24 pt-24">
-                    <h2 className="selectedone weight-500">Design efforts:</h2>
-                    {purpose.design_efforts.map((effortId) => (
-                      <li key={effortId} className="p-0 selectedone">
-                        <span className="dot black"></span>
-                        {design
-                          .flatMap((obj) => obj.items)
-                          .map((effort) => {
-                            if (effort && effort.id === effortId) {
-                              return (
-                                <span key={effort.id}>{effort.title}</span>
-                              );
-                            }
-                            return null;
-                          })}
-                      </li>
-                    ))}
-                  </div>
-                </div>
-              )
-            )} */}
+                )
+              )}
+          </div>
         </div>
       </div>
       <SingleProductOutcomesModel

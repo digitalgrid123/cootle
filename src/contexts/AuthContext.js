@@ -985,6 +985,23 @@ function AuthProvider({ children }) {
     }
   };
 
+  const effortList = async (project_id) => {
+    try {
+      const res = await axiosGet(API_ROUTER.EFFORT_LIST(project_id));
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return { status: false, data: res.data || "" };
+      }
+    } catch (error) {
+      return { status: false, data: "" };
+    }
+  };
+
   const resetmapping = async () => {
     return new Promise(async (resolve) => {
       try {
@@ -1211,6 +1228,7 @@ function AuthProvider({ children }) {
         updatePurpose,
         removePurpose,
         createProjecteffort,
+        effortList
       }}
     >
       {children}

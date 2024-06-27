@@ -128,6 +128,8 @@ export const API_ROUTER = {
   PURPOSE_LIST: (project_id) =>
     getNormalRoute(`projects/${project_id}/purposes`),
 
+  EFFORT_LIST: (project_id) => getNormalRoute(`projects/${project_id}/efforts`),
+
   //DELETE CATEGORY
   DELETE_CATEGORY: getNormalRoute("category/remove"),
 

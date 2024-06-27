@@ -10,7 +10,6 @@ const PurposeList = ({
   purpose,
 }) => {
   const dropdownRef = useRef(null);
-  const { purposeList } = useAuth();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [containerHeight, setContainerHeight] = useState(0);
@@ -36,24 +35,6 @@ const PurposeList = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [purposedropdownOpen]);
-
-  useEffect(() => {
-    const fetchPurposeList = async () => {
-      try {
-        const res = await purposeList();
-
-        if (res?.status) {
-          setPurpose(res.data);
-        } else {
-          console.error("Failed to fetch purpose list:", res);
-        }
-      } catch (err) {
-        console.error("Error fetching purpose list:", err);
-      }
-    };
-
-    fetchPurposeList();
-  }, [purposeList, setPurpose]);
 
   useEffect(() => {
     const calculateContainerHeight = () => {
