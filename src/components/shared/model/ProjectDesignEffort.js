@@ -195,7 +195,7 @@ const ProjectDesignEffort = ({
   };
 
   return (
-    <div>
+    <>
       {designdropdownOpen && (
         <div className="invitation-overlay p-80">
           <div className="invitation-content" ref={dropdownRef}>
@@ -258,7 +258,7 @@ const ProjectDesignEffort = ({
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

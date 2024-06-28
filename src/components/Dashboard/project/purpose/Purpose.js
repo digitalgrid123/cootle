@@ -8,6 +8,26 @@ import EditPurposeSection from "./EditPurposeSection";
 import ProductOutcomesModel from "@/components/shared/model/ProductOutcomesModel";
 import ProjectDesignEffort from "@/components/shared/model/ProjectDesignEffort";
 
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+// Generate weeks dynamically
+const weeks = Array.from({ length: 52 }, (_, i) => `Week ${i + 1}`);
+
+const quarters = ["Q1", "Q2", "Q3", "Q4"];
+
 const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
   const { purposelist, user, reteriveEffort, mappingList, createPurpose } =
     useAuth();
@@ -23,7 +43,11 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
   const [newPurposeTitle, setNewPurposeTitle] = useState("");
   const [newPurposeDescription, setNewPurposeDescription] = useState("");
   const [purposeListData, setPurposeListData] = useState(null);
+
   const [purposeToEdit, setPurposeToEdit] = useState(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("Quarterly");
+  const [selectedOptionItem, setSelectedOptionItem] = useState(null);
 
   const { toaster } = useToaster();
 
@@ -158,9 +182,117 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
     setDesignDropdownOpen(state);
   };
 
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleOptionClick = (option) => {
+    setSelectedOption(option);
+    setIsDropdownOpen(false);
+  };
+  const isActive = (year, option) => {
+    return selectedOptionItem === `${year}-${option}` ? "active" : "";
+  };
+
+  // Extract unique years from purposeListData's created_at dates
+  const years = Array.from(
+    new Set(
+      purposeListData?.map((purpose) =>
+        new Date(purpose.created_at).getFullYear()
+      )
+    )
+  );
+
+  const handleDateClick = (year, option) => {
+    setSelectedOptionItem(`${year}-${option}`);
+  };
+  const renderDates = () => {
+    return (
+      <ul className="timeline-dates">
+        {years.map((year) => (
+          <React.Fragment key={year}>
+            {selectedOption === "Monthly" &&
+              months.map((month, index) => (
+                <li
+                  key={`${year}-${month}-${index}`}
+                  className={`cursor-pointer ${isActive(year, month)} ${
+                    index === months.length - 1 ? "last-item" : ""
+                  }`}
+                  onClick={() => handleDateClick(year, month)}
+                >
+                  <span>{month}</span>
+                  <span>{year}</span>
+                </li>
+              ))}
+
+            {selectedOption === "Weekly" &&
+              weeks.map((week, index) => (
+                <li
+                  key={`${year}-${week}-${index}`}
+                  className={`cursor-pointer ${isActive(year, week)} ${
+                    index === weeks.length - 1 ? "last-item" : ""
+                  }`}
+                  onClick={() => handleDateClick(year, week)}
+                >
+                  <span className="week">{week}</span>
+                  <span className="year">{year}</span>
+                </li>
+              ))}
+
+            {selectedOption === "Quarterly" &&
+              quarters.map((quarter, index) => (
+                <li
+                  key={`${year}-${quarter}-${index}`}
+                  className={`cursor-pointer ${isActive(year, quarter)} ${
+                    index === quarters.length - 1 ? "last-item" : ""
+                  }`}
+                  onClick={() => handleDateClick(year, quarter)}
+                >
+                  <span className="quarter">{quarter}</span>
+                  <span className="year">{year}</span>
+                </li>
+              ))}
+
+            {/* Render faint bottom border after each year */}
+            <div className="border_bottom_faint w-100" key={`border-${year}`} />
+          </React.Fragment>
+        ))}
+      </ul>
+    );
+  };
+  // Function to calculate ISO week number
+  function getISOWeek(date) {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+    const yearStart = new Date(d.getFullYear(), 0, 1);
+    return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+  }
+  const filteredPurposes = purposeListData?.filter((purpose) => {
+    if (!selectedOptionItem) {
+      return true; // Show all if no option selected
+    }
+    const createdDate = new Date(purpose.created_at);
+    const purposeYear = createdDate.getFullYear();
+    const purposeMonth = months[createdDate.getMonth()];
+    const purposeWeek = `Week ${getISOWeek(createdDate)}`;
+
+    const purposeQuarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+
+    switch (selectedOption) {
+      case "Monthly":
+        return isActive(purposeYear, purposeMonth) !== "";
+      case "Weekly":
+        return isActive(purposeYear, purposeWeek) !== "";
+      case "Quarterly":
+        return isActive(purposeYear, purposeQuarter) !== "";
+      default:
+        return true; // Show all if no selection
+    }
+  });
   return (
-    <>
-      <div className="wrapper-company">
+    <div className="d-flex flex-row gap-3 h-100  justify-content-between">
+      <div className="wrapper-company w-100">
         <div className="company-sidebar w-100 d-flex flex-column gap-4">
           <NewPurposeSection
             isAdmin={isAdmin}
@@ -181,8 +313,8 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
             selectedDesignEfforts={selectedDesignEfforts}
             design={design}
           />
-          {purposeListData &&
-            purposeListData.map((purpose) =>
+          {filteredPurposes && filteredPurposes.length > 0 ? (
+            filteredPurposes.map((purpose) =>
               purposeToEdit && purposeToEdit.id === purpose.id ? (
                 <EditPurposeSection
                   key={purpose.id}
@@ -284,7 +416,51 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                   </div>
                 </div>
               )
+            )
+          ) : (
+            <div className="section-project">
+              <div className="pb-24 d-flex align-items-center justify-content-between w-100 border-bottom-grey"></div>
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="wrapper-company">
+        <div className="company-sidebar w-100 d-flex flex-column gap-4">
+          <div className="filter-container">
+            <div
+              className="d-flex align-items-center gap-1 justify-content-center"
+              onClick={toggleDropdown}
+            >
+              <h1 className="timeline-text">Timeline</h1>
+              <img
+                src="/assets/images/mark/dropdown-icon.svg"
+                alt="dropdown-icon"
+              />
+            </div>
+            {isDropdownOpen && (
+              <ul className="timeline-dropdown">
+                <li
+                  onClick={() => handleOptionClick("Monthly")}
+                  className={selectedOption === "Monthly" ? "active" : ""}
+                >
+                  Monthly
+                </li>
+                <li
+                  onClick={() => handleOptionClick("Weekly")}
+                  className={selectedOption === "Weekly" ? "active" : ""}
+                >
+                  Weekly
+                </li>
+                <li
+                  onClick={() => handleOptionClick("Quarterly")}
+                  className={selectedOption === "Quarterly" ? "active" : ""}
+                >
+                  Quarterly
+                </li>
+              </ul>
             )}
+            {renderDates()}
+          </div>
         </div>
       </div>
       <ProductOutcomesModel
@@ -302,7 +478,7 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
         design={design}
         setDesign={setDesign}
       />
-    </>
+    </div>
   );
 };
 

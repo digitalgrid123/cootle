@@ -34,7 +34,7 @@ const NewEffortSection = ({
   }
 
   const addLink = (url) => {
-    setLinks((prevLinks) => [...prevLinks, { name, url }]);
+    setLinks((prevLinks) => [...prevLinks, { url }]);
   };
 
   return (

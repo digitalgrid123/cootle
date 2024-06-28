@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 
-const LinkModel = ({ link, setLink, addLink, showLinkModel }) => {
+const LinkModel = ({
+  link,
+  setLink,
+  addLink,
+  showLinkModel,
+  setShowLinkModel,
+}) => {
   const [error, setError] = useState("");
 
   const handleLinkChange = (e) => {
@@ -12,6 +18,7 @@ const LinkModel = ({ link, setLink, addLink, showLinkModel }) => {
     if (e.key === "Enter" && !error) {
       addLink(link);
       setLink("");
+      setShowLinkModel(false);
     }
   };
 
@@ -44,7 +51,6 @@ const LinkModel = ({ link, setLink, addLink, showLinkModel }) => {
         <div className="input-container">
           <input
             type="text"
-            placeholder="Enter link URL"
             value={link}
             onChange={handleLinkChange}
             onKeyPress={handleKeyPress}
@@ -52,8 +58,11 @@ const LinkModel = ({ link, setLink, addLink, showLinkModel }) => {
             required
             autoFocus
           />
-          {error && <span className="error-message">{error}</span>}
-          <div className="icon-container">
+
+          <div
+            className="icon-container cursor-pointer"
+            onClick={handleKeyPress}
+          >
             <img
               src={
                 link && !error

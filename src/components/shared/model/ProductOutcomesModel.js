@@ -133,7 +133,7 @@ const ProductOutcomesModel = ({
   };
 
   return (
-    <div>
+    <>
       {designdropdownOpen && (
         <div className="invitation-overlay p-80">
           <div className="invitation-content" ref={dropdownRef}>
@@ -190,7 +190,7 @@ const ProductOutcomesModel = ({
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

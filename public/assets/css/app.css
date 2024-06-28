@@ -1957,13 +1957,91 @@ textarea {
   height: auto;
 }
 
-.input-field:first-line {
+/* .input-field:first-line {
   background-color: #735880cc;
-}
+} */
 
 .polygon {
   position: absolute;
   bottom: -14px;
   left: 30%;
   transform: rotate(-180deg);
+}
+
+.filter-container {
+  padding: 24px 15px;
+}
+.timeline-text {
+  color: #000000cc;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19.36px;
+  letter-spacing: -0.03em;
+  text-align: left;
+}
+.timeline-dropdown {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0px 1px 2px 0px #1b242c1f;
+  background-color: white;
+  position: absolute;
+  padding: 8px;
+}
+
+.timeline-dropdown li {
+  padding: 8px 16px;
+  color: #000000cc;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: -0.03em;
+  text-align: center;
+  cursor: pointer;
+}
+
+.timeline-dropdown li:hover,
+.timeline-dropdown li.active {
+  background-color: #e0dfe3 !important;
+  border-radius: 8px !important;
+}
+
+.timeline-dates {
+  list-style-type: none;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-direction: column;
+  padding: 0;
+  margin-top: 24px;
+}
+
+.timeline-dates li {
+  padding: 8px 16px;
+  color: #000000;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19.36px;
+  letter-spacing: -0.03em;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  padding: 11px 8px;
+}
+/* 
+.timeline-dates li {
+  background-color: var(--text-color);
+  border: none;
+  border-radius: 16px;
+} */
+
+.checked-status {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: right;
 }
