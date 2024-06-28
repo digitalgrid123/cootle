@@ -368,12 +368,14 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                           {new Date(purpose.created_at).toLocaleDateString()}
                         </h2>
                       </div>
-                      <button
-                        className="edit-button"
-                        onClick={() => handleEditClick(purpose)}
-                      >
-                        <img src="/assets/images/mark/edit.svg" alt="" />
-                      </button>
+                      {isAdmin && (
+                        <button
+                          className="edit-button"
+                          onClick={() => handleEditClick(purpose)}
+                        >
+                          <img src="/assets/images/mark/edit.svg" alt="" />
+                        </button>
+                      )}
                     </div>
                   </div>
                   <div className="d-flex align-items-center gap-4 pb-24 border-bottom-grey pt-24">

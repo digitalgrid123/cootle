@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useRef, useState } from "react";
 import PageTitle from "@/components/shared/PageTitle";
 import { useAuth, useTabs } from "@/hooks";
@@ -13,7 +12,8 @@ const Dashboard = () => {
   const [user, setUser] = useState(null);
   const selectedCompany = useGlobalCompany();
   const [showPopup, setShowPopup] = useState(false);
-  const { currentTab, setCurrentTab } = useTabs(1);
+  const { currentTab, setCurrentTab } = useTabs(getInitialTab());
+
   const contentRef = useRef();
 
   // Fetch user information on component mount
@@ -28,6 +28,18 @@ const Dashboard = () => {
     fetchUserinfo();
   }, [userinfo]);
 
+  // Determine initial tab based on localStorage or default to 1
+  function getInitialTab() {
+    const storedTab = localStorage.getItem("currentTab");
+    return storedTab ? parseInt(storedTab) : 1;
+  }
+
+  // Store current tab in localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("currentTab", currentTab);
+  }, [currentTab]);
+
+  // Effect to show popup if user starts with "User#"
   useEffect(() => {
     if (user && user.startsWith("User#")) {
       setShowPopup(true);
@@ -39,6 +51,7 @@ const Dashboard = () => {
     setCurrentTab((prev) => prev + 1);
   };
 
+  // Render the current tab based on currentTab state
   const renderCurrentTab = (activeTab) => {
     switch (activeTab) {
       case 1:
