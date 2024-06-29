@@ -7,11 +7,13 @@ const LinkModel = ({
   showLinkModel,
   setShowLinkModel,
 }) => {
-  const [error, setError] = useState("");
-
   const handleLinkChange = (e) => {
     setLink(e.target.value);
-    validateLink(e.target.value);
+  };
+  const closedmodel = () => {
+    addLink(link);
+    setShowLinkModel(false);
+    setLink("");
   };
 
   const handleKeyPress = (e) => {
@@ -19,29 +21,6 @@ const LinkModel = ({
       addLink(link);
       setLink("");
       setShowLinkModel(false);
-    }
-  };
-
-  const validateLink = (url) => {
-    // Basic URL validation
-    const urlPattern = new RegExp(
-      "^(https?:\\/\\/)?" + // protocol
-        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.([a-z]{2,}|[a-z\\d]{2,}))|" + // domain name and extension
-        "localhost|" + // localhost
-        "\\d{1,3}\\." + // OR IP (v4) address
-        "\\d{1,3}\\." +
-        "\\d{1,3}\\." +
-        "\\d{1,3}|" +
-        "\\[?[a-f\\d]*:[a-f\\d:]+\\]?)" + // OR IPv6 address
-        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-        "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-        "(\\#[-a-z\\d_]*)?$", // fragment locator
-      "i"
-    );
-    if (!urlPattern.test(url)) {
-      setError("Invalid URL");
-    } else {
-      setError("");
     }
   };
 
@@ -59,13 +38,10 @@ const LinkModel = ({
             autoFocus
           />
 
-          <div
-            className="icon-container cursor-pointer"
-            onClick={handleKeyPress}
-          >
+          <div className="icon-container cursor-pointer" onClick={closedmodel}>
             <img
               src={
-                link && !error
+                link
                   ? "/assets/images/mark/activelink.svg"
                   : "/assets/images/mark/inactivelink.svg"
               }

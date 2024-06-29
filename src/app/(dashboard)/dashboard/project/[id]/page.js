@@ -2,12 +2,11 @@
 import React, { useState, useEffect } from "react";
 import { getData } from "@/utils/storage";
 import Title from "@/components/Dashboard/Title";
-import ObjectiveMapping from "@/components/Dashboard/valuemapping/ObjectiveMapping";
-import ValueMapping from "@/components/Dashboard/valuemapping/ValueMapping";
 import { USER_ROLES } from "@/constants/keywords";
 import { useSearchParams, useRouter } from "next/navigation";
 import Purpose from "@/components/Dashboard/project/purpose/Purpose";
 import Effort from "@/components/Dashboard/project/efforts/Effort";
+import Insight from "@/components/Dashboard/project/insight/insight";
 
 const Page = () => {
   const searchParams = useSearchParams();
@@ -59,9 +58,7 @@ const Page = () => {
           />
         );
       case "insight":
-        return (
-          <ValueMapping selectedMapping={selectedMapping} isAdmin={isAdmin} />
-        );
+        return <Insight />;
       default:
         return <div />;
     }

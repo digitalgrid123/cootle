@@ -1158,6 +1158,45 @@ function AuthProvider({ children }) {
       };
     }
   };
+
+  const updateEffort = async (
+    project_effort_id,
+    links,
+    purpose,
+    outcome,
+    design_effort
+  ) => {
+    try {
+      const res = await axiosPatch(
+        API_ROUTER.UPDATE_EFFORT(project_effort_id),
+        {
+          links,
+          purpose,
+          outcome,
+          design_effort,
+        }
+      );
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return {
+          status: false,
+          data: "",
+        };
+      }
+    } catch (error) {
+      console.error("Error creating purpose:", error);
+      return {
+        status: false,
+        data: "",
+        message: "An error occurred while adding purpose",
+      };
+    }
+  };
   const removePurpose = async (purpose_id) => {
     return new Promise(async (resolve) => {
       try {
@@ -1178,6 +1217,123 @@ function AuthProvider({ children }) {
       }
     });
   };
+
+  const removeEffort = async (project_effort_id) => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosDelete(
+          API_ROUTER.REMOVE_EFFORT(project_effort_id)
+        );
+        if (res.status) {
+          resolve({
+            status: true,
+            data: res.data,
+            message: "Member Removed",
+          });
+        } else {
+          resolve({ status: false, data: "" });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+
+  const valueratio = async (project_id) => {
+    try {
+      const res = await axiosGet(API_ROUTER.EFFORT_VALUE_RATIO(project_id));
+   
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return { status: false, data: res.data || "" };
+      }
+    } catch (error) {
+      return { status: false, data: "" };
+    }
+  };
+
+  const objectiveratio = async (project_id) => {
+    try {
+      const res = await axiosGet(API_ROUTER.OBJECTIVE_VALUE_RATIO(project_id));
+      
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return { status: false, data: res.data || "" };
+      }
+    } catch (error) {
+      return { status: false, data: "" };
+    }
+  };
+
+  const effortbycategory = async (project_id) => {
+    try {
+      const res = await axiosGet(
+        API_ROUTER.EFFORT_BY_CATEGORY_COUNT(project_id)
+      );
+      
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return { status: false, data: res.data || "" };
+      }
+    } catch (error) {
+      return { status: false, data: "" };
+    }
+  };
+  const latestobjective = async (project_id) => {
+    try {
+      const res = await axiosGet(
+        API_ROUTER.LATEST_OBJECTIVE(project_id)
+      );
+      
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return { status: false, data: res.data || "" };
+      }
+    } catch (error) {
+      return { status: false, data: "" };
+    }
+  };
+
+  const latestvalue = async (project_id) => {
+    try {
+      const res = await axiosGet(
+        API_ROUTER.LATEST_VALUE(project_id)
+      );
+      
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return { status: false, data: res.data || "" };
+      }
+    } catch (error) {
+      return { status: false, data: "" };
+    }
+  };
+
 
   return (
     <AuthContext.Provider
@@ -1228,7 +1384,14 @@ function AuthProvider({ children }) {
         updatePurpose,
         removePurpose,
         createProjecteffort,
-        effortList
+        effortList,
+        updateEffort,
+        removeEffort,
+        valueratio,
+        objectiveratio,
+        effortbycategory,
+        latestobjective,
+        latestvalue
       }}
     >
       {children}

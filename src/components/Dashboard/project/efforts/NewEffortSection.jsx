@@ -39,7 +39,7 @@ const NewEffortSection = ({
 
   return (
     <div className="col-lg-6">
-      <div className="new-purpose-section w-100 ">
+      <div className="new-purpose-section w-100 mb-24">
         <div className="new-purpose-create w-100">
           <div className="mb-24 d-flex align-items-center justify-content-between w-100">
             <h1 className="create-id">{generateId()}</h1>
@@ -196,7 +196,7 @@ const NewEffortSection = ({
                   </span>
                 </button>
               </div>
-              <ul className="d-flex flex-wrap align-items-center m-0">
+              <ul className="d-flex flex-wrap align-items-center m-0 gap-2 flex-wrap">
                 {links?.map((link, index) => (
                   <div className="show-selectedone selectedone">
                     <li key={index} className="p-0 ">

@@ -187,6 +187,9 @@ textarea {
 .pb-24 {
   padding-bottom: 24px;
 }
+.mb-16 {
+  margin-bottom: 16px;
+}
 .pb-32 {
   padding-bottom: 32px;
 }
@@ -2044,4 +2047,121 @@ textarea {
   font-weight: 500;
   line-height: 16px;
   text-align: right;
+}
+
+.no-checked {
+  width: 21px;
+  height: 21px;
+  border: 1px solid #ffffff;
+  border-radius: 50%;
+  background: #d9d9d9;
+}
+
+.define-text {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 14.52px;
+  letter-spacing: -0.03em;
+  text-align: right;
+  color: #000000;
+}
+.question-mark {
+  font-size: 18px !important;
+  line-height: 21.78px !important;
+}
+
+.bar-chart {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.bar-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.bar {
+  height: 24px;
+  position: relative;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 5px;
+  color: white;
+  font-weight: bold;
+}
+
+.bar-value {
+  margin-right: 5px;
+}
+
+.bar-label {
+  flex-shrink: 0;
+  margin-left: 10px;
+}
+.center-line {
+  position: absolute;
+  top: 50%; /* Position at the center vertically */
+  left: 0;
+  right: 0;
+  height: 1px; /* Thickness of the line */
+  background-color: black;
+  pointer-events: none; /* Prevents interaction with the line */
+}
+
+.linechart {
+  position: absolute;
+  margin: auto;
+  width: 100%;
+  top: 50%;
+}
+.apexcharts-toolbar {
+  display: none !important;
+}
+/* .line-chart-container {
+  width: 74px;
+  height: 39px;
+} */
+
+.category-text {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: -0.03em;
+  text-align: left;
+  color: #000000cc;
+}
+.effort-complete {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: -0.03em;
+  text-align: left;
+  color: #000000cc;
+}
+
+.count-text {
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 32px;
+  letter-spacing: -0.03em;
+  text-align: left;
+  color: #000000cc;
+}
+.effort-count-container {
+  border: none;
+  border-radius: 24px;
+  background-color: var(--text-color);
+  padding: 16px;
+}
+.Design_effort_text {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 29.05px;
+  letter-spacing: -0.03em;
+  text-align: left;
+  color: #000000cc;
 }

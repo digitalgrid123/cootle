@@ -130,6 +130,25 @@ export const API_ROUTER = {
 
   EFFORT_LIST: (project_id) => getNormalRoute(`projects/${project_id}/efforts`),
 
+  UPDATE_EFFORT: (project_id) =>
+    getNormalRoute(`project-effort/${project_id}/edit`),
+  REMOVE_EFFORT: (project_id) =>
+    getNormalRoute(`project-effort/${project_id}/remove`),
+  EFFORT_VALUE_RATIO: (project_id) =>
+    getNormalRoute(`insights/${project_id}/value-ratio`),
+
+  OBJECTIVE_VALUE_RATIO: (project_id) =>
+    getNormalRoute(`insights/${project_id}/objective-ratio`),
+
+  EFFORT_BY_CATEGORY_COUNT: (project_id) =>
+    getNormalRoute(`insights/${project_id}/effort-by-category-count`),
+
+  LATEST_OBJECTIVE: (project_id) =>
+    getNormalRoute(`insights/${project_id}/latest-objectives`),
+
+  LATEST_VALUE: (project_id) =>
+    getNormalRoute(`insights/${project_id}/latest-values`),
+
   //DELETE CATEGORY
   DELETE_CATEGORY: getNormalRoute("category/remove"),
 

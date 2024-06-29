@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useAuth } from "@/hooks"; // Assuming useAuth is still needed
 
-const SingleProjectDesignEffort = ({
+const SingleProjectDeisngEffort = ({
   designdropdownOpen,
   toggledesignDropdown,
   setSelectedDesignEfforts,
@@ -113,34 +113,39 @@ const SingleProjectDesignEffort = ({
     .filter((category) => category.items.length > 0);
 
   const renderSelectedEfforts = () => {
-    const selectedItems = filteredDesign
-      .flatMap((category) => category.items)
-      .filter((item) => selectedDesignEfforts.includes(item.id));
-
-    if (selectedItems.length === 0) return null;
+    if (selectedDesignEfforts.length === 0) return null;
 
     return (
       <div className="selected-outcome border_bottom_faint pb-32">
         <h3 className="category-headingeffort mb-20 mt-24">Selected Effort</h3>
         <ul className="p-0">
           <div className="row">
-            {selectedItems.map((item) => (
-              <div key={item.id} className="col-lg-3">
-                <li
-                  onClick={() => handleTabClick(item.id)}
-                  className="d-flex design-tab selected-tab align-items-center justify-content-between"
-                  aria-label={`Remove ${item.title}`}
-                >
-                  {item.title}
-                  <div>
-                    <img
-                      src="/assets/images/mark/remove-design.svg"
-                      alt="remove-btn"
-                    />
-                  </div>
-                </li>
-              </div>
-            ))}
+            {selectedDesignEfforts?.map((id) => {
+              const selectedItem = design
+                .map((category) => category.items)
+                .flat()
+                .find((item) => item.id === id);
+
+              if (!selectedItem) return null;
+
+              return (
+                <div key={id} className="col-lg-3">
+                  <li
+                    onClick={() => handleTabClick(id)}
+                    className="d-flex design-tab selected-tab align-items-center justify-content-between mb-20"
+                    aria-label={`Remove ${selectedItem.title}`}
+                  >
+                    {selectedItem.title}
+                    <div>
+                      <img
+                        src="/assets/images/mark/remove-design.svg"
+                        alt="remove-btn"
+                      />
+                    </div>
+                  </li>
+                </div>
+              );
+            })}
           </div>
         </ul>
       </div>
@@ -154,41 +159,43 @@ const SingleProjectDesignEffort = ({
           {category.category}
         </h3>
         <div className="row border_bottom_faint pb-20">
-          {category.items.map((item, idx) => (
-            <div key={`${index}-${idx}`} className="col-lg-3 mb-3">
-              <li
-                className={`design-tab d-flex align-items-center justify-content-between gap-2 ${
-                  selectedDesignEfforts.includes(item.id) ? "selected-tab" : ""
-                }`}
-                onClick={() => handleTabClick(item.id)}
-                aria-label={`Toggle ${item.title}`}
-              >
-                <div className="d-flex align-items-center gap-2">
-                  <div className="dot"></div>
-                  <div className="text-start effort-selection">
-                    {item.title}
+          {category.items.map((item, idx) => {
+            const isSelected = selectedDesignEfforts.includes(item.id);
+
+            if (isSelected) {
+              return null; // Skip rendering selected items in renderDesignEfforts
+            }
+
+            return (
+              <div key={`${index}-${idx}`} className="col-lg-3 mb-3">
+                <li
+                  className="design-tab d-flex align-items-center justify-content-between gap-2"
+                  onClick={() => handleTabClick(item.id)}
+                  aria-label={`Toggle ${item.title}`}
+                >
+                  <div className="d-flex align-items-center gap-2">
+                    <div className="dot"></div>
+                    <div className="text-start effort-selection">
+                      {item.title}
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <img
-                    src={`${
-                      selectedDesignEfforts.includes(item.id)
-                        ? "/assets/images/mark/remove-design.svg"
-                        : "/assets/images/mark/add-design.svg"
-                    }`}
-                    alt="toggle-btn"
-                  />
-                </div>
-              </li>
-            </div>
-          ))}
+                  <div>
+                    <img
+                      src="/assets/images/mark/add-design.svg"
+                      alt="toggle-btn"
+                    />
+                  </div>
+                </li>
+              </div>
+            );
+          })}
         </div>
       </React.Fragment>
     ));
   };
 
   return (
-    <div>
+    <>
       {designdropdownOpen && (
         <div className="invitation-overlay p-80">
           <div className="invitation-content" ref={dropdownRef}>
@@ -251,8 +258,8 @@ const SingleProjectDesignEffort = ({
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
-export default SingleProjectDesignEffort;
+export default SingleProjectDeisngEffort;

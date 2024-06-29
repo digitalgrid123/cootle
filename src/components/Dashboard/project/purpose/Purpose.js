@@ -194,6 +194,11 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
     return selectedOptionItem === `${year}-${option}` ? "active" : "";
   };
 
+  useEffect(() => {
+    // Clear selectedOptionItem when selectedOption changes
+    setSelectedOptionItem(null);
+  }, [selectedOption]);
+
   // Extract unique years from purposeListData's created_at dates
   const years = Array.from(
     new Set(
@@ -430,7 +435,7 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
         <div className="company-sidebar w-100 d-flex flex-column gap-4">
           <div className="filter-container">
             <div
-              className="d-flex align-items-center gap-1 justify-content-center"
+              className="d-flex align-items-center gap-1 justify-content-center cursor-pointer"
               onClick={toggleDropdown}
             >
               <h1 className="timeline-text">Timeline</h1>
