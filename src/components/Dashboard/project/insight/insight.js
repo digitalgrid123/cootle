@@ -13,43 +13,42 @@ const Insight = ({ isAdmin }) => {
     latestobjective,
     latestvalue,
   } = useAuth(); // Destructuring latestvalue from useAuth hook
-  //   const [valueRatio, setValueRatio] = useState([]);
-  //   const [objectiveRatio, setObjectiveRatio] = useState([]);
+  const [valueRatio, setValueRatio] = useState([]);
+  const [objectiveRatio, setObjectiveRatio] = useState([]);
   const [effortCategories, setEffortCategories] = useState([]);
   const [latestObjective, setLatestObjective] = useState(null);
-  console.log("🚀 ~ Insight ~ latestObjective:", latestObjective);
   const [latestValue, setLatestValue] = useState(null);
   const project_id = params.id;
 
-  //   const fetchValueRatio = useCallback(async () => {
-  //     try {
-  //       if (project_id) {
-  //         const result = await valueratio(project_id);
-  //         if (result.status) {
-  //           setValueRatio(result.data);
-  //         } else {
-  //           throw new Error("Failed to fetch value ratio data");
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching value ratio data:", error);
-  //     }
-  //   }, [project_id, valueratio]);
+  const fetchValueRatio = useCallback(async () => {
+    try {
+      if (project_id) {
+        const result = await valueratio(project_id);
+        if (result.status) {
+          setValueRatio(result.data);
+        } else {
+          throw new Error("Failed to fetch value ratio data");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching value ratio data:", error);
+    }
+  }, [project_id, valueratio]);
 
-  //   const fetchObjectiveRatio = useCallback(async () => {
-  //     try {
-  //       if (project_id) {
-  //         const result = await objectiveratio(project_id);
-  //         if (result.status) {
-  //           setObjectiveRatio(result.data);
-  //         } else {
-  //           throw new Error("Failed to fetch objective ratio data");
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching objective ratio data:", error);
-  //     }
-  //   }, [project_id, objectiveratio]);
+  const fetchObjectiveRatio = useCallback(async () => {
+    try {
+      if (project_id) {
+        const result = await objectiveratio(project_id);
+        if (result.status) {
+          setObjectiveRatio(result.data);
+        } else {
+          throw new Error("Failed to fetch objective ratio data");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching objective ratio data:", error);
+    }
+  }, [project_id, objectiveratio]);
 
   const fetchEffortCategories = useCallback(async () => {
     try {
@@ -94,14 +93,14 @@ const Insight = ({ isAdmin }) => {
   }, [latestvalue]);
 
   useEffect(() => {
-    // fetchValueRatio();
-    // fetchObjectiveRatio();
+    fetchValueRatio();
+    fetchObjectiveRatio();
     fetchEffortCategories();
     fetchLatestObjective();
     fetchLatestValue(); // Call the fetch function for latest value
   }, [
-    // fetchValueRatio,
-    // fetchObjectiveRatio,
+    fetchValueRatio,
+    fetchObjectiveRatio,
     fetchEffortCategories,
     fetchLatestObjective,
     fetchLatestValue,
@@ -122,15 +121,18 @@ const Insight = ({ isAdmin }) => {
               <span className="question-mark">?</span>
             </h2>
           </div>
+          <div className="col-lg-6">
+            <h3 className="Design_effort_text mb-16 ">
+              Value driven product activities ratio
+            </h3>
+
+            {valueRatio.length > 0 ? (
+              <BarChart data={valueRatio} />
+            ) : (
+              <p>Loading value ratio data...</p>
+            )}
+          </div>
           {/* <div>
-          <h3>Value Ratio</h3>
-          {valueRatio.length > 0 ? (
-            <BarChart data={valueRatio} />
-          ) : (
-            <p>Loading value ratio data...</p>
-          )}
-        </div>
-        <div>
           <h3>Objective Ratio</h3>
           {objectiveRatio.length > 0 ? (
             <BarChart data={objectiveRatio} />
@@ -159,6 +161,18 @@ const Insight = ({ isAdmin }) => {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="col-lg-6">
+            <h3 className="Design_effort_text mb-16 ">
+              Value driven product activities ratio
+            </h3>
+
+            {latestObjective?.length > 0 ? (
+              <BarChart data={latestObjective} />
+            ) : (
+              <p>Loading value ratio data...</p>
+            )}
           </div>
           {/* <div>
           <h3>Latest Objective</h3>

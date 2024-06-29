@@ -71,6 +71,9 @@ export const API_ROUTER = {
   //MEMBER INVIATION LIST
   INVITATION_USER: getNormalRoute("invitations/list"),
 
+  //MEMBER
+  MEMBERS_LIST: getNormalRoute("members"),
+
   //REMOVE MEMBER
   REMOVE_MEMBER: getNormalRoute("members/remove"),
 
@@ -134,6 +137,9 @@ export const API_ROUTER = {
     getNormalRoute(`project-effort/${project_id}/edit`),
   REMOVE_EFFORT: (project_id) =>
     getNormalRoute(`project-effort/${project_id}/remove`),
+
+  EFFORT_CHECKED_BY: (project_id) =>
+    getNormalRoute(`project-effort/${project_id}/update/value-status`),
   EFFORT_VALUE_RATIO: (project_id) =>
     getNormalRoute(`insights/${project_id}/value-ratio`),
 

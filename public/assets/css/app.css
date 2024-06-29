@@ -190,6 +190,9 @@ textarea {
 .mb-16 {
   margin-bottom: 16px;
 }
+.mb-8 {
+  margin-bottom: 8px;
+}
 .pb-32 {
   padding-bottom: 32px;
 }
@@ -2080,6 +2083,7 @@ textarea {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  justify-content: space-between;
 }
 
 .bar {
@@ -2164,4 +2168,71 @@ textarea {
   letter-spacing: -0.03em;
   text-align: left;
   color: #000000cc;
+}
+
+.value-text {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 21.78px;
+  letter-spacing: -0.03em;
+  text-align: left;
+  color: #000000cc;
+}
+
+.bar-label {
+  color: #000000cc;
+
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19.36px;
+  letter-spacing: -0.03em;
+  text-align: right;
+}
+.bar-ratio {
+  height: 52.12px;
+  border: none;
+  border-radius: 16px;
+}
+.DropdownCheckedlist-menu {
+  list-style-type: none;
+  padding: 0;
+}
+
+.DropdownCheckedlist-menu > li {
+  font-size: 17px;
+  line-height: 20.57px;
+  letter-spacing: -0.03em;
+  text-align: left;
+  color: var(--Charcoal-Mist);
+  font-weight: 500;
+  padding: 8px;
+}
+
+.DropdownCheckedlist-menu > li.active,
+.DropdownCheckedlist-menu > li:hover {
+  background: var(--Lavender-Gray) !important;
+  border-radius: 16px !important;
+  border: none !important;
+}
+
+.checkby-name {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: right;
+  color: #000000cc;
+}
+
+.checkby-image {
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+
+  overflow: hidden;
+  border: 2px solid #ffffff;
+}
+.checkedby-container {
+  border-radius: 8px;
+  background-color: #f5f6f7;
+  padding: 10px 16px;
 }

@@ -10,6 +10,7 @@ import SingleProductOutcomesModel from "@/components/shared/model/SingleProductO
 import SingleProjectDesignEffort from "@/components/shared/model/SingleProjectDeisngEffort";
 import PurposeList from "@/components/shared/model/PurposeList";
 import EditEffortSection from "./EditEffortSection";
+import DropdownCheckedlist from "./Dropdown/DropdownCheckedlist";
 
 const months = [
   "Jan",
@@ -39,6 +40,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
     mappingList,
     createProjecteffort,
     effortList,
+    memberslist,
   } = useAuth();
   const params = useParams();
   const [lastIdNumber, setLastIdNumber] = useState(0);
@@ -51,15 +53,17 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [design, setDesign] = useState([]);
-
   const [purposeListData, setPurposeListData] = useState(null);
 
   const [effortToEdit, setEffortToEdit] = useState(null);
   const [purposedropdownOpen, setPurposeDropdownOpen] = useState(false);
   const [selectedPurpose, setSelectedPurpose] = useState(null);
   const [effortsListData, setEffortsListData] = useState(null);
-  const [selectedOption, setSelectedOption] = useState("Quarterly");
+  console.log("🚀 ~ Effort ~ effortsListData:", effortsListData);
+  const [membersListData, setMembersListData] = useState([]);
+  console.log("🚀 ~ Effort ~ membersListData:", membersListData);
 
+  const [selectedOption, setSelectedOption] = useState("Quarterly");
   const [selectedOptionItem, setSelectedOptionItem] = useState(null);
 
   const [link, setLink] = useState("");
@@ -71,6 +75,23 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   };
 
   const { toaster } = useToaster();
+  const fetchMemberData = async () => {
+    try {
+      if (isAdmin) {
+        const result = await memberslist();
+        if (result.status) {
+          setMembersListData(result.data);
+        } else {
+          throw new Error("Failed to fetch member list");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching member list:", error);
+    }
+  };
+  useEffect(() => {
+    fetchMemberData();
+  }, [memberslist]);
 
   const fetchEffortData = async () => {
     try {
@@ -79,17 +100,13 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
         if (result.status) {
           setEffortsListData(result.data);
         } else {
-          throw new Error("Failed to fetch purpose list");
+          throw new Error("Failed to fetch effort list");
         }
       }
     } catch (error) {
-      console.error("Error fetching purpose list:", error);
+      console.error("Error fetching effort list:", error);
     }
   };
-
-  useEffect(() => {
-    fetchEffortData();
-  }, [params.id, effortList]);
 
   const fetchData = async () => {
     try {
@@ -107,8 +124,9 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   };
 
   useEffect(() => {
+    fetchEffortData();
     fetchData();
-  }, [params.id, purposelist]);
+  }, [params.id, purposelist, effortList]);
 
   const fetchDesignEfforts = useCallback(
     async (designEffortIds) => {
@@ -553,29 +571,55 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                             <h1 className="select-outcome-text">
                               Value status:
                             </h1>
-                            <div
-                              className="d-flex align-items-center gap-1"
-                              style={getStatusStyles(effort?.value_status)}
-                            >
-                              <span className="checked-status">
-                                {statusDescriptions[effort?.value_status]}
-                              </span>
-                              <span>
-                                {getStatusImage() && (
-                                  <img
-                                    src={getStatusImage()}
-                                    alt={
-                                      statusDescriptions[effort?.value_status]
-                                    }
-                                  />
-                                )}
-                              </span>
+                            <DropdownCheckedlist
+                            fetchMemberData={fetchMemberData}
+                              effort={effort}
+                              statusDescriptions={statusDescriptions}
+                              getStatusImage={getStatusImage}
+                              getStatusStyles={getStatusStyles}
+                              isAdmin={isAdmin}
+                              fetchEffortData={fetchEffortData}
+                            />
+                          </div>
+                          {isAdmin && (
+                            <div className="d-flex align-items-center gap-4">
+                              <h1 className="select-outcome-text">
+                                Checked By:
+                              </h1>
+
+                              {effort.checked_by ? (
+                                (() => {
+                                  const checkedMember = membersListData?.find(
+                                    (member) => member.id === effort?.checked_by
+                                  );
+
+                                  return (
+                                    <div className="checkedby-container d-flex align-items-center gap-1">
+                                      <div className="checkby-image">
+                                        <img
+                                          src={
+                                            checkedMember?.profile_pic
+                                              ? checkedMember?.profile_pic
+                                              : "/assets/images/mark/profile.png"
+                                          }
+                                          alt={checkedMember?.fullname}
+                                          style={{
+                                            borderRadius: "50%",
+                                            objectFit: "cover",
+                                          }}
+                                        />
+                                      </div>
+                                      <h2 className="checkby-name">
+                                        <span>{checkedMember?.fullname}</span>
+                                      </h2>
+                                    </div>
+                                  );
+                                })()
+                              ) : (
+                                <div className="no-checked"></div>
+                              )}
                             </div>
-                          </div>
-                          <div className="d-flex align-items-center gap-4">
-                            <h1 className="select-outcome-text">Checked By:</h1>
-                            <div className="no-checked"></div>
-                          </div>
+                          )}
                         </div>
 
                         <div className="pb-24 d-flex gap-2  justify-content-between flex-column w-100 border-bottom-grey pt-24 pb-32">

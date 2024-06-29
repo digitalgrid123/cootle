@@ -1001,7 +1001,25 @@ function AuthProvider({ children }) {
       return { status: false, data: "" };
     }
   };
+  const memberslist = async () => {
+    try {
+      const res = await axiosGet(API_ROUTER.MEMBERS_LIST);
+    
 
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return { status: false, data: res.data || "" };
+      }
+    } catch (error) {
+      return { status: false, data: "" };
+    }
+  };
+
+ 
   const resetmapping = async () => {
     return new Promise(async (resolve) => {
       try {
@@ -1242,7 +1260,6 @@ function AuthProvider({ children }) {
   const valueratio = async (project_id) => {
     try {
       const res = await axiosGet(API_ROUTER.EFFORT_VALUE_RATIO(project_id));
-   
 
       if (res.status) {
         return {
@@ -1260,7 +1277,6 @@ function AuthProvider({ children }) {
   const objectiveratio = async (project_id) => {
     try {
       const res = await axiosGet(API_ROUTER.OBJECTIVE_VALUE_RATIO(project_id));
-      
 
       if (res.status) {
         return {
@@ -1280,7 +1296,6 @@ function AuthProvider({ children }) {
       const res = await axiosGet(
         API_ROUTER.EFFORT_BY_CATEGORY_COUNT(project_id)
       );
-      
 
       if (res.status) {
         return {
@@ -1296,10 +1311,7 @@ function AuthProvider({ children }) {
   };
   const latestobjective = async (project_id) => {
     try {
-      const res = await axiosGet(
-        API_ROUTER.LATEST_OBJECTIVE(project_id)
-      );
-      
+      const res = await axiosGet(API_ROUTER.LATEST_OBJECTIVE(project_id));
 
       if (res.status) {
         return {
@@ -1316,10 +1328,7 @@ function AuthProvider({ children }) {
 
   const latestvalue = async (project_id) => {
     try {
-      const res = await axiosGet(
-        API_ROUTER.LATEST_VALUE(project_id)
-      );
-      
+      const res = await axiosGet(API_ROUTER.LATEST_VALUE(project_id));
 
       if (res.status) {
         return {
@@ -1334,6 +1343,35 @@ function AuthProvider({ children }) {
     }
   };
 
+  const effortcheckedBy = async (project_effort_id, value_status) => {
+    try {
+      const res = await axiosPatch(
+        API_ROUTER.EFFORT_CHECKED_BY(project_effort_id),
+        {
+          value_status,
+        }
+      );
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return {
+          status: false,
+          data: "",
+        };
+      }
+    } catch (error) {
+      console.error("Error creating purpose:", error);
+      return {
+        status: false,
+        data: "",
+        message: "An error occurred while adding purpose",
+      };
+    }
+  };
 
   return (
     <AuthContext.Provider
@@ -1391,7 +1429,9 @@ function AuthProvider({ children }) {
         objectiveratio,
         effortbycategory,
         latestobjective,
-        latestvalue
+        latestvalue,
+        effortcheckedBy,
+        memberslist,
       }}
     >
       {children}

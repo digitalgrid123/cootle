@@ -425,9 +425,7 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
               )
             )
           ) : (
-            <div className="section-project">
-              <div className="pb-24 d-flex align-items-center justify-content-between w-100 border-bottom-grey"></div>
-            </div>
+            <></>
           )}
         </div>
       </div>

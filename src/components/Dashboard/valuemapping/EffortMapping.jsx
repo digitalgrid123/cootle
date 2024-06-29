@@ -232,17 +232,15 @@ const EffortMapping = ({ reset, isAdmin }) => {
                               onChange={(e) => setEditTitle(e.target.value)}
                             />
 
-                            {isAdmin && (
-                              <button
-                                onClick={handleCancelClick}
-                                className="edit-button"
-                              >
-                                <img
-                                  src="/assets/images/mark/close_btn.png"
-                                  alt="edit"
-                                />
-                              </button>
-                            )}
+                            <button
+                              onClick={handleCancelClick}
+                              className="edit-button"
+                            >
+                              <img
+                                src="/assets/images/mark/close_btn.png"
+                                alt="edit"
+                              />
+                            </button>
                           </div>
                           <textarea
                             className="textarea-input h-300 b-deepsea mb-20"
@@ -264,15 +262,17 @@ const EffortMapping = ({ reset, isAdmin }) => {
                             <h1 className="defination-heading">
                               {activeSubTab.title}
                             </h1>
-                            <button
-                              onClick={handleEditClick}
-                              className="edit-button"
-                            >
-                              <img
-                                src="/assets/images/mark/edit.svg"
-                                alt="edit"
-                              />
-                            </button>
+                            {isAdmin && (
+                              <button
+                                onClick={handleEditClick}
+                                className="edit-button"
+                              >
+                                <img
+                                  src="/assets/images/mark/edit.svg"
+                                  alt="edit"
+                                />
+                              </button>
+                            )}
                           </div>
                           <div className="defination-text">
                             <ul className="defination-text">
