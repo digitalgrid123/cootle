@@ -155,6 +155,9 @@ export const API_ROUTER = {
   LATEST_VALUE: (project_id) =>
     getNormalRoute(`insights/${project_id}/latest-values`),
 
+  EFFORT_GRAPH: (project_id) =>
+    getNormalRoute(`insights/${project_id}/efforts-graph`),
+
   //DELETE CATEGORY
   DELETE_CATEGORY: getNormalRoute("category/remove"),
 

@@ -6,7 +6,7 @@ const BarChart = ({ data }) => {
 
   // Transform data with fixed colors
   const transformedData = data.map((item, index) => ({
-    label: item.value,
+    label: item.value || item.objective,
     value: item.ratio,
     color: colors[index % colors.length], // Cycle through colors
   }));

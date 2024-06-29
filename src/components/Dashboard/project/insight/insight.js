@@ -3,6 +3,8 @@ import { useParams } from "next/navigation";
 import BarChart from "./charts/BarChart";
 import { useAuth } from "@/hooks";
 import CategoryByCountChart from "./charts/CategoryByCountChart";
+import Activity from "./charts/Activity";
+import LineGraph from "./charts/LineGraph";
 
 const Insight = ({ isAdmin }) => {
   const params = useParams();
@@ -12,100 +14,82 @@ const Insight = ({ isAdmin }) => {
     effortbycategory,
     latestobjective,
     latestvalue,
-  } = useAuth(); // Destructuring latestvalue from useAuth hook
-  const [valueRatio, setValueRatio] = useState([]);
-  const [objectiveRatio, setObjectiveRatio] = useState([]);
-  const [effortCategories, setEffortCategories] = useState([]);
-  const [latestObjective, setLatestObjective] = useState(null);
-  const [latestValue, setLatestValue] = useState(null);
+    effortgraph,
+  } = useAuth(); // Destructuring latestvalue and effortgraph from useAuth hook
+
+  const [data, setData] = useState({
+    valueRatio: [],
+    objectiveRatio: [],
+    effortCategories: {},
+    latestObjective: null,
+    latestValue: null,
+    effortGraphData: [],
+  });
+  const [error, setError] = useState(null);
+
   const project_id = params.id;
 
-  const fetchValueRatio = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     try {
-      if (project_id) {
-        const result = await valueratio(project_id);
-        if (result.status) {
-          setValueRatio(result.data);
-        } else {
-          throw new Error("Failed to fetch value ratio data");
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching value ratio data:", error);
-    }
-  }, [project_id, valueratio]);
+      if (!project_id) return;
 
-  const fetchObjectiveRatio = useCallback(async () => {
-    try {
-      if (project_id) {
-        const result = await objectiveratio(project_id);
-        if (result.status) {
-          setObjectiveRatio(result.data);
-        } else {
-          throw new Error("Failed to fetch objective ratio data");
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching objective ratio data:", error);
-    }
-  }, [project_id, objectiveratio]);
+      setError(null);
 
-  const fetchEffortCategories = useCallback(async () => {
-    try {
-      // Example usage of effortbycategory assuming it fetches categories data
-      const result = await effortbycategory(project_id);
-      if (result.status) {
-        setEffortCategories(result.data);
-      } else {
-        throw new Error("Failed to fetch effort categories data");
-      }
-    } catch (error) {
-      console.error("Error fetching effort categories data:", error);
-    }
-  }, [effortbycategory]);
+      const [
+        valueRatioResult,
+        objectiveRatioResult,
+        effortCategoriesResult,
+        latestObjectiveResult,
+        latestValueResult,
+        effortGraphDataResult,
+      ] = await Promise.all([
+        valueratio(project_id),
+        objectiveratio(project_id),
+        effortbycategory(project_id),
+        latestobjective(project_id),
+        latestvalue(project_id),
+        effortgraph(project_id),
+      ]);
 
-  const fetchLatestObjective = useCallback(async () => {
-    try {
-      // Example usage of latestobjective assuming it fetches latest objective data
-      const result = await latestobjective(project_id);
-      if (result.status) {
-        setLatestObjective(result.data);
-      } else {
-        throw new Error("Failed to fetch latest objective data");
-      }
+      setData({
+        valueRatio: valueRatioResult.status ? valueRatioResult.data : [],
+        objectiveRatio: objectiveRatioResult.status
+          ? objectiveRatioResult.data
+          : [],
+        effortCategories: effortCategoriesResult.status
+          ? effortCategoriesResult.data
+          : {},
+        latestObjective: latestObjectiveResult.status
+          ? latestObjectiveResult.data
+          : null,
+        latestValue: latestValueResult.status ? latestValueResult.data : null,
+        effortGraphData: effortGraphDataResult.status
+          ? effortGraphDataResult.data
+          : [],
+      });
     } catch (error) {
-      console.error("Error fetching latest objective data:", error);
+      console.error("Error fetching data:", error);
+      setError(error.message);
     }
-  }, [latestobjective]);
-
-  const fetchLatestValue = useCallback(async () => {
-    try {
-      // Example usage of latestvalue assuming it fetches latest value data
-      const result = await latestvalue(project_id);
-      if (result.status) {
-        setLatestValue(result.data);
-      } else {
-        throw new Error("Failed to fetch latest value data");
-      }
-    } catch (error) {
-      console.error("Error fetching latest value data:", error);
-    }
-  }, [latestvalue]);
+  }, [
+    project_id,
+    valueratio,
+    objectiveratio,
+    effortbycategory,
+    latestobjective,
+    latestvalue,
+    effortgraph,
+  ]);
 
   useEffect(() => {
-    fetchValueRatio();
-    fetchObjectiveRatio();
-    fetchEffortCategories();
-    fetchLatestObjective();
-    fetchLatestValue(); // Call the fetch function for latest value
-  }, [
-    fetchValueRatio,
-    fetchObjectiveRatio,
-    fetchEffortCategories,
-    fetchLatestObjective,
-    fetchLatestValue,
-  ]);
-  const categories = Object.entries(effortCategories);
+    fetchData();
+  }, [fetchData]);
+
+  const categories = Object.entries(data.effortCategories);
+
+  if (error) {
+    return <p>Error loading data: {error}</p>;
+  }
 
   return (
     <div className="wrapper-company w-100">
@@ -121,40 +105,37 @@ const Insight = ({ isAdmin }) => {
               <span className="question-mark">?</span>
             </h2>
           </div>
+          <h3 className="Design_effort_text mb-16 ">
+            Value driven product activities ratio
+          </h3>
           <div className="col-lg-6">
-            <h3 className="Design_effort_text mb-16 ">
-              Value driven product activities ratio
-            </h3>
-
-            {valueRatio.length > 0 ? (
-              <BarChart data={valueRatio} />
+            {data.valueRatio.length > 0 ? (
+              <BarChart data={data.valueRatio} />
             ) : (
-              <p>Loading value ratio data...</p>
+              <p>No value ratio data available.</p>
             )}
           </div>
-          {/* <div>
-          <h3>Objective Ratio</h3>
-          {objectiveRatio.length > 0 ? (
-            <BarChart data={objectiveRatio} />
-          ) : (
-            <p>Loading objective ratio data...</p>
-          )}
-        </div> */}
+          <div className="col-lg-6">
+            {data.objectiveRatio.length > 0 ? (
+              <BarChart data={data.objectiveRatio} />
+            ) : (
+              <p>No objective ratio data available.</p>
+            )}
+          </div>
           <div className="col-lg-6">
             <h3 className="Design_effort_text mb-16 ">
               Design efforts focused Ratio
             </h3>
             <div className="row">
               {categories.map(([category, count], index) => (
-                <div className="col-lg-6 mb-24">
-                  <div key={index} className="effort-count-container">
+                <div key={index} className="col-lg-6 mb-24">
+                  <div className="effort-count-container">
                     <h3 className="category-text mb-24">{category}</h3>
                     <div className="d-flex align-items-start justify-content-between">
                       <div className="d-flex flex-column gap-1">
                         <h2 className="effort-complete">Efforts done</h2>
                         <h2 className="count-text">{count}</h2>
                       </div>
-
                       <CategoryByCountChart count={count} />
                     </div>
                   </div>
@@ -162,34 +143,12 @@ const Insight = ({ isAdmin }) => {
               ))}
             </div>
           </div>
-
           <div className="col-lg-6">
-            <h3 className="Design_effort_text mb-16 ">
-              Value driven product activities ratio
-            </h3>
-
-            {latestObjective?.length > 0 ? (
-              <BarChart data={latestObjective} />
-            ) : (
-              <p>Loading value ratio data...</p>
-            )}
+            <h3 className="Design_effort_text mb-16 ">Effort Graph</h3>
+            <div className="row">
+              <LineGraph data={data.effortGraphData} />
+            </div>
           </div>
-          {/* <div>
-          <h3>Latest Objective</h3>
-          {latestObjective ? (
-            <p>{latestObjective.title}</p>
-          ) : (
-            <p>Loading latest objective data...</p>
-          )}
-        </div>
-        <div>
-          <h3>Latest Value</h3>
-          {latestValue ? (
-            <p>{latestValue.value}</p>
-          ) : (
-            <p>Loading latest value data...</p>
-          )}
-        </div> */}
         </div>
       </div>
     </div>

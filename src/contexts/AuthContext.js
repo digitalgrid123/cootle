@@ -1004,7 +1004,6 @@ function AuthProvider({ children }) {
   const memberslist = async () => {
     try {
       const res = await axiosGet(API_ROUTER.MEMBERS_LIST);
-    
 
       if (res.status) {
         return {
@@ -1019,7 +1018,6 @@ function AuthProvider({ children }) {
     }
   };
 
- 
   const resetmapping = async () => {
     return new Promise(async (resolve) => {
       try {
@@ -1343,6 +1341,23 @@ function AuthProvider({ children }) {
     }
   };
 
+  const effortgraph = async (project_id) => {
+    try {
+      const res = await axiosGet(API_ROUTER.EFFORT_GRAPH(project_id));
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return { status: false, data: res.data || "" };
+      }
+    } catch (error) {
+      return { status: false, data: "" };
+    }
+  };
+
   const effortcheckedBy = async (project_effort_id, value_status) => {
     try {
       const res = await axiosPatch(
@@ -1432,6 +1447,7 @@ function AuthProvider({ children }) {
         latestvalue,
         effortcheckedBy,
         memberslist,
+        effortgraph,
       }}
     >
       {children}
