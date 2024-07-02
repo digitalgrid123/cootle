@@ -149,6 +149,12 @@ const Insight = ({ isAdmin }) => {
               <LineGraph data={data.effortGraphData} />
             </div>
           </div>
+          <div className="col-lg-6">
+            <h3 className="Design_effort_text mb-16 ">Effort Graph</h3>
+            <div className="row">
+              <Activity activities={data.latestObjective} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

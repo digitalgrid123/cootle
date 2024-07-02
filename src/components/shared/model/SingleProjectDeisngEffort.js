@@ -95,7 +95,7 @@ const SingleProjectDeisngEffort = ({
 
   const handleTabClick = (id) => {
     // If the clicked item is already selected, deselect it
-    if (selectedDesignEfforts.includes(id)) {
+    if (selectedDesignEfforts?.includes(id)) {
       setSelectedDesignEfforts([]);
     } else {
       // Otherwise, select the clicked item and deselect others
@@ -113,7 +113,7 @@ const SingleProjectDeisngEffort = ({
     .filter((category) => category.items.length > 0);
 
   const renderSelectedEfforts = () => {
-    if (selectedDesignEfforts.length === 0) return null;
+    if (selectedDesignEfforts?.length === 0) return null;
 
     return (
       <div className="selected-outcome border_bottom_faint pb-32">
@@ -160,7 +160,7 @@ const SingleProjectDeisngEffort = ({
         </h3>
         <div className="row border_bottom_faint pb-20">
           {category.items.map((item, idx) => {
-            const isSelected = selectedDesignEfforts.includes(item.id);
+            const isSelected = selectedDesignEfforts?.includes(item.id);
 
             if (isSelected) {
               return null; // Skip rendering selected items in renderDesignEfforts

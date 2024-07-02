@@ -319,7 +319,7 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
             design={design}
           />
           {filteredPurposes && filteredPurposes.length > 0 ? (
-            filteredPurposes.map((purpose) =>
+            filteredPurposes.reverse().map((purpose) =>
               purposeToEdit && purposeToEdit.id === purpose.id ? (
                 <EditPurposeSection
                   key={purpose.id}

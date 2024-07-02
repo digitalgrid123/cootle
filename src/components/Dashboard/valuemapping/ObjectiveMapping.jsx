@@ -119,9 +119,57 @@ const ObjectiveMapping = ({ selectedMapping, reset, isAdmin }) => {
     reset,
   ]);
 
-  const handleModelAdded = useCallback(async () => {
-    await fetchObjectives();
-  }, [fetchObjectives]);
+  const fetchlastObjectives = useCallback(async () => {
+    try {
+      const res = await mappingList(selectedMapping);
+      if (res?.status && Array.isArray(res.data) && res.data.length > 0) {
+        const objectivesData = res.data;
+
+        // Fetch design efforts for each objective
+        const designEffortPromises = objectivesData.map(async (obj) => {
+          if (obj.design_efforts.length > 0) {
+            const designEffortData = await fetchDesignEfforts(
+              obj.design_efforts
+            );
+            return { ...obj, design_efforts: designEffortData };
+          }
+          return obj;
+        });
+
+        const objectivesWithDesignEfforts = await Promise.all(
+          designEffortPromises
+        );
+
+        setObjectives(objectivesWithDesignEfforts);
+
+        // Get active tab id from localStorage if available
+        const storedActiveTabId = localStorage.getItem("activeTabId");
+        // Set the active tab based on stored ID or default to the last objective
+        const activeTabToSet =
+          objectivesWithDesignEfforts
+            .slice()
+            .reverse()
+            .find((obj) => obj.id === Number(storedActiveTabId)) ||
+          objectivesWithDesignEfforts.slice().reverse()[0];
+        setActiveTab(activeTabToSet);
+
+        // Set the first design effort of the active tab as active
+        if (activeTabToSet?.design_efforts.length > 0) {
+          setActiveProductOutcome(activeTabToSet.design_efforts[0].title);
+        }
+      } else {
+        setError("No data found in the response");
+      }
+    } catch (err) {
+      setError("Error fetching data");
+    } finally {
+      setLoading(false);
+    }
+  }, [mappingList, selectedMapping, fetchDesignEfforts, reset]);
+
+  const handleModelAddedlast = useCallback(async () => {
+    await fetchlastObjectives();
+  }, [fetchlastObjectives]);
 
   useEffect(() => {
     fetchObjectives();
@@ -405,7 +453,7 @@ const ObjectiveMapping = ({ selectedMapping, reset, isAdmin }) => {
         selectedMapping={selectedMapping}
         dropdownOpen={dropdownOpen}
         toggleDropdown={toggleDropdown}
-        onModelAdded={handleModelAdded}
+        onModelAdded={handleModelAddedlast}
       />
     </>
   );

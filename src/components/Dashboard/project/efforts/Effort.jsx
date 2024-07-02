@@ -59,9 +59,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   const [purposedropdownOpen, setPurposeDropdownOpen] = useState(false);
   const [selectedPurpose, setSelectedPurpose] = useState(null);
   const [effortsListData, setEffortsListData] = useState(null);
-  console.log("🚀 ~ Effort ~ effortsListData:", effortsListData);
   const [membersListData, setMembersListData] = useState([]);
-  console.log("🚀 ~ Effort ~ membersListData:", membersListData);
 
   const [selectedOption, setSelectedOption] = useState("Quarterly");
   const [selectedOptionItem, setSelectedOptionItem] = useState(null);
@@ -437,7 +435,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
               />
 
               {filteredEffort &&
-                filteredEffort.map((effort) =>
+                filteredEffort.reverse().map((effort) =>
                   effortToEdit && effortToEdit.id === effort.id ? (
                     <>
                       {
@@ -462,7 +460,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                     </>
                   ) : (
                     <div key={effort.id} className="col-lg-6">
-                      <div className="section-project">
+                      <div className="section-project mb-24">
                         <div className="pb-24 d-flex align-items-center justify-content-between w-100 border-bottom-grey">
                           <div className="d-flex align-items-center justify-content-between w-100">
                             <h1 className="create-id">{`#eff${
@@ -572,9 +570,8 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                               Value status:
                             </h1>
                             <DropdownCheckedlist
-                            fetchMemberData={fetchMemberData}
+                              fetchMemberData={fetchMemberData}
                               effort={effort}
-                              statusDescriptions={statusDescriptions}
                               getStatusImage={getStatusImage}
                               getStatusStyles={getStatusStyles}
                               isAdmin={isAdmin}

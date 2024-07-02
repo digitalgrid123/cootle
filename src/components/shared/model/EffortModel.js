@@ -23,10 +23,9 @@ const EffortModel = ({
       closeDropdown();
     }
   };
-
   const handleAdd = async () => {
     try {
-      const res = await createDesignEffort(activeTab, description, name);
+      const res = await createDesignEffort(activeTab, description || " ", name);
       if (!res.status) {
         toaster("Failed to add", TOAST_TYPES.ERROR);
       } else {

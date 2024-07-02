@@ -36,7 +36,7 @@ const MainMap = () => {
         toaster("Failed to Reset", TOAST_TYPES.ERROR);
       } else {
         toaster("Successfully Reset", TOAST_TYPES.SUCCESS);
-        setReset(true);
+        setOpenDropdown(false);
       }
     } catch (error) {
       toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);
@@ -127,7 +127,7 @@ const MainMap = () => {
             }`}
             onClick={() => handleMappingChange("OUT")}
           >
-            Product Mapping
+            Product Outcome
           </button>
         </div>
 

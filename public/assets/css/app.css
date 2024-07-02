@@ -2080,10 +2080,10 @@ textarea {
 }
 
 .bar-container {
+  width: 60%;
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  justify-content: space-between;
 }
 
 .bar {
@@ -2196,6 +2196,11 @@ textarea {
 .DropdownCheckedlist-menu {
   list-style-type: none;
   padding: 0;
+  position: absolute;
+  background: var(--text-color) !important;
+  z-index: 1000;
+  box-shadow: var(--box-shadow);
+  border-radius: 8px;
 }
 
 .DropdownCheckedlist-menu > li {

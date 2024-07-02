@@ -2,24 +2,29 @@ import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 import { useAuth, useToaster } from "@/hooks";
 import React, { useState } from "react";
 
+const statusDescriptions = {
+  YBC: "Yet to be checked",
+  UCH: "Unchecked", // This will be filtered out from the dropdown options
+  UPA: "Unplanned Activity",
+  REA: "Realised",
+  VUR: "Value Unrealised",
+};
+
 const DropdownCheckedlist = ({
   effort,
   getStatusStyles,
   getStatusImage,
-  statusDescriptions,
   isAdmin,
   fetchEffortData,
   fetchMemberData,
 }) => {
+  console.log("🚀 ~ effort:", effort);
   const { effortcheckedBy } = useAuth();
-  const { toaster } = useToaster(); // Add toaster from useToaster
+  const { toaster } = useToaster();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(effort?.value_status);
 
   const toggleDropdown = () => {
-    if (isAdmin) {
-      return; // Do not open dropdown if isAdmin is true
-    }
     setIsOpen(!isOpen);
   };
 
@@ -46,7 +51,7 @@ const DropdownCheckedlist = ({
       <div
         className="DropdownCheckedlist-header d-flex align-items-center gap-1 cursor-pointer"
         style={getStatusStyles(effort?.value_status)}
-        onClick={toggleDropdown}
+        onClick={!isAdmin ? toggleDropdown : undefined}
       >
         <span className="checked-status">
           {statusDescriptions[selectedStatus]}
@@ -62,19 +67,21 @@ const DropdownCheckedlist = ({
           </span>
         )}
       </div>
-      {isOpen && (
+      {isOpen && !isAdmin && (
         <ul className="DropdownCheckedlist-menu">
-          {Object.keys(statusDescriptions).map((statusKey) => (
-            <li
-              key={statusKey}
-              onClick={() => handleStatusSelect(statusKey)}
-              className={`cursor-pointer mb-8 ${
-                selectedStatus === statusKey ? "active" : ""
-              }`}
-            >
-              {statusDescriptions[statusKey]}
-            </li>
-          ))}
+          {Object.keys(statusDescriptions)
+            .filter((statusKey) => statusKey !== "UCH") // Filter out 'UCH'
+            .map((statusKey) => (
+              <li
+                key={statusKey}
+                onClick={() => handleStatusSelect(statusKey)}
+                className={`cursor-pointer mb-8 ${
+                  selectedStatus === statusKey ? "active" : ""
+                }`}
+              >
+                {statusDescriptions[statusKey]}
+              </li>
+            ))}
         </ul>
       )}
     </div>

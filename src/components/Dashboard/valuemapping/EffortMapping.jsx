@@ -10,6 +10,7 @@ const EffortMapping = ({ reset, isAdmin }) => {
   const [categoriesList, setCategoriesList] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
   const [activeSubTab, setActiveSubTab] = useState(null);
+
   const [activeContentTab, setActiveContentTab] = useState("Definition");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [designdropdownOpen, setDesignDropdownOpen] = useState(false);
@@ -40,6 +41,42 @@ const EffortMapping = ({ reset, isAdmin }) => {
       }
     } catch (error) {
       console.error("Error fetching categories:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const refreshCategories = async () => {
+    setLoading(true);
+    try {
+      const res = await categories();
+      if (res?.status && Array.isArray(res.data) && res.data.length > 0) {
+        const updatedCategories = res.data;
+        setCategoriesList(updatedCategories);
+        setActiveCategory(updatedCategories[updatedCategories.length - 1]); // Set activeCategory to the last item
+      } else {
+        console.error("Failed to fetch categories or empty data returned");
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const refreshEfforts = async () => {
+    setLoading(true);
+    try {
+      const res = await getSinglecategory(activeCategory.id); // Assuming getSinglecategory fetches the category details with efforts
+      if (res?.status && Array.isArray(res.data) && res.data.length > 0) {
+        const updatedEfforts = res.data;
+        setInitialDesignEfforts(updatedEfforts);
+        setActiveSubTab(updatedEfforts[updatedEfforts.length - 1]); // Set activeSubTab to the last item
+      } else {
+        console.error("Failed to fetch efforts or empty data returned");
+      }
+    } catch (error) {
+      console.error("Error fetching efforts:", error);
     } finally {
       setLoading(false);
     }
@@ -300,7 +337,7 @@ const EffortMapping = ({ reset, isAdmin }) => {
         toggledesignDropdown={toggleDesignDropdown}
         designdropdownOpen={designdropdownOpen}
         activeTab={activeCategory ? activeCategory.id : ""}
-        refreshCategories={fetchCategories}
+        refreshCategories={refreshEfforts}
       />
       <MapModel
         dropdownOpen={dropdownOpen}
@@ -308,7 +345,7 @@ const EffortMapping = ({ reset, isAdmin }) => {
         tabs={categoriesList}
         activeTab={activeCategory ? activeCategory.name : ""}
         handleTabClick={handleCategoryClick}
-        refreshCategories={fetchCategories}
+        refreshCategories={refreshCategories}
       />
     </>
   );
