@@ -4,12 +4,12 @@ const SingleProductOutcomesModel = ({
   designdropdownOpen,
   toggledesignDropdown,
   objectives,
+  selectedProductOutcomes,
   setSelectedProductOutcomes,
 }) => {
   const dropdownRef = useRef(null);
   const [containerHeight, setContainerHeight] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTab, setSelectedTab] = useState(null);
 
   const closeDropdown = () => {
     toggledesignDropdown(false);
@@ -53,42 +53,45 @@ const SingleProductOutcomesModel = ({
   };
 
   const handleTabClick = (id) => {
-    setSelectedTab(id === selectedTab ? null : id);
+    if (!selectedProductOutcomes) {
+      setSelectedProductOutcomes([id]);
+    } else if (selectedProductOutcomes.includes(id)) {
+      setSelectedProductOutcomes(
+        selectedProductOutcomes.filter((objId) => objId !== id)
+      );
+    } else {
+      setSelectedProductOutcomes([...selectedProductOutcomes, id]);
+    }
   };
 
-  useEffect(() => {
-    if (!designdropdownOpen && selectedTab !== null) {
-      setSelectedProductOutcomes([selectedTab]);
-      closeDropdown();
-    }
-  }, [designdropdownOpen, selectedTab, setSelectedProductOutcomes]);
-
   const renderSelectedObjectives = () => {
-    const selectedObjective = objectives.find((obj) => obj.id === selectedTab);
-
-    if (!selectedObjective) {
-      return null;
-    }
+    const selectedObjectives = objectives.filter((obj) =>
+      selectedProductOutcomes?.includes(obj.id)
+    );
 
     return (
       <div className="selected-outcome border_bottom_faint pb-32">
-        <h3 className="category-headingeffort mb-20 mt-24">Selected outcome</h3>
+        <h3 className="category-headingeffort mb-20 mt-24">
+          Selected outcomes
+        </h3>
         <ul className="p-0">
           <div className="row">
-            <div className="col-lg-3">
-              <li
-                onClick={() => handleTabClick(selectedObjective.id)}
-                className="d-flex design-tab selected-tab align-items-center justify-content-between"
-              >
-                {selectedObjective.title}
-                <div>
-                  <img
-                    src="/assets/images/mark/remove-design.svg"
-                    alt="remove-btn"
-                  />
-                </div>
-              </li>
-            </div>
+            {selectedObjectives.map((objective) => (
+              <div key={objective.id} className="col-lg-3">
+                <li
+                  onClick={() => handleTabClick(objective.id)}
+                  className="d-flex design-tab selected-tab  align-items-center justify-content-between"
+                >
+                  {objective.title}
+                  <div>
+                    <img
+                      src="/assets/images/mark/remove-design.svg"
+                      alt="remove-btn"
+                    />
+                  </div>
+                </li>
+              </div>
+            ))}
           </div>
         </ul>
       </div>
@@ -99,7 +102,7 @@ const SingleProductOutcomesModel = ({
     const filteredObjectives = objectives.filter(
       (obj) =>
         obj.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        obj.id !== selectedTab
+        !selectedProductOutcomes?.includes(obj.id)
     );
 
     return (
@@ -113,7 +116,7 @@ const SingleProductOutcomesModel = ({
               <div key={objective.id} className="col-lg-3">
                 <li
                   onClick={() => handleTabClick(objective.id)}
-                  className="d-flex design-tab align-items-center justify-content-between flex-wrap"
+                  className="d-flex design-tab  align-items-center justify-content-between flex-wrap"
                 >
                   {objective.title}
                   <div>
@@ -141,7 +144,7 @@ const SingleProductOutcomesModel = ({
                 <div className="col-lg-12">
                   <div className="dropdown-header d-flex align-items-center justify-content-between">
                     <h2 className="category-heading weight-600 mb-24">
-                      Product outcomes
+                      Product desired outcomes
                     </h2>
                     <button
                       className="send_btn"
@@ -180,13 +183,7 @@ const SingleProductOutcomesModel = ({
                   </div>
                 </div>
                 <div className="border_bottom_faint pb-32"></div>
-                <div
-                  className="col-lg-12 mt-20"
-                  style={{
-                    maxHeight: `${containerHeight}px`,
-                    overflowY: "auto",
-                  }}
-                >
+                <div className="col-lg-12 mt-20">
                   {renderSelectedObjectives()}
                   {renderSampleObjectives()}
                 </div>

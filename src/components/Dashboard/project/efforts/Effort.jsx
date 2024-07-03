@@ -71,7 +71,6 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
 
   const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
   const [user, setUser] = useState(null);
- 
 
   useEffect(() => {
     const fetchUserinfo = async () => {
@@ -825,7 +824,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
           </div>
         </div>
       </div>
-      <ProductOutcomesModel
+      <SingleProductOutcomesModel
         designdropdownOpen={designdropdownOpen}
         toggledesignDropdown={setDesigndropdownOpen}
         objectives={objectives}
