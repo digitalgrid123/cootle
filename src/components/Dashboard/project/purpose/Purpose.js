@@ -58,7 +58,6 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
 
   const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
   const [user, setUser] = useState(null);
-  console.log("🚀 ~ Purpose ~ user:", user);
 
   useEffect(() => {
     const fetchUserinfo = async () => {
