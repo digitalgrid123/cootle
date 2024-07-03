@@ -35,7 +35,7 @@ const quarters = ["Q1", "Q2", "Q3", "Q4"];
 const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   const {
     purposelist,
-    user,
+    userinfo,
     reteriveEffort,
     mappingList,
     createProjecteffort,
@@ -70,7 +70,19 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   const [userdetail, setUserDetail] = useState([]);
 
   const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
+  const [user, setUser] = useState(null);
+ 
 
+  useEffect(() => {
+    const fetchUserinfo = async () => {
+      const res = await userinfo();
+      if (res && res.status) {
+        setUser(res.data);
+      }
+    };
+
+    fetchUserinfo();
+  }, [userinfo]);
   // Handle lifetime click
   const handleLifetimeClick = () => {
     setIsLifetimeClicked(true);
@@ -524,7 +536,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                 onToggleNewEffort={onToggleNewEffort}
                 showNewEffortInput={showNewEffortInput}
                 generateId={generateId}
-                user={userdetail}
+                user={user}
                 getCurrentDate={getCurrentDate}
                 handleSaveEffort={handleSaveEffort}
                 toggledesigndropdown={toggledesigndropdown}
@@ -556,7 +568,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                           setLinks={setLinks}
                           key={effort.id}
                           effort={effort}
-                          user={user}
+                          user={userdetail}
                           handleCancel={handleCancelEdit}
                           objectives={objectives}
                           design={design}

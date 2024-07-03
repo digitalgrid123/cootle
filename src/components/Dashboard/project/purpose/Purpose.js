@@ -31,7 +31,7 @@ const quarters = ["Q1", "Q2", "Q3", "Q4"];
 const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
   const {
     purposelist,
-    user,
+    userinfo,
     reteriveEffort,
     mappingList,
     createPurpose,
@@ -57,7 +57,19 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
   const [selectedOptionItem, setSelectedOptionItem] = useState(null);
 
   const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
+  const [user, setUser] = useState(null);
+  console.log("🚀 ~ Purpose ~ user:", user);
 
+  useEffect(() => {
+    const fetchUserinfo = async () => {
+      const res = await userinfo();
+      if (res && res.status) {
+        setUser(res.data);
+      }
+    };
+
+    fetchUserinfo();
+  }, [userinfo]);
   // Handle lifetime click
   const handleLifetimeClick = () => {
     setIsLifetimeClicked(true);

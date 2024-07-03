@@ -35,8 +35,8 @@ const NewPurposeSection = ({
                 <div className="create_profile">
                   <img
                     src={
-                      user.profile_pic
-                        ? user.profile_pic
+                      user?.profile_pic
+                        ? user?.profile_pic
                         : "/assets/images/mark/profile.png"
                     }
                     alt="profile"
@@ -48,7 +48,7 @@ const NewPurposeSection = ({
                     }}
                   />
                 </div>
-                <h2 className="create-name">{user.fullname}</h2>
+                <h2 className="create-name">{user?.fullname}</h2>
               </div>
             </div>
             <div className="d-flex align-items-center gap-2">
