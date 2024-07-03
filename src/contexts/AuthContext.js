@@ -399,7 +399,6 @@ function AuthProvider({ children }) {
   };
 
   const userinfobyId = async (user_id) => {
-   
     return new Promise(async (resolve) => {
       try {
         const res = await axiosGet(API_ROUTER.USER_INFO, {
@@ -407,7 +406,6 @@ function AuthProvider({ children }) {
         });
 
         if (res.status) {
-    
           resolve({ status: true, data: res.data });
         } else {
           resolve({ status: false, data: "" });
@@ -420,7 +418,6 @@ function AuthProvider({ children }) {
 
   const createcompany = async (name, logo) => {
     return new Promise(async (resolve) => {
-        console.log("🚀 ~ returnnewPromise ~ res:", res)
       try {
         const formData = new FormData();
         formData.append("name", name);
