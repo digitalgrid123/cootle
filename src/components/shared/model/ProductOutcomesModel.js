@@ -53,9 +53,9 @@ const ProductOutcomesModel = ({
   };
 
   const handleTabClick = (id) => {
-    if (selectedProductOutcomes.includes(id)) {
+    if (selectedProductOutcomes?.includes(id)) {
       setSelectedProductOutcomes(
-        selectedProductOutcomes.filter((objId) => objId !== id)
+        selectedProductOutcomes?.filter((objId) => objId !== id)
       );
     } else {
       setSelectedProductOutcomes([...selectedProductOutcomes, id]);
@@ -64,7 +64,7 @@ const ProductOutcomesModel = ({
 
   const renderSelectedObjectives = () => {
     const selectedObjectives = objectives.filter((obj) =>
-      selectedProductOutcomes.includes(obj.id)
+      selectedProductOutcomes?.includes(obj.id)
     );
 
     return (
@@ -100,7 +100,7 @@ const ProductOutcomesModel = ({
     const filteredObjectives = objectives.filter(
       (obj) =>
         obj.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        !selectedProductOutcomes.includes(obj.id)
+        !selectedProductOutcomes?.includes(obj.id)
     );
 
     return (

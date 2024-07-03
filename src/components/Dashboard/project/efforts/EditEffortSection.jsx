@@ -5,6 +5,7 @@ import LinkModel from "@/components/shared/model/LinkModel";
 import SingleProductOutcomesModel from "@/components/shared/model/SingleProductOutcomesModel";
 import SingleProjectDesignEffort from "@/components/shared/model/SingleProjectDeisngEffort";
 import PurposeList from "@/components/shared/model/PurposeList";
+import ProductOutcomesModel from "@/components/shared/model/ProductOutcomesModel";
 
 const EditEffortSection = ({
   effort,
@@ -26,7 +27,7 @@ const EditEffortSection = ({
   const [designdropdownOpen, setDesigndropdownOpen] = useState(false);
   const [designDropdownOpen, setDesignDropdownOpen] = useState(false);
   const [selectedProductOutcomes, setSelectedProductOutcomes] = useState(
-    effort?.outcome || ""
+    effort?.outcomes || ""
   );
 
   const { toaster } = useToaster();
@@ -62,13 +63,13 @@ const EditEffortSection = ({
     // Prepare edited effort data
     const editedEffort = {
       ...effort,
-      outcome: selectedProductOutcomes,
+      outcomes: selectedProductOutcomes,
       design_effort: selectedDesignEfforts[0],
       purpose: selectedPurpose,
       links: selectedLinks,
     };
 
-    const { outcome, design_effort, purpose, links } = editedEffort;
+    const { outcomes, design_effort, purpose, links } = editedEffort;
     const project_effort_id = effort?.id;
 
     try {
@@ -76,7 +77,7 @@ const EditEffortSection = ({
         project_effort_id,
         links,
         purpose,
-        outcome,
+        outcomes,
         design_effort
       );
 
@@ -121,7 +122,14 @@ const EditEffortSection = ({
         <div className="new-purpose-section w-100 mb-24">
           <div className="new-purpose-create w-100">
             <div className="mb-24 d-flex align-items-center justify-content-between w-100">
-              <h1 className="create-id">{`#eff${effort?.local_id}`}</h1>
+              <h1 className="create-id">{`#eff${
+                effort?.local_id < 10
+                  ? `00${effort?.local_id}`
+                  : effort?.local_id < 100
+                  ? `0${effort?.local_id}`
+                  : effort?.local_id
+              }`}</h1>
+
               <div className="d-flex align-items-center gap-2">
                 <button
                   className="delete-btn mr-12"
@@ -154,6 +162,7 @@ const EditEffortSection = ({
                       style={{
                         position: "absolute",
                         top: "0",
+                        height: "100%",
                         objectFit: "cover",
                       }}
                     />
@@ -211,17 +220,14 @@ const EditEffortSection = ({
                   </button>
                 </div>
                 <ul className="mt-20 d-flex align-items-center ">
-                  {selectedProductOutcomes && (
-                    <li
-                      key={selectedProductOutcomes}
-                      className="p-0 selectedone"
-                    >
-                      <span className="dot black"></span>
-                      {objectives.find(
-                        (obj) => obj.id === selectedProductOutcomes
-                      )?.title || ""}
-                    </li>
-                  )}
+                  {selectedProductOutcomes &&
+                    selectedProductOutcomes.map((outcomeId) => (
+                      <li key={outcomeId} className="p-0 selectedone">
+                        <span className="dot black"></span>
+                        {objectives.find((obj) => obj.id === outcomeId)
+                          ?.title || ""}
+                      </li>
+                    ))}
                 </ul>
               </div>
             </div>
@@ -301,7 +307,7 @@ const EditEffortSection = ({
           </div>
         </div>
       </div>
-      <SingleProductOutcomesModel
+      <ProductOutcomesModel
         designdropdownOpen={designdropdownOpen}
         toggledesignDropdown={setDesigndropdownOpen}
         objectives={objectives}

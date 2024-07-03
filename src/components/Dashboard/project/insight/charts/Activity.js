@@ -9,7 +9,7 @@ const Activity = ({ activities }) => {
     async (designEffortIds) => {
       try {
         const response = await retrieveEffort(designEffortIds);
-        console.log("🚀 ~ response:", response);
+
         if (response.status) {
           return response.data;
         } else {

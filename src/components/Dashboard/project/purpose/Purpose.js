@@ -29,8 +29,15 @@ const weeks = Array.from({ length: 52 }, (_, i) => `Week ${i + 1}`);
 const quarters = ["Q1", "Q2", "Q3", "Q4"];
 
 const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
-  const { purposelist, user, reteriveEffort, mappingList, createPurpose } =
-    useAuth();
+  const {
+    purposelist,
+    user,
+    reteriveEffort,
+    mappingList,
+    createPurpose,
+    userinfobyId,
+    useradd,
+  } = useAuth();
   const params = useParams();
   const [lastIdNumber, setLastIdNumber] = useState(0);
   const [objectives, setObjectives] = useState([]);
@@ -48,6 +55,35 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Quarterly");
   const [selectedOptionItem, setSelectedOptionItem] = useState(null);
+
+  const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
+
+  // Handle lifetime click
+  const handleLifetimeClick = () => {
+    setIsLifetimeClicked(true);
+    setSelectedOption("Quarterly"); // Set a default option if needed
+    setSelectedOptionItem(null); // Reset selected item
+    setIsDropdownOpen(false); // Close dropdown if open
+  };
+
+  const [userdetail, setUserDetail] = useState([]);
+
+  useEffect(() => {
+    const fetchUserinfo = async (userId) => {
+      try {
+        const res = await userinfobyId(userId);
+        if (res && res.status && res.data) {
+          setUserDetail(res.data); // Assuming res.data contains user details
+        }
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+      }
+    };
+
+    if (purposeListData && purposeListData.length > 0) {
+      purposeListData.forEach((purpose) => fetchUserinfo(purpose.user));
+    }
+  }, [purposeListData, useradd]);
 
   const { toaster } = useToaster();
 
@@ -188,16 +224,38 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
+
+    // Handle lifetime reset
+    if (option === "Lifetime") {
+      handleLifetimeClick();
+      return;
+    }
+
+    switch (option) {
+      case "Monthly":
+        setSelectedOptionItem(
+          `${new Date().getFullYear()}-${months[new Date().getMonth()]}`
+        );
+        break;
+      case "Weekly":
+        setSelectedOptionItem(
+          `${new Date().getFullYear()}-Week ${getISOWeek(new Date())}`
+        );
+        break;
+      case "Quarterly":
+        setSelectedOptionItem(getCurrentQuarter());
+        break;
+      default:
+        setSelectedOptionItem(null);
+        break;
+    }
+    setIsLifetimeClicked(false);
     setIsDropdownOpen(false);
   };
+
   const isActive = (year, option) => {
     return selectedOptionItem === `${year}-${option}` ? "active" : "";
   };
-
-  useEffect(() => {
-    // Clear selectedOptionItem when selectedOption changes
-    setSelectedOptionItem(null);
-  }, [selectedOption]);
 
   // Extract unique years from purposeListData's created_at dates
   const years = Array.from(
@@ -210,53 +268,88 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
 
   const handleDateClick = (year, option) => {
     setSelectedOptionItem(`${year}-${option}`);
+    setIsLifetimeClicked(false);
   };
   const renderDates = () => {
+    const activeDates = new Set(); // Use a set to track active dates
+
+    // Collect active dates based on selectedOption and purposeListData
+    purposeListData?.forEach((purpose) => {
+      const createdDate = new Date(purpose.created_at);
+      const year = createdDate.getFullYear();
+      const month = months[createdDate.getMonth()];
+      const week = `Week ${getISOWeek(createdDate)}`;
+      const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+
+      switch (selectedOption) {
+        case "Monthly":
+          activeDates.add(`${year}-${month}`);
+          break;
+        case "Weekly":
+          activeDates.add(`${year}-${week}`);
+          break;
+        case "Quarterly":
+          activeDates.add(`${year}-${quarter}`);
+          break;
+        default:
+          break;
+      }
+    });
+
     return (
       <ul className="timeline-dates">
         {years.map((year) => (
           <React.Fragment key={year}>
             {selectedOption === "Monthly" &&
-              months.map((month, index) => (
-                <li
-                  key={`${year}-${month}-${index}`}
-                  className={`cursor-pointer ${isActive(year, month)} ${
-                    index === months.length - 1 ? "last-item" : ""
-                  }`}
-                  onClick={() => handleDateClick(year, month)}
-                >
-                  <span>{month}</span>
-                  <span>{year}</span>
-                </li>
-              ))}
+              months.map(
+                (month, index) =>
+                  activeDates.has(`${year}-${month}`) && (
+                    <li
+                      key={`${year}-${month}-${index}`}
+                      className={`cursor-pointer ${isActive(year, month)} ${
+                        index === months.length - 1 ? "last-item" : ""
+                      }`}
+                      onClick={() => handleDateClick(year, month)}
+                    >
+                      <span>{month}</span>
+                      <span>{year}</span>
+                    </li>
+                  )
+              )}
 
             {selectedOption === "Weekly" &&
-              weeks.map((week, index) => (
-                <li
-                  key={`${year}-${week}-${index}`}
-                  className={`cursor-pointer ${isActive(year, week)} ${
-                    index === weeks.length - 1 ? "last-item" : ""
-                  }`}
-                  onClick={() => handleDateClick(year, week)}
-                >
-                  <span className="week">{week}</span>
-                  <span className="year">{year}</span>
-                </li>
-              ))}
+              weeks.map(
+                (week, index) =>
+                  activeDates.has(`${year}-${week}`) && (
+                    <li
+                      key={`${year}-${week}-${index}`}
+                      className={`cursor-pointer ${isActive(year, week)} ${
+                        index === weeks.length - 1 ? "last-item" : ""
+                      }`}
+                      onClick={() => handleDateClick(year, week)}
+                    >
+                      <span className="week">{week}</span>
+                      <span className="year">{year}</span>
+                    </li>
+                  )
+              )}
 
             {selectedOption === "Quarterly" &&
-              quarters.map((quarter, index) => (
-                <li
-                  key={`${year}-${quarter}-${index}`}
-                  className={`cursor-pointer ${isActive(year, quarter)} ${
-                    index === quarters.length - 1 ? "last-item" : ""
-                  }`}
-                  onClick={() => handleDateClick(year, quarter)}
-                >
-                  <span className="quarter">{quarter}</span>
-                  <span className="year">{year}</span>
-                </li>
-              ))}
+              quarters.map(
+                (quarter, index) =>
+                  activeDates.has(`${year}-${quarter}`) && (
+                    <li
+                      key={`${year}-${quarter}-${index}`}
+                      className={`cursor-pointer ${isActive(year, quarter)} ${
+                        index === quarters.length - 1 ? "last-item" : ""
+                      }`}
+                      onClick={() => handleDateClick(year, quarter)}
+                    >
+                      <span className="quarter">{quarter}</span>
+                      <span className="year">{year}</span>
+                    </li>
+                  )
+              )}
 
             {/* Render faint bottom border after each year */}
             <div className="border_bottom_faint w-100" key={`border-${year}`} />
@@ -265,7 +358,26 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
       </ul>
     );
   };
-  // Function to calculate ISO week number
+
+  const getCurrentQuarter = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    if (month >= 1 && month <= 3) {
+      return `${year}-Q1`;
+    } else if (month >= 4 && month <= 6) {
+      return `${year}-Q2`;
+    } else if (month >= 7 && month <= 9) {
+      return `${year}-Q3`;
+    } else {
+      return `${year}-Q4`;
+    }
+  };
+
+  useEffect(() => {
+    // Set selectedOptionItem to current quarter initially
+    setSelectedOptionItem(getCurrentQuarter());
+  }, []);
   function getISOWeek(date) {
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);
@@ -274,23 +386,27 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
     return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
   }
   const filteredPurposes = purposeListData?.filter((purpose) => {
+    if (isLifetimeClicked) {
+      return true; // Show all if lifetime clicked
+    }
+
     if (!selectedOptionItem) {
       return true; // Show all if no option selected
     }
+
     const createdDate = new Date(purpose.created_at);
     const purposeYear = createdDate.getFullYear();
     const purposeMonth = months[createdDate.getMonth()];
     const purposeWeek = `Week ${getISOWeek(createdDate)}`;
-
     const purposeQuarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
 
     switch (selectedOption) {
       case "Monthly":
-        return isActive(purposeYear, purposeMonth) !== "";
+        return `${purposeYear}-${purposeMonth}` === selectedOptionItem;
       case "Weekly":
-        return isActive(purposeYear, purposeWeek) !== "";
+        return `${purposeYear}-${purposeWeek}` === selectedOptionItem;
       case "Quarterly":
-        return isActive(purposeYear, purposeQuarter) !== "";
+        return `${purposeYear}-${purposeQuarter}` === selectedOptionItem;
       default:
         return true; // Show all if no selection
     }
@@ -324,7 +440,7 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                 <EditPurposeSection
                   key={purpose.id}
                   purpose={purposeToEdit}
-                  user={user}
+                  user={userdetail}
                   handleCancel={handleCancelEdit}
                   objectives={objectives}
                   design={design}
@@ -352,8 +468,8 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                           <div className="create_profile">
                             <img
                               src={
-                                user.profile_pic
-                                  ? user.profile_pic
+                                userdetail.profile_pic
+                                  ? userdetail.profile_pic
                                   : "/assets/images/mark/profile.png"
                               }
                               alt="profile"
@@ -361,10 +477,11 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                                 position: "absolute",
                                 top: "0",
                                 objectFit: "cover",
+                                height: "100%",
                               }}
                             />
                           </div>
-                          <h2 className="create-name">{user.fullname}</h2>
+                          <h2 className="create-name">{userdetail.fullname}</h2>
                         </div>
                       </div>
                       <div className="d-flex align-items-center gap-2">
@@ -432,38 +549,48 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
       <div className="wrapper-company">
         <div className="company-sidebar w-100 d-flex flex-column gap-4">
           <div className="filter-container">
-            <div
-              className="d-flex align-items-center gap-1 justify-content-center cursor-pointer"
-              onClick={toggleDropdown}
-            >
-              <h1 className="timeline-text">Timeline</h1>
-              <img
-                src="/assets/images/mark/dropdown-icon.svg"
-                alt="dropdown-icon"
-              />
+            <div className="d-flex align-items-center flex-column border_bottom_faint pb-24 ">
+              <div
+                className="d-flex align-items-center gap-1 justify-content-center cursor-pointer mb-24"
+                onClick={toggleDropdown}
+              >
+                <h1 className="timeline-text">Timeline</h1>
+                <img
+                  src="/assets/images/mark/dropdown-icon.svg"
+                  alt="dropdown-icon"
+                />
+              </div>
+              <div
+                onClick={() => handleOptionClick("Lifetime")}
+                className={`cursor-pointer lifetime ${
+                  isLifetimeClicked ? "active" : ""
+                }`}
+              >
+                <h1 className="timeline-text">Lifetime</h1>
+              </div>
+              {isDropdownOpen && (
+                <ul className="timeline-dropdown">
+                  <li
+                    onClick={() => handleOptionClick("Monthly")}
+                    className={selectedOption === "Monthly" ? "active" : ""}
+                  >
+                    Monthly
+                  </li>
+                  <li
+                    onClick={() => handleOptionClick("Weekly")}
+                    className={selectedOption === "Weekly" ? "active" : ""}
+                  >
+                    Weekly
+                  </li>
+                  <li
+                    onClick={() => handleOptionClick("Quarterly")}
+                    className={selectedOption === "Quarterly" ? "active" : ""}
+                  >
+                    Quarterly
+                  </li>
+                </ul>
+              )}
             </div>
-            {isDropdownOpen && (
-              <ul className="timeline-dropdown">
-                <li
-                  onClick={() => handleOptionClick("Monthly")}
-                  className={selectedOption === "Monthly" ? "active" : ""}
-                >
-                  Monthly
-                </li>
-                <li
-                  onClick={() => handleOptionClick("Weekly")}
-                  className={selectedOption === "Weekly" ? "active" : ""}
-                >
-                  Weekly
-                </li>
-                <li
-                  onClick={() => handleOptionClick("Quarterly")}
-                  className={selectedOption === "Quarterly" ? "active" : ""}
-                >
-                  Quarterly
-                </li>
-              </ul>
-            )}
             {renderDates()}
           </div>
         </div>

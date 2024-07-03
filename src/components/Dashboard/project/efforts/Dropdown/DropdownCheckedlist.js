@@ -18,7 +18,6 @@ const DropdownCheckedlist = ({
   fetchEffortData,
   fetchMemberData,
 }) => {
-  console.log("🚀 ~ effort:", effort);
   const { effortcheckedBy } = useAuth();
   const { toaster } = useToaster();
   const [isOpen, setIsOpen] = useState(false);

@@ -137,12 +137,10 @@ const EffortMapping = ({ reset, isAdmin }) => {
       const { id: effort_id } = activeSubTab; // Extracting effort_id from activeSubTab
       const updatedName = editTitle;
       const updatedDescription = editDescription;
-      const categoryName = activeCategory.name; // Extracting category name
 
       const res = await updateDesignEffort(
         updatedName,
         updatedDescription,
-        categoryName,
         effort_id
       );
 

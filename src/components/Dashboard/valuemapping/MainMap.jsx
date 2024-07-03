@@ -36,6 +36,7 @@ const MainMap = () => {
         toaster("Failed to Reset", TOAST_TYPES.ERROR);
       } else {
         toaster("Successfully Reset", TOAST_TYPES.SUCCESS);
+        setReset(true);
         setOpenDropdown(false);
       }
     } catch (error) {

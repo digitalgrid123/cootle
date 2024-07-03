@@ -9,7 +9,6 @@ const ProfileHeader = () => {
   const [popupOpen, setPopupOpen] = useState(false);
   const dropdownRef = useRef(null);
   const popupRef = useRef(null);
-  const fileInputRef = useRef(null);
   const [user, setUser] = useState(null);
 
   useEffect(() => {

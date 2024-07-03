@@ -23,6 +23,7 @@ const ValueMapping = ({ selectedMapping, reset, isAdmin }) => {
   const [editedDescription, setEditedDescription] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [reteriveData, setRetrieveData] = useState([]);
   const selectedCompany = useGlobalCompany();
 
   const toggleDropdown = useCallback(
@@ -36,11 +37,9 @@ const ValueMapping = ({ selectedMapping, reset, isAdmin }) => {
 
   const handleTabClick = useCallback((obj) => {
     setActiveTab(obj);
+    localStorage.setItem("activeTabId", obj.id); // Store active tab id in localStorage
     setActiveContentTab(TABS.DEFINITION);
     setEditMode(false);
-
-    // Store active tab's ID in localStorage to persist across page refresh
-    localStorage.setItem("activeValueMappingTabId", obj.id);
   }, []);
 
   const handleContentTabClick = useCallback((contentTab) => {
@@ -88,22 +87,27 @@ const ValueMapping = ({ selectedMapping, reset, isAdmin }) => {
           designEffortPromises
         );
 
-        setObjectives(objectivesWithDesignEfforts);
+        // Reverse the list of objectives
+        const reversedObjectives = objectivesWithDesignEfforts.reverse();
 
-        // Get active tab id from localStorage if available
-        const storedActiveTabId = localStorage.getItem(
-          "activeValueMappingTabId"
-        );
-        // Set the active tab based on stored ID or default to the first objective
-        const activeTabToSet =
-          objectivesWithDesignEfforts.find(
-            (obj) => obj.id === Number(storedActiveTabId)
-          ) || objectivesWithDesignEfforts[0];
-        setActiveTab(activeTabToSet);
+        setObjectives(reversedObjectives);
+
+        // Retrieve active tab index from localStorage if available
+        const storedActiveTabId = localStorage.getItem("activeTabId");
+        if (storedActiveTabId) {
+          const storedTab = reversedObjectives.find(
+            (obj) => obj.id === parseInt(storedActiveTabId)
+          );
+          setActiveTab(storedTab || reversedObjectives[0]);
+        } else {
+          setActiveTab(reversedObjectives[0]);
+        }
 
         // Set the first design effort of the active tab as active
-        if (activeTabToSet?.design_efforts.length > 0) {
-          setActiveProductOutcome(activeTabToSet.design_efforts[0].title);
+        if (reversedObjectives[0]?.design_efforts.length > 0) {
+          setActiveProductOutcome(
+            reversedObjectives[0].design_efforts[0].title
+          );
         }
       } else {
         setError("No data found in the response");
@@ -142,22 +146,19 @@ const ValueMapping = ({ selectedMapping, reset, isAdmin }) => {
           designEffortPromises
         );
 
-        setObjectives(objectivesWithDesignEfforts);
+        // Reverse the list of objectives
+        const reversedObjectives = objectivesWithDesignEfforts.reverse();
 
-        // Get active tab id from localStorage if available
-        const storedActiveTabId = localStorage.getItem("activeTabId");
-        // Set the active tab based on stored ID or default to the last objective
-        const activeTabToSet =
-          objectivesWithDesignEfforts
-            .slice()
-            .reverse()
-            .find((obj) => obj.id === Number(storedActiveTabId)) ||
-          objectivesWithDesignEfforts.slice().reverse()[0];
-        setActiveTab(activeTabToSet);
+        setObjectives(reversedObjectives);
+
+        // Set the active tab to the last objective
+        setActiveTab(reversedObjectives[0]);
 
         // Set the first design effort of the active tab as active
-        if (activeTabToSet?.design_efforts.length > 0) {
-          setActiveProductOutcome(activeTabToSet.design_efforts[0].title);
+        if (reversedObjectives[0]?.design_efforts.length > 0) {
+          setActiveProductOutcome(
+            reversedObjectives[0].design_efforts[0].title
+          );
         }
       } else {
         setError("No data found in the response");

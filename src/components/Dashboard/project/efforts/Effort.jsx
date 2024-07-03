@@ -41,6 +41,8 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
     createProjecteffort,
     effortList,
     memberslist,
+    userinfobyId,
+    useradd,
   } = useAuth();
   const params = useParams();
   const [lastIdNumber, setLastIdNumber] = useState(0);
@@ -49,6 +51,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   const [designdropdownOpen, setDesigndropdownOpen] = useState(false);
   const [designDropdownOpen, setDesignDropdownOpen] = useState(false);
   const [selectedProductOutcomes, setSelectedProductOutcomes] = useState([]);
+
   const [selectedDesignEfforts, setSelectedDesignEfforts] = useState([]);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -59,10 +62,22 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   const [purposedropdownOpen, setPurposeDropdownOpen] = useState(false);
   const [selectedPurpose, setSelectedPurpose] = useState(null);
   const [effortsListData, setEffortsListData] = useState(null);
+
   const [membersListData, setMembersListData] = useState([]);
 
   const [selectedOption, setSelectedOption] = useState("Quarterly");
   const [selectedOptionItem, setSelectedOptionItem] = useState(null);
+  const [userdetail, setUserDetail] = useState([]);
+
+  const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
+
+  // Handle lifetime click
+  const handleLifetimeClick = () => {
+    setIsLifetimeClicked(true);
+    setSelectedOption("Quarterly"); // Set a default option if needed
+    setSelectedOptionItem(null); // Reset selected item
+    setIsDropdownOpen(false); // Close dropdown if open
+  };
 
   const [link, setLink] = useState("");
 
@@ -71,6 +86,23 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   const togglePurposeDropdown = (state) => {
     setPurposeDropdownOpen(state);
   };
+
+  useEffect(() => {
+    const fetchUserinfo = async (userId) => {
+      try {
+        const res = await userinfobyId(userId);
+        if (res && res.status && res.data) {
+          setUserDetail(res.data); // Assuming res.data contains user details
+        }
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+      }
+    };
+
+    if (effortsListData && effortsListData.length > 0) {
+      effortsListData.forEach((effort) => fetchUserinfo(effort.user));
+    }
+  }, [effortsListData, useradd]);
 
   const { toaster } = useToaster();
   const fetchMemberData = async () => {
@@ -173,9 +205,9 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   }, [fetchDesignEfforts, mappingList]);
 
   const generateId = () => {
-    const highestLocalId = purposeListData
-      ? purposeListData.reduce((maxId, purpose) => {
-          return purpose.local_id > maxId ? purpose.local_id : maxId;
+    const highestLocalId = effortsListData
+      ? effortsListData.reduce((maxId, effort) => {
+          return effort.local_id > maxId ? effort.local_id : maxId;
         }, 0)
       : 0;
 
@@ -203,7 +235,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
         params.id,
         transformedLinks,
         selectedPurpose,
-        selectedProductOutcomes[0],
+        selectedProductOutcomes,
         selectedDesignEfforts[0]
       );
 
@@ -213,6 +245,8 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
         setSelectedPurpose(null);
         setSelectedProductOutcomes(null);
         setSelectedDesignEfforts(null);
+        setLink("");
+        setLinks([]);
       } else {
         toaster("Failed to add effort", TOAST_TYPES.ERROR);
       }
@@ -239,13 +273,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   const toggleDesignDropdown = (state) => {
     setDesignDropdownOpen(state);
   };
-  const statusDescriptions = {
-    YBC: "Yet to be checked",
-    UCH: "Unchecked",
-    UPA: "Unplanned Activity",
-    REA: "Realised",
-    VUR: "Value Unrealised",
-  };
+
   const getStatusStyles = (status) => {
     switch (status) {
       case "YBC":
@@ -297,8 +325,35 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
+
+    // Handle lifetime reset
+    if (option === "Lifetime") {
+      handleLifetimeClick();
+      return;
+    }
+
+    switch (option) {
+      case "Monthly":
+        setSelectedOptionItem(
+          `${new Date().getFullYear()}-${months[new Date().getMonth()]}`
+        );
+        break;
+      case "Weekly":
+        setSelectedOptionItem(
+          `${new Date().getFullYear()}-Week ${getISOWeek(new Date())}`
+        );
+        break;
+      case "Quarterly":
+        setSelectedOptionItem(getCurrentQuarter());
+        break;
+      default:
+        setSelectedOptionItem(null);
+        break;
+    }
+    setIsLifetimeClicked(false);
     setIsDropdownOpen(false);
   };
+
   const isActive = (year, option) => {
     return selectedOptionItem === `${year}-${option}` ? "active" : "";
   };
@@ -314,53 +369,88 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
 
   const handleDateClick = (year, option) => {
     setSelectedOptionItem(`${year}-${option}`);
+    setIsLifetimeClicked(false);
   };
   const renderDates = () => {
+    const activeDates = new Set(); // Use a set to track active dates
+
+    // Collect active dates based on selectedOption and purposeListData
+    effortsListData?.forEach((purpose) => {
+      const createdDate = new Date(purpose.created_at);
+      const year = createdDate.getFullYear();
+      const month = months[createdDate.getMonth()];
+      const week = `Week ${getISOWeek(createdDate)}`;
+      const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+
+      switch (selectedOption) {
+        case "Monthly":
+          activeDates.add(`${year}-${month}`);
+          break;
+        case "Weekly":
+          activeDates.add(`${year}-${week}`);
+          break;
+        case "Quarterly":
+          activeDates.add(`${year}-${quarter}`);
+          break;
+        default:
+          break;
+      }
+    });
+
     return (
       <ul className="timeline-dates">
         {years.map((year) => (
           <React.Fragment key={year}>
             {selectedOption === "Monthly" &&
-              months.map((month, index) => (
-                <li
-                  key={`${year}-${month}-${index}`}
-                  className={`cursor-pointer ${isActive(year, month)} ${
-                    index === months.length - 1 ? "last-item" : ""
-                  }`}
-                  onClick={() => handleDateClick(year, month)}
-                >
-                  <span>{month}</span>
-                  <span>{year}</span>
-                </li>
-              ))}
+              months.map(
+                (month, index) =>
+                  activeDates.has(`${year}-${month}`) && (
+                    <li
+                      key={`${year}-${month}-${index}`}
+                      className={`cursor-pointer ${isActive(year, month)} ${
+                        index === months.length - 1 ? "last-item" : ""
+                      }`}
+                      onClick={() => handleDateClick(year, month)}
+                    >
+                      <span>{month}</span>
+                      <span>{year}</span>
+                    </li>
+                  )
+              )}
 
             {selectedOption === "Weekly" &&
-              weeks.map((week, index) => (
-                <li
-                  key={`${year}-${week}-${index}`}
-                  className={`cursor-pointer ${isActive(year, week)} ${
-                    index === weeks.length - 1 ? "last-item" : ""
-                  }`}
-                  onClick={() => handleDateClick(year, week)}
-                >
-                  <span className="week">{week}</span>
-                  <span className="year">{year}</span>
-                </li>
-              ))}
+              weeks.map(
+                (week, index) =>
+                  activeDates.has(`${year}-${week}`) && (
+                    <li
+                      key={`${year}-${week}-${index}`}
+                      className={`cursor-pointer ${isActive(year, week)} ${
+                        index === weeks.length - 1 ? "last-item" : ""
+                      }`}
+                      onClick={() => handleDateClick(year, week)}
+                    >
+                      <span className="week">{week}</span>
+                      <span className="year">{year}</span>
+                    </li>
+                  )
+              )}
 
             {selectedOption === "Quarterly" &&
-              quarters.map((quarter, index) => (
-                <li
-                  key={`${year}-${quarter}-${index}`}
-                  className={`cursor-pointer ${isActive(year, quarter)} ${
-                    index === quarters.length - 1 ? "last-item" : ""
-                  }`}
-                  onClick={() => handleDateClick(year, quarter)}
-                >
-                  <span className="quarter">{quarter}</span>
-                  <span className="year">{year}</span>
-                </li>
-              ))}
+              quarters.map(
+                (quarter, index) =>
+                  activeDates.has(`${year}-${quarter}`) && (
+                    <li
+                      key={`${year}-${quarter}-${index}`}
+                      className={`cursor-pointer ${isActive(year, quarter)} ${
+                        index === quarters.length - 1 ? "last-item" : ""
+                      }`}
+                      onClick={() => handleDateClick(year, quarter)}
+                    >
+                      <span className="quarter">{quarter}</span>
+                      <span className="year">{year}</span>
+                    </li>
+                  )
+              )}
 
             {/* Render faint bottom border after each year */}
             <div className="border_bottom_faint w-100" key={`border-${year}`} />
@@ -370,11 +460,25 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
     );
   };
 
+  const getCurrentQuarter = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    if (month >= 1 && month <= 3) {
+      return `${year}-Q1`;
+    } else if (month >= 4 && month <= 6) {
+      return `${year}-Q2`;
+    } else if (month >= 7 && month <= 9) {
+      return `${year}-Q3`;
+    } else {
+      return `${year}-Q4`;
+    }
+  };
+
   useEffect(() => {
-    // Clear selectedOptionItem when selectedOption changes
-    setSelectedOptionItem(null);
-  }, [selectedOption]);
-  // Function to calculate ISO week number
+    // Set selectedOptionItem to current quarter initially
+    setSelectedOptionItem(getCurrentQuarter());
+  }, []);
   function getISOWeek(date) {
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);
@@ -383,23 +487,27 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
     return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
   }
   const filteredEffort = effortsListData?.filter((purpose) => {
+    if (isLifetimeClicked) {
+      return true; // Show all if lifetime clicked
+    }
+
     if (!selectedOptionItem) {
       return true; // Show all if no option selected
     }
+
     const createdDate = new Date(purpose.created_at);
     const purposeYear = createdDate.getFullYear();
     const purposeMonth = months[createdDate.getMonth()];
     const purposeWeek = `Week ${getISOWeek(createdDate)}`;
-
     const purposeQuarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
 
     switch (selectedOption) {
       case "Monthly":
-        return isActive(purposeYear, purposeMonth) !== "";
+        return `${purposeYear}-${purposeMonth}` === selectedOptionItem;
       case "Weekly":
-        return isActive(purposeYear, purposeWeek) !== "";
+        return `${purposeYear}-${purposeWeek}` === selectedOptionItem;
       case "Quarterly":
-        return isActive(purposeYear, purposeQuarter) !== "";
+        return `${purposeYear}-${purposeQuarter}` === selectedOptionItem;
       default:
         return true; // Show all if no selection
     }
@@ -416,7 +524,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                 onToggleNewEffort={onToggleNewEffort}
                 showNewEffortInput={showNewEffortInput}
                 generateId={generateId}
-                user={user}
+                user={userdetail}
                 getCurrentDate={getCurrentDate}
                 handleSaveEffort={handleSaveEffort}
                 toggledesigndropdown={toggledesigndropdown}
@@ -503,19 +611,22 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                               <div className="create_profile">
                                 <img
                                   src={
-                                    user.profile_pic
-                                      ? user.profile_pic
+                                    userdetail.profile_pic
+                                      ? userdetail.profile_pic
                                       : "/assets/images/mark/profile.png"
                                   }
                                   alt="profile"
                                   style={{
                                     position: "absolute",
                                     top: "0",
+                                    height: "100%",
                                     objectFit: "cover",
                                   }}
                                 />
                               </div>
-                              <h2 className="create-name">{user.fullname}</h2>
+                              <h2 className="create-name">
+                                {userdetail.fullname}
+                              </h2>
                             </div>
                           </div>
                           <div className="d-flex align-items-center gap-4">
@@ -536,17 +647,15 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                           </div>
                           <div className="d-flex align-items-center gap-4">
                             <h1 className="select-outcome-text">Outcome:</h1>
-                            {effort.outcome && (
-                              <li
-                                key={effort.outcome}
-                                className="p-0 selectedone"
-                              >
-                                <span className="dot black"></span>
-                                {objectives.find(
-                                  (obj) => obj.id === effort.outcome
-                                )?.title || ""}
-                              </li>
-                            )}
+                            {effort.outcomes &&
+                              effort.outcomes.map((outcomeId) => (
+                                <li key={outcomeId} className="p-0 selectedone">
+                                  <span className="dot black"></span>
+                                  {objectives.find(
+                                    (obj) => obj.id === outcomeId
+                                  )?.title || ""}
+                                </li>
+                              ))}
                           </div>
                         </div>
                         <div className="pb-24 d-flex gap-2  justify-content-between flex-column w-100 border-bottom-grey pt-24 pb-32">
@@ -592,7 +701,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
 
                                   return (
                                     <div className="checkedby-container d-flex align-items-center gap-1">
-                                      <div className="checkby-image">
+                                      <div className="checkby-image relative">
                                         <img
                                           src={
                                             checkedMember?.profile_pic
@@ -601,8 +710,11 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                                           }
                                           alt={checkedMember?.fullname}
                                           style={{
+                                            position: "absolute",
+                                            top: "0",
                                             borderRadius: "50%",
                                             objectFit: "cover",
+                                            height: "100%",
                                           }}
                                         />
                                       </div>
@@ -654,44 +766,54 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
         <div className="wrapper-company">
           <div className="company-sidebar w-100 d-flex flex-column gap-4">
             <div className="filter-container">
-              <div
-                className="d-flex align-items-center gap-1 justify-content-center cursor-pointer"
-                onClick={toggleDropdown}
-              >
-                <h1 className="timeline-text">Timeline</h1>
-                <img
-                  src="/assets/images/mark/dropdown-icon.svg"
-                  alt="dropdown-icon"
-                />
+              <div className="d-flex align-items-center flex-column border_bottom_faint pb-24 ">
+                <div
+                  className="d-flex align-items-center gap-1 justify-content-center cursor-pointer mb-24"
+                  onClick={toggleDropdown}
+                >
+                  <h1 className="timeline-text">Timeline</h1>
+                  <img
+                    src="/assets/images/mark/dropdown-icon.svg"
+                    alt="dropdown-icon"
+                  />
+                </div>
+                <div
+                  onClick={() => handleOptionClick("Lifetime")}
+                  className={`cursor-pointer lifetime ${
+                    isLifetimeClicked ? "active" : ""
+                  }`}
+                >
+                  <h1 className="timeline-text">Lifetime</h1>
+                </div>
+                {isDropdownOpen && (
+                  <ul className="timeline-dropdown">
+                    <li
+                      onClick={() => handleOptionClick("Monthly")}
+                      className={selectedOption === "Monthly" ? "active" : ""}
+                    >
+                      Monthly
+                    </li>
+                    <li
+                      onClick={() => handleOptionClick("Weekly")}
+                      className={selectedOption === "Weekly" ? "active" : ""}
+                    >
+                      Weekly
+                    </li>
+                    <li
+                      onClick={() => handleOptionClick("Quarterly")}
+                      className={selectedOption === "Quarterly" ? "active" : ""}
+                    >
+                      Quarterly
+                    </li>
+                  </ul>
+                )}
               </div>
-              {isDropdownOpen && (
-                <ul className="timeline-dropdown">
-                  <li
-                    onClick={() => handleOptionClick("Monthly")}
-                    className={selectedOption === "Monthly" ? "active" : ""}
-                  >
-                    Monthly
-                  </li>
-                  <li
-                    onClick={() => handleOptionClick("Weekly")}
-                    className={selectedOption === "Weekly" ? "active" : ""}
-                  >
-                    Weekly
-                  </li>
-                  <li
-                    onClick={() => handleOptionClick("Quarterly")}
-                    className={selectedOption === "Quarterly" ? "active" : ""}
-                  >
-                    Quarterly
-                  </li>
-                </ul>
-              )}
               {renderDates()}
             </div>
           </div>
         </div>
       </div>
-      <SingleProductOutcomesModel
+      <ProductOutcomesModel
         designdropdownOpen={designdropdownOpen}
         toggledesignDropdown={setDesigndropdownOpen}
         objectives={objectives}

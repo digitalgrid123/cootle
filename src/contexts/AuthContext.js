@@ -398,8 +398,29 @@ function AuthProvider({ children }) {
     });
   };
 
+  const userinfobyId = async (user_id) => {
+   
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosGet(API_ROUTER.USER_INFO, {
+          user_id,
+        });
+
+        if (res.status) {
+    
+          resolve({ status: true, data: res.data });
+        } else {
+          resolve({ status: false, data: "" });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+
   const createcompany = async (name, logo) => {
     return new Promise(async (resolve) => {
+        console.log("🚀 ~ returnnewPromise ~ res:", res)
       try {
         const formData = new FormData();
         formData.append("name", name);
@@ -815,12 +836,11 @@ function AuthProvider({ children }) {
     });
   };
 
-  const updateDesignEffort = async (name, description, category, effort_id) => {
+  const updateDesignEffort = async (name, description, effort_id) => {
     try {
       const res = await axiosPatch(API_ROUTER.UPDATE_DESIGN_EFFORT, {
         title: name,
         description,
-        category,
         effort_id,
       });
 
@@ -1103,7 +1123,7 @@ function AuthProvider({ children }) {
     project_id,
     links,
     purpose,
-    outcome,
+    outcomes,
     design_effort
   ) => {
     try {
@@ -1111,7 +1131,7 @@ function AuthProvider({ children }) {
         project_id,
         links,
         purpose,
-        outcome,
+        outcomes,
         design_effort,
       });
 
@@ -1179,7 +1199,7 @@ function AuthProvider({ children }) {
     project_effort_id,
     links,
     purpose,
-    outcome,
+    outcomes,
     design_effort
   ) => {
     try {
@@ -1188,7 +1208,7 @@ function AuthProvider({ children }) {
         {
           links,
           purpose,
-          outcome,
+          outcomes,
           design_effort,
         }
       );
@@ -1448,6 +1468,7 @@ function AuthProvider({ children }) {
         effortcheckedBy,
         memberslist,
         effortgraph,
+        userinfobyId,
       }}
     >
       {children}

@@ -11,7 +11,6 @@ const EditPurposeSection = ({
   setDesign,
   objectives,
   design,
-
   fetchData,
   setPurposeToEdit,
 }) => {
@@ -33,20 +32,20 @@ const EditPurposeSection = ({
     // Prepare edited purpose data
     const editedPurpose = {
       ...purpose,
+      title, // Include the updated title
+      description, // Include the updated description
       desired_outcomes: selectedProductOutcomes,
       design_efforts: selectedDesignEfforts,
     };
 
-    const { title, description, desired_outcomes, design_efforts } =
-      editedPurpose;
-    const purpose_id = purpose?.id;
+    const { id: purpose_id } = purpose; // Destructure purpose ID
     try {
       const response = await updatePurpose(
-        title,
-        description,
+        editedPurpose.title,
+        editedPurpose.description,
         purpose_id,
-        desired_outcomes,
-        design_efforts
+        editedPurpose.desired_outcomes,
+        editedPurpose.design_efforts
       );
 
       if (response.status) {
@@ -68,6 +67,7 @@ const EditPurposeSection = ({
   const toggleDesignDropdown = (state) => {
     setDesignDropdownOpen(state);
   };
+
   const handleDeleteClick = async () => {
     try {
       const response = await removePurpose(purpose.id); // Assuming purpose.id is accessible in your props or context
@@ -89,7 +89,13 @@ const EditPurposeSection = ({
       <div className="new-purpose-section w-100">
         <div className="new-purpose-create w-100">
           <div className="mb-24 d-flex align-items-center justify-content-between w-100">
-            <h1 className="create-id">{`#pur${purpose?.local_id}`}</h1>
+            <h1 className="create-id">{`#pur${
+              purpose?.local_id < 10
+                ? `00${purpose?.local_id}`
+                : purpose?.local_id < 100
+                ? `0${purpose?.local_id}`
+                : purpose?.local_id
+            }`}</h1>
             <div className="d-flex align-items-center gap-2">
               <div className="d-flex align-items-center gap-2">
                 <h2 className="create-name weight-500">Created by:</h2>
@@ -103,6 +109,7 @@ const EditPurposeSection = ({
                       style={{
                         position: "absolute",
                         top: "0",
+                        height: "100%",
                         objectFit: "cover",
                       }}
                     />

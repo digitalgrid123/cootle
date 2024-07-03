@@ -2,8 +2,6 @@ import React from "react";
 import Chart from "react-apexcharts";
 
 const LineGraph = ({ data }) => {
-  console.log("🚀 ~ LineGraph ~ data:", data);
-
   // Extract series names and data
   const seriesNames = Object.keys(data);
   const chartData = seriesNames.map((seriesName, index) => ({

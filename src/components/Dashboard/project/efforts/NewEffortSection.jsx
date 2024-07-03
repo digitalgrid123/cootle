@@ -36,6 +36,11 @@ const NewEffortSection = ({
   const addLink = (url) => {
     setLinks((prevLinks) => [...prevLinks, { url }]);
   };
+  const handleCancel = () => {
+    setLink(""); // Clear the link state
+    onToggleNewEffort(); // Toggle the new effort input
+    setShowLinkModel(false);
+  };
 
   return (
     <div className="col-lg-6">
@@ -44,7 +49,7 @@ const NewEffortSection = ({
           <div className="mb-24 d-flex align-items-center justify-content-between w-100">
             <h1 className="create-id">{generateId()}</h1>
             <div className="d-flex align-items-center gap-2">
-              <button className="close_effort_btn" onClick={onToggleNewEffort}>
+              <button className="close_effort_btn" onClick={handleCancel}>
                 <span>Cancel</span>
               </button>
               <button className="save_effort_btn" onClick={handleSaveEffort}>
@@ -67,6 +72,7 @@ const NewEffortSection = ({
                     style={{
                       position: "absolute",
                       top: "0",
+                      height: "100%",
                       objectFit: "cover",
                     }}
                   />

@@ -2241,3 +2241,14 @@ textarea {
   background-color: #f5f6f7;
   padding: 10px 16px;
 }
+.lifetime.active {
+  background-color: var(--text-color);
+  border: none;
+  border-radius: 16px;
+}
+
+.lifetime {
+  display: flex;
+  justify-content: center;
+  padding: 17px 35px;
+}

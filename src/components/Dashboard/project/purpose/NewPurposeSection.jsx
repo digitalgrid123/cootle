@@ -43,6 +43,7 @@ const NewPurposeSection = ({
                     style={{
                       position: "absolute",
                       top: "0",
+                      height: "100%",
                       objectFit: "cover",
                     }}
                   />
