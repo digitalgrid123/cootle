@@ -126,7 +126,7 @@ const EditPurposeSection = ({
             </div>
             <div className="d-flex align-items-center gap-2">
               <button className="delete-btn mr-12" onClick={handleDeleteClick}>
-                <img src="/assets/images/mark/delete.svg" alt="delete-icon" />
+                <img src="/assets/images/mark/delete.png" alt="delete-icon" />
               </button>
               <div className="d-flex align-items-center gap-2 border-left-faint pl-12">
                 <button className="close_effort_btn" onClick={handleCancel}>
