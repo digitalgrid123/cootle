@@ -171,6 +171,10 @@ export const API_ROUTER = {
   RETERIVE_EFFORT_BY_IDS: getNormalRoute("design-effort/retrieve"),
 
   //USER INFOR
+  USER_INFO_ID: (user_id) => getUserRoute(`info/${user_id}`),
+
+  //USER INFO BY ID
+
   USER_INFO: getUserRoute("info"),
 
   //SURGEON

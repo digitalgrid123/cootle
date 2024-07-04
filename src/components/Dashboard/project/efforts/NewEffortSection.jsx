@@ -29,7 +29,7 @@ const NewEffortSection = ({
   const tooglelinkmodel = () => {
     setShowLinkModel((prev) => !prev);
   };
-  if (!isAdmin || !showNewEffortInput) {
+  if (!showNewEffortInput) {
     return null;
   }
 

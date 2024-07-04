@@ -78,13 +78,21 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
   };
 
   const [userdetail, setUserDetail] = useState([]);
-
   useEffect(() => {
     const fetchUserinfo = async (userId) => {
       try {
         const res = await userinfobyId(userId);
         if (res && res.status && res.data) {
-          setUserDetail(res.data); // Assuming res.data contains user details
+          setUserDetail((prevDetails) => {
+            // Check if the user ID already exists in the array
+            const userExists = prevDetails.some(
+              (user) => user.id === res.data.id
+            );
+            if (!userExists) {
+              return [...prevDetails, res.data];
+            }
+            return prevDetails;
+          });
         }
       } catch (error) {
         console.error("Error fetching user info:", error);
@@ -427,7 +435,6 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
       <div className="wrapper-company w-100">
         <div className="company-sidebar w-100 d-flex flex-column gap-4">
           <NewPurposeSection
-            isAdmin={isAdmin}
             onToggleNewPurpose={onToggleNewPurpose}
             showNewPurposeInput={showNewPurposeInput}
             generateId={generateId}
@@ -474,26 +481,39 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                     </div>
                     <div className="d-flex align-items-center gap-2">
                       <div className="d-flex align-items-center gap-2">
-                        <h2 className="create-name weight-500">Created by:</h2>
-                        <div className="d-flex align-items-center gap-1">
-                          <div className="create_profile">
-                            <img
-                              src={
-                                userdetail.profile_pic
-                                  ? userdetail.profile_pic
-                                  : "/assets/images/mark/profile.png"
+                        {userdetail.some((user) => user.id === purpose.user) ? (
+                          <>
+                            <div className="create_profile">
+                              <img
+                                src={
+                                  userdetail.find(
+                                    (user) => user.id === purpose.user
+                                  ).profile_pic
+                                    ? userdetail.find(
+                                        (user) => user.id === purpose.user
+                                      ).profile_pic
+                                    : "/assets/images/mark/profile.png"
+                                }
+                                alt="profile"
+                                style={{
+                                  position: "absolute",
+                                  top: "0",
+                                  objectFit: "cover",
+                                  height: "100%",
+                                }}
+                              />
+                            </div>
+                            <h2 className="create-name">
+                              {
+                                userdetail.find(
+                                  (user) => user.id === purpose.user
+                                ).fullname
                               }
-                              alt="profile"
-                              style={{
-                                position: "absolute",
-                                top: "0",
-                                objectFit: "cover",
-                                height: "100%",
-                              }}
-                            />
-                          </div>
-                          <h2 className="create-name">{userdetail.fullname}</h2>
-                        </div>
+                            </h2>
+                          </>
+                        ) : (
+                          <></>
+                        )}
                       </div>
                       <div className="d-flex align-items-center gap-2">
                         <h2 className="create-name weight-500">Created on:</h2>
@@ -501,12 +521,12 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                           {new Date(purpose.created_at).toLocaleDateString()}
                         </h2>
                       </div>
-                      {isAdmin && (
+                      {purpose.user === user?.id && (
                         <button
                           className="edit-button"
                           onClick={() => handleEditClick(purpose)}
                         >
-                          <img src="/assets/images/mark/edit.svg" alt="" />
+                          <img src="/assets/images/mark/edit.svg" alt="Edit" />
                         </button>
                       )}
                     </div>

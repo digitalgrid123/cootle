@@ -401,9 +401,7 @@ function AuthProvider({ children }) {
   const userinfobyId = async (user_id) => {
     return new Promise(async (resolve) => {
       try {
-        const res = await axiosGet(API_ROUTER.USER_INFO, {
-          user_id,
-        });
+        const res = await axiosGet(API_ROUTER.USER_INFO_ID(user_id));
 
         if (res.status) {
           resolve({ status: true, data: res.data });
@@ -1272,9 +1270,12 @@ function AuthProvider({ children }) {
     });
   };
 
-  const valueratio = async (project_id) => {
+  const valueratio = async (project_id, start_date, end_date) => {
     try {
-      const res = await axiosGet(API_ROUTER.EFFORT_VALUE_RATIO(project_id));
+      const res = await axiosGet(API_ROUTER.EFFORT_VALUE_RATIO(project_id), {
+        start_date,
+        end_date,
+      });
 
       if (res.status) {
         return {
@@ -1289,9 +1290,12 @@ function AuthProvider({ children }) {
     }
   };
 
-  const objectiveratio = async (project_id) => {
+  const objectiveratio = async (project_id, start_date, end_date) => {
     try {
-      const res = await axiosGet(API_ROUTER.OBJECTIVE_VALUE_RATIO(project_id));
+      const res = await axiosGet(API_ROUTER.OBJECTIVE_VALUE_RATIO(project_id), {
+        start_date,
+        end_date,
+      });
 
       if (res.status) {
         return {
@@ -1306,10 +1310,14 @@ function AuthProvider({ children }) {
     }
   };
 
-  const effortbycategory = async (project_id) => {
+  const effortbycategory = async (project_id, start_date, end_date) => {
     try {
       const res = await axiosGet(
-        API_ROUTER.EFFORT_BY_CATEGORY_COUNT(project_id)
+        API_ROUTER.EFFORT_BY_CATEGORY_COUNT(project_id),
+        {
+          start_date,
+          end_date,
+        }
       );
 
       if (res.status) {
@@ -1324,9 +1332,12 @@ function AuthProvider({ children }) {
       return { status: false, data: "" };
     }
   };
-  const latestobjective = async (project_id) => {
+  const latestobjective = async (project_id, start_date, end_date) => {
     try {
-      const res = await axiosGet(API_ROUTER.LATEST_OBJECTIVE(project_id));
+      const res = await axiosGet(API_ROUTER.LATEST_OBJECTIVE(project_id), {
+        start_date,
+        end_date,
+      });
 
       if (res.status) {
         return {
@@ -1341,9 +1352,12 @@ function AuthProvider({ children }) {
     }
   };
 
-  const latestvalue = async (project_id) => {
+  const latestvalue = async (project_id, start_date, end_date) => {
     try {
-      const res = await axiosGet(API_ROUTER.LATEST_VALUE(project_id));
+      const res = await axiosGet(API_ROUTER.LATEST_VALUE(project_id), {
+        start_date,
+        end_date,
+      });
 
       if (res.status) {
         return {
@@ -1358,9 +1372,12 @@ function AuthProvider({ children }) {
     }
   };
 
-  const effortgraph = async (project_id) => {
+  const effortgraph = async (project_id, start_date, end_date) => {
     try {
-      const res = await axiosGet(API_ROUTER.EFFORT_GRAPH(project_id));
+      const res = await axiosGet(API_ROUTER.EFFORT_GRAPH(project_id), {
+        start_date,
+        end_date,
+      });
 
       if (res.status) {
         return {

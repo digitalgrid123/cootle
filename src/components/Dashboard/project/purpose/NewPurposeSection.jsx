@@ -19,7 +19,7 @@ const NewPurposeSection = ({
   selectedDesignEfforts,
   design,
 }) => {
-  if (!isAdmin || !showNewPurposeInput) {
+  if (!showNewPurposeInput) {
     return null;
   }
 

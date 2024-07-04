@@ -145,12 +145,31 @@ const EffortMapping = ({ reset, isAdmin }) => {
       );
 
       if (res.status) {
-        setActiveSubTab({
-          ...activeSubTab,
-          title: updatedName,
-          description: updatedDescription,
-        });
-        setEditMode(false);
+        // Update initialDesignEfforts without changing activeSubTab
+        setInitialDesignEfforts((prevEfforts) =>
+          prevEfforts.map((effort) =>
+            effort.id === effort_id
+              ? {
+                  ...effort,
+                  title: updatedName,
+                  description: updatedDescription,
+                }
+              : effort
+          )
+        );
+
+        // Update activeSubTab if it matches the updated effort_id
+        setActiveSubTab((prevSubTab) =>
+          prevSubTab && prevSubTab.id === effort_id
+            ? {
+                ...prevSubTab,
+                title: updatedName,
+                description: updatedDescription,
+              }
+            : prevSubTab
+        );
+
+        setEditMode(false); // Exit edit mode
       } else {
         console.error("Failed to update sub-tab");
       }

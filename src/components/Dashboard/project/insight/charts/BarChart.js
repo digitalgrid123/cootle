@@ -28,8 +28,11 @@ const BarChart = ({ data }) => {
             ></div>
             <span className="bar-label text-left">{`${item.value}%`}</span>
           </div>
-          <div style={{ width: "40%" }}>
-            <span className="bar-label">{item.label}</span>
+          <div
+            style={{ width: "40%", paddingBottom: "10px" }}
+            className="d-flex justify-content-end"
+          >
+            <span className="bar-label text-left">{item.label}</span>
           </div>
         </div>
       ))}

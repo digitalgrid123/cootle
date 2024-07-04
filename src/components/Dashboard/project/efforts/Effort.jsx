@@ -71,6 +71,11 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
 
   const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
   const [user, setUser] = useState(null);
+  const { toaster } = useToaster();
+
+  const [link, setLink] = useState("");
+
+  const [links, setLinks] = useState([]);
 
   useEffect(() => {
     const fetchUserinfo = async () => {
@@ -90,10 +95,6 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
     setIsDropdownOpen(false); // Close dropdown if open
   };
 
-  const [link, setLink] = useState("");
-
-  const [links, setLinks] = useState([]);
-
   const togglePurposeDropdown = (state) => {
     setPurposeDropdownOpen(state);
   };
@@ -103,19 +104,27 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
       try {
         const res = await userinfobyId(userId);
         if (res && res.status && res.data) {
-          setUserDetail(res.data); // Assuming res.data contains user details
+          setUserDetail((prevDetails) => {
+            // Check if the user ID already exists in the array
+            const userExists = prevDetails.some(
+              (user) => user.id === res.data.id
+            );
+            if (!userExists) {
+              return [...prevDetails, res.data];
+            }
+            return prevDetails;
+          });
         }
       } catch (error) {
         console.error("Error fetching user info:", error);
       }
     };
 
-    if (effortsListData && effortsListData.length > 0) {
-      effortsListData.forEach((effort) => fetchUserinfo(effort.user));
+    if (purposeListData && purposeListData.length > 0) {
+      purposeListData.forEach((purpose) => fetchUserinfo(purpose.user));
     }
-  }, [effortsListData, useradd]);
+  }, [purposeListData, useradd]);
 
-  const { toaster } = useToaster();
   const fetchMemberData = async () => {
     try {
       if (isAdmin) {
@@ -372,7 +381,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   // Extract unique years from purposeListData's created_at dates
   const years = Array.from(
     new Set(
-      purposeListData?.map((purpose) =>
+      effortsListData?.map((purpose) =>
         new Date(purpose.created_at).getFullYear()
       )
     )
@@ -531,7 +540,6 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
           <div className="company-sidebar w-100 d-flex flex-column gap-4 ">
             <div className="row">
               <NewEffortSection
-                isAdmin={isAdmin}
                 onToggleNewEffort={onToggleNewEffort}
                 showNewEffortInput={showNewEffortInput}
                 generateId={generateId}
@@ -601,7 +609,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                                   ).toLocaleDateString()}
                                 </h2>
                               </div>
-                              {isAdmin && (
+                              {effort?.user === user?.id && (
                                 <button
                                   className="edit-button"
                                   onClick={() => handleEditClick(effort)}
@@ -619,25 +627,41 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                           <div className="d-flex align-items-center gap-4">
                             <h2 className="create-name weight-500">By:</h2>
                             <div className="d-flex align-items-center gap-1">
-                              <div className="create_profile">
-                                <img
-                                  src={
-                                    userdetail.profile_pic
-                                      ? userdetail.profile_pic
-                                      : "/assets/images/mark/profile.png"
-                                  }
-                                  alt="profile"
-                                  style={{
-                                    position: "absolute",
-                                    top: "0",
-                                    height: "100%",
-                                    objectFit: "cover",
-                                  }}
-                                />
-                              </div>
-                              <h2 className="create-name">
-                                {userdetail.fullname}
-                              </h2>
+                              {userdetail.some(
+                                (user) => user.id === effort.user
+                              ) ? (
+                                <>
+                                  <div className="create_profile">
+                                    <img
+                                      src={
+                                        userdetail.find(
+                                          (user) => user.id === effort.user
+                                        ).profile_pic
+                                          ? userdetail.find(
+                                              (user) => user.id === effort.user
+                                            ).profile_pic
+                                          : "/assets/images/mark/profile.png"
+                                      }
+                                      alt="profile"
+                                      style={{
+                                        position: "absolute",
+                                        top: "0",
+                                        objectFit: "cover",
+                                        height: "100%",
+                                      }}
+                                    />
+                                  </div>
+                                  <h2 className="create-name">
+                                    {
+                                      userdetail.find(
+                                        (user) => user.id === effort.user
+                                      ).fullname
+                                    }
+                                  </h2>
+                                </>
+                              ) : (
+                                <></>
+                              )}
                             </div>
                           </div>
                           <div className="d-flex align-items-center gap-4">
@@ -695,51 +719,57 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                               getStatusImage={getStatusImage}
                               getStatusStyles={getStatusStyles}
                               isAdmin={isAdmin}
+                              user={user}
                               fetchEffortData={fetchEffortData}
                             />
                           </div>
-                          {isAdmin && (
-                            <div className="d-flex align-items-center gap-4">
-                              <h1 className="select-outcome-text">
-                                Checked By:
-                              </h1>
 
-                              {effort.checked_by ? (
-                                (() => {
-                                  const checkedMember = membersListData?.find(
-                                    (member) => member.id === effort?.checked_by
-                                  );
+                          <div className="d-flex align-items-center gap-4">
+                            <h1 className="select-outcome-text">Checked By:</h1>
 
-                                  return (
-                                    <div className="checkedby-container d-flex align-items-center gap-1">
-                                      <div className="checkby-image relative">
-                                        <img
-                                          src={
-                                            checkedMember?.profile_pic
-                                              ? checkedMember?.profile_pic
-                                              : "/assets/images/mark/profile.png"
-                                          }
-                                          alt={checkedMember?.fullname}
-                                          style={{
-                                            position: "absolute",
-                                            top: "0",
-                                            borderRadius: "50%",
-                                            objectFit: "cover",
-                                            height: "100%",
-                                          }}
-                                        />
-                                      </div>
-                                      <h2 className="checkby-name">
-                                        <span>{checkedMember?.fullname}</span>
-                                      </h2>
+                            {effort.checked_by ? (
+                              (() => {
+                                const checkedMember = membersListData?.find(
+                                  (member) => member.id === effort?.checked_by
+                                );
+
+                                return (
+                                  <div className="checkedby-container d-flex align-items-center gap-1">
+                                    <div className="checkby-image relative">
+                                      <img
+                                        src={
+                                          checkedMember?.profile_pic ||
+                                          user?.profile_pic
+                                            ? checkedMember?.profile_pic ||
+                                              user?.profile_pic
+                                            : "/assets/images/mark/profile.png"
+                                        }
+                                        alt={
+                                          checkedMember?.fullname ||
+                                          user?.fullname
+                                        }
+                                        style={{
+                                          position: "absolute",
+                                          top: "0",
+                                          borderRadius: "50%",
+                                          objectFit: "cover",
+                                          height: "100%",
+                                        }}
+                                      />
                                     </div>
-                                  );
-                                })()
-                              ) : (
-                                <div className="no-checked"></div>
-                              )}
-                            </div>
-                          )}
+                                    <h2 className="checkby-name">
+                                      <span>
+                                        {checkedMember?.fullname ||
+                                          user?.fullname}
+                                      </span>
+                                    </h2>
+                                  </div>
+                                );
+                              })()
+                            ) : (
+                              <div className="no-checked"></div>
+                            )}
+                          </div>
                         </div>
 
                         <div className="pb-24 d-flex gap-2  justify-content-between flex-column w-100 border-bottom-grey pt-24 pb-32">

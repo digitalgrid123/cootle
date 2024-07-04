@@ -6,17 +6,17 @@ const statusDescriptions = {
   YBC: "Yet to be checked",
   UCH: "Unchecked", // This will be filtered out from the dropdown options
   UPA: "Unplanned Activity",
-  REA: "Realised",
-  VUR: "Value Unrealised",
+  REA: "Value Realised",
+  VUR: " Unrealised",
 };
 
 const DropdownCheckedlist = ({
   effort,
   getStatusStyles,
   getStatusImage,
-  isAdmin,
   fetchEffortData,
   fetchMemberData,
+  user,
 }) => {
   const { effortcheckedBy } = useAuth();
   const { toaster } = useToaster();
@@ -50,12 +50,17 @@ const DropdownCheckedlist = ({
       <div
         className="DropdownCheckedlist-header d-flex align-items-center gap-1 cursor-pointer"
         style={getStatusStyles(effort?.value_status)}
-        onClick={!isAdmin ? toggleDropdown : undefined}
+        onClick={() => {
+          if (effort.user === user?.id) {
+            return; // Do nothing if effort user matches current user
+          }
+          toggleDropdown(); // Toggle dropdown if effort user does not match current user
+        }}
       >
         <span className="checked-status">
           {statusDescriptions[selectedStatus]}
         </span>
-        {!isAdmin && (
+        {effort.user !== user?.id && (
           <span>
             {getStatusImage() && (
               <img
@@ -66,7 +71,7 @@ const DropdownCheckedlist = ({
           </span>
         )}
       </div>
-      {isOpen && !isAdmin && (
+      {isOpen && effort.user !== user?.id && (
         <ul className="DropdownCheckedlist-menu">
           {Object.keys(statusDescriptions)
             .filter((statusKey) => statusKey !== "UCH") // Filter out 'UCH'

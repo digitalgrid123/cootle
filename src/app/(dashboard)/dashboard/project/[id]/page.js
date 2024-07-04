@@ -65,8 +65,6 @@ const Page = () => {
   };
 
   const renderAdminButton = () => {
-    if (!isAdmin) return <div />;
-
     if (selectedMapping === "purpose") {
       return (
         <div
