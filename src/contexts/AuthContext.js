@@ -1421,6 +1421,33 @@ function AuthProvider({ children }) {
       };
     }
   };
+  const assignAdmin = async (user_id) => {
+    try {
+      const res = await axiosPut(
+        API_ROUTER.ASSIGN_ADMIN(user_id),
+        
+      );
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return {
+          status: false,
+          data: "",
+        };
+      }
+    } catch (error) {
+      console.error("Error creating purpose:", error);
+      return {
+        status: false,
+        data: "",
+        message: "An error occurred while adding purpose",
+      };
+    }
+  };
 
   return (
     <AuthContext.Provider
@@ -1483,6 +1510,7 @@ function AuthProvider({ children }) {
         memberslist,
         effortgraph,
         userinfobyId,
+        assignAdmin
       }}
     >
       {children}

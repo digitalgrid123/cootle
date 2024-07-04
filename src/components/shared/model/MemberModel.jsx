@@ -6,7 +6,7 @@ import PaginationComponent from "../table/Pagination";
 
 const MemberModel = ({ activeTab }) => {
   const { toaster } = useToaster();
-  const { inviteuser, member, removeMember } = useAuth();
+  const { inviteuser, member, removeMember, assignAdmin } = useAuth();
   const selectedCompany = useGlobalCompany();
 
   const [emails, setEmails] = useState("");
@@ -98,6 +98,20 @@ const MemberModel = ({ activeTab }) => {
 
   const invitations = memberList?.invitations ?? [];
   const user = memberList?.user ?? {};
+  const handleAssignAdmin = async (memberId) => {
+    try {
+      // Perform API call to assign admin
+      const response = await assignAdmin(memberId);
+      if (response.status) {
+        toaster("Successfully Authorized", TOAST_TYPES.SUCCESS);
+        setFetchTrigger((prev) => !prev); // Trigger data refresh
+      } else {
+        toaster("Not able to authorized", TOAST_TYPES.ERROR);
+      }
+    } catch (error) {
+      toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);
+    }
+  };
 
   // Calculate total number of pages based on pageLimit
   const pageCount = Math.ceil(invitations.length / pageLimit);
@@ -262,14 +276,26 @@ const MemberModel = ({ activeTab }) => {
                                   Member
                                 </p>
                                 <p
+                                  onClick={() =>
+                                    handleAssignAdmin(member.invited_user_id)
+                                  }
+                                  className={
+                                    selectedOption === "Assign Admin"
+                                      ? "selected-option"
+                                      : ""
+                                  }
+                                >
+                                  Authorize as admin
+                                </p>
+                                <p
+                                  onClick={() =>
+                                    handleRemoveMember(member.invited_user_id)
+                                  }
                                   className={
                                     selectedOption === "Remove Member"
                                       ? "selected-option"
                                       : ""
                                   }
-                                  onClick={() =>
-                                    handleRemoveMember(member.invited_user_id)
-                                  } // Pass invited_user_id to the handler
                                 >
                                   Remove Member
                                 </p>

@@ -1,13 +1,13 @@
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 import { useAuth, useToaster } from "@/hooks";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const statusDescriptions = {
   YBC: "Yet to be checked",
   UCH: "Unchecked", // This will be filtered out from the dropdown options
   UPA: "Unplanned Activity",
   REA: "Value Realised",
-  VUR: " Unrealised",
+  VUR: "Unrealised",
 };
 
 const DropdownCheckedlist = ({
@@ -23,9 +23,32 @@ const DropdownCheckedlist = ({
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(effort?.value_status);
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  useEffect(() => {
+    const checkIfUnchanged = async () => {
+      const createdAtDate = new Date(effort?.created_at);
+      const oneWeekAfter = new Date(
+        createdAtDate.getTime() + 7 * 24 * 60 * 60 * 1000
+      );
+      const now = new Date();
+
+      if (!effort?.checked_by && now >= oneWeekAfter) {
+        const result = await effortcheckedBy(effort.id, "UCH");
+
+        if (result.status) {
+          setSelectedStatus("UCH");
+          toaster("Status automatically set to Unchecked", TOAST_TYPES.INFO);
+          fetchEffortData();
+          fetchMemberData();
+        } else {
+          toaster("Failed to automatically set status", TOAST_TYPES.ERROR);
+        }
+      }
+    };
+
+    checkIfUnchanged();
+  }, [effort, effortcheckedBy, fetchEffortData, fetchMemberData, toaster]);
+
+  const toggleDropdown = () => setIsOpen(!isOpen);
 
   const handleStatusSelect = async (status) => {
     try {
@@ -51,27 +74,24 @@ const DropdownCheckedlist = ({
         className="DropdownCheckedlist-header d-flex align-items-center gap-1 cursor-pointer"
         style={getStatusStyles(effort?.value_status)}
         onClick={() => {
-          if (effort.user === user?.id) {
-            return; // Do nothing if effort user matches current user
+          if (effort.user !== user?.id && selectedStatus !== "UCH") {
+            toggleDropdown();
           }
-          toggleDropdown(); // Toggle dropdown if effort user does not match current user
         }}
       >
         <span className="checked-status">
           {statusDescriptions[selectedStatus]}
         </span>
-        {effort.user !== user?.id && (
-          <span>
-            {getStatusImage() && (
-              <img
-                src={getStatusImage()}
-                alt={statusDescriptions[selectedStatus]}
-              />
-            )}
-          </span>
-        )}
+        {effort.user !== user?.id &&
+          getStatusImage() &&
+          effort?.value_status !== "UCH" && (
+            <img
+              src={getStatusImage()}
+              alt={statusDescriptions[selectedStatus]}
+            />
+          )}
       </div>
-      {isOpen && effort.user !== user?.id && (
+      {isOpen && effort.user !== user?.id && selectedStatus !== "UCH" && (
         <ul className="DropdownCheckedlist-menu">
           {Object.keys(statusDescriptions)
             .filter((statusKey) => statusKey !== "UCH") // Filter out 'UCH'

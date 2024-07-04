@@ -63,14 +63,13 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   const [selectedPurpose, setSelectedPurpose] = useState(null);
   const [effortsListData, setEffortsListData] = useState(null);
 
-  const [membersListData, setMembersListData] = useState([]);
-
   const [selectedOption, setSelectedOption] = useState("Quarterly");
   const [selectedOptionItem, setSelectedOptionItem] = useState(null);
   const [userdetail, setUserDetail] = useState([]);
 
   const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
   const [user, setUser] = useState(null);
+
   const { toaster } = useToaster();
 
   const [link, setLink] = useState("");
@@ -99,50 +98,36 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
     setPurposeDropdownOpen(state);
   };
 
-  useEffect(() => {
-    const fetchUserinfo = async (userId) => {
-      try {
-        const res = await userinfobyId(userId);
-        if (res && res.status && res.data) {
-          setUserDetail((prevDetails) => {
-            // Check if the user ID already exists in the array
-            const userExists = prevDetails.some(
-              (user) => user.id === res.data.id
-            );
-            if (!userExists) {
-              return [...prevDetails, res.data];
-            }
-            return prevDetails;
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-      }
-    };
+  const fetchUserinfoById = async (userId) => {
+    try {
+      const res = await userinfobyId(userId);
 
+      if (res && res.status && res.data) {
+        setUserDetail((prevDetails) => {
+          const userExists = prevDetails.some(
+            (user) => user.id === res.data.id
+          );
+          if (!userExists) {
+            return [...prevDetails, res.data];
+          } else {
+            return prevDetails.map((user) =>
+              user.id === res.data.id ? res.data : user
+            );
+          }
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
+  };
+
+  useEffect(() => {
     if (purposeListData && purposeListData.length > 0) {
-      purposeListData.forEach((purpose) => fetchUserinfo(purpose.user));
+      purposeListData.forEach((purpose) => fetchUserinfoById(purpose.user));
     }
   }, [purposeListData, useradd]);
 
-  const fetchMemberData = async () => {
-    try {
-      if (isAdmin) {
-        const result = await memberslist();
-        if (result.status) {
-          setMembersListData(result.data);
-        } else {
-          throw new Error("Failed to fetch member list");
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching member list:", error);
-    }
-  };
-  useEffect(() => {
-    fetchMemberData();
-  }, [memberslist]);
-
+ 
   const fetchEffortData = async () => {
     try {
       if (params?.id) {
@@ -609,17 +594,20 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                                   ).toLocaleDateString()}
                                 </h2>
                               </div>
-                              {effort?.user === user?.id && (
-                                <button
-                                  className="edit-button"
-                                  onClick={() => handleEditClick(effort)}
-                                >
-                                  <img
-                                    src="/assets/images/mark/edit.svg"
-                                    alt=""
-                                  />
-                                </button>
-                              )}
+                              {effort?.user === user?.id &&
+                                effort?.value_status !== "UCH" && (
+                                  <button
+                                    className="edit-button"
+                                    onClick={() =>
+                                      handleEditClick(simulatedEffort)
+                                    }
+                                  >
+                                    <img
+                                      src="/assets/images/mark/edit.svg"
+                                      alt=""
+                                    />
+                                  </button>
+                                )}
                             </div>
                           </div>
                         </div>
@@ -729,7 +717,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
 
                             {effort.checked_by ? (
                               (() => {
-                                const checkedMember = membersListData?.find(
+                                const checkedMember = userdetail?.find(
                                   (member) => member.id === effort?.checked_by
                                 );
 
@@ -738,16 +726,11 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                                     <div className="checkby-image relative">
                                       <img
                                         src={
-                                          checkedMember?.profile_pic ||
-                                          user?.profile_pic
-                                            ? checkedMember?.profile_pic ||
-                                              user?.profile_pic
+                                          checkedMember?.profile_pic
+                                            ? checkedMember?.profile_pic
                                             : "/assets/images/mark/profile.png"
                                         }
-                                        alt={
-                                          checkedMember?.fullname ||
-                                          user?.fullname
-                                        }
+                                        alt={checkedMember?.fullname}
                                         style={{
                                           position: "absolute",
                                           top: "0",
@@ -758,10 +741,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                                       />
                                     </div>
                                     <h2 className="checkby-name">
-                                      <span>
-                                        {checkedMember?.fullname ||
-                                          user?.fullname}
-                                      </span>
+                                      <span>{checkedMember?.fullname}</span>
                                     </h2>
                                   </div>
                                 );

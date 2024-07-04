@@ -1,10 +1,9 @@
 import { Loader } from "@/components/shared/loader";
 import { useAuth } from "@/hooks";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 
 const statusDescriptions = {
   YBC: "Yet to be checked",
-  UCH: "Unchecked", // This will be filtered out from the dropdown options
   UPA: "Unplanned Activity",
   REA: "Value Realised",
   VUR: "Unrealised",
@@ -13,12 +12,6 @@ const statusDescriptions = {
 const statusStyles = {
   YBC: {
     backgroundColor: "#000000CC",
-    color: "white",
-    padding: "6px 12px",
-    borderRadius: "8px",
-  },
-  UCH: {
-    backgroundColor: "#F24E1E",
     color: "white",
     padding: "6px 12px",
     borderRadius: "8px",
@@ -49,11 +42,6 @@ const activityStyles = {
     padding: "7px 7px 7px 20px",
     borderRadius: "16px",
   },
-  UCH: {
-    backgroundColor: "#F24E1E1A",
-    padding: "7px 7px 7px 20px",
-    borderRadius: "16px",
-  },
   UPA: {
     backgroundColor: "#E0DFE31A",
     padding: "7px 7px 7px 20px",
@@ -72,61 +60,29 @@ const activityStyles = {
 };
 
 const Activity = ({ activities }) => {
-  const { retrieveEffort, mappingList } = useAuth();
-  const [objectives, setObjectives] = useState([]);
+  const { designEffort } = useAuth();
   const [loading, setLoading] = useState(true);
-
-  const fetchDesignEfforts = useCallback(
-    async (designEffortIds) => {
-      try {
-        const response = await retrieveEffort(designEffortIds);
-        if (response?.status && Array.isArray(response.data)) {
-          return response.data;
-        } else {
-          throw new Error("Failed to fetch design efforts");
-        }
-      } catch (error) {
-        console.error("Error fetching design efforts:", error);
-        return [];
-      }
-    },
-    [retrieveEffort]
-  );
+  const [designData, setDesignData] = useState([]);
 
   useEffect(() => {
-    const fetchObjectives = async () => {
+    const fetchDesignEffort = async () => {
       try {
-        const res = await mappingList("OUT");
-        if (res?.status && Array.isArray(res.data) && res.data.length > 0) {
-          const objectivesData = res.data;
-          const objectivesWithDesignEfforts = await Promise.all(
-            objectivesData.map(async (obj) => {
-              if (obj.design_efforts.length > 0) {
-                const designEffortData = await fetchDesignEfforts(
-                  obj.design_efforts
-                );
-                return { ...obj, design_efforts: designEffortData };
-              }
-              return obj;
-            })
-          );
-          setObjectives(objectivesWithDesignEfforts);
+        const res = await designEffort();
+
+        if (res?.status) {
+          setDesignData(res.data);
         } else {
-          console.error("No data found in the response");
+          console.error("Failed to fetch design effort:", res);
         }
       } catch (err) {
-        console.error("Error fetching data:", err);
+        console.error("Error fetching design effort:", err);
       } finally {
-        setLoading(false);
+        setLoading(false); // Set loading to false once data fetching is complete
       }
     };
 
-    if (activities && Object.keys(activities).length > 0) {
-      fetchObjectives();
-    } else {
-      setLoading(false);
-    }
-  }, [activities, fetchDesignEfforts, mappingList]);
+    fetchDesignEffort();
+  }, [designEffort]);
 
   if (loading) {
     return <Loader />;
@@ -141,6 +97,9 @@ const Activity = ({ activities }) => {
             activityStyles[activity.project_effort?.value_status] || {};
           const statusStyle =
             statusStyles[activity.project_effort?.value_status] || {};
+          const matchedDesign = designData.find(
+            (design) => design.id === activity.project_effort?.design_effort
+          );
 
           return (
             <div
@@ -150,19 +109,27 @@ const Activity = ({ activities }) => {
             >
               <div className="d-flex flex-column gap-1">
                 <h1 className="objective-text">
-                  {activity.objectives?.[0] || ""}
+                  {matchedDesign ? matchedDesign.title : ""}
                 </h1>
-                <h1 className="objective-text">{activity.values?.[0] || ""}</h1>
+
                 <ul
                   className="p-0 d-flex gap-2 align-items-center"
                   style={{ listStyle: "none" }}
                 >
-                  {activity.project_effort?.outcomes.map((outcomeId, idx) => (
-                    <li key={idx} className="outcomes-text f-14 p-0">
-                      <span className="f-12">#</span>
-                      {objectives.find((obj) => obj.id === outcomeId)?.title}
-                    </li>
-                  ))}
+                  {activity.objectives &&
+                    activity.objectives.map((objective, index) => (
+                      <li key={index} className="outcomes-text f-14 p-0">
+                        <span className="f-12">#</span>
+                        <span>{objective}</span>
+                      </li>
+                    ))}
+                  {activity.values &&
+                    activity.values.map((value, index) => (
+                      <li key={index} className="outcomes-text f-14 p-0">
+                        <span className="f-12">#</span>
+                        <span>{value}</span>
+                      </li>
+                    ))}
                 </ul>
               </div>
               <div className="status-container" style={{ ...statusStyle }}>

@@ -88,6 +88,9 @@ const CategoryByCountChart = ({ count }) => {
           show: false,
         },
       },
+      grid: {
+        show: false, // This will hide both horizontal and vertical grid lines
+      },
       yaxis: {
         show: false,
       },
@@ -124,7 +127,10 @@ const CategoryByCountChart = ({ count }) => {
   // If count is zero, render only the linechart <div>
   if (count === 0) {
     return (
-      <div className="relative" style={{ width: "80px", height: "80px" }}>
+      <div
+        className="relative"
+        style={{ width: "80px", height: "80px", bottom: "33px" }}
+      >
         <div className="linechart">
           <img
             src="/assets/images/mark/line.svg"
@@ -137,14 +143,17 @@ const CategoryByCountChart = ({ count }) => {
 
   // If count is not zero, render the chart and the linechart <div>
   return (
-    <div className="relative" style={{ width: "80px", height: "80px" }}>
+    <div
+      className="relative"
+      style={{ width: "80px", height: "80px", bottom: "33px" }}
+    >
       <div id="chart">
         <ReactApexChart
           options={chartData.options}
           series={chartData.series}
           type="line"
-          height={80}
-          width={80}
+          height={85}
+          width={85}
         />
       </div>
       <div className="linechart">

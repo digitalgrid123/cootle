@@ -2297,3 +2297,7 @@ textarea {
   border: none;
   border-radius: 16px;
 }
+
+.apexcharts-xaxis {
+  display: none !important;
+}

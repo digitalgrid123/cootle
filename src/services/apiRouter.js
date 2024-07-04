@@ -60,6 +60,9 @@ export const API_ROUTER = {
   //REJECT INVITATION
   REJECT_INVITE: getNormalRoute("invite/reject"),
 
+  //ASSIGN AS ADMIN
+  ASSIGN_ADMIN: (user_id) => getUserRoute(`${user_id}/membership/admin`),
+
   //Edit COMPANY
   COMPANY_EDIT: getNormalRoute("company/edit"),
   //COMPANY LIST

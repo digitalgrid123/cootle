@@ -38,6 +38,7 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
     userinfobyId,
     useradd,
   } = useAuth();
+
   const params = useParams();
   const [lastIdNumber, setLastIdNumber] = useState(0);
   const [objectives, setObjectives] = useState([]);
@@ -55,18 +56,20 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Quarterly");
   const [selectedOptionItem, setSelectedOptionItem] = useState(null);
+  const [userdetail, setUserDetail] = useState([]);
 
   const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const fetchUserinfo = async () => {
-      const res = await userinfo();
-      if (res && res.status) {
-        setUser(res.data);
-      }
-    };
+  const fetchUserinfo = async () => {
+    const res = await userinfo();
 
+    if (res && res.status) {
+      setUser(res.data);
+    }
+  };
+
+  useEffect(() => {
     fetchUserinfo();
   }, [userinfo]);
   // Handle lifetime click
@@ -77,30 +80,36 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
     setIsDropdownOpen(false); // Close dropdown if open
   };
 
-  const [userdetail, setUserDetail] = useState([]);
-  useEffect(() => {
-    const fetchUserinfo = async (userId) => {
-      try {
-        const res = await userinfobyId(userId);
-        if (res && res.status && res.data) {
-          setUserDetail((prevDetails) => {
-            // Check if the user ID already exists in the array
-            const userExists = prevDetails.some(
-              (user) => user.id === res.data.id
-            );
-            if (!userExists) {
-              return [...prevDetails, res.data];
-            }
-            return prevDetails;
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-      }
-    };
+  const fetchUserinfoById = async (userId) => {
+    try {
+      const res = await userinfobyId(userId);
+      
 
+      if (res && res.status && res.data) {
+     
+        setUserDetail((prevDetails) => {
+          const userExists = prevDetails.some(
+            (user) => user.id === res.data.id
+          );
+          if (!userExists) {
+           
+            return [...prevDetails, res.data];
+          } else {
+            
+            return prevDetails.map((user) =>
+              user.id === res.data.id ? res.data : user
+            );
+          }
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
+  };
+
+  useEffect(() => {
     if (purposeListData && purposeListData.length > 0) {
-      purposeListData.forEach((purpose) => fetchUserinfo(purpose.user));
+      purposeListData.forEach((purpose) => fetchUserinfoById(purpose.user));
     }
   }, [purposeListData, useradd]);
 
@@ -123,7 +132,7 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
 
   useEffect(() => {
     fetchData();
-  }, [params.id, purposelist]);
+  }, [params.id, purposelist.useradd]);
 
   const fetchDesignEfforts = useCallback(
     async (designEffortIds) => {
