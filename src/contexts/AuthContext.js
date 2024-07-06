@@ -507,7 +507,7 @@ function AuthProvider({ children }) {
         if (res.status) {
           resolve({ status: true, data: res });
           saveData(STORAGE_KEYS.SESSION, res.session_id);
-          saveData(USER_ROLES.SUPER_ADMIN, res.is_admin);
+          saveData(USER_ROLES.SUPER_ADMIN, res.is_owner);
         } else {
           resolve({ status: false, data: "" });
         }
@@ -1423,10 +1423,7 @@ function AuthProvider({ children }) {
   };
   const assignAdmin = async (user_id) => {
     try {
-      const res = await axiosPut(
-        API_ROUTER.ASSIGN_ADMIN(user_id),
-        
-      );
+      const res = await axiosPut(API_ROUTER.ASSIGN_ADMIN(user_id));
 
       if (res.status) {
         return {
@@ -1510,7 +1507,7 @@ function AuthProvider({ children }) {
         memberslist,
         effortgraph,
         userinfobyId,
-        assignAdmin
+        assignAdmin,
       }}
     >
       {children}
