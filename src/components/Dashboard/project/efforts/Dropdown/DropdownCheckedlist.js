@@ -15,7 +15,7 @@ const DropdownCheckedlist = ({
   getStatusStyles,
   getStatusImage,
   fetchEffortData,
-  fetchMemberData,
+
   user,
 }) => {
   const { effortcheckedBy } = useAuth();
@@ -38,7 +38,6 @@ const DropdownCheckedlist = ({
           setSelectedStatus("UCH");
           toaster("Status automatically set to Unchecked", TOAST_TYPES.INFO);
           fetchEffortData();
-          fetchMemberData();
         } else {
           toaster("Failed to automatically set status", TOAST_TYPES.ERROR);
         }
@@ -46,7 +45,7 @@ const DropdownCheckedlist = ({
     };
 
     checkIfUnchanged();
-  }, [effort, effortcheckedBy, fetchEffortData, fetchMemberData, toaster]);
+  }, [effort, effortcheckedBy, fetchEffortData, , toaster]);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -58,7 +57,6 @@ const DropdownCheckedlist = ({
         setSelectedStatus(status);
         setIsOpen(false);
         fetchEffortData();
-        fetchMemberData();
         toaster("Effort added successfully", TOAST_TYPES.SUCCESS);
       } else {
         toaster("Failed to add effort", TOAST_TYPES.ERROR);

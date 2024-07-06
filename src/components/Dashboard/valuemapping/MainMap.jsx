@@ -1,5 +1,5 @@
 // MainMap.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import Title from "../Title";
 import EffortMapping from "./EffortMapping";
 import ObjectiveMapping from "./ObjectiveMapping";
@@ -16,6 +16,13 @@ const MainMap = () => {
   const { toaster } = useToaster();
   const { resetmapping } = useAuth();
   const isAdmin = getData(USER_ROLES.SUPER_ADMIN);
+  const [archieveddropdownOpen, setArchievedDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const togglearchievedDropdown = useCallback(
+    () => setArchievedDropdownOpen((prev) => !prev),
+    []
+  );
 
   useEffect(() => {
     // Handle initial selection based on URL or any other initial logic
@@ -66,6 +73,8 @@ const MainMap = () => {
             selectedMapping={selectedMapping}
             reset={reset}
             isAdmin={isAdmin}
+            togglearchievedDropdown={togglearchievedDropdown}
+            archieveddropdownOpen={archieveddropdownOpen}
           />
         );
       case "VAL":
@@ -74,6 +83,8 @@ const MainMap = () => {
             selectedMapping={selectedMapping}
             reset={reset}
             isAdmin={isAdmin}
+            togglearchievedDropdown={togglearchievedDropdown}
+            archieveddropdownOpen={archieveddropdownOpen}
           />
         );
       case "OUT":
@@ -82,6 +93,8 @@ const MainMap = () => {
             selectedMapping={selectedMapping}
             reset={reset}
             isAdmin={isAdmin}
+            togglearchievedDropdown={togglearchievedDropdown}
+            archieveddropdownOpen={archieveddropdownOpen}
           />
         );
       default:
@@ -92,6 +105,24 @@ const MainMap = () => {
   const handleDropdown = () => {
     setOpenDropdown(!openDropdown);
   };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      handleDropdown();
+    }
+  };
+
+  useEffect(() => {
+    if (openDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openDropdown]);
 
   return (
     <div className="h-100 d-flex flex-column">
@@ -139,11 +170,14 @@ const MainMap = () => {
             </button>
           )}
           {openDropdown && (
-            <ul className="reset-dropdown d-flex gap-2 flex-column">
+            <ul
+              className="reset-dropdown d-flex gap-2 flex-column"
+              ref={dropdownRef}
+            >
               <h2 className="account_text border_bottom_bluish weight-500">
                 Action
               </h2>
-              <div className="reset-profile d-flex align-items-center justify-content-between w-100">
+              <div className="reset-profile d-flex align-items-center justify-content-between w-100  border_bottom_bluish">
                 <div
                   className="profile-setting_container cursor-pointer"
                   onClick={restAddButton}
@@ -153,6 +187,19 @@ const MainMap = () => {
                     alt="profile-settings"
                   />
                   <h4 className="cursor-pointer weight-500">Reset Mapping</h4>
+                </div>
+              </div>
+              <div className="reset-profile d-flex align-items-center justify-content-between w-100">
+                <div
+                  className="profile-setting_container cursor-pointer"
+                  onClick={togglearchievedDropdown}
+                >
+                  <img
+                    style={{ width: "32px" }}
+                    src="/assets/images/mark/archieve.png"
+                    alt="profile-settings"
+                  />
+                  <h4 className="cursor-pointer weight-500">Archieved</h4>
                 </div>
               </div>
             </ul>

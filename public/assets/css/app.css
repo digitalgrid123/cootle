@@ -2301,3 +2301,27 @@ textarea {
 .apexcharts-xaxis {
   display: none !important;
 }
+
+.unarchive-btn {
+  border: none;
+  width: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.3s ease; /* Smooth transition for opacity */
+}
+
+.custom-li-class .archived-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0; /* Hidden by default */
+  transition: opacity 0.3s ease; /* Smooth transition for opacity */
+}
+
+.custom-li-class:hover .archived-btn {
+  opacity: 1; /* Show button on hover */
+}

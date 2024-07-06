@@ -4,14 +4,21 @@ import CreateModel from "@/components/shared/model/CreateModel";
 import DesignEffortModel from "@/components/shared/model/DesignEffortModel";
 import { useGlobalCompany } from "@/utils/globalState";
 import { Loader } from "@/components/shared/loader";
+import ArchievedModel from "@/components/shared/model/ArchievedModel";
 
 const TABS = {
   DEFINITION: "Definition",
   PRODUCT_OUTCOMES: "Associated design efforts",
 };
 
-const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
-  const { mappingList, updatemapping, reteriveEffort } = useAuth();
+const ProductOutcomes = ({
+  selectedMapping,
+  reset,
+  isAdmin,
+  togglearchievedDropdown,
+  archieveddropdownOpen,
+}) => {
+  const { mappingList, updatemapping, reteriveEffort ,mappingachieve} = useAuth();
   const [activeTab, setActiveTab] = useState(null);
   const [activeContentTab, setActiveContentTab] = useState(TABS.DEFINITION);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -25,6 +32,7 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
   const [error, setError] = useState(null);
   const [reteriveData, setRetrieveData] = useState([]);
   const selectedCompany = useGlobalCompany();
+  const [archivedObjectives, setArchivedObjectives] = useState([]);
 
   const toggleDropdown = useCallback(
     () => setDropdownOpen((prev) => !prev),
@@ -50,7 +58,6 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
   const handleProductOutcomeClick = useCallback((designEffort) => {
     setActiveProductOutcome(designEffort.title); // Set active design effort based on clicked item
   }, []);
-
   const fetchDesignEfforts = useCallback(async (designEffortIds) => {
     try {
       const response = await reteriveEffort(designEffortIds);
@@ -87,26 +94,35 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
           designEffortPromises
         );
 
-        // Reverse the list of objectives
-        const reversedObjectives = objectivesWithDesignEfforts.reverse();
+        // Separate archived and non-archived objectives
+        const archivedObjectives = objectivesWithDesignEfforts.filter(
+          (obj) => obj.is_archived
+        );
+        const nonArchivedObjectives = objectivesWithDesignEfforts.filter(
+          (obj) => !obj.is_archived
+        );
 
-        setObjectives(reversedObjectives);
+        // Reverse the list of non-archived objectives
+        const reversedNonArchivedObjectives = nonArchivedObjectives.reverse();
+
+        setObjectives(reversedNonArchivedObjectives);
+        setArchivedObjectives(archivedObjectives); // Assuming you have a state for archived objectives
 
         // Retrieve active tab index from localStorage if available
         const storedActiveTabId = localStorage.getItem("activeTabId");
         if (storedActiveTabId) {
-          const storedTab = reversedObjectives.find(
+          const storedTab = reversedNonArchivedObjectives.find(
             (obj) => obj.id === parseInt(storedActiveTabId)
           );
-          setActiveTab(storedTab || reversedObjectives[0]);
+          setActiveTab(storedTab || reversedNonArchivedObjectives[0]);
         } else {
-          setActiveTab(reversedObjectives[0]);
+          setActiveTab(reversedNonArchivedObjectives[0]);
         }
 
         // Set the first design effort of the active tab as active
-        if (reversedObjectives[0]?.design_efforts.length > 0) {
+        if (reversedNonArchivedObjectives[0]?.design_efforts.length > 0) {
           setActiveProductOutcome(
-            reversedObjectives[0].design_efforts[0].title
+            reversedNonArchivedObjectives[0].design_efforts[0].title
           );
         }
       } else {
@@ -131,7 +147,6 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
       if (res?.status && Array.isArray(res.data) && res.data.length > 0) {
         const objectivesData = res.data;
 
-        // Fetch design efforts for each objective
         const designEffortPromises = objectivesData.map(async (obj) => {
           if (obj.design_efforts.length > 0) {
             const designEffortData = await fetchDesignEfforts(
@@ -146,18 +161,27 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
           designEffortPromises
         );
 
-        // Reverse the list of objectives
-        const reversedObjectives = objectivesWithDesignEfforts.reverse();
+        const archivedObjectives = objectivesWithDesignEfforts.filter(
+          (obj) => obj.is_archived
+        );
+        const unarchivedObjectives = objectivesWithDesignEfforts.filter(
+          (obj) => !obj.is_archived
+        );
 
-        setObjectives(reversedObjectives);
+        // Reverse the lists
+        const reversedUnarchivedObjectives = unarchivedObjectives.reverse();
+        const reversedArchivedObjectives = archivedObjectives.reverse();
 
-        // Set the active tab to the last objective
-        setActiveTab(reversedObjectives[0]);
+        setObjectives(reversedUnarchivedObjectives);
+        setArchivedObjectives(reversedArchivedObjectives);
+
+        // Set the active tab to the last unarchived objective
+        setActiveTab(reversedUnarchivedObjectives[0]);
 
         // Set the first design effort of the active tab as active
-        if (reversedObjectives[0]?.design_efforts.length > 0) {
+        if (reversedUnarchivedObjectives[0]?.design_efforts.length > 0) {
           setActiveProductOutcome(
-            reversedObjectives[0].design_efforts[0].title
+            reversedUnarchivedObjectives[0].design_efforts[0].title
           );
         }
       } else {
@@ -239,6 +263,25 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
     () => objectives.find((obj) => obj.id === activeTab?.id),
     [objectives, activeTab]
   );
+  const handleMappingAchieve = useCallback(
+    async (mappingId) => {
+      try {
+        const res = await mappingachieve(mappingId);
+
+        if (res.status) {
+          fetchObjectives();
+          console.log("Mapping achieved successfully:", res.data);
+        } else {
+          // Handle failure, show error message or take appropriate action
+          console.error("Failed to achieve mapping:", res.message);
+        }
+      } catch (error) {
+        console.error("Error achieving mapping:", error);
+      }
+    },
+    [mappingachieve]
+  );
+
 
   if (loading)
     return (
@@ -265,15 +308,26 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
           </div>
 
           <ul>
-            {objectives.map((obj) => (
+          {objectives.map((obj) => (
               <li
                 key={obj.id}
-                className={`d-flex align-items-center justify-content-start gap-2 ${
+                className={`custom-li-class d-flex align-items-center justify-content-between gap-2 ${
                   activeTab?.id === obj.id ? "active" : ""
                 }`}
                 onClick={() => handleTabClick(obj)}
               >
                 <h2 className="menutext f-16 weight-500">{obj.title}</h2>
+                {activeTab?.id === obj.id ? (
+                  <button
+                    className="archived-btn menutext f-16 weight-500"
+                    onClick={() => handleMappingAchieve(obj.id)}
+                  >
+                    <img
+                      src="/assets/images/mark/archieve.png"
+                      alt="archived"
+                    />
+                  </button>
+                ) : null}
               </li>
             ))}
           </ul>
@@ -457,6 +511,14 @@ const ProductOutcomes = ({ selectedMapping, reset, isAdmin }) => {
         dropdownOpen={dropdownOpen}
         toggleDropdown={toggleDropdown}
         onModelAdded={handleModelAddedlast}
+      />
+      <ArchievedModel
+        title="Archieved List"
+        selectedMapping={selectedMapping}
+        dropdownOpen={archieveddropdownOpen}
+        toggleDropdown={togglearchievedDropdown}
+        archivedObjectives={archivedObjectives}
+        fetchObjectives={fetchObjectives}
       />
     </>
   );

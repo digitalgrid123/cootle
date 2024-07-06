@@ -127,7 +127,6 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
     }
   }, [purposeListData, useradd]);
 
- 
   const fetchEffortData = async () => {
     try {
       if (params?.id) {
@@ -162,6 +161,11 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
     fetchEffortData();
     fetchData();
   }, [params.id, purposelist, effortList]);
+
+  useEffect(() => {
+    fetchEffortData();
+    fetchData();
+  }, [params.id, purposelist, effortList, memberslist]);
 
   const fetchDesignEfforts = useCallback(
     async (designEffortIds) => {
@@ -702,7 +706,6 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                               Value status:
                             </h1>
                             <DropdownCheckedlist
-                              fetchMemberData={fetchMemberData}
                               effort={effort}
                               getStatusImage={getStatusImage}
                               getStatusStyles={getStatusStyles}

@@ -63,6 +63,10 @@ export const API_ROUTER = {
   //ASSIGN AS ADMIN
   ASSIGN_ADMIN: (user_id) => getUserRoute(`${user_id}/membership/admin`),
 
+  //Mapping_Archieve
+  MAPPING_ARCHIEVE: getNormalRoute("mapping/archive"),
+  MAPPING_UNARCHIEVE: getNormalRoute("mapping/unarchive"),
+
   //Edit COMPANY
   COMPANY_EDIT: getNormalRoute("company/edit"),
   //COMPANY LIST

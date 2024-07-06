@@ -6,15 +6,18 @@ import PaginationComponent from "../table/Pagination";
 
 const MemberModel = ({ activeTab }) => {
   const { toaster } = useToaster();
-  const { inviteuser, member, removeMember, assignAdmin } = useAuth();
+  const { inviteuser, member, removeMember, assignAdmin, memberslist, user } =
+    useAuth();
   const selectedCompany = useGlobalCompany();
 
   const [emails, setEmails] = useState("");
   const [memberList, setMemberList] = useState({});
+
   const [fetchTrigger, setFetchTrigger] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Member");
   const [showDropdown, setShowDropdown] = useState({});
   const [pageLimit, setPageLimit] = useState(calculatePageLimit());
+  const [owner, setOwner] = useState(null);
 
   // Pagination state
   const [activePage, setActivePage] = useState(1);
@@ -38,6 +41,24 @@ const MemberModel = ({ activeTab }) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    const fetchMemberData = async () => {
+      try {
+        const result = await memberslist();
+        if (result.status) {
+          const ownerData = result.data.filter((member) => member.is_owner);
+          setOwner(ownerData.length > 0 ? ownerData[0] : null);
+        } else {
+          throw new Error("Failed to fetch member list");
+        }
+      } catch (error) {
+        console.error("Error fetching member list:", error);
+      }
+    };
+
+    fetchMemberData();
+  }, [memberslist]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,7 +118,7 @@ const MemberModel = ({ activeTab }) => {
   };
 
   const invitations = memberList?.invitations ?? [];
-  const user = memberList?.user ?? {};
+
   const handleAssignAdmin = async (memberId) => {
     try {
       // Perform API call to assign admin
@@ -113,8 +134,8 @@ const MemberModel = ({ activeTab }) => {
     }
   };
 
-  // Calculate total number of pages based on pageLimit
-  const pageCount = Math.ceil(invitations.length / pageLimit);
+  const isOwner = user.is_owner && owner.is_owner && user.id === owner.id;
+  console.log("🚀 ~ MemberModel ~ isOwner:", isOwner);
 
   return (
     <>
@@ -176,26 +197,20 @@ const MemberModel = ({ activeTab }) => {
                     <img
                       className="profile-member"
                       src={
-                        user.profile_pic || "/assets/images/mark/profile.png"
+                        owner.profile_pic || "/assets/images/mark/profile.png"
                       }
                       alt="profile"
                     />
                     <div>
                       <h2 className="member_email weight-400">
-                        {user.fullname || ""}
+                        {owner.fullname || ""}
                       </h2>
-                      <h2 className="member_email weight-400">{user.email}</h2>
+                      <h2 className="member_email weight-400">{owner.email}</h2>
                     </div>
                   </td>
                   <td className="text-center">
                     <span className="member-title weight-500">
                       Admin (Owner)
-                    </span>
-                    <span>
-                      <img
-                        src="/assets/images/mark/littledrop.svg"
-                        alt="dropdown"
-                      />
                     </span>
                   </td>
                   <td
@@ -255,51 +270,117 @@ const MemberModel = ({ activeTab }) => {
                         {member.accepted ? (
                           <>
                             <span className="member-title weight-500">
-                              {selectedOption}
+                              {member.invited_is_admin
+                                ? "Admin"
+                                : selectedOption}
                             </span>
-                            <span>
-                              <img
-                                src="/assets/images/mark/littledrop.svg"
-                                alt="dropdown"
-                              />
-                            </span>
-                            {showDropdown[index] && (
-                              <div className="member-content">
-                                <p
-                                  onClick={() => setSelectedOption("Member")}
-                                  className={
-                                    selectedOption === "Member"
-                                      ? "selected-option"
-                                      : ""
-                                  }
-                                >
-                                  Member
-                                </p>
-                                <p
-                                  onClick={() =>
-                                    handleAssignAdmin(member.invited_user_id)
-                                  }
-                                  className={
-                                    selectedOption === "Assign Admin"
-                                      ? "selected-option"
-                                      : ""
-                                  }
-                                >
-                                  Authorize as admin
-                                </p>
-                                <p
-                                  onClick={() =>
-                                    handleRemoveMember(member.invited_user_id)
-                                  }
-                                  className={
-                                    selectedOption === "Remove Member"
-                                      ? "selected-option"
-                                      : ""
-                                  }
-                                >
-                                  Remove Member
-                                </p>
-                              </div>
+                            {isOwner && (
+                              <>
+                                <span>
+                                  <img
+                                    src="/assets/images/mark/littledrop.svg"
+                                    alt="dropdown"
+                                  />
+                                </span>
+                                {showDropdown[index] && (
+                                  <div className="member-content">
+                                    <p
+                                      onClick={() =>
+                                        setSelectedOption("Member")
+                                      }
+                                      className={
+                                        selectedOption === "Member"
+                                          ? "selected-option"
+                                          : ""
+                                      }
+                                    >
+                                      Member
+                                    </p>
+                                    <p
+                                      onClick={() =>
+                                        handleAssignAdmin(
+                                          member.invited_user_id
+                                        )
+                                      }
+                                      className={
+                                        selectedOption === "Assign Admin"
+                                          ? "selected-option"
+                                          : ""
+                                      }
+                                    >
+                                      Authorize as admin
+                                    </p>
+                                    <p
+                                      onClick={() =>
+                                        handleRemoveMember(
+                                          member.invited_user_id
+                                        )
+                                      }
+                                      className={
+                                        selectedOption === "Remove Member"
+                                          ? "selected-option"
+                                          : ""
+                                      }
+                                    >
+                                      Remove Member
+                                    </p>
+                                  </div>
+                                )}
+                              </>
+                            )}
+                            {!isOwner && !member.invited_is_admin && (
+                              <>
+                                <span>
+                                  <img
+                                    src="/assets/images/mark/littledrop.svg"
+                                    alt="dropdown"
+                                  />
+                                </span>
+                                {showDropdown[index] && (
+                                  <div className="member-content">
+                                    <p
+                                      onClick={() =>
+                                        setSelectedOption("Member")
+                                      }
+                                      className={
+                                        selectedOption === "Member"
+                                          ? "selected-option"
+                                          : ""
+                                      }
+                                    >
+                                      Member
+                                    </p>
+                                    <p
+                                      onClick={() =>
+                                        handleAssignAdmin(
+                                          member.invited_user_id
+                                        )
+                                      }
+                                      className={
+                                        selectedOption === "Assign Admin"
+                                          ? "selected-option"
+                                          : ""
+                                      }
+                                    >
+                                      Authorize as admin
+                                    </p>
+                                    <p
+                                      onClick={() =>
+                                        handleRemoveMember(
+                                          member.invited_user_id
+                                        )
+                                      }
+                                      className={
+                                        selectedOption === "Remove Member"
+                                          ? "selected-option"
+                                          : ""
+                                      }
+                                    >
+                                      Remove Member
+                                    </p>
+                                  </div>
+                                )}
+                              </>
                             )}
                           </>
                         ) : (

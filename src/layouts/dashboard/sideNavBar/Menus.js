@@ -23,7 +23,6 @@ const Menus = () => {
   const selectedCompany = useGlobalCompany();
 
   const isAdmin = getData(USER_ROLES.SUPER_ADMIN);
-  console.log("🚀 ~ Menus ~ isAdmin:", isAdmin);
   const [showPopup, setShowPopup] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
   const [showProjectPopup, setShowProjectPopup] = useState(false);

@@ -169,9 +169,10 @@ function AuthProvider({ children }) {
 
           const userInfoResponse = await axiosGet(API_ROUTER.USER_INFO);
           if (userInfoResponse.status) {
+            saveData(USER_ROLES.SUPER_ADMIN, userInfoResponse.data.is_admin);
             dispatch({
               type: "INITIALIZE",
-              payload: {
+              payload: { 
                 isAuthenticated: true,
                 user: userInfoResponse.data,
               },
@@ -507,7 +508,6 @@ function AuthProvider({ children }) {
         if (res.status) {
           resolve({ status: true, data: res });
           saveData(STORAGE_KEYS.SESSION, res.session_id);
-          saveData(USER_ROLES.SUPER_ADMIN, res.is_owner);
         } else {
           resolve({ status: false, data: "" });
         }
@@ -1446,6 +1446,60 @@ function AuthProvider({ children }) {
     }
   };
 
+  const mappingachieve =async (mapping_id) => {
+    try {
+      const res = await axiosPatch(API_ROUTER.MAPPING_ARCHIEVE,{
+        mapping_id
+      });
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return {
+          status: false,
+          data: "",
+        };
+      }
+    } catch (error) {
+      console.error("Error creating purpose:", error);
+      return {
+        status: false,
+        data: "",
+        message: "An error occurred while adding purpose",
+      };
+    }
+  };
+
+  const unarchiveObjective =async (mapping_id) => {
+    try {
+      const res = await axiosPatch(API_ROUTER.MAPPING_UNARCHIEVE,{
+        mapping_id
+      });
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return {
+          status: false,
+          data: "",
+        };
+      }
+    } catch (error) {
+      console.error("Error creating purpose:", error);
+      return {
+        status: false,
+        data: "",
+        message: "An error occurred while adding purpose",
+      };
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -1508,6 +1562,8 @@ function AuthProvider({ children }) {
         effortgraph,
         userinfobyId,
         assignAdmin,
+        mappingachieve,
+        unarchiveObjective
       }}
     >
       {children}
