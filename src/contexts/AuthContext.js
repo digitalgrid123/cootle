@@ -520,6 +520,7 @@ function AuthProvider({ children }) {
         if (res.status) {
           resolve({ status: true, data: res });
           saveData(STORAGE_KEYS.SESSION, res.session_id);
+          saveData(USER_ROLES.SUPER_ADMIN, userInfoResponse.data.is_owner);
         } else {
           resolve({ status: false, data: "" });
         }
