@@ -9,11 +9,11 @@ import { setSelectedCompany, useGlobalCompany } from "@/utils/globalState";
 import CreateNewModel from "@/components/shared/model/CreateNewModel";
 import InvitationList from "@/components/shared/model/InvitationList";
 import { USER_ROLES } from "@/constants/keywords";
-import { getData } from "@/utils/storage";
+import { getData, saveData } from "@/utils/storage";
 import NewProjectModal from "@/components/shared/model/NewProjectModal";
 
 const Menus = () => {
-  const { companylist, projectlist } = useAuth();
+  const { companylist, projectlist, userinfo } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const dropdownRef = useRef(null);
@@ -27,6 +27,18 @@ const Menus = () => {
   const [showInvite, setShowInvite] = useState(false);
   const [showProjectPopup, setShowProjectPopup] = useState(false);
   const [activeMenuItem, setActiveMenuItem] = useState("");
+
+  // Fetch user information on component mount
+  useEffect(() => {
+    const fetchUserinfo = async () => {
+      const res = await userinfo();
+      if (res && res.status) {
+        saveData(USER_ROLES.SUPER_ADMIN, res.data.is_admin);
+      }
+    };
+
+    fetchUserinfo();
+  }, [userinfo]);
 
   useEffect(() => {
     const fetchCompanyList = async () => {

@@ -22,6 +22,7 @@ const Dashboard = () => {
     const fetchUserinfo = async () => {
       const res = await userinfo();
       if (res && res.status) {
+        
         setUser(res.data.fullname);
       }
     };

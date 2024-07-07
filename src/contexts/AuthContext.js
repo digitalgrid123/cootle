@@ -128,17 +128,12 @@ function AuthProvider({ children }) {
         refresh: rT,
       });
 
-      if (res.status === 200) {
-        setSession(
-          res.data.access,
-          rT,
-          handleTokenExpiration,
-          handleRTExpiration
-        );
+      if (res.status) {
+        setSession(res?.access, rT, handleTokenExpiration, handleRTExpiration);
 
         // After successful token refresh, retrieve user info again
         const userInfoResponse = await axiosGet(API_ROUTER.USER_INFO);
-        if (userInfoResponse.status === 200) {
+        if (userInfoResponse.status) {
           dispatch({
             type: "UPDATE",
             payload: {
@@ -213,13 +208,13 @@ function AuthProvider({ children }) {
 
     initialize(); // Call initialize immediately on mount
 
-    const intervalId = setInterval(() => {
-      initialize();
-    }, 20000);
+    // const intervalId = setInterval(() => {
+    //   initialize();
+    // }, 20000);
 
-    // Clear interval on component unmount to avoid memory leaks
-    return () => clearInterval(intervalId);
-  }, []); // Empty dependency array ensures useEffect runs only on mount
+    // // Clear interval on component unmount to avoid memory leaks
+    // return () => clearInterval(intervalId);
+  }, [dispatch]); // Empty dependency array ensures useEffect runs only on mount
 
   const verifyregisterCode = async (email, verification_code) => {
     // eslint-disable-next-line no-async-promise-executor
@@ -520,7 +515,6 @@ function AuthProvider({ children }) {
         if (res.status) {
           resolve({ status: true, data: res });
           saveData(STORAGE_KEYS.SESSION, res.session_id);
-          saveData(USER_ROLES.SUPER_ADMIN, userInfoResponse.data.is_owner);
         } else {
           resolve({ status: false, data: "" });
         }
