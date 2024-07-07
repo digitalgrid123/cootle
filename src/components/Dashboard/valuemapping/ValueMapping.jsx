@@ -318,7 +318,7 @@ const ValueMapping = ({
                 onClick={() => handleTabClick(obj)}
               >
                 <h2 className="menutext f-16 weight-500">{obj.title}</h2>
-                {activeTab?.id === obj.id ? (
+                {isAdmin && activeTab?.id === obj.id ? (
                   <button
                     className="archived-btn menutext f-16 weight-500"
                     onClick={() => handleMappingAchieve(obj.id)}

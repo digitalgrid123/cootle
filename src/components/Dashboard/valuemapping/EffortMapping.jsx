@@ -309,7 +309,9 @@ const EffortMapping = ({
                         {subTab.title}
                       </h3>
 
-                      {activeSubTab && activeSubTab.id === subTab.id ? (
+                      {isAdmin &&
+                      activeSubTab &&
+                      activeSubTab.id === subTab.id ? (
                         <button
                           className="archived-btn menutext f-16 weight-500"
                           onClick={() => handleEffortAchieve(subTab.id)}

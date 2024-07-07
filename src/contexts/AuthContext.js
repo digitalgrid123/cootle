@@ -206,8 +206,10 @@ function AuthProvider({ children }) {
       }
     };
 
-    initialize();
-  }, [dispatch]);
+    initialize(); // Call initialize immediately on mount
+
+   
+  }, [dispatch]); // Empty dependency array ensures useEffect runs only on mount
 
   const verifyregisterCode = async (email, verification_code) => {
     // eslint-disable-next-line no-async-promise-executor

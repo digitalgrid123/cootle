@@ -38,6 +38,13 @@ const Menus = () => {
     };
 
     fetchUserinfo();
+
+    const intervalId = setInterval(() => {
+      fetchUserinfo();
+    }, 5000);
+
+    // Clear interval on component unmount to avoid memory leaks
+    return () => clearInterval(intervalId);
   }, [userinfo]);
 
   useEffect(() => {
