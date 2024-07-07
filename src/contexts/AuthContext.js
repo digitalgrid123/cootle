@@ -215,7 +215,7 @@ function AuthProvider({ children }) {
 
     const intervalId = setInterval(() => {
       initialize();
-    }, 20000);
+    }, 5000);
 
     // Clear interval on component unmount to avoid memory leaks
     return () => clearInterval(intervalId);
