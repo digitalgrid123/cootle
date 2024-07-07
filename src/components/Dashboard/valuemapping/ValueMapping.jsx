@@ -18,7 +18,8 @@ const ValueMapping = ({
   archieveddropdownOpen,
   togglearchievedDropdown,
 }) => {
-  const { mappingList, updatemapping, reteriveEffort,mappingachieve } = useAuth();
+  const { mappingList, updatemapping, reteriveEffort, mappingachieve } =
+    useAuth();
   const [activeTab, setActiveTab] = useState(null);
   const [activeContentTab, setActiveContentTab] = useState(TABS.DEFINITION);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -272,7 +273,6 @@ const ValueMapping = ({
 
         if (res.status) {
           fetchObjectives();
-          console.log("Mapping achieved successfully:", res.data);
         } else {
           // Handle failure, show error message or take appropriate action
           console.error("Failed to achieve mapping:", res.message);
@@ -283,7 +283,6 @@ const ValueMapping = ({
     },
     [mappingachieve]
   );
-
 
   if (loading)
     return (

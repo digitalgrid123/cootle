@@ -20,7 +20,6 @@ const EditEffortSection = ({
   setPurposeListData,
   fetchEffortData,
 }) => {
-  console.log("🚀 ~ user:", user);
   const { updateEffort, removeEffort } = useAuth();
   const [link, setLink] = useState();
 

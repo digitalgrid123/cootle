@@ -135,7 +135,6 @@ const MemberModel = ({ activeTab }) => {
   };
 
   const isOwner = user.is_owner && owner.is_owner && user.id === owner.id;
-  console.log("🚀 ~ MemberModel ~ isOwner:", isOwner);
 
   return (
     <>

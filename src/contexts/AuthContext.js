@@ -213,12 +213,12 @@ function AuthProvider({ children }) {
 
     initialize(); // Call initialize immediately on mount
 
-    // const intervalId = setInterval(() => {
-    //   initialize();
-    // }, 20000);
+    const intervalId = setInterval(() => {
+      initialize();
+    }, 20000);
 
-    // // Clear interval on component unmount to avoid memory leaks
-    // return () => clearInterval(intervalId);
+    // Clear interval on component unmount to avoid memory leaks
+    return () => clearInterval(intervalId);
   }, []); // Empty dependency array ensures useEffect runs only on mount
 
   const verifyregisterCode = async (email, verification_code) => {

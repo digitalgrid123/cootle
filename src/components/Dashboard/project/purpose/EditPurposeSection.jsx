@@ -14,7 +14,6 @@ const EditPurposeSection = ({
   fetchData,
   setPurposeToEdit,
 }) => {
-  console.log("🚀 ~ EditPurposeSection:", EditPurposeSection);
   const { updatePurpose, removePurpose } = useAuth();
   const [title, setTitle] = useState(purpose.title);
   const [description, setDescription] = useState(purpose.description);

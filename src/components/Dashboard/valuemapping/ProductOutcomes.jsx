@@ -18,7 +18,8 @@ const ProductOutcomes = ({
   togglearchievedDropdown,
   archieveddropdownOpen,
 }) => {
-  const { mappingList, updatemapping, reteriveEffort ,mappingachieve} = useAuth();
+  const { mappingList, updatemapping, reteriveEffort, mappingachieve } =
+    useAuth();
   const [activeTab, setActiveTab] = useState(null);
   const [activeContentTab, setActiveContentTab] = useState(TABS.DEFINITION);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -270,7 +271,6 @@ const ProductOutcomes = ({
 
         if (res.status) {
           fetchObjectives();
-          console.log("Mapping achieved successfully:", res.data);
         } else {
           // Handle failure, show error message or take appropriate action
           console.error("Failed to achieve mapping:", res.message);
@@ -281,7 +281,6 @@ const ProductOutcomes = ({
     },
     [mappingachieve]
   );
-
 
   if (loading)
     return (
@@ -308,7 +307,7 @@ const ProductOutcomes = ({
           </div>
 
           <ul>
-          {objectives.map((obj) => (
+            {objectives.map((obj) => (
               <li
                 key={obj.id}
                 className={`custom-li-class d-flex align-items-center justify-content-between gap-2 ${

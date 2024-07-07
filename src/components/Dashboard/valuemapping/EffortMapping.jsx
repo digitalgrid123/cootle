@@ -225,7 +225,6 @@ const EffortMapping = ({
 
         if (res.status) {
           fetchCategories();
-          console.log("Mapping achieved successfully:", res.data);
         } else {
           // Handle failure, show error message or take appropriate action
           console.error("Failed to achieve mapping:", res.message);
