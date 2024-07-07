@@ -67,6 +67,9 @@ export const API_ROUTER = {
   MAPPING_ARCHIEVE: getNormalRoute("mapping/archive"),
   MAPPING_UNARCHIEVE: getNormalRoute("mapping/unarchive"),
 
+  EFFORT_ARCHIEVE: getNormalRoute("design-effort/archive"),
+  EFFORT_UNARCHIEVE: getNormalRoute("design-effort/unarchive"),
+
   //Edit COMPANY
   COMPANY_EDIT: getNormalRoute("company/edit"),
   //COMPANY LIST

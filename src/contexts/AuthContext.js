@@ -128,12 +128,17 @@ function AuthProvider({ children }) {
         refresh: rT,
       });
 
-      if (res.status) {
-        setSession(res?.access, rT, handleTokenExpiration, handleRTExpiration);
+      if (res.status === 200) {
+        setSession(
+          res.data.access,
+          rT,
+          handleTokenExpiration,
+          handleRTExpiration
+        );
 
         // After successful token refresh, retrieve user info again
         const userInfoResponse = await axiosGet(API_ROUTER.USER_INFO);
-        if (userInfoResponse.status) {
+        if (userInfoResponse.status === 200) {
           dispatch({
             type: "UPDATE",
             payload: {
@@ -172,7 +177,7 @@ function AuthProvider({ children }) {
             saveData(USER_ROLES.SUPER_ADMIN, userInfoResponse.data.is_admin);
             dispatch({
               type: "INITIALIZE",
-              payload: { 
+              payload: {
                 isAuthenticated: true,
                 user: userInfoResponse.data,
               },
@@ -206,8 +211,15 @@ function AuthProvider({ children }) {
       }
     };
 
-    initialize();
-  }, []);
+    initialize(); // Call initialize immediately on mount
+
+    // const intervalId = setInterval(() => {
+    //   initialize();
+    // }, 20000);
+
+    // // Clear interval on component unmount to avoid memory leaks
+    // return () => clearInterval(intervalId);
+  }, []); // Empty dependency array ensures useEffect runs only on mount
 
   const verifyregisterCode = async (email, verification_code) => {
     // eslint-disable-next-line no-async-promise-executor
@@ -1446,10 +1458,10 @@ function AuthProvider({ children }) {
     }
   };
 
-  const mappingachieve =async (mapping_id) => {
+  const mappingachieve = async (mapping_id) => {
     try {
-      const res = await axiosPatch(API_ROUTER.MAPPING_ARCHIEVE,{
-        mapping_id
+      const res = await axiosPatch(API_ROUTER.MAPPING_ARCHIEVE, {
+        mapping_id,
       });
 
       if (res.status) {
@@ -1473,10 +1485,62 @@ function AuthProvider({ children }) {
     }
   };
 
-  const unarchiveObjective =async (mapping_id) => {
+  const unarchiveObjective = async (mapping_id) => {
     try {
-      const res = await axiosPatch(API_ROUTER.MAPPING_UNARCHIEVE,{
-        mapping_id
+      const res = await axiosPatch(API_ROUTER.MAPPING_UNARCHIEVE, {
+        mapping_id,
+      });
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return {
+          status: false,
+          data: "",
+        };
+      }
+    } catch (error) {
+      console.error("Error creating purpose:", error);
+      return {
+        status: false,
+        data: "",
+        message: "An error occurred while adding purpose",
+      };
+    }
+  };
+  const effortachieve = async (effort_id) => {
+    try {
+      const res = await axiosPatch(API_ROUTER.EFFORT_ARCHIEVE, {
+        effort_id,
+      });
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return {
+          status: false,
+          data: "",
+        };
+      }
+    } catch (error) {
+      console.error("Error creating purpose:", error);
+      return {
+        status: false,
+        data: "",
+        message: "An error occurred while adding purpose",
+      };
+    }
+  };
+  const effortunarchieve = async (effort_id) => {
+    try {
+      const res = await axiosPatch(API_ROUTER.EFFORT_UNARCHIEVE, {
+        effort_id,
       });
 
       if (res.status) {
@@ -1563,7 +1627,9 @@ function AuthProvider({ children }) {
         userinfobyId,
         assignAdmin,
         mappingachieve,
-        unarchiveObjective
+        unarchiveObjective,
+        effortachieve,
+        effortunarchieve,
       }}
     >
       {children}

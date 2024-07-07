@@ -4,9 +4,16 @@ import MapModel from "@/components/shared/model/MapModel";
 import { useAuth } from "@/hooks";
 import { useGlobalCompany } from "@/utils/globalState";
 import { Loader } from "@/components/shared/loader";
+import ArchivedEffortsModal from "@/components/shared/model/ArchivedEffortsModal";
 
-const EffortMapping = ({ reset, isAdmin }) => {
-  const { categories, getSinglecategory, updateDesignEffort } = useAuth();
+const EffortMapping = ({
+  reset,
+  isAdmin,
+  archieveddropdownOpen,
+  togglearchievedDropdown,
+}) => {
+  const { categories, getSinglecategory, updateDesignEffort, effortachieve } =
+    useAuth();
   const [categoriesList, setCategoriesList] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
   const [activeSubTab, setActiveSubTab] = useState(null);
@@ -16,14 +23,16 @@ const EffortMapping = ({ reset, isAdmin }) => {
   const [designdropdownOpen, setDesignDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [initialDesignEfforts, setInitialDesignEfforts] = useState([]);
+
   const [editMode, setEditMode] = useState(false);
   const [editTitle, setEditTitle] = useState("");
   const selectedCompany = useGlobalCompany();
   const [editDescription, setEditDescription] = useState("");
+  const [archivedDesignEfforts, setArchivedDesignEfforts] = useState([]);
 
   useEffect(() => {
     fetchCategories();
-  }, [categories, selectedCompany, reset]);
+  }, [categories, selectedCompany, reset, isAdmin]);
 
   const fetchCategories = async () => {
     setLoading(true);
@@ -33,9 +42,20 @@ const EffortMapping = ({ reset, isAdmin }) => {
         const firstCategory = res.data[0];
         setCategoriesList(res.data);
         setActiveCategory(firstCategory);
-        const firstDesignEffort = firstCategory?.design_efforts[0] || null;
+
+        // Separate archived and unarchived design efforts
+        const unarchivedDesignEfforts = firstCategory.design_efforts.filter(
+          (de) => !de.is_archived
+        );
+        const archivedDesignEfforts = firstCategory.design_efforts.filter(
+          (de) => de.is_archived
+        );
+
+        const firstDesignEffort = unarchivedDesignEfforts[0] || null;
+
         setActiveSubTab(firstDesignEffort);
-        setInitialDesignEfforts(firstCategory.design_efforts || []);
+        setInitialDesignEfforts(unarchivedDesignEfforts);
+        setArchivedDesignEfforts(archivedDesignEfforts);
       } else {
         console.error("Failed to fetch categories");
       }
@@ -68,10 +88,26 @@ const EffortMapping = ({ reset, isAdmin }) => {
     setLoading(true);
     try {
       const res = await getSinglecategory(activeCategory.id); // Assuming getSinglecategory fetches the category details with efforts
-      if (res?.status && Array.isArray(res.data) && res.data.length > 0) {
-        const updatedEfforts = res.data;
-        setInitialDesignEfforts(updatedEfforts);
-        setActiveSubTab(updatedEfforts[updatedEfforts.length - 1]); // Set activeSubTab to the last item
+      if (
+        res?.status &&
+        Array.isArray(res.data.design_efforts) &&
+        res.data.design_efforts.length > 0
+      ) {
+        const updatedEfforts = res.data.design_efforts;
+
+        // Separate archived and unarchived design efforts
+        const unarchivedDesignEfforts = updatedEfforts.filter(
+          (de) => !de.is_archived
+        );
+        const archivedDesignEfforts = updatedEfforts.filter(
+          (de) => de.is_archived
+        );
+
+        setInitialDesignEfforts(unarchivedDesignEfforts);
+        setArchivedDesignEfforts(archivedDesignEfforts);
+        setActiveSubTab(
+          unarchivedDesignEfforts[unarchivedDesignEfforts.length - 1]
+        ); // Set activeSubTab to the last unarchived item
       } else {
         console.error("Failed to fetch efforts or empty data returned");
       }
@@ -182,6 +218,25 @@ const EffortMapping = ({ reset, isAdmin }) => {
     setEditMode(false);
   };
 
+  const handleEffortAchieve = useCallback(
+    async (effortId) => {
+      try {
+        const res = await effortachieve(effortId);
+
+        if (res.status) {
+          fetchCategories();
+          console.log("Mapping achieved successfully:", res.data);
+        } else {
+          // Handle failure, show error message or take appropriate action
+          console.error("Failed to achieve mapping:", res.message);
+        }
+      } catch (error) {
+        console.error("Error achieving mapping:", error);
+      }
+    },
+    [effortachieve]
+  );
+
   return (
     <>
       <div className="wrapper-company">
@@ -244,7 +299,7 @@ const EffortMapping = ({ reset, isAdmin }) => {
                   initialDesignEfforts.map((subTab) => (
                     <li
                       key={subTab.id}
-                      className={`${
+                      className={`custom-li-class d-flex align-items-center justify-content-between ${
                         activeSubTab && activeSubTab.id === subTab.id
                           ? "active"
                           : ""
@@ -254,6 +309,18 @@ const EffortMapping = ({ reset, isAdmin }) => {
                       <h3 className="menutext f-16 weight-400">
                         {subTab.title}
                       </h3>
+
+                      {activeSubTab && activeSubTab.id === subTab.id ? (
+                        <button
+                          className="archived-btn menutext f-16 weight-500"
+                          onClick={() => handleEffortAchieve(subTab.id)}
+                        >
+                          <img
+                            src="/assets/images/mark/archieve.png"
+                            alt="archived"
+                          />
+                        </button>
+                      ) : null}
                     </li>
                   ))
                 ) : (
@@ -363,6 +430,13 @@ const EffortMapping = ({ reset, isAdmin }) => {
         activeTab={activeCategory ? activeCategory.name : ""}
         handleTabClick={handleCategoryClick}
         refreshCategories={refreshCategories}
+      />
+      <ArchivedEffortsModal
+        title="Archived Design Efforts"
+        dropdownOpen={archieveddropdownOpen}
+        toggleDropdown={togglearchievedDropdown}
+        archivedDesignEfforts={archivedDesignEfforts}
+        fetchEfforts={fetchCategories}
       />
     </>
   );

@@ -66,7 +66,14 @@ const MainMap = () => {
   const renderContent = () => {
     switch (selectedMapping) {
       case "effort":
-        return <EffortMapping reset={reset} isAdmin={isAdmin} />;
+        return (
+          <EffortMapping
+            reset={reset}
+            isAdmin={isAdmin}
+            togglearchievedDropdown={togglearchievedDropdown}
+            archieveddropdownOpen={archieveddropdownOpen}
+          />
+        );
       case "OBJ":
         return (
           <ObjectiveMapping

@@ -20,6 +20,7 @@ const EditEffortSection = ({
   setPurposeListData,
   fetchEffortData,
 }) => {
+  console.log("🚀 ~ user:", user);
   const { updateEffort, removeEffort } = useAuth();
   const [link, setLink] = useState();
 
@@ -164,6 +165,7 @@ const EditEffortSection = ({
                         top: "0",
                         height: "100%",
                         objectFit: "cover",
+                        width: "100%",
                       }}
                     />
                   </div>

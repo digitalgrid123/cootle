@@ -83,19 +83,15 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
   const fetchUserinfoById = async (userId) => {
     try {
       const res = await userinfobyId(userId);
-      
 
       if (res && res.status && res.data) {
-     
         setUserDetail((prevDetails) => {
           const userExists = prevDetails.some(
             (user) => user.id === res.data.id
           );
           if (!userExists) {
-           
             return [...prevDetails, res.data];
           } else {
-            
             return prevDetails.map((user) =>
               user.id === res.data.id ? res.data : user
             );
@@ -467,7 +463,7 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                 <EditPurposeSection
                   key={purpose.id}
                   purpose={purposeToEdit}
-                  user={userdetail}
+                  user={user}
                   handleCancel={handleCancelEdit}
                   objectives={objectives}
                   design={design}

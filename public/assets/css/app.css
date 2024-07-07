@@ -207,6 +207,9 @@ textarea {
   align-items: center;
   justify-content: center;
 }
+.overflow-scroll {
+  overflow-y: scroll;
+}
 
 /* Font Weight */
 

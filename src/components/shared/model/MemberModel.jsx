@@ -296,6 +296,7 @@ const MemberModel = ({ activeTab }) => {
                                     >
                                       Member
                                     </p>
+
                                     <p
                                       onClick={() =>
                                         handleAssignAdmin(
@@ -350,20 +351,7 @@ const MemberModel = ({ activeTab }) => {
                                     >
                                       Member
                                     </p>
-                                    <p
-                                      onClick={() =>
-                                        handleAssignAdmin(
-                                          member.invited_user_id
-                                        )
-                                      }
-                                      className={
-                                        selectedOption === "Assign Admin"
-                                          ? "selected-option"
-                                          : ""
-                                      }
-                                    >
-                                      Authorize as admin
-                                    </p>
+
                                     <p
                                       onClick={() =>
                                         handleRemoveMember(

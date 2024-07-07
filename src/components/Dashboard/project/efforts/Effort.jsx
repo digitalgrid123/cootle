@@ -69,6 +69,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
 
   const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
   const [user, setUser] = useState(null);
+  const [memberlist, setMemberList] = useState([]);
 
   const { toaster } = useToaster();
 
@@ -86,6 +87,17 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
 
     fetchUserinfo();
   }, [userinfo]);
+
+  useEffect(() => {
+    const fetchMemberinfo = async () => {
+      const res = await memberslist();
+      if (res && res.status) {
+        setMemberList(res.data);
+      }
+    };
+
+    fetchMemberinfo();
+  }, [memberslist, useradd]);
   // Handle lifetime click
   const handleLifetimeClick = () => {
     setIsLifetimeClicked(true);
@@ -564,7 +576,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                           setLinks={setLinks}
                           key={effort.id}
                           effort={effort}
-                          user={userdetail}
+                          user={user}
                           handleCancel={handleCancelEdit}
                           objectives={objectives}
                           design={design}
@@ -602,9 +614,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                                 effort?.value_status !== "UCH" && (
                                   <button
                                     className="edit-button"
-                                    onClick={() =>
-                                      handleEditClick(simulatedEffort)
-                                    }
+                                    onClick={() => handleEditClick(effort)}
                                   >
                                     <img
                                       src="/assets/images/mark/edit.svg"
@@ -619,41 +629,48 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                           <div className="d-flex align-items-center gap-4">
                             <h2 className="create-name weight-500">By:</h2>
                             <div className="d-flex align-items-center gap-1">
-                              {userdetail.some(
-                                (user) => user.id === effort.user
-                              ) ? (
-                                <>
-                                  <div className="create_profile">
-                                    <img
-                                      src={
-                                        userdetail.find(
-                                          (user) => user.id === effort.user
-                                        ).profile_pic
-                                          ? userdetail.find(
-                                              (user) => user.id === effort.user
-                                            ).profile_pic
-                                          : "/assets/images/mark/profile.png"
-                                      }
-                                      alt="profile"
-                                      style={{
-                                        position: "absolute",
-                                        top: "0",
-                                        objectFit: "cover",
-                                        height: "100%",
-                                      }}
-                                    />
-                                  </div>
-                                  <h2 className="create-name">
-                                    {
-                                      userdetail.find(
-                                        (user) => user.id === effort.user
-                                      ).fullname
-                                    }
-                                  </h2>
-                                </>
-                              ) : (
-                                <></>
-                              )}
+                              {(() => {
+                                // Find user in userdetail
+                                const user = userdetail.find(
+                                  (user) => user.id === effort.user
+                                );
+
+                                // If user is not found in userdetail, check memberlistdata
+                                const userInMemberList = user
+                                  ? user
+                                  : memberlist.find(
+                                      (member) => member.id === effort.user
+                                    );
+
+                                if (userInMemberList) {
+                                  return (
+                                    <>
+                                      <div className="create_profile">
+                                        <img
+                                          src={
+                                            userInMemberList.profile_pic
+                                              ? userInMemberList.profile_pic
+                                              : "/assets/images/mark/profile.png"
+                                          }
+                                          alt="profile"
+                                          style={{
+                                            position: "absolute",
+                                            top: "0",
+                                            objectFit: "cover",
+                                            height: "100%",
+                                            width: "100%",
+                                          }}
+                                        />
+                                      </div>
+                                      <h2 className="create-name">
+                                        {userInMemberList.fullname}
+                                      </h2>
+                                    </>
+                                  );
+                                } else {
+                                  return <></>;
+                                }
+                              })()}
                             </div>
                           </div>
                           <div className="d-flex align-items-center gap-4">

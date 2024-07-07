@@ -2,15 +2,15 @@ import { useAuth, useToaster } from "@/hooks";
 import { TOAST_TYPES } from "@/constants/keywords";
 import React, { useEffect, useRef, useState } from "react";
 
-const ArchievedModel = ({
+const ArchivedEffortsModal = ({
   dropdownOpen,
   toggleDropdown,
-  archivedObjectives,
-  fetchObjectives,
+  archivedDesignEfforts,
+  fetchEfforts,
   title,
 }) => {
   const dropdownRef = useRef(null);
-  const { unarchiveObjective } = useAuth();
+  const { effortunarchieve } = useAuth();
   const { toaster } = useToaster();
 
   const closeDropdown = () => {
@@ -23,18 +23,18 @@ const ArchievedModel = ({
     }
   };
 
-  const handleUnarchive = async (objectiveId) => {
+  const handleUnarchive = async (effortId) => {
     try {
-      const res = await unarchiveObjective(objectiveId);
+      const res = await effortunarchieve(effortId);
 
       if (!res.status) {
-        toaster("Failed to unarchive objective", TOAST_TYPES.ERROR);
+        toaster("Failed to unarchive design effort", TOAST_TYPES.ERROR);
       } else {
-        fetchObjectives();
-        toaster("Objective unarchived successfully", TOAST_TYPES.SUCCESS);
+        fetchEfforts();
+        toaster("Design effort unarchived successfully", TOAST_TYPES.SUCCESS);
       }
     } catch (error) {
-      console.error("Error unarchiving objective:", error);
+      console.error("Error unarchiving design effort:", error);
       toaster("Something went wrong while unarchiving", TOAST_TYPES.ERROR);
     }
   };
@@ -67,29 +67,31 @@ const ArchievedModel = ({
                   <span>close</span>
                 </button>
               </div>
-              <div className="archived-objectives-list ptb-34 overflow-scroll ">
-                {archivedObjectives.length > 0 ? (
-                  archivedObjectives.map((obj) => (
+              <div className="archived-efforts-list ptb-34 overflow-scroll ">
+                {archivedDesignEfforts.length > 0 ? (
+                  archivedDesignEfforts.map((effort) => (
                     <div
-                      key={obj.id}
-                      className="archived-objective-item  border_bottom_faint pb-20 d-flex align-items-center justify-content-between pt-24"
+                      key={effort.id}
+                      className="archived-effort-item border_bottom_faint pb-20 d-flex align-items-center justify-content-between pt-24"
                     >
-                      <h3 className="menutext weight-500 m-0">{obj.title}</h3>
+                      <h3 className="menutext weight-500 m-0">
+                        {effort.title}
+                      </h3>
 
                       <button
                         type="button"
                         className="unarchive-btn"
-                        onClick={() => handleUnarchive(obj.id)}
+                        onClick={() => handleUnarchive(effort.id)}
                       >
                         <img
                           src="/assets/images/mark/unarchive.svg"
-                          alt="unarchieve-icon"
+                          alt="unarchive-icon"
                         />
                       </button>
                     </div>
                   ))
                 ) : (
-                  <p>No archived objectives found.</p>
+                  <p>No archived design efforts found.</p>
                 )}
               </div>
             </div>
@@ -100,4 +102,4 @@ const ArchievedModel = ({
   );
 };
 
-export default ArchievedModel;
+export default ArchivedEffortsModal;
