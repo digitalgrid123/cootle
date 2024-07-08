@@ -6,8 +6,16 @@ import PaginationComponent from "../table/Pagination";
 
 const MemberModel = ({ activeTab }) => {
   const { toaster } = useToaster();
-  const { inviteuser, member, removeMember, assignAdmin, memberslist, user } =
-    useAuth();
+  const {
+    inviteuser,
+    member,
+    removeMember,
+    assignAdmin,
+    memberslist,
+    user,
+    unassignAdmin,
+    
+  } = useAuth();
   const selectedCompany = useGlobalCompany();
 
   const [emails, setEmails] = useState("");
@@ -76,20 +84,19 @@ const MemberModel = ({ activeTab }) => {
     }
   };
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const res = await member();
-        if (res?.status) {
-          setMemberList(res.data);
-        } else {
-          console.error("Failed to fetch member list");
-        }
-      } catch (err) {
-        console.error("Error fetching member list:", err);
+  const fetchUserInfo = async () => {
+    try {
+      const res = await member();
+      if (res?.status) {
+        setMemberList(res.data);
+      } else {
+        console.error("Failed to fetch member list");
       }
-    };
-
+    } catch (err) {
+      console.error("Error fetching member list:", err);
+    }
+  };
+  useEffect(() => {
     fetchUserInfo(); // Fetch initially
 
     const intervalId = setInterval(() => {
@@ -126,6 +133,23 @@ const MemberModel = ({ activeTab }) => {
       if (response.status) {
         toaster("Successfully Authorized", TOAST_TYPES.SUCCESS);
         setFetchTrigger((prev) => !prev); // Trigger data refresh
+        fetchUserInfo();
+      } else {
+        toaster("Not able to authorized", TOAST_TYPES.ERROR);
+      }
+    } catch (error) {
+      toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);
+    }
+  };
+
+  const handleUnassignAdmin = async (memberId) => {
+    try {
+      // Perform API call to assign admin
+      const response = await unassignAdmin(memberId);
+      if (response.status) {
+        toaster("Successfully Authorized", TOAST_TYPES.SUCCESS);
+        setFetchTrigger((prev) => !prev); // Trigger data refresh
+        fetchUserInfo();
       } else {
         toaster("Not able to authorized", TOAST_TYPES.ERROR);
       }
@@ -279,6 +303,7 @@ const MemberModel = ({ activeTab }) => {
                                   <img
                                     src="/assets/images/mark/littledrop.svg"
                                     alt="dropdown"
+                                    // onClick={() => toggleDropdown(index)}
                                   />
                                 </span>
                                 {showDropdown[index] && (
@@ -295,21 +320,37 @@ const MemberModel = ({ activeTab }) => {
                                     >
                                       Member
                                     </p>
-
-                                    <p
-                                      onClick={() =>
-                                        handleAssignAdmin(
-                                          member.invited_user_id
-                                        )
-                                      }
-                                      className={
-                                        selectedOption === "Assign Admin"
-                                          ? "selected-option"
-                                          : ""
-                                      }
-                                    >
-                                      Authorize as admin
-                                    </p>
+                                    {member.invited_is_admin ? (
+                                      <p
+                                        onClick={() =>
+                                          handleUnassignAdmin(
+                                            member.invited_user_id
+                                          )
+                                        }
+                                        className={
+                                          selectedOption === "Unassign Admin"
+                                            ? "selected-option"
+                                            : ""
+                                        }
+                                      >
+                                        Unauthorized as admin
+                                      </p>
+                                    ) : (
+                                      <p
+                                        onClick={() =>
+                                          handleAssignAdmin(
+                                            member.invited_user_id
+                                          )
+                                        }
+                                        className={
+                                          selectedOption === "Assign Admin"
+                                            ? "selected-option"
+                                            : ""
+                                        }
+                                      >
+                                        Authorize as admin
+                                      </p>
+                                    )}
                                     <p
                                       onClick={() =>
                                         handleRemoveMember(
@@ -334,6 +375,7 @@ const MemberModel = ({ activeTab }) => {
                                   <img
                                     src="/assets/images/mark/littledrop.svg"
                                     alt="dropdown"
+                                    onClick={() => toggleDropdown(index)}
                                   />
                                 </span>
                                 {showDropdown[index] && (
@@ -350,7 +392,6 @@ const MemberModel = ({ activeTab }) => {
                                     >
                                       Member
                                     </p>
-
                                     <p
                                       onClick={() =>
                                         handleRemoveMember(

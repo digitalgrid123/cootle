@@ -62,6 +62,7 @@ export const API_ROUTER = {
 
   //ASSIGN AS ADMIN
   ASSIGN_ADMIN: (user_id) => getUserRoute(`${user_id}/membership/admin`),
+  UNASSIGN_ADMIN: (user_id) => getUserRoute(`${user_id}/membership/member`),
 
   //Mapping_Archieve
   MAPPING_ARCHIEVE: getNormalRoute("mapping/archive"),
@@ -134,6 +135,7 @@ export const API_ROUTER = {
 
   //REMOVE PURPOSE
   REMOVE_PURPOSE: getNormalRoute("purpose/remove"),
+  CHECK_MEMBERSHIP: getNormalRoute("membership/check"),
 
   //Project list
   PROJECT_LIST: getNormalRoute("projects"),

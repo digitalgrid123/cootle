@@ -12,6 +12,7 @@ const Dashboard = () => {
   const { userinfo } = useAuth();
   const [user, setUser] = useState(null);
   const selectedCompany = useGlobalCompany();
+  console.log("🚀 ~ Dashboard ~ selectedCompany:", selectedCompany);
   const [showPopup, setShowPopup] = useState(false);
   const { currentTab, setCurrentTab } = useTabs(getInitialTab());
 
@@ -22,7 +23,6 @@ const Dashboard = () => {
     const fetchUserinfo = async () => {
       const res = await userinfo();
       if (res && res.status) {
-        
         setUser(res.data.fullname);
       }
     };
@@ -44,6 +44,8 @@ const Dashboard = () => {
   // Effect to show popup if user starts with "User#"
   useEffect(() => {
     if (user && user.startsWith("User#")) {
+      setShowPopup(true);
+    } else if (selectedCompany === undefined && user !== null) {
       setShowPopup(true);
     }
   }, [user]);

@@ -1,5 +1,7 @@
 import { useAuth } from "@/hooks";
 import { useState, useEffect, useRef } from "react";
+import { saveData } from "./storage";
+import { USER_ROLES } from "@/constants/keywords";
 
 let globalState = {
   selectedCompany: null,
@@ -13,7 +15,7 @@ export const setSelectedCompany = (company) => {
 
 export const useGlobalCompany = () => {
   const [company, setCompany] = useState(globalState.selectedCompany);
-  const { companyset } = useAuth();
+  const { companyset, checkmember } = useAuth();
   const isCurrentCompanyUpdated = useRef(false);
 
   useEffect(() => {
@@ -46,6 +48,34 @@ export const useGlobalCompany = () => {
           console.error("API call failed:", error);
         });
     }
+  }, [company, companyset]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchMember = async () => {
+      if (company && company.id && !isCurrentCompanyUpdated.current) {
+        try {
+          const res = await checkmember(company.id);
+          if (isMounted) {
+            if (res.is_admin || res.is_owner) {
+              isCurrentCompanyUpdated.current = true;
+            }
+          }
+        } catch (error) {
+          if (isMounted) {
+            console.error("API call failed:", error);
+          }
+        }
+      }
+    };
+
+    const intervalId = setInterval(fetchMember, 15000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(intervalId); // Clear interval on component unmount
+    };
   }, [company, companyset]);
 
   return company;

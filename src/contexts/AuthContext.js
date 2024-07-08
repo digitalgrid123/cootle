@@ -151,41 +151,29 @@ function AuthProvider({ children }) {
       handleRTExpiration();
     }
   };
+  const initialize = async () => {
+    try {
+      const accessToken = getData(STORAGE_KEYS.AUTH_TOKEN);
+      const refreshToken = getData(STORAGE_KEYS.AUTH_REFRESH_TOKEN);
+      const localAuth = getData(STORAGE_KEYS.AUTH);
 
-  useEffect(() => {
-    const initialize = async () => {
-      try {
-        const accessToken = getData(STORAGE_KEYS.AUTH_TOKEN);
-        const refreshToken = getData(STORAGE_KEYS.AUTH_REFRESH_TOKEN);
-        const localAuth = getData(STORAGE_KEYS.AUTH);
+      if (accessToken && localAuth) {
+        setSession(
+          accessToken,
+          refreshToken,
+          handleTokenExpiration,
+          handleRTExpiration
+        );
 
-        if (accessToken && localAuth) {
-          setSession(
-            accessToken,
-            refreshToken,
-            handleTokenExpiration,
-            handleRTExpiration
-          );
-
-          const userInfoResponse = await axiosGet(API_ROUTER.USER_INFO);
-          if (userInfoResponse.status) {
-            saveData(USER_ROLES.SUPER_ADMIN, userInfoResponse.data.is_admin);
-            dispatch({
-              type: "INITIALIZE",
-              payload: {
-                isAuthenticated: true,
-                user: userInfoResponse.data,
-              },
-            });
-          } else {
-            dispatch({
-              type: "INITIALIZE",
-              payload: {
-                isAuthenticated: false,
-                user: null,
-              },
-            });
-          }
+        const userInfoResponse = await axiosGet(API_ROUTER.USER_INFO);
+        if (userInfoResponse.status) {
+          dispatch({
+            type: "INITIALIZE",
+            payload: {
+              isAuthenticated: true,
+              user: userInfoResponse.data,
+            },
+          });
         } else {
           dispatch({
             type: "INITIALIZE",
@@ -195,7 +183,7 @@ function AuthProvider({ children }) {
             },
           });
         }
-      } catch (err) {
+      } else {
         dispatch({
           type: "INITIALIZE",
           payload: {
@@ -204,12 +192,20 @@ function AuthProvider({ children }) {
           },
         });
       }
-    };
+    } catch (err) {
+      dispatch({
+        type: "INITIALIZE",
+        payload: {
+          isAuthenticated: false,
+          user: null,
+        },
+      });
+    }
+  };
 
+  useEffect(() => {
     initialize(); // Call initialize immediately on mount
-
-   
-  }, [dispatch]); // Empty dependency array ensures useEffect runs only on mount
+  }, []);
 
   const verifyregisterCode = async (email, verification_code) => {
     // eslint-disable-next-line no-async-promise-executor
@@ -518,6 +514,40 @@ function AuthProvider({ children }) {
       }
     });
   };
+
+  const checkmember = (id) => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await axiosGet(API_ROUTER.CHECK_MEMBERSHIP, {
+          current_company_id: id,
+        });
+  
+        if (res.status) {
+          // Assume saveData function saves the role and is_admin status
+          saveData(USER_ROLES.SUPER_ADMIN, res.data.is_admin);
+  
+          // Retrieve previous is_admin state
+          let prevIsAdmin = localStorage.getItem('prevIsAdmin') === 'true';
+  
+          // Check if current is_admin state is different from previous state
+          if (res.data.is_admin !== prevIsAdmin) {
+            initialize();
+          }
+  
+          // Update prevIsAdmin in localStorage with current is_admin state
+          localStorage.setItem('prevIsAdmin', res.data.is_admin);
+  
+          resolve({ status: true, data: res });
+        } else {
+          resolve({ status: false, data: "" });
+        }
+      } catch (error) {
+        resolve({ status: false, data: "" });
+      }
+    });
+  };
+  
+
   const editcompany = (name, logo) => {
     return new Promise(async (resolve) => {
       try {
@@ -1448,6 +1478,31 @@ function AuthProvider({ children }) {
     }
   };
 
+  const unassignAdmin = async (user_id) => {
+    try {
+      const res = await axiosPut(API_ROUTER.UNASSIGN_ADMIN(user_id));
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return {
+          status: false,
+          data: "",
+        };
+      }
+    } catch (error) {
+      console.error("Error creating purpose:", error);
+      return {
+        status: false,
+        data: "",
+        message: "An error occurred while adding purpose",
+      };
+    }
+  };
+
   const mappingachieve = async (mapping_id) => {
     try {
       const res = await axiosPatch(API_ROUTER.MAPPING_ARCHIEVE, {
@@ -1620,6 +1675,8 @@ function AuthProvider({ children }) {
         unarchiveObjective,
         effortachieve,
         effortunarchieve,
+        unassignAdmin,
+        checkmember,
       }}
     >
       {children}
