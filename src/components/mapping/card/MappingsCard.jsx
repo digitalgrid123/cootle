@@ -6,6 +6,19 @@ const MappingsCard = ({
   handleAddMappingClick,
   defaultDesignEfforts,
 }) => {
+  // Mapping object to translate type values to labels
+  const typeLabels = {
+    VAL: "Value Mapping",
+    OUT: "Product Outcomes",
+    OBJ: "Objective Mapping",
+    // Add more mappings as needed
+  };
+
+  // Function to get the label for a given type value
+  const getTypeLabel = (typeValue) => {
+    return typeLabels[typeValue] || typeValue;
+  };
+
   return (
     <div className="card mt-4">
       <div className="card-body">
@@ -22,7 +35,7 @@ const MappingsCard = ({
               <h5>{mapping.title}</h5>
               <p>{mapping.description}</p>
               <p>
-                <strong>Type:</strong> {mapping.type}
+                <strong>Type:</strong> {getTypeLabel(mapping.type)}
               </p>
               <p>
                 <strong>Design Efforts:</strong>{" "}

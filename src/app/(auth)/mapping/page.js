@@ -277,7 +277,7 @@ const MappingPage = () => {
             <Nav.Link eventKey="categories">Categories</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link eventKey="designEfforts">Design Efforts</Nav.Link>
+            <Nav.Link eventKey="designEfforts">Effort Mapping</Nav.Link>
           </Nav.Item>
           <Nav.Item>
             <Nav.Link eventKey="mappings">Mappings</Nav.Link>

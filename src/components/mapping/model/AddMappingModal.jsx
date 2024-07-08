@@ -46,8 +46,12 @@ const AddMappingModal = ({
     });
   };
 
-  // Hardcoded options for the Type dropdown
-  const typeOptions = ["VAL", "OUT", "OBJ"];
+  // Modified typeOptions with label and value
+  const typeOptions = [
+    { label: "Value Mapping", value: "VAL" },
+    { label: "Product Outcomes", value: "OUT" },
+    { label: "Objective Mapping", value: "OBJ" },
+  ];
 
   return (
     <Modal show={show} onHide={handleClose}>
@@ -83,9 +87,9 @@ const AddMappingModal = ({
               onChange={handleChange}
             >
               <option value="">Select Type</option>
-              {typeOptions.map((type, index) => (
-                <option key={index} value={type}>
-                  {type}
+              {typeOptions.map((option, index) => (
+                <option key={index} value={option.value}>
+                  {option.label}
                 </option>
               ))}
             </Form.Control>
