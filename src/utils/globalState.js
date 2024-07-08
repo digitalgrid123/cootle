@@ -38,8 +38,9 @@ export const useGlobalCompany = () => {
     if (company && company.id && !isCurrentCompanyUpdated.current) {
       companyset(company.id)
         .then((res) => {
-          if (res && res.data && res.data.is_admin !== undefined) {
-            const updatedCompany = { ...company, is_admin: res.data.is_admin };
+          if (res && res.data) {
+            fetchMember();
+            const updatedCompany = { ...company };
             setSelectedCompany(updatedCompany);
             isCurrentCompanyUpdated.current = true; // Mark as updated
           }
@@ -49,31 +50,23 @@ export const useGlobalCompany = () => {
         });
     }
   }, [company, companyset]);
+  const fetchMember = async () => {
+    if (company && company.id && !isCurrentCompanyUpdated.current) {
+      try {
+        const res = await checkmember(company.id);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchMember = async () => {
-      if (company && company.id && !isCurrentCompanyUpdated.current) {
-        try {
-          const res = await checkmember(company.id);
-          if (isMounted) {
-            if (res.is_admin || res.is_owner) {
-              isCurrentCompanyUpdated.current = true;
-            }
-          }
-        } catch (error) {
-          if (isMounted) {
-            console.error("API call failed:", error);
-          }
+        if (res.is_admin || res.is_owner) {
+          isCurrentCompanyUpdated.current = true;
         }
+      } catch (error) {
+        console.error("API call failed:", error);
       }
-    };
-
+    }
+  };
+  useEffect(() => {
     const intervalId = setInterval(fetchMember, 15000);
 
     return () => {
-      isMounted = false;
       clearInterval(intervalId); // Clear interval on component unmount
     };
   }, [company, companyset]);
