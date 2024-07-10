@@ -12,7 +12,7 @@ const Dashboard = () => {
   const { userinfo } = useAuth();
   const [user, setUser] = useState(null);
   const selectedCompany = useGlobalCompany();
-  console.log("🚀 ~ Dashboard ~ selectedCompany:", selectedCompany);
+
   const [showPopup, setShowPopup] = useState(false);
   const { currentTab, setCurrentTab } = useTabs(getInitialTab());
 
