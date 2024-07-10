@@ -372,6 +372,7 @@ const MappingPage = () => {
           </Tab.Pane>
           <Tab.Pane eventKey="VAL">
             <MappingsCard
+              title="Default Value Mapping"
               mappings={data.default_mappings.filter(
                 (mapping) => mapping.type === "VAL"
               )}
@@ -383,6 +384,7 @@ const MappingPage = () => {
           </Tab.Pane>
           <Tab.Pane eventKey="OUT">
             <MappingsCard
+            title="Default Product Outcome"
               mappings={data.default_mappings.filter(
                 (mapping) => mapping.type === "OUT"
               )}
@@ -394,6 +396,7 @@ const MappingPage = () => {
           </Tab.Pane>
           <Tab.Pane eventKey="OBJ">
             <MappingsCard
+            title="Default Objective Mapping"
               mappings={data.default_mappings.filter(
                 (mapping) => mapping.type === "OBJ"
               )}

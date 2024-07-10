@@ -1,6 +1,7 @@
 import React from "react";
 
 const MappingsCard = ({
+  title,
   mappings,
   handleEditMappingClick,
   handleAddMappingClick,
@@ -37,7 +38,7 @@ const MappingsCard = ({
   return (
     <div className="card mt-4">
       <div className="card-body">
-        <h2 className="card-title">Default Mappings</h2>
+        <h2 className="card-title">{title}</h2>
         <button
           className="btn btn-primary mb-3"
           onClick={handleAddMappingClick} // Handle click to add new mapping
