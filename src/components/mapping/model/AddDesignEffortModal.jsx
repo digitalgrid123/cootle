@@ -1,5 +1,4 @@
-// AddDesignEffortModal.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
 const AddDesignEffortModal = ({
@@ -7,12 +6,21 @@ const AddDesignEffortModal = ({
   handleClose,
   categories,
   handleSave,
+  activeCategory, // Receive active category state
 }) => {
   const [newDesignEffort, setNewDesignEffort] = useState({
     title: "",
-    category: categories.length > 0 ? categories[0].name : "",
+    category: activeCategory, // Initialize category with activeCategory
     description: "",
   });
+
+  // Reset form fields when activeCategory changes
+  useEffect(() => {
+    setNewDesignEffort((prevDesignEffort) => ({
+      ...prevDesignEffort,
+      category: activeCategory,
+    }));
+  }, [activeCategory]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,11 +32,15 @@ const AddDesignEffortModal = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleSave(newDesignEffort);
-    setNewDesignEffort({
-      title: "",
-      category: categories.length > 0 ? categories[0].name : "",
-      description: "",
+    handleSave(newDesignEffort)?.then((success) => {
+      if (success) {
+        setNewDesignEffort({
+          title: "",
+          category: activeCategory,
+          description: "",
+        });
+        handleClose(); // Close modal after saving
+      }
     });
   };
 
@@ -48,7 +60,7 @@ const AddDesignEffortModal = ({
               onChange={handleChange}
             />
           </Form.Group>
-          <Form.Group className="mb-3">
+          {/* <Form.Group className="mb-3">
             <Form.Label>Category</Form.Label>
             <Form.Control
               as="select"
@@ -56,13 +68,13 @@ const AddDesignEffortModal = ({
               value={newDesignEffort.category}
               onChange={handleChange}
             >
-              {categories.map((category, index) => (
-                <option key={index} value={category.name}>
+              {categories?.map((category) => (
+                <option key={category.name} value={category.name}>
                   {category.name}
                 </option>
               ))}
             </Form.Control>
-          </Form.Group>
+          </Form.Group> */}
           <Form.Group className="mb-3">
             <Form.Label>Description</Form.Label>
             <Form.Control

@@ -19,12 +19,15 @@ const MappingPage = () => {
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { getdefaultmapping, defaultmapping } = useAuth();
+  const [activeCategory, setActiveCategory] = useState("");
   const { toaster } = useToaster();
   const [data, setData] = useState({
     default_categories: [],
     default_design_efforts: [],
     default_mappings: [],
   });
+  const [activeKey, setActiveKey] = useState("categories");
+
   const [showDesignEffortModal, setShowDesignEffortModal] = useState(false);
   const [selectedDesignEffort, setSelectedDesignEffort] = useState({
     title: "",
@@ -124,7 +127,17 @@ const MappingPage = () => {
 
   const handleSaveMappingChanges = () => {
     const updatedMappings = [...data.default_mappings];
-    updatedMappings[mappingIndex] = selectedMapping;
+    const existingMappingIndex = updatedMappings.findIndex(
+      (m) => m.id === selectedMapping.id
+    );
+
+    if (existingMappingIndex !== -1) {
+      // Update existing mapping if found by index
+      updatedMappings[existingMappingIndex] = selectedMapping;
+    } else {
+      // Add new mapping to the list if no existing mapping found
+      updatedMappings.push(selectedMapping);
+    }
 
     setData((prevData) => ({
       ...prevData,
@@ -143,15 +156,21 @@ const MappingPage = () => {
   };
 
   const handleAddDesignEffort = (newDesignEffort) => {
-    setData((prevData) => ({
-      ...prevData,
-      default_design_efforts: [
-        ...prevData.default_design_efforts,
-        newDesignEffort,
-      ],
-    }));
-    setShowAddDesignEffortModal(false);
+    return new Promise((resolve, reject) => {
+      setData((prevData) => ({
+        ...prevData,
+        default_design_efforts: [
+          ...prevData.default_design_efforts,
+          newDesignEffort,
+        ],
+      }));
+
+      setShowAddDesignEffortModal(false);
+      resolve(true); // Resolve with true or success status
+      // If there are any conditions where you need to reject the promise, you can use `reject(false);`
+    });
   };
+
   const handleAddMapping = (newMapping) => {
     setData((prevData) => ({
       ...prevData,
@@ -189,6 +208,7 @@ const MappingPage = () => {
   const handleAddMappingClick = () => {
     setShowAddMappingModal(true);
   };
+
   const exportAsJson = async () => {
     const exportData = {
       default_categories: data.default_categories.map((category) => ({
@@ -202,7 +222,8 @@ const MappingPage = () => {
           description: effort.description,
         })
       ),
-      default_mappings: data.default_mappings.map((mapping) => ({
+      default_mappings: data.default_mappings.map((mapping, index) => ({
+        id: index, // or mapping.id if each mapping has an id
         title: mapping.title,
         description: mapping.description,
         type: mapping.type,
@@ -239,16 +260,16 @@ const MappingPage = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value, selectedOptions } = e.target;
+    const { name, value, selectedOptions } = e.target || e;
 
-    if (name === "design_efforts") {
-      const selectedValues = Array.from(
-        selectedOptions,
+    if (name === "design_efforts" && selectedOptions) {
+      const selectedTitles = Array.from(selectedOptions).map(
         (option) => option.value
       );
+
       setSelectedMapping((prevMapping) => ({
         ...prevMapping,
-        [name]: selectedValues,
+        [name]: selectedTitles,
       }));
     } else {
       setSelectedMapping((prevMapping) => ({
@@ -256,6 +277,38 @@ const MappingPage = () => {
         [name]: value,
       }));
     }
+  };
+
+  const handleRemoveCategory = async (index) => {
+    const updatedCategories = [...data.default_categories];
+    updatedCategories.splice(index, 1);
+
+    setData((prevData) => ({
+      ...prevData,
+      default_categories: updatedCategories,
+    }));
+
+    if (activeCategory === index) {
+      setActiveCategory(""); // Clear active category if it was removed
+    }
+  };
+
+  const handleRemoveDesignEffort = (index) => {
+    const updatedDesignEfforts = [...data.default_design_efforts];
+    updatedDesignEfforts.splice(index, 1);
+    setData((prevData) => ({
+      ...prevData,
+      default_design_efforts: updatedDesignEfforts,
+    }));
+  };
+
+  const handleRemoveMapping = (index) => {
+    const updatedMappings = [...data.default_mappings];
+    updatedMappings.splice(index, 1);
+    setData((prevData) => ({
+      ...prevData,
+      default_mappings: updatedMappings,
+    }));
   };
 
   return isAuthenticated ? (
@@ -271,16 +324,26 @@ const MappingPage = () => {
         </div>
       </div>
 
-      <Tab.Container defaultActiveKey="categories">
+      <Tab.Container
+        defaultActiveKey="categories"
+        activeKey={activeKey}
+        onSelect={(k) => setActiveKey(k)}
+      >
         <Nav variant="tabs" className="mb-3">
           <Nav.Item>
-            <Nav.Link eventKey="categories">Categories</Nav.Link>
+            <Nav.Link eventKey="categories">Effort Categories</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link eventKey="designEfforts">Effort Mapping</Nav.Link>
+            <Nav.Link eventKey="designEfforts">Effort List</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link eventKey="mappings">Mappings</Nav.Link>
+            <Nav.Link eventKey="OBJ">Objective Mapping</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link eventKey="VAL">Value Mapping</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link eventKey="OUT">Product Outcomes</Nav.Link>
           </Nav.Item>
         </Nav>
         <Tab.Content>
@@ -290,32 +353,58 @@ const MappingPage = () => {
                 categories={data.default_categories}
                 handleEditCategoryClick={handleEditCategoryClick}
                 handleAddCategoryClick={handleAddCategoryClick}
+                handleRemoveCategory={handleRemoveCategory}
               />
             </div>
           </Tab.Pane>
           <Tab.Pane eventKey="designEfforts">
             <div className="row">
               <DesignEffortsCard
+                categories={data.default_categories}
                 designEfforts={data.default_design_efforts}
                 handleEditDesignEffortClick={handleEditDesignEffortClick}
                 handleAddDesignEffortClick={handleAddDesignEffortClick}
+                handleRemoveDesignEffort={handleRemoveDesignEffort}
+                activeCategory={activeCategory}
+                setActiveCategory={setActiveCategory}
               />
             </div>
           </Tab.Pane>
-          <Tab.Pane eventKey="mappings">
-            <div className="row">
-              <MappingsCard
-                mappings={data.default_mappings}
-                handleEditMappingClick={handleEditMappingClick}
-                handleAddMappingClick={handleAddMappingClick}
-                defaultDesignEfforts={data.default_design_efforts} // Pass default_design_efforts
-              />
-            </div>
+          <Tab.Pane eventKey="VAL">
+            <MappingsCard
+              mappings={data.default_mappings.filter(
+                (mapping) => mapping.type === "VAL"
+              )}
+              defaultDesignEfforts={data.default_design_efforts}
+              handleEditMappingClick={handleEditMappingClick}
+              handleAddMappingClick={handleAddMappingClick}
+              handleRemoveMapping={handleRemoveMapping}
+            />
+          </Tab.Pane>
+          <Tab.Pane eventKey="OUT">
+            <MappingsCard
+              mappings={data.default_mappings.filter(
+                (mapping) => mapping.type === "OUT"
+              )}
+              defaultDesignEfforts={data.default_design_efforts}
+              handleEditMappingClick={handleEditMappingClick}
+              handleAddMappingClick={handleAddMappingClick}
+              handleRemoveMapping={handleRemoveMapping}
+            />
+          </Tab.Pane>
+          <Tab.Pane eventKey="OBJ">
+            <MappingsCard
+              mappings={data.default_mappings.filter(
+                (mapping) => mapping.type === "OBJ"
+              )}
+              defaultDesignEfforts={data.default_design_efforts}
+              handleEditMappingClick={handleEditMappingClick}
+              handleAddMappingClick={handleAddMappingClick}
+              handleRemoveMapping={handleRemoveMapping}
+            />
           </Tab.Pane>
         </Tab.Content>
       </Tab.Container>
-
-      {/* Modals */}
       <EditCategoryModal
         show={showCategoryModal}
         handleClose={() => setShowCategoryModal(false)}
@@ -340,16 +429,8 @@ const MappingPage = () => {
         }
         categories={data.default_categories}
         handleSave={handleSaveDesignEffortChanges}
+        activeCategory={activeCategory} // Pass activeCategory
       />
-      <EditMappingModal
-        show={showMappingModal}
-        handleClose={() => setShowMappingModal(false)}
-        mapping={selectedMapping}
-        handleChange={handleChange}
-        defaultDesignEfforts={data.default_design_efforts}
-        handleSave={handleSaveMappingChanges}
-      />
-
       <AddCategoryModal
         show={showAddCategoryModal}
         handleClose={() => setShowAddCategoryModal(false)}
@@ -361,6 +442,16 @@ const MappingPage = () => {
         handleClose={() => setShowAddDesignEffortModal(false)}
         categories={data.default_categories}
         handleSave={handleAddDesignEffort}
+        activeCategory={activeCategory} // Pass activeCategory
+      />
+
+      <EditMappingModal
+        show={showMappingModal}
+        handleClose={() => setShowMappingModal(false)}
+        mapping={selectedMapping}
+        handleChange={handleChange}
+        defaultDesignEfforts={data.default_design_efforts}
+        handleSave={handleSaveMappingChanges}
       />
 
       <AddMappingModal
@@ -368,6 +459,7 @@ const MappingPage = () => {
         handleClose={() => setShowAddMappingModal(false)}
         defaultDesignEfforts={data.default_design_efforts}
         handleSave={handleAddMapping}
+        mappingType={activeKey}
       />
     </div>
   ) : (

@@ -1,20 +1,25 @@
 import React from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import Select from "react-select";
 
 const EditMappingModal = ({
   show,
   handleClose,
   mapping,
   handleChange,
-  handleSave,
   defaultDesignEfforts,
+  handleSave,
 }) => {
-  // Modified typeOptions with label and value
-  const typeOptions = [
-    { label: "Value Mapping", value: "VAL" },
-    { label: "Product Outcomes", value: "OUT" },
-    { label: "Objective Mapping", value: "OBJ" },
-  ];
+  const options = defaultDesignEfforts.map((effort) => ({
+    value: effort.title, // Assuming title can uniquely identify efforts
+    label: effort.title,
+  }));
+
+  // Map initial selected values from mapping.design_efforts to react-select options
+  const selectedOptions = mapping.design_efforts.map((effortTitle) => ({
+    value: effortTitle,
+    label: effortTitle,
+  }));
 
   return (
     <Modal show={show} onHide={handleClose}>
@@ -23,55 +28,42 @@ const EditMappingModal = ({
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Form.Group controlId="formMappingTitle">
+          <Form.Group controlId="title">
             <Form.Label>Title</Form.Label>
             <Form.Control
               type="text"
               name="title"
-              value={mapping.title || ""}
+              value={mapping.title}
               onChange={handleChange}
             />
           </Form.Group>
-          <Form.Group controlId="formMappingDescription">
+          <Form.Group controlId="description">
             <Form.Label>Description</Form.Label>
             <Form.Control
               as="textarea"
+              rows={3}
               name="description"
-              value={mapping.description || ""}
+              value={mapping.description}
               onChange={handleChange}
             />
           </Form.Group>
-          <Form.Group controlId="formMappingType">
-            <Form.Label>Type</Form.Label>
-            <Form.Control
-              as="select"
-              name="type"
-              value={mapping.type || ""}
-              onChange={handleChange}
-            >
-              <option value="">Select Type</option>
-              {typeOptions.map((option, index) => (
-                <option key={index} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
-          <Form.Group controlId="formMappingDesignEfforts">
+
+          <Form.Group controlId="designEfforts">
             <Form.Label>Design Efforts</Form.Label>
-            <Form.Control
-              as="select"
+            <Select
+              options={options}
+              isMulti
               name="design_efforts"
-              value={mapping.design_efforts || []}
-              onChange={handleChange}
-              multiple
-            >
-              {defaultDesignEfforts.map((effort, index) => (
-                <option key={index} value={effort.title}>
-                  {effort.title}
-                </option>
-              ))}
-            </Form.Control>
+              value={selectedOptions}
+              onChange={(selectedOptions) =>
+                handleChange({
+                  target: {
+                    name: "design_efforts",
+                    selectedOptions,
+                  },
+                })
+              }
+            />
           </Form.Group>
         </Form>
       </Modal.Body>

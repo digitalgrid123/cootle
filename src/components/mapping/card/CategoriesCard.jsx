@@ -1,10 +1,10 @@
-// CategoriesCard.js
 import React from "react";
 
 const CategoriesCard = ({
   categories,
   handleEditCategoryClick,
   handleAddCategoryClick,
+  handleRemoveCategory,
 }) => (
   <div className="card mt-4">
     <div className="card-body">
@@ -17,12 +17,20 @@ const CategoriesCard = ({
           <li key={index} className="list-group-item">
             <div className="d-flex justify-content-between align-items-center">
               {category.name}
-              <button
-                className="btn btn-secondary btn-sm"
-                onClick={() => handleEditCategoryClick(category, index)}
-              >
-                Edit
-              </button>
+              <div>
+                <button
+                  className="btn btn-secondary btn-sm me-2"
+                  onClick={() => handleEditCategoryClick(category, index)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="btn btn-danger btn-sm"
+                  onClick={() => handleRemoveCategory(category, index)}
+                >
+                  Remove
+                </button>
+              </div>
             </div>
           </li>
         ))}

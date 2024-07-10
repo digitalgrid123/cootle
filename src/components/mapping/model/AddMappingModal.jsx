@@ -1,57 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import Select from "react-select";
 
 const AddMappingModal = ({
   show,
   handleClose,
   defaultDesignEfforts,
   handleSave,
+  mappingType,
 }) => {
+  // Initialize state
   const [newMapping, setNewMapping] = useState({
     title: "",
     description: "",
-    type: "", // Initialize type with an empty string
+    type: mappingType || "",
     design_efforts: [],
   });
 
-  const handleChange = (e) => {
-    const { name, value, selectedOptions } = e.target;
+  // Effect to update type when mappingType changes
+  useEffect(() => {
+    setNewMapping((prevState) => ({
+      ...prevState,
+      type: mappingType || "",
+    }));
+  }, [mappingType]);
 
-    if (name === "design_efforts") {
-      const selectedValues = Array.from(
-        selectedOptions,
-        (option) => option.value
-      );
-      setNewMapping((prevMapping) => ({
-        ...prevMapping,
-        [name]: selectedValues,
-      }));
-    } else {
-      setNewMapping((prevMapping) => ({
-        ...prevMapping,
-        [name]: value,
-      }));
-    }
+  // Handler for input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewMapping((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
+  // Handler for design efforts selection
+  const handleDesignEffortsChange = (selectedOptions) => {
+    const selectedEfforts = selectedOptions.map((option) => option.value); // Use .value to map selected options correctly
+    setNewMapping((prevState) => ({
+      ...prevState,
+      design_efforts: selectedEfforts,
+    }));
+  };
+
+  // Handler for form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     handleSave(newMapping);
-    // Reset form fields after submission
     setNewMapping({
       title: "",
       description: "",
-      type: "",
+      type: mappingType || "",
       design_efforts: [],
     });
+    handleClose();
   };
 
-  // Modified typeOptions with label and value
-  const typeOptions = [
-    { label: "Value Mapping", value: "VAL" },
-    { label: "Product Outcomes", value: "OUT" },
-    { label: "Objective Mapping", value: "OBJ" },
-  ];
+  // Map defaultDesignEfforts to options for react-select
+  const designEffortsOptions = defaultDesignEfforts.map((effort) => ({
+    value: effort.title,
+    label: effort.title,
+  }));
 
   return (
     <Modal show={show} onHide={handleClose}>
@@ -78,7 +87,7 @@ const AddMappingModal = ({
               onChange={handleChange}
             />
           </Form.Group>
-          <Form.Group controlId="formMappingType">
+          {/* <Form.Group controlId="formMappingType">
             <Form.Label>Type</Form.Label>
             <Form.Control
               as="select"
@@ -87,28 +96,21 @@ const AddMappingModal = ({
               onChange={handleChange}
             >
               <option value="">Select Type</option>
-              {typeOptions.map((option, index) => (
-                <option key={index} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
+              <option value="VAL">Value Mapping</option>
+              <option value="OUT">Product Outcomes</option>
+              <option value="OBJ">Objective Mapping</option>
             </Form.Control>
-          </Form.Group>
+          </Form.Group> */}
           <Form.Group controlId="formMappingDesignEfforts">
             <Form.Label>Design Efforts</Form.Label>
-            <Form.Control
-              as="select"
-              name="design_efforts"
-              value={newMapping.design_efforts}
-              onChange={handleChange}
-              multiple
-            >
-              {defaultDesignEfforts.map((effort, index) => (
-                <option key={index} value={effort.title}>
-                  {effort.title}
-                </option>
-              ))}
-            </Form.Control>
+            <Select
+              value={designEffortsOptions.filter((option) =>
+                newMapping.design_efforts.includes(option.value)
+              )}
+              options={designEffortsOptions}
+              onChange={handleDesignEffortsChange}
+              isMulti
+            />
           </Form.Group>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
