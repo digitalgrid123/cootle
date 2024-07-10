@@ -6,8 +6,8 @@ const EditDesignEffortModal = ({
   handleClose,
   designEffort,
   handleChange,
-  categories,
   handleSave,
+  categories,
   activeCategory, // Receive active category state
 }) => {
   const [editedDesignEffort, setEditedDesignEffort] = useState({
@@ -20,7 +20,7 @@ const EditDesignEffortModal = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleSave();
+    handleSave(editedDesignEffort); // Pass edited design effort to handleSave
     handleClose(); // Close modal after saving
   };
 
@@ -40,21 +40,6 @@ const EditDesignEffortModal = ({
               onChange={handleChange}
             />
           </Form.Group>
-          {/* <Form.Group className="mb-3">
-            <Form.Label>Category</Form.Label>
-            <Form.Control
-              as="select"
-              name="category"
-              value={editedDesignEffort.category}
-              onChange={handleChange}
-            >
-              {categories?.map((category, index) => (
-                <option key={index} value={category.name}>
-                  {category.name}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group> */}
           <Form.Group className="mb-3">
             <Form.Label>Description</Form.Label>
             <Form.Control

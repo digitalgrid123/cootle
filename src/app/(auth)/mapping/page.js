@@ -96,9 +96,11 @@ const MappingPage = () => {
     setPassword("");
   };
 
-  const handleSaveDesignEffortChanges = () => {
-    const updatedDesignEfforts = [...data.default_design_efforts];
-    updatedDesignEfforts[designEffortIndex] = selectedDesignEffort;
+  const handleSaveDesignEffortChanges = (editedDesignEffort) => {
+    const updatedDesignEfforts = data.default_design_efforts.map((item) =>
+      item.id === editedDesignEffort.id ? editedDesignEffort : item
+    );
+
     setData((prevData) => ({
       ...prevData,
       default_design_efforts: updatedDesignEfforts,
@@ -281,11 +283,26 @@ const MappingPage = () => {
 
   const handleRemoveCategory = async (index) => {
     const updatedCategories = [...data.default_categories];
-    updatedCategories.splice(index, 1);
+    const removedCategory = updatedCategories.splice(index, 1)[0];
+
+    // Remove design efforts linked to the removed category
+    const updatedDesignEfforts = data.default_design_efforts.filter(
+      (effort) => effort.category !== removedCategory.name
+    );
+
+    // Remove mappings linked to the removed category
+    const updatedMappings = data.default_mappings.filter((mapping) => {
+      const isLinked = mapping.design_efforts.some(
+        (effort) => effort.category === removedCategory.name
+      );
+      return !isLinked;
+    });
 
     setData((prevData) => ({
       ...prevData,
       default_categories: updatedCategories,
+      default_design_efforts: updatedDesignEfforts,
+      default_mappings: updatedMappings,
     }));
 
     if (activeCategory === index) {
@@ -295,18 +312,38 @@ const MappingPage = () => {
 
   const handleRemoveDesignEffort = (index) => {
     const updatedDesignEfforts = [...data.default_design_efforts];
-    updatedDesignEfforts.splice(index, 1);
+    const removedEffort = updatedDesignEfforts.splice(index, 1)[0];
+
+    // Remove mappings linked to the removed design effort
+    const updatedMappings = data.default_mappings.filter(
+      (mapping) => !mapping.design_efforts.includes(removedEffort)
+    );
+
     setData((prevData) => ({
       ...prevData,
       default_design_efforts: updatedDesignEfforts,
+      default_mappings: updatedMappings,
     }));
   };
 
   const handleRemoveMapping = (index) => {
     const updatedMappings = [...data.default_mappings];
-    updatedMappings.splice(index, 1);
+    const removedMapping = updatedMappings.splice(index, 1)[0];
+
+    // Remove any references to this mapping in design efforts
+    const updatedDesignEfforts = data.default_design_efforts.map((effort) => {
+      const updatedDesigns = effort.design_efforts.filter(
+        (design) => design.id !== removedMapping.id
+      );
+      return {
+        ...effort,
+        design_efforts: updatedDesigns,
+      };
+    });
+
     setData((prevData) => ({
       ...prevData,
+      default_design_efforts: updatedDesignEfforts,
       default_mappings: updatedMappings,
     }));
   };
@@ -384,7 +421,7 @@ const MappingPage = () => {
           </Tab.Pane>
           <Tab.Pane eventKey="OUT">
             <MappingsCard
-            title="Default Product Outcome"
+              title="Default Product Outcome"
               mappings={data.default_mappings.filter(
                 (mapping) => mapping.type === "OUT"
               )}
@@ -396,7 +433,7 @@ const MappingPage = () => {
           </Tab.Pane>
           <Tab.Pane eventKey="OBJ">
             <MappingsCard
-            title="Default Objective Mapping"
+              title="Default Objective Mapping"
               mappings={data.default_mappings.filter(
                 (mapping) => mapping.type === "OBJ"
               )}
