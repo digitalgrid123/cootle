@@ -50,19 +50,19 @@ export const useGlobalCompany = () => {
         });
     }
   }, [company, companyset]);
-  const fetchMember = async () => {
-    if (company && company.id && !isCurrentCompanyUpdated.current) {
-      try {
-        const res = await checkmember(company.id);
 
-        if (res.is_admin || res.is_owner) {
-          isCurrentCompanyUpdated.current = true;
-        }
-      } catch (error) {
-        console.error("API call failed:", error);
+  const fetchMember = async () => {
+    try {
+      const res = await checkmember(company.id);
+
+      if (res.is_admin || res.is_owner) {
+        isCurrentCompanyUpdated.current = true;
       }
+    } catch (error) {
+      console.error("API call failed:", error);
     }
   };
+
   useEffect(() => {
     const intervalId = setInterval(fetchMember, 15000);
 
