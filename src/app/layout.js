@@ -51,7 +51,7 @@ export default function RootLayout({ children }) {
 
         <script src="assets/js/index.js" async></script>
         <script src="assets/js/app.js" async></script>
-        <title>Vision Surgery AI – Medical Video Processing</title>
+        <title>Cootle</title>
       </Head>
       <body className={inter.className}>
         {

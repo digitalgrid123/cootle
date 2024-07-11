@@ -1,7 +1,5 @@
 import { useAuth } from "@/hooks";
 import { useState, useEffect, useRef } from "react";
-import { saveData } from "./storage";
-import { USER_ROLES } from "@/constants/keywords";
 
 let globalState = {
   selectedCompany: null,
@@ -69,7 +67,7 @@ export const useGlobalCompany = () => {
     return () => {
       clearInterval(intervalId); // Clear interval on component unmount
     };
-  }, [company, companyset]);
+  }, [company]);
 
   return company;
 };

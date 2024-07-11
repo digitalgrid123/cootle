@@ -3,7 +3,7 @@ export const getClientSite = () => {
     case "development":
       return "http://localhost:3000/";
     case "vercel":
-      return "https://vision-surgery.vercel.app/";
+      return "https://cootle.vercel.app/";
     case "production":
       return "";
     default:
