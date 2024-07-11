@@ -11,6 +11,7 @@ const NotificationModel = ({
 }) => {
   const { notifications, isLoading, clearAll, removeall, deleteNotification } =
     useNotifications();
+  const [initialLoading, setInitialLoading] = useState(true); // New state for initial loading
   const [showInvite, setShowInvite] = useState(false);
   const notificationModelRef = useRef(null);
 
@@ -38,6 +39,12 @@ const NotificationModel = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [handleClickOutside]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setInitialLoading(false); // Set initial loading to false after the first fetch
+    }
+  }, [isLoading]);
 
   const safeNotifications = notifications || [];
 
@@ -70,7 +77,8 @@ const NotificationModel = ({
                   <span>Mark All as Read</span>
                 </button>
               </div>
-              {isLoading ? (
+
+              {initialLoading ? (
                 <Loader />
               ) : safeNotifications.length === 0 ? (
                 <p>No notifications</p>
@@ -87,7 +95,7 @@ const NotificationModel = ({
                         {notification.message}
                       </p>
                       <p className="menutext weight-500 m-0">
-                        Recevied at:{" "}
+                        Received at:{" "}
                         {new Date(notification.created_at).toLocaleDateString()}
                       </p>
                     </div>

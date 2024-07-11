@@ -10,23 +10,6 @@ import Navbar from "@/layouts/dashboard/header/Navbar";
 
 const LoginPage = () => {
   const { push } = useRouter();
-  const { selectedRole, setSelectedRole } = useAuth();
-  const [userEmail, setUserEmail] = useState("");
-  const { currentTab, setCurrentTab } = useTabs(1);
-
-  const next = () => {
-    setCurrentTab((prev) => prev + 1);
-  };
-
-  const onSelectRole = (role) => {
-    setSelectedRole(role);
-    next();
-  };
-
-  const OTPSent = (email) => {
-    setUserEmail(email);
-    next();
-  };
 
   const handleLogin = () => {
     push(PATH_AUTH.login);

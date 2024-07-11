@@ -17,7 +17,7 @@ const Edit = () => {
         <div className="wrapper-company">
           <div className="company-sidebar h-100">
             <h1 className="company-setup-heading weight-600">Company setup</h1>
-            <ul className="">
+            <ul>
               <li
                 className={`d-flex align-items-center justify-content-start gap-2 ${
                   activeTab === "settings" ? "active" : ""
