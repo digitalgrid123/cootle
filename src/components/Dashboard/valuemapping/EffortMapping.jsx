@@ -38,7 +38,6 @@ const EffortMapping = ({
     setLoading(true);
     try {
       const res = await categories(); // Assuming this function fetches your data
-      console.log("🚀 ~ fetchCategories ~ res:", res);
 
       if (res?.status && res.data.length > 0) {
         const firstCategory = res.data[0];
