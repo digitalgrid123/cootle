@@ -6,7 +6,7 @@ const ArchivedEffortsModal = ({
   dropdownOpen,
   toggleDropdown,
   archivedDesignEfforts,
-  fetchEfforts,
+  refreshEfforts,
   title,
 }) => {
   const dropdownRef = useRef(null);
@@ -30,7 +30,7 @@ const ArchivedEffortsModal = ({
       if (!res.status) {
         toaster("Failed to unarchive design effort", TOAST_TYPES.ERROR);
       } else {
-        fetchEfforts();
+        refreshEfforts();
         toaster("Design effort unarchived successfully", TOAST_TYPES.SUCCESS);
       }
     } catch (error) {

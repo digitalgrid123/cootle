@@ -37,7 +37,9 @@ const EffortMapping = ({
   const fetchCategories = async () => {
     setLoading(true);
     try {
-      const res = await categories();
+      const res = await categories(); // Assuming this function fetches your data
+      console.log("🚀 ~ fetchCategories ~ res:", res);
+
       if (res?.status && res.data.length > 0) {
         const firstCategory = res.data[0];
         setCategoriesList(res.data);
@@ -47,6 +49,7 @@ const EffortMapping = ({
         const unarchivedDesignEfforts = firstCategory.design_efforts.filter(
           (de) => !de.is_archived
         );
+
         const archivedDesignEfforts = firstCategory.design_efforts.filter(
           (de) => de.is_archived
         );
@@ -128,15 +131,23 @@ const EffortMapping = ({
       setLoading(true);
       try {
         const res = await getSinglecategory(category.id);
+
         setActiveCategory(category);
         if (res?.status && res.data.length > 0) {
-          const firstSubTab = res.data[0];
+          const unarchivedDesignEfforts = res.data.filter(
+            (de) => !de.is_archived
+          );
+          const archivedDesignEfforts = res.data.filter((de) => de.is_archived);
+
+          const firstSubTab = unarchivedDesignEfforts[0] || null;
           setActiveSubTab(firstSubTab);
-          setInitialDesignEfforts(res.data);
+          setInitialDesignEfforts(unarchivedDesignEfforts);
+          setArchivedDesignEfforts(archivedDesignEfforts);
           setActiveContentTab("Definition");
         } else {
           setActiveSubTab(null);
           setInitialDesignEfforts([]);
+          setArchivedDesignEfforts([]);
           console.error("Failed to fetch category details");
         }
       } catch (error) {
@@ -229,7 +240,7 @@ const EffortMapping = ({
         const res = await effortachieve(effortId);
 
         if (res.status) {
-          fetchCategories();
+          refreshEfforts();
         } else {
           // Handle failure, show error message or take appropriate action
           console.error("Failed to achieve mapping:", res.message);
@@ -444,7 +455,7 @@ const EffortMapping = ({
         dropdownOpen={archieveddropdownOpen}
         toggleDropdown={togglearchievedDropdown}
         archivedDesignEfforts={archivedDesignEfforts}
-        fetchEfforts={fetchCategories}
+        refreshEfforts={refreshEfforts}
       />
     </>
   );
