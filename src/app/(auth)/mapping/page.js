@@ -213,7 +213,8 @@ const MappingPage = () => {
 
   const exportAsJson = async () => {
     const exportData = {
-      default_categories: data.default_categories.map((category) => ({
+      default_categories: data.default_categories.map((category, index) => ({
+        id: index,
         name: category.name,
       })),
       default_design_efforts: data.default_design_efforts.map(
@@ -281,60 +282,70 @@ const MappingPage = () => {
     }
   };
 
-  const handleRemoveCategory = async (index) => {
-    const updatedCategories = [...data.default_categories];
-    const removedCategory = updatedCategories.splice(index, 1)[0];
+  const handleRemoveCategory = async (categoryId) => {
+    // Remove the category with the specified id
+    const updatedCategories = data.default_categories.filter(
+      (category) => category.id !== categoryId
+    );
 
     // Remove design efforts linked to the removed category
     const updatedDesignEfforts = data.default_design_efforts.filter(
-      (effort) => effort.category !== removedCategory.name
+      (effort) => effort.categoryId !== categoryId
     );
 
     // Remove mappings linked to the removed category
     const updatedMappings = data.default_mappings.filter((mapping) => {
       const isLinked = mapping.design_efforts.some(
-        (effort) => effort.category === removedCategory.name
+        (effort) => effort.categoryId === categoryId
       );
       return !isLinked;
     });
 
-    setData((prevData) => ({
-      ...prevData,
+    // Update your state with the new data
+    setData({
+      ...data,
       default_categories: updatedCategories,
       default_design_efforts: updatedDesignEfforts,
       default_mappings: updatedMappings,
-    }));
-
-    if (activeCategory === index) {
-      setActiveCategory(""); // Clear active category if it was removed
-    }
+    });
   };
 
-  const handleRemoveDesignEffort = (index) => {
-    const updatedDesignEfforts = [...data.default_design_efforts];
-    const removedEffort = updatedDesignEfforts.splice(index, 1)[0];
+  const handleRemoveDesignEffort = (id) => {
+    setData((prevData) => {
+      const updatedDesignEfforts = prevData.default_design_efforts.filter(
+        (effort) => effort.id !== id
+      );
 
-    // Remove mappings linked to the removed design effort
+      const updatedMappings = prevData.default_mappings.map((mapping) => ({
+        ...mapping,
+        design_efforts: mapping.design_efforts.filter(
+          (effortId) => effortId !== id
+        ),
+      }));
+
+      return {
+        ...prevData,
+        default_design_efforts: updatedDesignEfforts,
+        default_mappings: updatedMappings,
+      };
+    });
+  };
+
+  const handleRemoveMapping = (mapping) => {
     const updatedMappings = data.default_mappings.filter(
-      (mapping) => !mapping.design_efforts.includes(removedEffort)
+      (m) => m.id !== mapping.id
     );
-
-    setData((prevData) => ({
-      ...prevData,
-      default_design_efforts: updatedDesignEfforts,
-      default_mappings: updatedMappings,
-    }));
-  };
-
-  const handleRemoveMapping = (index) => {
-    const updatedMappings = [...data.default_mappings];
-    const removedMapping = updatedMappings.splice(index, 1)[0];
 
     // Remove any references to this mapping in design efforts
     const updatedDesignEfforts = data.default_design_efforts.map((effort) => {
-      const updatedDesigns = effort.design_efforts.filter(
-        (design) => design.id !== removedMapping.id
-      );
+      const updatedDesigns = (effort.design_efforts || []).filter((design) => {
+        if (typeof design === "string") {
+          return design !== mapping.title; // Compare with title if it's a string
+        } else if (typeof design === "object") {
+          return design.id !== mapping.id; // Compare with id if it's an object
+        }
+        return true;
+      });
       return {
         ...effort,
         design_efforts: updatedDesigns,
@@ -347,6 +358,8 @@ const MappingPage = () => {
       default_mappings: updatedMappings,
     }));
   };
+
+  console.log(data.default_design_efforts);
 
   return isAuthenticated ? (
     <div className="container mt-5">

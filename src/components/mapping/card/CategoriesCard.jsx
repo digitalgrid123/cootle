@@ -13,20 +13,20 @@ const CategoriesCard = ({
         Add Category
       </button>
       <ul className="list-group list-group-flush">
-        {categories.map((category, index) => (
-          <li key={index} className="list-group-item">
+        {categories.map((category) => (
+          <li key={category.id} className="list-group-item">
             <div className="d-flex justify-content-between align-items-center">
               {category.name}
               <div>
                 <button
                   className="btn btn-secondary btn-sm me-2"
-                  onClick={() => handleEditCategoryClick(category, index)}
+                  onClick={() => handleEditCategoryClick(category)}
                 >
                   Edit
                 </button>
                 <button
                   className="btn btn-danger btn-sm"
-                  onClick={() => handleRemoveCategory(category, index)}
+                  onClick={() => handleRemoveCategory(category.id)}
                 >
                   Remove
                 </button>

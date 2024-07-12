@@ -69,7 +69,7 @@ const MappingsCard = ({
                 </button>
                 <button
                   className="btn btn-danger btn-sm"
-                  onClick={() => handleRemoveMapping(mapping, index)}
+                  onClick={() => handleRemoveMapping(mapping)}
                 >
                   Remove
                 </button>

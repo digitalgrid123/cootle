@@ -57,7 +57,7 @@ const DesignEffortsCard = ({
           </button>
           <ul className="list-group list-group-flush">
             {filteredEfforts.map((effort, index) => (
-              <li key={index} className="list-group-item">
+              <li key={effort.id} className="list-group-item">
                 <h5>{effort.title}</h5>
                 <p>
                   <strong>Category:</strong> {effort.category}
@@ -71,7 +71,7 @@ const DesignEffortsCard = ({
                 </button>
                 <button
                   className="btn btn-danger"
-                  onClick={() => handleRemoveDesignEffort(effort, index)}
+                  onClick={() => handleRemoveDesignEffort(effort.id)}
                 >
                   Remove
                 </button>
