@@ -77,41 +77,44 @@ const NotificationModel = ({
                   <span>Mark All as Read</span>
                 </button>
               </div>
-
-              {initialLoading ? (
-                <Loader />
-              ) : safeNotifications.length === 0 ? (
-                <p>No notifications</p>
-              ) : (
-                safeNotifications.map((notification, index) => (
-                  <div
-                    key={index}
-                    className={`d-flex align-items-center justify-content-between notification-item border_bottom_Semi-Transparent_navy plr-14 pb-20 ${
-                      notification.is_read ? "read" : "unread"
-                    }`}
-                  >
-                    <div>
-                      <p className="menutext weight-500 m-0">
-                        {notification.message}
-                      </p>
-                      <p className="menutext weight-500 m-0">
-                        Received at:{" "}
-                        {new Date(notification.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-
-                    <button
-                      className="cross_btn"
-                      onClick={() => deleteNotification(notification.id)}
+              <div className="notification-scroll ">
+                {initialLoading ? (
+                  <Loader />
+                ) : safeNotifications.length === 0 ? (
+                  <p>No notifications</p>
+                ) : (
+                  safeNotifications.map((notification, index) => (
+                    <div
+                      key={index}
+                      className={`d-flex align-items-center justify-content-between notification-item border_bottom_Semi-Transparent_navy plr-14 pb-20 ${
+                        notification.is_read ? "read" : "unread"
+                      }`}
                     >
-                      <img
-                        src="/assets/images/mark/close.png"
-                        alt="close_btn"
-                      />
-                    </button>
-                  </div>
-                ))
-              )}
+                      <div>
+                        <p className="menutext weight-500 m-0">
+                          {notification.message}
+                        </p>
+                        <p className="menutext weight-500 m-0">
+                          Received at:{" "}
+                          {new Date(
+                            notification.created_at
+                          ).toLocaleDateString()}
+                        </p>
+                      </div>
+
+                      <button
+                        className="cross_btn"
+                        onClick={() => deleteNotification(notification.id)}
+                      >
+                        <img
+                          src="/assets/images/mark/close.png"
+                          alt="close_btn"
+                        />
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
           </div>
         </div>

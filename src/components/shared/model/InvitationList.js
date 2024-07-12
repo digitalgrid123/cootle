@@ -91,41 +91,43 @@ const InvitationList = ({ setShowInvite, showInvite }) => {
                   <span className="weight-600">Close</span>
                 </button>
               </div>
-              {invitations.length > 0 ? (
-                invitations.map((invite) => (
-                  <div
-                    key={invite.company}
-                    className="d-flex align-items-center justify-content-between invitationlist margin-11"
-                  >
-                    <div className="d-flex align-items-center gap-2 ">
-                      <CompanyLogo
-                        logo={invite.logo}
-                        name={invite.company_name}
-                      />
-                      <h3 className="companyinvite weight-500">
-                        {invite.company_name}
-                      </h3>
-                    </div>
+              <div className="notification-scroll">
+                {invitations.length > 0 ? (
+                  invitations.map((invite) => (
+                    <div
+                      key={invite.company}
+                      className="d-flex align-items-center justify-content-between invitationlist margin-11"
+                    >
+                      <div className="d-flex align-items-center gap-2 ">
+                        <CompanyLogo
+                          logo={invite.logo}
+                          name={invite.company_name}
+                        />
+                        <h3 className="companyinvite weight-500">
+                          {invite.company_name}
+                        </h3>
+                      </div>
 
-                    <div className="d-flex align-items-center gap-4">
-                      <button
-                        onClick={() => handleAccept(invite.company)}
-                        className="accept_btn"
-                      >
-                        <span className="weight-500">Accept</span>
-                      </button>
-                      <button
-                        onClick={() => handleReject(invite.company)}
-                        className="reject_btn"
-                      >
-                        <span className="weight-500">Reject</span>
-                      </button>
+                      <div className="d-flex align-items-center gap-4">
+                        <button
+                          onClick={() => handleAccept(invite.company)}
+                          className="accept_btn"
+                        >
+                          <span className="weight-500">Accept</span>
+                        </button>
+                        <button
+                          onClick={() => handleReject(invite.company)}
+                          className="reject_btn"
+                        >
+                          <span className="weight-500">Reject</span>
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))
-              ) : (
-                <p>No company invitations at the moment.</p>
-              )}
+                  ))
+                ) : (
+                  <p>No company invitations at the moment.</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
