@@ -87,13 +87,10 @@ const EffortMapping = ({
   const refreshEfforts = async () => {
     setLoading(true);
     try {
-      const res = await getSinglecategory(activeCategory.id); // Assuming getSinglecategory fetches the category details with efforts
-      if (
-        res?.status &&
-        Array.isArray(res.data.design_efforts) &&
-        res.data.design_efforts.length > 0
-      ) {
-        const updatedEfforts = res.data.design_efforts;
+      const res = await getSinglecategory(activeCategory.id);
+
+      if (res?.status) {
+        const updatedEfforts = res.data; // Assuming data contains an array of design efforts
 
         // Separate archived and unarchived design efforts
         const unarchivedDesignEfforts = updatedEfforts.filter(
@@ -110,9 +107,17 @@ const EffortMapping = ({
         ); // Set activeSubTab to the last unarchived item
       } else {
         console.error("Failed to fetch efforts or empty data returned");
+        // Handle empty or invalid data scenario
+        setInitialDesignEfforts([]);
+        setArchivedDesignEfforts([]);
+        setActiveSubTab(null);
       }
     } catch (error) {
       console.error("Error fetching efforts:", error);
+      // Handle error scenario
+      setInitialDesignEfforts([]);
+      setArchivedDesignEfforts([]);
+      setActiveSubTab(null);
     } finally {
       setLoading(false);
     }
@@ -422,7 +427,8 @@ const EffortMapping = ({
         toggledesignDropdown={toggleDesignDropdown}
         designdropdownOpen={designdropdownOpen}
         activeTab={activeCategory ? activeCategory.id : ""}
-        refreshCategories={refreshEfforts}
+        refreshEfforts={refreshEfforts}
+        fetchCategories={fetchCategories}
       />
       <MapModel
         dropdownOpen={dropdownOpen}
@@ -431,6 +437,7 @@ const EffortMapping = ({
         activeTab={activeCategory ? activeCategory.name : ""}
         handleTabClick={handleCategoryClick}
         refreshCategories={refreshCategories}
+        refreshEffort={refreshEfforts}
       />
       <ArchivedEffortsModal
         title="Archived Design Efforts"

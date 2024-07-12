@@ -8,6 +8,7 @@ const MapModel = ({
   toggleDropdown,
   tabs,
   refreshCategories,
+  refreshEffort,
 }) => {
   const { createcategory, removeCategory } = useAuth(); // Assuming removeCategory is provided by useAuth
   const { toaster } = useToaster();
@@ -46,6 +47,7 @@ const MapModel = ({
       }
       toaster("Category created successfully", TOAST_TYPES.SUCCESS);
       refreshCategories(); // Refresh categories after adding a new one
+      refreshEffort();
     } catch (error) {
       toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);
     } finally {

@@ -6,7 +6,8 @@ const EffortModel = ({
   designdropdownOpen,
   toggledesignDropdown,
   activeTab,
-  refreshCategories,
+  refreshEfforts,
+  fetchCategories,
 }) => {
   const dropdownRef = useRef(null);
   const [name, setName] = useState("");
@@ -25,13 +26,14 @@ const EffortModel = ({
   };
   const handleAdd = async () => {
     try {
-      const res = await createDesignEffort(activeTab, description || " ", name);
+      const res = await createDesignEffort(activeTab, description || "", name);
       if (!res.status) {
         toaster("Failed to add", TOAST_TYPES.ERROR);
       } else {
         toaster("Added successfully", TOAST_TYPES.SUCCESS);
-        refreshCategories();
+        refreshEfforts();
         closeDropdown();
+        // fetchCategories();
       }
     } catch (error) {
       console.error("Error adding model:", error);
