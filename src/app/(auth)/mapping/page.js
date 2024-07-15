@@ -359,8 +359,6 @@ const MappingPage = () => {
     }));
   };
 
-  console.log(data.default_design_efforts);
-
   return isAuthenticated ? (
     <div className="container mt-5">
       <div className="row">
