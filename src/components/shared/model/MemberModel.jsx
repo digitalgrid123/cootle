@@ -14,7 +14,6 @@ const MemberModel = ({ activeTab }) => {
     memberslist,
     user,
     unassignAdmin,
-    
   } = useAuth();
   const selectedCompany = useGlobalCompany();
 

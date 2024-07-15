@@ -1,31 +1,23 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import PageTitle from "@/components/shared/PageTitle";
 import { useRouter } from "next/navigation";
-import { USER_ROLES_MAPPER } from "@/constants/keywords";
-import { useAuth, useTabs } from "@/hooks";
 import { PATH_AUTH } from "@/routes/paths";
 import Navbar from "@/layouts/dashboard/header/Navbar";
 
-const LoginPage = () => {
+const AuthPage = () => {
   const { push } = useRouter();
 
-  const handleLogin = () => {
-    push(PATH_AUTH.login);
-  };
-
-  const handleSignup = () => {
-    push(PATH_AUTH.signup);
-  };
+  const handleNavigation = (path) => () => push(path);
 
   return (
     <>
       <PageTitle title="Authentication" />
       <Navbar
         disableGetStarted={false}
-        onLogin={handleLogin}
-        onSignup={handleSignup}
+        onLogin={handleNavigation(PATH_AUTH.login)}
+        onSignup={handleNavigation(PATH_AUTH.signup)}
       />
       <section className="bg-main">
         <div className="container-fluid">
@@ -38,14 +30,15 @@ const LoginPage = () => {
                     id="main-heading"
                   >
                     Easily
-                    <span className="weight-700">define</span>,
-                    <span className="weight-700">track</span> and
+                    <span className="weight-700"> define</span>,
+                    <span className="weight-700"> track</span> and
                     <span className="weight-700"> improve </span>
                     the value of product design in your <br /> organization
                   </h1>
                   <div className="content_arrow">
                     <span>
                       <img
+                        loading="lazy"
                         src="/assets/images/mark/arrow.png"
                         alt="arrow-img"
                         id="arrow-img"
@@ -54,16 +47,19 @@ const LoginPage = () => {
                     <span>
                       <button
                         className="started_btn weight-600"
-                        onClick={handleSignup}
+                        onClick={handleNavigation(PATH_AUTH.signup)}
                       >
                         Get started
                       </button>
                     </span>
                   </div>
                 </div>
-
                 <div className="img-software">
-                  <img src="/assets/images/mark/software.webp" alt="software" />
+                  <img
+                    loading="lazy"
+                    src="/assets/images/mark/software.webp"
+                    alt="software"
+                  />
                   <h2 className="thanks-text weight-700">
                     Thanks for checking on us.
                   </h2>
@@ -77,4 +73,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default AuthPage;

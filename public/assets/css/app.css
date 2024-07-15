@@ -336,6 +336,13 @@ textarea {
   align-items: center;
   gap: 7px;
 }
+.pt-270 {
+  padding-top: 270px;
+}
+
+.authentication-box {
+  width: 28rem;
+}
 
 .cootle-text {
   font-size: 20px;
@@ -351,13 +358,13 @@ textarea {
 .content_arrow {
   position: absolute;
   bottom: -8px;
-  right: 5%;
+  right: 0%;
   display: flex;
   align-items: center;
 }
 
 #arrow-img {
-  width: 24vw;
+  width: 25vw;
   height: auto;
 }
 
@@ -379,7 +386,7 @@ textarea {
 }
 
 .heading {
-  padding: 140px 0 0 30px;
+  padding: 140px 30px 0 30px;
 }
 .thanks-text {
   font-family: var(--antro);
