@@ -1,7 +1,7 @@
+// jwt.js
 import { jwtDecode } from "jwt-decode";
-//
 import axios from "./axios";
-import { removeAll, saveData } from "./storage";
+import { removeAll, saveData, getData } from "./storage";
 import { STORAGE_KEYS } from "@/constants/keywords";
 const jwt = require("jwt-simple");
 
@@ -11,7 +11,6 @@ const isValidToken = (accessToken) => {
   }
   const decoded = jwtDecode(accessToken);
   const currentTime = Date.now() / 1000;
-
   return decoded.exp > currentTime;
 };
 

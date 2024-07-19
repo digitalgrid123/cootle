@@ -137,7 +137,10 @@ const Menus = () => {
       ));
 
   const renderProjectList = () => {
-    return projectList.map((project) => {
+    // Reverse the projectList array to display the latest project first
+    const reversedProjectList = projectList.slice().reverse();
+
+    return reversedProjectList.map((project) => {
       const projectPath = PATH_DASHBOARD.project.view(project.id, project.name);
       // Extract the base path without query parameters
       const projectBasePath = projectPath.split("?")[0];

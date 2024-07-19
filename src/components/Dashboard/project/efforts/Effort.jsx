@@ -735,22 +735,31 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                           <div className="d-flex align-items-center gap-4">
                             <h1 className="select-outcome-text">Checked By:</h1>
 
-                            {effort.checked_by ? (
-                              (() => {
-                                const checkedMember = userdetail?.find(
-                                  (member) => member.id === effort?.checked_by
-                                );
+                            {(() => {
+                              // Try to find checked member in userdetail
+                              let checkedMember = userdetail?.find(
+                                (member) => member.id === effort.checked_by
+                              );
 
+                              // If not found in userdetail, try memberlist
+                              if (!checkedMember) {
+                                checkedMember = memberlist?.find(
+                                  (member) => member.id === effort.checked_by
+                                );
+                              }
+
+                              // Render checked member or placeholder if not found
+                              if (checkedMember) {
                                 return (
                                   <div className="checkedby-container d-flex align-items-center gap-1">
                                     <div className="checkby-image relative">
                                       <img
                                         src={
-                                          checkedMember?.profile_pic
-                                            ? checkedMember?.profile_pic
+                                          checkedMember.profile_pic
+                                            ? checkedMember.profile_pic
                                             : "/assets/images/mark/profile.png"
                                         }
-                                        alt={checkedMember?.fullname}
+                                        alt={checkedMember.fullname}
                                         style={{
                                           position: "absolute",
                                           top: "0",
@@ -761,14 +770,15 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                                       />
                                     </div>
                                     <h2 className="checkby-name">
-                                      <span>{checkedMember?.fullname}</span>
+                                      <span>{checkedMember.fullname}</span>
                                     </h2>
                                   </div>
                                 );
-                              })()
-                            ) : (
-                              <div className="no-checked"></div>
-                            )}
+                              } else {
+                                // If neither found, render placeholder
+                                return <div className="no-checked"></div>;
+                              }
+                            })()}
                           </div>
                         </div>
 

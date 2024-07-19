@@ -19,7 +19,7 @@ import {
 import axiosInstance from "@/utils/axios";
 import { getRole } from "@/utils/helper";
 import { setSession } from "@/utils/jwt";
-import { getData, getSessionIdFromCookies, saveData } from "@/utils/storage";
+import { getData, saveData } from "@/utils/storage";
 import axios from "axios";
 import { useLocalStorage } from "usehooks-ts";
 import { setSelectedCompany } from "@/utils/globalState";
@@ -29,7 +29,6 @@ const initialState = {
   isInitialized: false,
   user: null,
 };
-let userData = null;
 
 const handlers = {
   INITIALIZE: (state, action) => {
@@ -87,7 +86,8 @@ const reducer = (state, action) =>
 
 const AuthContext = createContext({
   ...initialState,
-  VerifyEmail: () => Promise.resolve(),
+  verifyregisterCode: () => Promise.resolve(),
+  userloginverify: () => Promise.resolve(),
   signup: () => Promise.resolve(),
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
@@ -117,63 +117,58 @@ function AuthProvider({ children }) {
           user: null,
         },
       });
-    } catch (error) {}
+    } catch (error) {
+      console.error("Failed to handle refresh token expiration", error);
+    }
   };
 
   const handleTokenExpiration = async () => {
     try {
       const rT = getData(STORAGE_KEYS.AUTH_REFRESH_TOKEN);
-
       const res = await axiosPost(API_ROUTER.REFRESH_TOKEN, {
         refresh: rT,
       });
-
       if (res.status) {
-        setSession(res?.access, rT, handleTokenExpiration, handleRTExpiration);
-
-        // After successful token refresh, retrieve user info again
-        const userInfoResponse = await axiosGet(API_ROUTER.USER_INFO);
-        if (userInfoResponse.status) {
-          dispatch({
-            type: "UPDATE",
-            payload: {
-              user: userInfoResponse.data,
-            },
-          });
-        }
-      } else {
-        // Handle refresh token failure
-        handleRTExpiration();
+        setSession(res.access, rT, handleTokenExpiration, handleRTExpiration);
       }
     } catch (error) {
-      console.error("Error refreshing token:", error);
-      // Handle refresh token error
-      handleRTExpiration();
+      console.error("Failed to handle token expiration", error);
     }
   };
-  const initialize = async () => {
-    try {
-      const accessToken = getData(STORAGE_KEYS.AUTH_TOKEN);
-      const refreshToken = getData(STORAGE_KEYS.AUTH_REFRESH_TOKEN);
-      const localAuth = getData(STORAGE_KEYS.AUTH);
 
-      if (accessToken && localAuth) {
-        setSession(
-          accessToken,
-          refreshToken,
-          handleTokenExpiration,
-          handleRTExpiration
-        );
+  useEffect(() => {
+    const initialize = async () => {
+      try {
+        const accessToken = getData(STORAGE_KEYS.AUTH_TOKEN);
+        const refreshToken = getData(STORAGE_KEYS.AUTH_REFRESH_TOKEN);
+        const localAuth = getData(STORAGE_KEYS.AUTH);
 
-        const userInfoResponse = await axiosGet(API_ROUTER.USER_INFO);
-        if (userInfoResponse.status) {
-          dispatch({
-            type: "INITIALIZE",
-            payload: {
-              isAuthenticated: true,
-              user: userInfoResponse.data,
-            },
-          });
+        if (accessToken && localAuth) {
+          setSession(
+            accessToken,
+            refreshToken,
+            handleTokenExpiration,
+            handleRTExpiration
+          );
+
+          const userInfoResponse = await axiosGet(API_ROUTER.USER_INFO);
+          if (userInfoResponse.status) {
+            dispatch({
+              type: "INITIALIZE",
+              payload: {
+                isAuthenticated: true,
+                user: userInfoResponse.data,
+              },
+            });
+          } else {
+            dispatch({
+              type: "INITIALIZE",
+              payload: {
+                isAuthenticated: false,
+                user: null,
+              },
+            });
+          }
         } else {
           dispatch({
             type: "INITIALIZE",
@@ -183,7 +178,7 @@ function AuthProvider({ children }) {
             },
           });
         }
-      } else {
+      } catch (err) {
         dispatch({
           type: "INITIALIZE",
           payload: {
@@ -192,19 +187,8 @@ function AuthProvider({ children }) {
           },
         });
       }
-    } catch (err) {
-      dispatch({
-        type: "INITIALIZE",
-        payload: {
-          isAuthenticated: false,
-          user: null,
-        },
-      });
-    }
-  };
-
-  useEffect(() => {
-    initialize(); // Call initialize immediately on mount
+    };
+    initialize();
   }, []);
 
   const verifyregisterCode = async (email, verification_code) => {
@@ -215,11 +199,9 @@ function AuthProvider({ children }) {
           email,
           verification_code,
         });
-        const user = {
-          email: email,
-        };
 
         if (res.status) {
+          const user = await axiosGet(API_ROUTER.USER_INFO);
           const { access, refresh } = res;
           setSession(
             access,
@@ -229,7 +211,7 @@ function AuthProvider({ children }) {
           );
           saveData(STORAGE_KEYS.AUTH, user);
           dispatch({
-            type: "LOGIN",
+            type: "REGISTER",
             payload: {
               user: { ...user },
             },
@@ -317,11 +299,9 @@ function AuthProvider({ children }) {
           email,
           verification_code,
         });
-        const user = {
-          email: email,
-        };
 
         if (res.status) {
+          const userInfoResponse = await axiosGet(API_ROUTER.USER_INFO);
           const { access, refresh } = res;
           setSession(
             access,
@@ -521,22 +501,22 @@ function AuthProvider({ children }) {
         const res = await axiosGet(API_ROUTER.CHECK_MEMBERSHIP, {
           current_company_id: id,
         });
-  
+
         if (res.status) {
           // Assume saveData function saves the role and is_admin status
           saveData(USER_ROLES.SUPER_ADMIN, res.data.is_admin);
-  
+
           // Retrieve previous is_admin state
-          let prevIsAdmin = localStorage.getItem('prevIsAdmin') === 'true';
-  
+          let prevIsAdmin = localStorage.getItem("prevIsAdmin") === "true";
+
           // Check if current is_admin state is different from previous state
           if (res.data.is_admin !== prevIsAdmin) {
             initialize();
           }
-  
+
           // Update prevIsAdmin in localStorage with current is_admin state
-          localStorage.setItem('prevIsAdmin', res.data.is_admin);
-  
+          localStorage.setItem("prevIsAdmin", res.data.is_admin);
+
           resolve({ status: true, data: res });
         } else {
           resolve({ status: false, data: "" });
@@ -546,7 +526,6 @@ function AuthProvider({ children }) {
       }
     });
   };
-  
 
   const editcompany = (name, logo) => {
     return new Promise(async (resolve) => {
@@ -1302,11 +1281,11 @@ function AuthProvider({ children }) {
     });
   };
 
-  const valueratio = async (project_id, start_date, end_date) => {
+  const valueratio = async (project_id, start_date = "", end_date = "") => {
     try {
       const res = await axiosGet(API_ROUTER.EFFORT_VALUE_RATIO(project_id), {
-        start_date,
-        end_date,
+        start_date: start_date || "",
+        end_date: end_date || "",
       });
 
       if (res.status) {
@@ -1322,11 +1301,11 @@ function AuthProvider({ children }) {
     }
   };
 
-  const objectiveratio = async (project_id, start_date, end_date) => {
+  const objectiveratio = async (project_id, start_date = "", end_date = "") => {
     try {
       const res = await axiosGet(API_ROUTER.OBJECTIVE_VALUE_RATIO(project_id), {
-        start_date,
-        end_date,
+        start_date: start_date || "",
+        end_date: end_date || "",
       });
 
       if (res.status) {
@@ -1342,13 +1321,17 @@ function AuthProvider({ children }) {
     }
   };
 
-  const effortbycategory = async (project_id, start_date, end_date) => {
+  const effortbycategory = async (
+    project_id,
+    start_date = "",
+    end_date = ""
+  ) => {
     try {
       const res = await axiosGet(
         API_ROUTER.EFFORT_BY_CATEGORY_COUNT(project_id),
         {
-          start_date,
-          end_date,
+          start_date: start_date || "", // Ensure non-null value
+          end_date: end_date || "",
         }
       );
 
@@ -1364,11 +1347,15 @@ function AuthProvider({ children }) {
       return { status: false, data: "" };
     }
   };
-  const latestobjective = async (project_id, start_date, end_date) => {
+  const latestobjective = async (
+    project_id,
+    start_date = "",
+    end_date = ""
+  ) => {
     try {
       const res = await axiosGet(API_ROUTER.LATEST_OBJECTIVE(project_id), {
-        start_date,
-        end_date,
+        start_date: start_date || "",
+        end_date: end_date || "",
       });
 
       if (res.status) {
@@ -1384,11 +1371,11 @@ function AuthProvider({ children }) {
     }
   };
 
-  const latestvalue = async (project_id, start_date, end_date) => {
+  const latestvalue = async (project_id, start_date = "", end_date = "") => {
     try {
       const res = await axiosGet(API_ROUTER.LATEST_VALUE(project_id), {
-        start_date,
-        end_date,
+        start_date: start_date || "",
+        end_date: end_date || "",
       });
 
       if (res.status) {
@@ -1404,11 +1391,11 @@ function AuthProvider({ children }) {
     }
   };
 
-  const effortgraph = async (project_id, start_date, end_date) => {
+  const effortgraph = async (project_id, start_date = "", end_date = "") => {
     try {
       const res = await axiosGet(API_ROUTER.EFFORT_GRAPH(project_id), {
-        start_date,
-        end_date,
+        start_date: start_date || "",
+        end_date: end_date || "",
       });
 
       if (res.status) {
@@ -1481,6 +1468,33 @@ function AuthProvider({ children }) {
   const unassignAdmin = async (user_id) => {
     try {
       const res = await axiosPut(API_ROUTER.UNASSIGN_ADMIN(user_id));
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return {
+          status: false,
+          data: "",
+        };
+      }
+    } catch (error) {
+      console.error("Error creating purpose:", error);
+      return {
+        status: false,
+        data: "",
+        message: "An error occurred while adding purpose",
+      };
+    }
+  };
+
+  const removeinvitation = async (invitation_id) => {
+    try {
+      const res = await axiosDelete(
+        API_ROUTER.REMOVE_NOTIFICATION(invitation_id)
+      );
 
       if (res.status) {
         return {
@@ -1677,6 +1691,7 @@ function AuthProvider({ children }) {
         effortunarchieve,
         unassignAdmin,
         checkmember,
+        removeinvitation,
       }}
     >
       {children}

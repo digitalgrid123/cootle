@@ -63,6 +63,8 @@ export const API_ROUTER = {
   //ASSIGN AS ADMIN
   ASSIGN_ADMIN: (user_id) => getUserRoute(`${user_id}/membership/admin`),
   UNASSIGN_ADMIN: (user_id) => getUserRoute(`${user_id}/membership/member`),
+  REMOVE_NOTIFICATION: (user_id) =>
+    getNormalRoute(`invitation/${user_id}/delete`),
 
   //Mapping_Archieve
   MAPPING_ARCHIEVE: getNormalRoute("mapping/archive"),

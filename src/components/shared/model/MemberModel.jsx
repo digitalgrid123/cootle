@@ -14,6 +14,7 @@ const MemberModel = ({ activeTab }) => {
     memberslist,
     user,
     unassignAdmin,
+    removeinvitation,
   } = useAuth();
   const selectedCompany = useGlobalCompany();
 
@@ -156,8 +157,23 @@ const MemberModel = ({ activeTab }) => {
       toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);
     }
   };
+  const handleRemoveInvitation = async (memberId) => {
+    try {
+      // Perform API call to assign admin
+      const response = await removeinvitation(memberId);
+      if (response.status) {
+        toaster("Successfully Remove", TOAST_TYPES.SUCCESS);
+        setFetchTrigger((prev) => !prev); // Trigger data refresh
+        fetchUserInfo();
+      } else {
+        toaster("Not able to Remove", TOAST_TYPES.ERROR);
+      }
+    } catch (error) {
+      toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);
+    }
+  };
 
-  const isOwner = user.is_owner && owner.is_owner && user.id === owner.id;
+  const isOwner = user?.is_owner && owner?.is_owner && user?.id === owner?.id;
 
   return (
     <>
@@ -378,24 +394,75 @@ const MemberModel = ({ activeTab }) => {
                                   />
                                 </span>
                                 {showDropdown[index] && (
+                                  <div className="dropdown-menu member-dropdown">
+                                    <ul>
+                                      {member.invited_user_fullname &&
+                                      !member.invited_user_fullname.startsWith(
+                                        "User#"
+                                      ) ? (
+                                        <>
+                                          {isOwner && (
+                                            <li
+                                              onClick={() =>
+                                                handleRemoveMember(member.id)
+                                              }
+                                            >
+                                              Remove Member
+                                            </li>
+                                          )}
+                                          {member.is_admin ? (
+                                            <li
+                                              onClick={() =>
+                                                handleUnassignAdmin(member.id)
+                                              }
+                                            >
+                                              Unassign as Admin
+                                            </li>
+                                          ) : (
+                                            <li
+                                              onClick={() =>
+                                                handleAssignAdmin(member.id)
+                                              }
+                                            >
+                                              Assign as Admin
+                                            </li>
+                                          )}
+                                        </>
+                                      ) : (
+                                        <li
+                                          onClick={() =>
+                                            handleRemoveMember(member.id)
+                                          }
+                                        >
+                                          Remove Invitation
+                                        </li>
+                                      )}
+                                    </ul>
+                                  </div>
+                                )}
+                              </>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            <span className="member-title weight-500 ">
+                              Non-Member
+                            </span>
+
+                            {isOwner && (
+                              <>
+                                <span>
+                                  <img
+                                    src="/assets/images/mark/littledrop.svg"
+                                    alt="dropdown"
+                                    // onClick={() => toggleDropdown(index)}
+                                  />
+                                </span>
+                                {showDropdown[index] && (
                                   <div className="member-content">
                                     <p
                                       onClick={() =>
-                                        setSelectedOption("Member")
-                                      }
-                                      className={
-                                        selectedOption === "Member"
-                                          ? "selected-option"
-                                          : ""
-                                      }
-                                    >
-                                      Member
-                                    </p>
-                                    <p
-                                      onClick={() =>
-                                        handleRemoveMember(
-                                          member.invited_user_id
-                                        )
+                                        handleRemoveInvitation(member.id)
                                       }
                                       className={
                                         selectedOption === "Remove Member"
@@ -403,17 +470,13 @@ const MemberModel = ({ activeTab }) => {
                                           : ""
                                       }
                                     >
-                                      Remove Member
+                                      Remove Invitation
                                     </p>
                                   </div>
                                 )}
                               </>
                             )}
                           </>
-                        ) : (
-                          <span className="member-title weight-500">
-                            Non-Member
-                          </span>
                         )}
                       </td>
                       <td
