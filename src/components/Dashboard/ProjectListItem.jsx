@@ -5,7 +5,7 @@ import { useAuth, useToaster } from "@/hooks";
 import { TOAST_TYPES, USER_ROLES } from "@/constants/keywords";
 import { getData } from "@/utils/storage";
 
-const ProjectListItem = ({ project, isActive, onClick }) => {
+const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
   const router = useRouter();
   const { deleteProject } = useAuth();
   const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -30,6 +30,7 @@ const ProjectListItem = ({ project, isActive, onClick }) => {
     try {
       const response = await deleteProject(project.id);
       if (response.status) {
+        fetchProjectList();
         toaster("Project successfully deleted", TOAST_TYPES.SUCCESS);
       } else {
         toaster("Failed to delete project", TOAST_TYPES.ERROR);

@@ -136,39 +136,29 @@ function AuthProvider({ children }) {
     }
   };
 
-  useEffect(() => {
-    const initialize = async () => {
-      try {
-        const accessToken = getData(STORAGE_KEYS.AUTH_TOKEN);
-        const refreshToken = getData(STORAGE_KEYS.AUTH_REFRESH_TOKEN);
-        const localAuth = getData(STORAGE_KEYS.AUTH);
+  const initialize = async () => {
+    try {
+      const accessToken = getData(STORAGE_KEYS.AUTH_TOKEN);
+      const refreshToken = getData(STORAGE_KEYS.AUTH_REFRESH_TOKEN);
+      const localAuth = getData(STORAGE_KEYS.AUTH);
 
-        if (accessToken && localAuth) {
-          setSession(
-            accessToken,
-            refreshToken,
-            handleTokenExpiration,
-            handleRTExpiration
-          );
+      if (accessToken && localAuth) {
+        setSession(
+          accessToken,
+          refreshToken,
+          handleTokenExpiration,
+          handleRTExpiration
+        );
 
-          const userInfoResponse = await axiosGet(API_ROUTER.USER_INFO);
-          if (userInfoResponse.status) {
-            dispatch({
-              type: "INITIALIZE",
-              payload: {
-                isAuthenticated: true,
-                user: userInfoResponse.data,
-              },
-            });
-          } else {
-            dispatch({
-              type: "INITIALIZE",
-              payload: {
-                isAuthenticated: false,
-                user: null,
-              },
-            });
-          }
+        const userInfoResponse = await axiosGet(API_ROUTER.USER_INFO);
+        if (userInfoResponse.status) {
+          dispatch({
+            type: "INITIALIZE",
+            payload: {
+              isAuthenticated: true,
+              user: userInfoResponse.data,
+            },
+          });
         } else {
           dispatch({
             type: "INITIALIZE",
@@ -178,7 +168,7 @@ function AuthProvider({ children }) {
             },
           });
         }
-      } catch (err) {
+      } else {
         dispatch({
           type: "INITIALIZE",
           payload: {
@@ -187,7 +177,17 @@ function AuthProvider({ children }) {
           },
         });
       }
-    };
+    } catch (err) {
+      dispatch({
+        type: "INITIALIZE",
+        payload: {
+          isAuthenticated: false,
+          user: null,
+        },
+      });
+    }
+  };
+  useEffect(() => {
     initialize();
   }, []);
 
@@ -201,7 +201,6 @@ function AuthProvider({ children }) {
         });
 
         if (res.status) {
-          const user = await axiosGet(API_ROUTER.USER_INFO);
           const { access, refresh } = res;
           setSession(
             access,
@@ -209,6 +208,7 @@ function AuthProvider({ children }) {
             handleTokenExpiration,
             handleRTExpiration
           );
+          const user = await axiosGet(API_ROUTER.USER_INFO);
           saveData(STORAGE_KEYS.AUTH, user);
           dispatch({
             type: "REGISTER",
@@ -292,43 +292,39 @@ function AuthProvider({ children }) {
   };
 
   const userloginverify = async (email, verification_code) => {
-    // eslint-disable-next-line no-async-promise-executor
-    return new Promise(async (resolve) => {
-      try {
-        const res = await axiosPost(API_ROUTER.REGISTER_VERIFY, {
-          email,
-          verification_code,
+    try {
+      const res = await axiosPost(API_ROUTER.REGISTER_VERIFY, {
+        email,
+        verification_code,
+      });
+
+      if (res.status) {
+        const { access, refresh } = res;
+        setSession(access, refresh, handleTokenExpiration, handleRTExpiration);
+        const user = await axiosGet(API_ROUTER.USER_INFO);
+        saveData(STORAGE_KEYS.AUTH, user);
+        dispatch({
+          type: "LOGIN",
+          payload: {
+            user: { ...user },
+          },
         });
 
-        if (res.status) {
-          const userInfoResponse = await axiosGet(API_ROUTER.USER_INFO);
-          const { access, refresh } = res;
-          setSession(
-            access,
-            refresh,
-            handleTokenExpiration,
-            handleRTExpiration
-          );
-          saveData(STORAGE_KEYS.AUTH, user);
-          dispatch({
-            type: "LOGIN",
-            payload: {
-              user: { ...user },
-            },
-          });
-
-          resolve({ status: true, data: user, message: "successfully login" });
-        } else {
-          resolve({
-            status: false,
-            data: "",
-            message: res?.data?.response?.data?.status,
-          });
-        }
-      } catch (error) {
-        resolve({ status: false, data: "", message: "" });
+        return { status: true, data: user, message: "successfully login" };
+      } else {
+        return {
+          status: false,
+          data: "",
+          message: res?.data?.response?.data?.status,
+        };
       }
-    });
+    } catch (error) {
+      return {
+        status: false,
+        data: "",
+        message: error.message || "An error occurred",
+      };
+    }
   };
 
   const updateuser = async (fullname, profile_pic) => {
@@ -1623,6 +1619,34 @@ function AuthProvider({ children }) {
     }
   };
 
+
+  const deleteProject = async (project_id) => {
+    try {
+      const res = await axiosDelete(API_ROUTER.DELETE_PROJECT,{
+        project_id
+      });
+
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return {
+          status: false,
+          data: "",
+        };
+      }
+    } catch (error) {
+      console.error("Error creating purpose:", error);
+      return {
+        status: false,
+        data: "",
+        message: "An error occurred while adding purpose",
+      };
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -1692,6 +1716,7 @@ function AuthProvider({ children }) {
         unassignAdmin,
         checkmember,
         removeinvitation,
+        deleteProject
       }}
     >
       {children}

@@ -26,6 +26,7 @@ const MemberModel = ({ activeTab }) => {
   const [showDropdown, setShowDropdown] = useState({});
   const [pageLimit, setPageLimit] = useState(calculatePageLimit());
   const [owner, setOwner] = useState(null);
+  console.log("🚀 ~ MemberModel ~ owner:", owner);
 
   // Pagination state
   const [activePage, setActivePage] = useState(1);
@@ -235,15 +236,17 @@ const MemberModel = ({ activeTab }) => {
                     <img
                       className="profile-member"
                       src={
-                        owner.profile_pic || "/assets/images/mark/profile.png"
+                        owner?.profile_pic || "/assets/images/mark/profile.png"
                       }
                       alt="profile"
                     />
                     <div>
                       <h2 className="member_email weight-400">
-                        {owner.fullname || ""}
+                        {owner?.fullname || ""}
                       </h2>
-                      <h2 className="member_email weight-400">{owner.email}</h2>
+                      <h2 className="member_email weight-400">
+                        {owner?.email}
+                      </h2>
                     </div>
                   </td>
                   <td className="text-center">

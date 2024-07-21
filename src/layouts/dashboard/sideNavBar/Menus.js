@@ -150,6 +150,7 @@ const Menus = () => {
           key={project.id}
           project={project}
           isActive={isActive}
+          fetchProjectList={fetchProjectList}
           onClick={() =>
             handleSelect(PATH_DASHBOARD.project.view(project.id, project.name))
           }
