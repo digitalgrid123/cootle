@@ -167,8 +167,8 @@ const Insight = ({ isAdmin }) => {
           : null,
         latestValue: latestValueResult.status ? latestValueResult.data : null,
         effortGraphData: effortGraphDataResult.status
-          ? effortGraphDataResult.data
-          : [],
+          ? { data: effortGraphDataResult.data, start, end }
+          : { data: [], start, end },
       });
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -184,6 +184,7 @@ const Insight = ({ isAdmin }) => {
     effortgraph,
     selectedOption,
   ]);
+
   useEffect(() => {
     setSelectedOptionItem(`${new Date().getFullYear()}-${getCurrentQuarter()}`);
   }, []);
@@ -480,7 +481,11 @@ const Insight = ({ isAdmin }) => {
               </div>
             </div>
             <div className="col-lg-6">
-              <LineGraph data={data.effortGraphData} />
+              <LineGraph
+                data={data?.effortGraphData?.data}
+                start={data?.effortGraphData?.start}
+                end={data?.effortGraphData?.end}
+              />
             </div>
           </div>
         </div>

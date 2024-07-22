@@ -26,7 +26,6 @@ const MemberModel = ({ activeTab }) => {
   const [showDropdown, setShowDropdown] = useState({});
   const [pageLimit, setPageLimit] = useState(calculatePageLimit());
   const [owner, setOwner] = useState(null);
-  console.log("🚀 ~ MemberModel ~ owner:", owner);
 
   // Pagination state
   const [activePage, setActivePage] = useState(1);
