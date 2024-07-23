@@ -78,7 +78,8 @@ const Insight = ({ isAdmin }) => {
 
       setError(null);
 
-      let start, end;
+      let start = "";
+      let end = "";
 
       switch (selectedOption) {
         case "Monthly":
@@ -131,6 +132,10 @@ const Insight = ({ isAdmin }) => {
             default:
               break;
           }
+          break;
+        case "Lifetime":
+          start = "";
+          end = "";
           break;
         default:
           start = null;
