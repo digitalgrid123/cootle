@@ -70,7 +70,7 @@ const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
           <ul>
             <li onClick={handleDelete}>
               <img
-                src="/assets/images/mark/delete.svg"
+                src="/assets/images/mark/delete.png"
                 alt="profile"
                 lazy="loading"
                 style={{ filter: "invert(1)" }}

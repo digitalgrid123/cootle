@@ -88,10 +88,15 @@ const Activity = ({ activities }) => {
     return <Loader />;
   }
 
+  // Reverse the order of activities
+  const reversedActivities = activities
+    ? Object.keys(activities).reverse()
+    : [];
+
   return (
     <>
-      {activities && Object.keys(activities).length > 0 ? (
-        Object.keys(activities).map((key) => {
+      {reversedActivities.length > 0 ? (
+        reversedActivities.map((key) => {
           const activity = activities[key];
           const activityStyle =
             activityStyles[activity.project_effort?.value_status] || {};
