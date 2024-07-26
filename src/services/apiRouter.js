@@ -88,7 +88,7 @@ export const API_ROUTER = {
   MEMBERS_LIST: getNormalRoute("members"),
 
   //DELETE PROJECT
-  DELETE_PROJECT:getNormalRoute("project/delete"),
+  DELETE_PROJECT: getNormalRoute("project/delete"),
 
   //REMOVE MEMBER
   REMOVE_MEMBER: getNormalRoute("members/remove"),

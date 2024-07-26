@@ -18,7 +18,7 @@ const months = [
 
 const quarters = ["Q1", "Q2", "Q3", "Q4"];
 
-const LineGraph = ({ data = {}, start, end, loading }) => {
+const LineGraph = ({ data = {}, loading }) => {
   if (loading) {
     return (
       <div className="loader">
@@ -32,44 +32,33 @@ const LineGraph = ({ data = {}, start, end, loading }) => {
     return <div>No data available</div>;
   }
 
-  const getLabelType = () => {
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-    const diffInDays = (endDate - startDate) / (1000 * 60 * 60 * 24) + 1; // Add 1 to include the end day
-
-    if (diffInDays <= 7) return "weekly"; // Less than or equal to 7 days
-    if (diffInDays <= 31) return "monthly"; // Less than or equal to 31 days
-    return "quarterly"; // More than 31 days
-  };
-
-  const labelType = getLabelType();
+  const labelType = "monthly"; // Assuming monthly for simplicity
 
   const generateLabels = () => {
     const labels = [];
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-    let currentDate = startDate;
+    const now = new Date();
+    const currentYear = now.getFullYear();
 
-    const getISOWeek = (date) => {
-      const januaryFourth = new Date(date.getFullYear(), 0, 4);
-      const dayOfYear = (date - januaryFourth) / 86400000 + 1;
-      return Math.ceil(dayOfYear / 7);
-    };
-
-    while (currentDate <= endDate) {
-      if (labelType === "monthly") {
-        labels.push(months[currentDate.getMonth()]);
-        currentDate.setMonth(currentDate.getMonth() + 1);
-      } else if (labelType === "quarterly") {
-        const quarter = Math.floor(currentDate.getMonth() / 3) + 1;
-        labels.push(`Q${quarter}`);
-        currentDate.setMonth(currentDate.getMonth() + 3);
-      } else if (labelType === "weekly") {
-        const weekNumber = getISOWeek(currentDate);
+    if (labelType === "monthly") {
+      for (let i = 0; i < 12; i++) {
+        labels.push(`${months[i]} ${currentYear}`);
+      }
+    } else if (labelType === "quarterly") {
+      for (let i = 0; i < 4; i++) {
+        labels.push(`Q${i + 1} ${currentYear}`);
+      }
+    } else if (labelType === "weekly") {
+      const startOfYear = new Date(currentYear, 0, 1);
+      let currentDate = startOfYear;
+      while (currentDate.getFullYear() === currentYear) {
+        const weekNumber = Math.ceil(
+          ((currentDate - startOfYear) / 86400000 + 1) / 7
+        );
         labels.push(`W${weekNumber}`);
         currentDate.setDate(currentDate.getDate() + 7);
       }
     }
+
     return labels;
   };
 
@@ -154,7 +143,7 @@ const LineGraph = ({ data = {}, start, end, loading }) => {
   const series = transformedData;
 
   return (
-    <div id="chart" className="effort-count-container">
+    <div id="chart">
       <Chart options={options} series={series} type="line" height={350} />
     </div>
   );

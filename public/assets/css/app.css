@@ -2192,6 +2192,7 @@ textarea {
   color: #000000cc;
 }
 .effort-count-container {
+  height: 100%;
   border: none;
   border-radius: 24px;
   background-color: var(--text-color);

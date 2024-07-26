@@ -14,7 +14,7 @@ const BarChart = ({ data }) => {
   return (
     <div className="effort-count-container">
       <h2 className="value-text mb-16">
-        Value driven product activities ratio
+        BO:DE Ratio™ Business objectives to design effort ratio
       </h2>
       {transformedData.map((item, index) => (
         <div

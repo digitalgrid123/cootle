@@ -6,6 +6,7 @@ import CategoryByCountChart from "./charts/CategoryByCountChart";
 import Activity from "./charts/Activity";
 import LineGraph from "./charts/LineGraph";
 
+// Constants for months, weeks, and quarters
 const months = [
   "Jan",
   "Feb",
@@ -20,12 +21,25 @@ const months = [
   "Nov",
   "Dec",
 ];
-
 const weeks = Array.from({ length: 52 }, (_, i) => `Week ${i + 1}`);
-
 const quarters = ["Q1", "Q2", "Q3", "Q4"];
+// Function to get the current quarter
+const getCurrentQuarter = () => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  if (month >= 1 && month <= 3) {
+    return `${year}-Q1`;
+  } else if (month >= 4 && month <= 6) {
+    return `${year}-Q2`;
+  } else if (month >= 7 && month <= 9) {
+    return `${year}-Q3`;
+  } else {
+    return `${year}-Q4`;
+  }
+};
 
-const Insight = ({ isAdmin }) => {
+const Insight = () => {
   const params = useParams();
   const {
     valueratio,
@@ -37,6 +51,7 @@ const Insight = ({ isAdmin }) => {
     effortList,
   } = useAuth();
 
+  // State variables
   const [data, setData] = useState({
     valueRatio: [],
     objectiveRatio: [],
@@ -45,22 +60,22 @@ const Insight = ({ isAdmin }) => {
     latestValue: null,
     effortGraphData: [],
   });
-
+  const [effortsListData, setEffortsListData] = useState(null);
   const [error, setError] = useState(null);
-  const [selectedOption, setSelectedOption] = useState("Quarterly");
-  const [selectedOptionItem, setSelectedOptionItem] = useState(null);
   const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [effortsListData, setEffortsListData] = useState(null);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [selectedOption, setSelectedOption] = useState("Quarterly");
+  const [selectedOptionItem, setSelectedOptionItem] = useState(
+    getCurrentQuarter()
+  );
 
   const project_id = params.id;
 
+  // Function to fetch effort data
   const fetchEffortData = async () => {
     try {
-      if (params?.id) {
-        const result = await effortList(params.id);
+      if (project_id) {
+        const result = await effortList(project_id);
         if (result.status) {
           setEffortsListData(result.data);
         } else {
@@ -72,76 +87,17 @@ const Insight = ({ isAdmin }) => {
     }
   };
 
-  const fetchData = useCallback(async () => {
+  // Function to fetch data based on the selected option
+  const fetchData = async () => {
     try {
       if (!project_id) return;
-
       setError(null);
 
-      let start = "";
-      let end = "";
-
-      switch (selectedOption) {
-        case "Monthly":
-          const currentYear = new Date().getFullYear();
-          const currentMonth = new Date().getMonth() + 1; // Adding 1 to get month number (January is 1)
-
-          // Ensure month is formatted as two digits (e.g., 01, 02, ..., 12)
-          const formattedMonth = currentMonth.toString().padStart(2, "0");
-
-          start = `${currentYear}-${formattedMonth}-01`;
-          end = `${currentYear}-${formattedMonth}-31`;
-          break;
-        case "Weekly":
-          const weekStart = new Date();
-          weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-          start = weekStart.toISOString().split("T")[0];
-          const weekEnd = new Date(weekStart);
-          weekEnd.setDate(weekStart.getDate() + 6);
-          end = weekEnd.toISOString().split("T")[0];
-          break;
-        case "Quarterly":
-          const date = new Date();
-          const year = date.getFullYear();
-          const month = date.getMonth();
-          switch (month) {
-            case 0:
-            case 1:
-            case 2:
-              start = `${year}-01-01`;
-              end = `${year}-03-31`;
-              break;
-            case 3:
-            case 4:
-            case 5:
-              start = `${year}-04-01`;
-              end = `${year}-06-30`;
-              break;
-            case 6:
-            case 7:
-            case 8:
-              start = `${year}-07-01`;
-              end = `${year}-09-30`;
-              break;
-            case 9:
-            case 10:
-            case 11:
-              start = `${year}-10-01`;
-              end = `${year}-12-31`;
-              break;
-            default:
-              break;
-          }
-          break;
-        case "Lifetime":
-          start = "";
-          end = "";
-          break;
-        default:
-          start = null;
-          end = null;
-          break;
-      }
+      const { year, period, offset } = getFilterParams(
+        selectedOption,
+        selectedOptionItem,
+        effortsListData
+      );
 
       const [
         valueRatioResult,
@@ -151,150 +107,12 @@ const Insight = ({ isAdmin }) => {
         latestValueResult,
         effortGraphDataResult,
       ] = await Promise.all([
-        valueratio(project_id, start, end),
-        objectiveratio(project_id, start, end),
-        effortbycategory(project_id, start, end),
-        latestobjective(project_id, start, end),
-        latestvalue(project_id, start, end),
-        effortgraph(project_id, start, end),
-      ]);
-
-      setData({
-        valueRatio: valueRatioResult.status ? valueRatioResult.data : [],
-        objectiveRatio: objectiveRatioResult.status
-          ? objectiveRatioResult.data
-          : [],
-        effortCategories: effortCategoriesResult.status
-          ? effortCategoriesResult.data
-          : {},
-        latestObjective: latestObjectiveResult.status
-          ? latestObjectiveResult.data
-          : null,
-        latestValue: latestValueResult.status ? latestValueResult.data : null,
-        effortGraphData: effortGraphDataResult.status
-          ? { data: effortGraphDataResult.data, start, end }
-          : { data: [], start, end },
-      });
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setError(error.message);
-    }
-  }, [
-    project_id,
-    valueratio,
-    objectiveratio,
-    effortbycategory,
-    latestobjective,
-    latestvalue,
-    effortgraph,
-    selectedOption,
-  ]);
-
-  useEffect(() => {
-    setSelectedOptionItem(`${new Date().getFullYear()}-${getCurrentQuarter()}`);
-  }, []);
-
-  useEffect(() => {
-    fetchEffortData();
-    fetchData();
-  }, [params.id, fetchData]);
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const handleOptionClick = (option) => {
-    setSelectedOption(option);
-
-    switch (option) {
-      case "Lifetime":
-        setSelectedOption("Quarterly");
-        setIsLifetimeClicked(true);
-        setSelectedOptionItem(null);
-        break;
-      case "Monthly":
-        setIsLifetimeClicked(false);
-        setSelectedOptionItem(
-          `${new Date().getFullYear()}-${months[new Date().getMonth()]}`
-        );
-        break;
-      case "Weekly":
-        setIsLifetimeClicked(false);
-        setSelectedOptionItem(
-          `${new Date().getFullYear()}-Week ${getISOWeek(new Date())}`
-        );
-        break;
-      case "Quarterly":
-        setIsLifetimeClicked(false);
-        setSelectedOptionItem(
-          `${new Date().getFullYear()}-${getCurrentQuarter()}`
-        );
-        break;
-      default:
-        setSelectedOptionItem(null);
-        break;
-    }
-
-    setIsDropdownOpen(false);
-  };
-
-  const isActive = (year, option) => {
-    return selectedOptionItem === `${year}-${option}` ? "active" : "";
-  };
-
-  const handleDateClick = async (year, option) => {
-    setSelectedOptionItem(`${year}-${option}`);
-    setIsLifetimeClicked(false);
-
-    let start, end;
-
-    switch (selectedOption) {
-      case "Monthly":
-        const formattedMonth = months.indexOf(option) + 1; // Get month number from month name
-        start = `${year}-${formattedMonth.toString().padStart(2, "0")}-01`;
-        end = `${year}-${formattedMonth.toString().padStart(2, "0")}-31`;
-        break;
-      case "Weekly":
-        // Calculate start and end of the selected week
-        const weekStart = new Date(year, 0); // January 1st of the selected year
-        weekStart.setDate(
-          weekStart.getDate() + (parseInt(option.split(" ")[1], 10) - 1) * 7
-        ); // Adjust to the selected week
-        start = weekStart.toISOString().split("T")[0];
-
-        const weekEnd = new Date(weekStart);
-        weekEnd.setDate(weekStart.getDate() + 6); // End of the selected week
-        end = weekEnd.toISOString().split("T")[0];
-        break;
-      case "Quarterly":
-        const quarterIndex = quarters.indexOf(option) + 1; // Get quarter index (1, 2, 3, 4)
-        const quarterStartMonth = 3 * (quarterIndex - 1) + 1; // Calculate starting month of the quarter
-        start = `${year}-${quarterStartMonth.toString().padStart(2, "0")}-01`;
-        end = new Date(year, quarterStartMonth + 2, 0)
-          .toISOString()
-          .split("T")[0]; // Calculate end of the quarter
-        break;
-      default:
-        start = null;
-        end = null;
-        break;
-    }
-
-    try {
-      const [
-        valueRatioResult,
-        objectiveRatioResult,
-        effortCategoriesResult,
-        latestObjectiveResult,
-        latestValueResult,
-        effortGraphDataResult,
-      ] = await Promise.all([
-        valueratio(project_id, start, end),
-        objectiveratio(project_id, start, end),
-        effortbycategory(project_id, start, end),
-        latestobjective(project_id, start, end),
-        latestvalue(project_id, start, end),
-        effortgraph(project_id, start, end),
+        valueratio(project_id, year, period, offset),
+        objectiveratio(project_id, year, period, offset),
+        effortbycategory(project_id, year, period, offset),
+        latestobjective(project_id, year, period, offset),
+        latestvalue(project_id, year, period, offset),
+        effortgraph(project_id, year, period, offset),
       ]);
 
       setData({
@@ -315,20 +133,179 @@ const Insight = ({ isAdmin }) => {
       });
     } catch (error) {
       console.error("Error fetching data:", error);
-      setError(error.message);
     }
   };
 
-  const renderDates = () => {
-    const activeDates = new Set(); // Use a set to track active dates
+  const getFilterParams = (
+    selectedOption,
+    selectedOptionItem,
+    effortsListData
+  ) => {
+    const currentYear = new Date().getFullYear();
 
-    // Collect active dates based on selectedOption and purposeListData
-    effortsListData?.forEach((purpose) => {
-      const createdDate = new Date(purpose.created_at);
+    // Extract unique years from effortsListData
+    const years = new Set();
+    const monthsSet = new Set();
+    const weeksSet = new Set();
+    const quartersSet = new Set();
+
+    effortsListData?.forEach((effort) => {
+      const createdDate = new Date(effort.created_at);
       const year = createdDate.getFullYear();
       const month = months[createdDate.getMonth()];
       const week = `Week ${getISOWeek(createdDate)}`;
       const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+
+      years.add(year);
+      monthsSet.add(month);
+      weeksSet.add(week);
+      quartersSet.add(quarter);
+    });
+
+    const uniqueYears = Array.from(years).sort((a, b) => b - a);
+    const uniqueMonths = Array.from(monthsSet);
+    const uniqueWeeks = Array.from(weeksSet);
+    const uniqueQuarters = Array.from(quartersSet);
+
+    // Set default values
+    let year = currentYear;
+    let period = "quarterly";
+    let offset = 0;
+
+    if (selectedOption === "Lifetime") {
+      // Return default values for Lifetime
+      return { year: null, period: null, offset: null };
+    }
+
+    if (selectedOptionItem) {
+      const [itemYear, item] = selectedOptionItem.split("-");
+      year = parseInt(itemYear, 10);
+
+      switch (selectedOption) {
+        case "Monthly":
+          period = "monthly";
+          if (uniqueMonths) {
+            const monthIndex = uniqueMonths.indexOf(item);
+            offset = calculateOffset(
+              uniqueMonths,
+              monthIndex,
+              year === currentYear
+            );
+          }
+          break;
+        case "Weekly":
+          period = "weekly";
+          if (uniqueWeeks) {
+            const weekIndex = uniqueWeeks.indexOf(item);
+            offset = calculateOffset(
+              uniqueWeeks,
+              weekIndex,
+              year === currentYear
+            );
+          }
+          break;
+        case "Quarterly":
+          period = "quarterly";
+          if (uniqueQuarters) {
+            const quarterIndex = uniqueQuarters.indexOf(item);
+            offset = calculateOffset(
+              uniqueQuarters,
+              quarterIndex,
+              year === currentYear
+            );
+          }
+          break;
+        default:
+          break;
+      }
+    }
+
+    return { year, period, offset };
+  };
+
+  const calculateOffset = (optionsArray, currentIndex) => {
+    if (currentIndex === -1) return 0;
+    const remainingOptions = optionsArray.slice(currentIndex + 1);
+
+    if (remainingOptions.length === 0) return 0;
+
+    let offset = 0;
+    for (let i = 0; i < optionsArray.length; i++) {
+      if (i > currentIndex && !remainingOptions.includes(optionsArray[i])) {
+        offset += 1;
+      } else if (i > currentIndex) {
+        offset = remainingOptions.indexOf(optionsArray[i]) + 1;
+      }
+    }
+
+    return offset;
+  };
+
+  useEffect(() => {
+    fetchEffortData();
+    fetchData();
+  }, [project_id, selectedOption, selectedOptionItem]);
+
+  // Function to toggle the dropdown
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  // Function to handle option click in the dropdown
+  const handleOptionClick = (option) => {
+    if (option === "Lifetime") {
+      handleLifetimeClick();
+      return;
+    }
+
+    setSelectedOption(option);
+
+    switch (option) {
+      case "Monthly":
+        setSelectedOptionItem(
+          `${new Date().getFullYear()}-${months[new Date().getMonth()]}`
+        );
+        break;
+      case "Weekly":
+        setSelectedOptionItem(
+          `${new Date().getFullYear()}-Week ${getISOWeek(new Date())}`
+        );
+        break;
+      case "Quarterly":
+        setSelectedOptionItem(getCurrentQuarter());
+        break;
+      default:
+        setSelectedOptionItem(null);
+        break;
+    }
+    setIsLifetimeClicked(false);
+    setIsDropdownOpen(false);
+  };
+
+  // Function to check if an option is active
+  const isActive = (year, option) => {
+    return selectedOptionItem === `${year}-${option}` ? "active" : "";
+  };
+
+  // Function to handle date click
+  const handleDateClick = (year, option) => {
+    setSelectedOptionItem(`${year}-${option}`);
+    setIsLifetimeClicked(false);
+  };
+
+  const renderDates = () => {
+    const activeDates = new Set();
+    const years = new Set();
+
+    // Populate activeDates and years based on effortsListData
+    effortsListData?.forEach((effort) => {
+      const createdDate = new Date(effort.created_at);
+      const year = createdDate.getFullYear();
+      const month = months[createdDate.getMonth()];
+      const week = `Week ${getISOWeek(createdDate)}`;
+      const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+
+      years.add(year); // Add year to the set of years
 
       switch (selectedOption) {
         case "Monthly":
@@ -345,84 +322,99 @@ const Insight = ({ isAdmin }) => {
       }
     });
 
+    const sortedYears = Array.from(years).sort((a, b) => b - a); // Sort years in descending order
+
+    const getOffset = (item, list) => {
+      const index = list.indexOf(item);
+      return list.length - 1 - index;
+    };
+
     return (
       <ul className="timeline-dates">
-        {years.map((year) => (
+        {sortedYears.map((year) => (
           <React.Fragment key={year}>
             {selectedOption === "Monthly" &&
-              months.map(
-                (month, index) =>
-                  activeDates.has(`${year}-${month}`) && (
-                    <li
-                      key={`${year}-${month}-${index}`}
-                      className={`cursor-pointer ${isActive(year, month)} ${
-                        index === months.length - 1 ? "last-item" : ""
-                      }`}
-                      onClick={() => handleDateClick(year, month)}
-                    >
-                      <span>{month}</span>
-                      <span>{year}</span>
-                    </li>
-                  )
-              )}
+              months.map((month) => {
+                const item = `${year}-${month}`;
+                return activeDates.has(item) ? (
+                  <li
+                    key={item}
+                    className={`cursor-pointer ${isActive(year, month)} ${
+                      getOffset(month, months) === 0 ? "last-item" : ""
+                    }`}
+                    onClick={() => handleDateClick(year, month)}
+                  >
+                    <span>{month}</span>
+                    <span>{year}</span>
+                  </li>
+                ) : null;
+              })}
 
             {selectedOption === "Weekly" &&
-              weeks.map(
-                (week, index) =>
-                  activeDates.has(`${year}-${week}`) && (
-                    <li
-                      key={`${year}-${week}-${index}`}
-                      className={`cursor-pointer ${isActive(year, week)} ${
-                        index === weeks.length - 1 ? "last-item" : ""
-                      }`}
-                      onClick={() => handleDateClick(year, week)}
-                    >
-                      <span className="week">{week}</span>
-                      <span className="year">{year}</span>
-                    </li>
-                  )
-              )}
+              weeks.map((week) => {
+                const item = `${year}-${week}`;
+                return activeDates.has(item) ? (
+                  <li
+                    key={item}
+                    className={`cursor-pointer ${isActive(year, week)} ${
+                      getOffset(week, weeks) === 0 ? "last-item" : ""
+                    }`}
+                    onClick={() => handleDateClick(year, week)}
+                  >
+                    <span className="week">{week}</span>
+                    <span className="year">{year}</span>
+                  </li>
+                ) : null;
+              })}
 
             {selectedOption === "Quarterly" &&
-              quarters.map(
-                (quarter, index) =>
-                  activeDates.has(`${year}-${quarter}`) && (
-                    <li
-                      key={`${year}-${quarter}-${index}`}
-                      className={`cursor-pointer ${isActive(year, quarter)} ${
-                        index === quarters.length - 1 ? "last-item" : ""
-                      }`}
-                      onClick={() => handleDateClick(year, quarter)}
-                    >
-                      <span>{quarter}</span>
-                      <span>{year}</span>
-                    </li>
-                  )
-              )}
+              quarters.map((quarter) => {
+                const item = `${year}-${quarter}`;
+                return activeDates.has(item) ? (
+                  <li
+                    key={item}
+                    className={`cursor-pointer ${isActive(year, quarter)} ${
+                      getOffset(quarter, quarters) === 0 ? "last-item" : ""
+                    }`}
+                    onClick={() => handleDateClick(year, quarter)}
+                  >
+                    <span className="quarter">{quarter}</span>
+                    <span className="year">{year}</span>
+                  </li>
+                ) : null;
+              })}
+
+            <div className="border_bottom_faint w-100" key={`border-${year}`} />
           </React.Fragment>
         ))}
       </ul>
     );
   };
 
-  const getCurrentQuarter = () => {
-    const date = new Date();
-    const month = date.getMonth() + 1;
-    return `Q${Math.ceil(month / 3)}`;
-  };
-
+  // Function to get the ISO week number
   const getISOWeek = (date) => {
-    const dayOne = new Date(date.getFullYear(), 0, 1);
-    const numDays = Math.floor(
-      (date.getTime() - dayOne.getTime()) / (24 * 60 * 60 * 1000)
+    const time = new Date(date.getTime());
+    time.setHours(0, 0, 0, 0);
+    time.setDate(time.getDate() + 3 - ((time.getDay() + 6) % 7));
+    const week1 = new Date(time.getFullYear(), 0, 4);
+    return (
+      1 +
+      Math.round(
+        ((time.getTime() - week1.getTime()) / 86400000 -
+          3 +
+          ((week1.getDay() + 6) % 7)) /
+          7
+      )
     );
-    return Math.ceil((date.getDay() + 1 + numDays) / 7);
   };
 
-  const years = Array.from(
-    { length: 10 },
-    (_, i) => new Date().getFullYear() - i
-  );
+  // Function to handle lifetime click
+  const handleLifetimeClick = () => {
+    setIsLifetimeClicked(true);
+    setSelectedOption("Lifetime");
+    setSelectedOptionItem(null);
+    setIsDropdownOpen(false);
+  };
 
   return (
     <div className="d-flex flex-row gap-3 h-100  justify-content-between">
@@ -441,16 +433,12 @@ const Insight = ({ isAdmin }) => {
             </div>
 
             <div className="col-lg-6">
-              {data.valueRatio.length > 0 ? (
-                <BarChart data={data.valueRatio} />
-              ) : (
-                <p>No value ratio data available.</p>
-              )}
+              <BarChart data={data.valueRatio} />
             </div>
             <div className="col-lg-6">
               <div className="effort-count-container">
                 <h2 className="value-text mb-16">
-                  Latest business outcome driven product activities
+                  Latest org. values-focused design efforts
                 </h2>
                 <Activity activities={data.latestValue} />
               </div>
@@ -486,11 +474,10 @@ const Insight = ({ isAdmin }) => {
               </div>
             </div>
             <div className="col-lg-6">
-              <LineGraph
-                data={data?.effortGraphData?.data}
-                start={data?.effortGraphData?.start}
-                end={data?.effortGraphData?.end}
-              />
+              <div className="effort-count-container">
+                <h2 className="value-text mb-16">Design efforts comparison</h2>
+                <LineGraph data={data?.effortGraphData?.data} />
+              </div>
             </div>
           </div>
         </div>
@@ -504,11 +491,7 @@ const Insight = ({ isAdmin }) => {
             </div>
 
             <div className="col-lg-6">
-              {data.objectiveRatio.length > 0 ? (
-                <BarChart data={data.objectiveRatio} />
-              ) : (
-                <p>No objective ratio data available.</p>
-              )}
+              <BarChart data={data.objectiveRatio} />
             </div>
             <div className="col-lg-6">
               <div className="effort-count-container">

@@ -1277,12 +1277,37 @@ function AuthProvider({ children }) {
     });
   };
 
-  const valueratio = async (project_id, start_date = "", end_date = "") => {
+  const buildQueryString = (params) => {
+    const query = new URLSearchParams();
+
+    // Add parameters to the query string only if they are not null, undefined, or empty strings
+    if (params.year) query.append("year", params.year);
+    if (params.period) query.append("period", params.period);
+    if (
+      params.offset !== null &&
+      params.offset !== undefined &&
+      params.offset !== ""
+    ) {
+      query.append("offset", params.offset);
+    }
+
+    return query.toString();
+  };
+
+  const valueratio = async (
+    project_id,
+    year = "",
+    period = "",
+    offset = ""
+  ) => {
     try {
-      const res = await axiosGet(API_ROUTER.EFFORT_VALUE_RATIO(project_id), {
-        start_date: start_date || "",
-        end_date: end_date || "",
-      });
+      const queryString = buildQueryString({ year, period, offset });
+
+      const url = `${API_ROUTER.EFFORT_VALUE_RATIO(project_id)}${
+        queryString ? "?" + queryString : ""
+      }`;
+
+      const res = await axiosGet(url);
 
       if (res.status) {
         return {
@@ -1297,12 +1322,19 @@ function AuthProvider({ children }) {
     }
   };
 
-  const objectiveratio = async (project_id, start_date = "", end_date = "") => {
+  const objectiveratio = async (
+    project_id,
+    year = "",
+    period = "",
+    offset = ""
+  ) => {
     try {
-      const res = await axiosGet(API_ROUTER.OBJECTIVE_VALUE_RATIO(project_id), {
-        start_date: start_date || "",
-        end_date: end_date || "",
-      });
+      const queryString = buildQueryString({ year, period, offset });
+      const url = `${API_ROUTER.OBJECTIVE_VALUE_RATIO(project_id)}${
+        queryString ? "?" + queryString : ""
+      }`;
+
+      const res = await axiosGet(url);
 
       if (res.status) {
         return {
@@ -1319,17 +1351,17 @@ function AuthProvider({ children }) {
 
   const effortbycategory = async (
     project_id,
-    start_date = "",
-    end_date = ""
+    year = "",
+    period = "",
+    offset = ""
   ) => {
     try {
-      const res = await axiosGet(
-        API_ROUTER.EFFORT_BY_CATEGORY_COUNT(project_id),
-        {
-          start_date: start_date || "", // Ensure non-null value
-          end_date: end_date || "",
-        }
-      );
+      const queryString = buildQueryString({ year, period, offset });
+      const url = `${API_ROUTER.EFFORT_BY_CATEGORY_COUNT(project_id)}${
+        queryString ? "?" + queryString : ""
+      }`;
+
+      const res = await axiosGet(url);
 
       if (res.status) {
         return {
@@ -1343,16 +1375,20 @@ function AuthProvider({ children }) {
       return { status: false, data: "" };
     }
   };
+
   const latestobjective = async (
     project_id,
-    start_date = "",
-    end_date = ""
+    year = "",
+    period = "",
+    offset = ""
   ) => {
     try {
-      const res = await axiosGet(API_ROUTER.LATEST_OBJECTIVE(project_id), {
-        start_date: start_date || "",
-        end_date: end_date || "",
-      });
+      const queryString = buildQueryString({ year, period, offset });
+      const url = `${API_ROUTER.LATEST_OBJECTIVE(project_id)}${
+        queryString ? "?" + queryString : ""
+      }`;
+
+      const res = await axiosGet(url);
 
       if (res.status) {
         return {
@@ -1367,12 +1403,19 @@ function AuthProvider({ children }) {
     }
   };
 
-  const latestvalue = async (project_id, start_date = "", end_date = "") => {
+  const latestvalue = async (
+    project_id,
+    year = "",
+    period = "",
+    offset = ""
+  ) => {
     try {
-      const res = await axiosGet(API_ROUTER.LATEST_VALUE(project_id), {
-        start_date: start_date || "",
-        end_date: end_date || "",
-      });
+      const queryString = buildQueryString({ year, period, offset });
+      const url = `${API_ROUTER.LATEST_VALUE(project_id)}${
+        queryString ? "?" + queryString : ""
+      }`;
+
+      const res = await axiosGet(url);
 
       if (res.status) {
         return {
@@ -1387,12 +1430,19 @@ function AuthProvider({ children }) {
     }
   };
 
-  const effortgraph = async (project_id, start_date = "", end_date = "") => {
+  const effortgraph = async (
+    project_id,
+    year = "",
+    period = "",
+    offset = ""
+  ) => {
     try {
-      const res = await axiosGet(API_ROUTER.EFFORT_GRAPH(project_id), {
-        start_date: start_date || "",
-        end_date: end_date || "",
-      });
+      const queryString = buildQueryString({ year, period, offset });
+      const url = `${API_ROUTER.EFFORT_GRAPH(project_id)}${
+        queryString ? "?" + queryString : ""
+      }`;
+
+      const res = await axiosGet(url);
 
       if (res.status) {
         return {
@@ -1619,11 +1669,10 @@ function AuthProvider({ children }) {
     }
   };
 
-
   const deleteProject = async (project_id) => {
     try {
-      const res = await axiosDelete(API_ROUTER.DELETE_PROJECT,{
-        project_id
+      const res = await axiosDelete(API_ROUTER.DELETE_PROJECT, {
+        project_id,
       });
 
       if (res.status) {
@@ -1716,7 +1765,7 @@ function AuthProvider({ children }) {
         unassignAdmin,
         checkmember,
         removeinvitation,
-        deleteProject
+        deleteProject,
       }}
     >
       {children}
