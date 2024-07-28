@@ -2329,17 +2329,13 @@ textarea {
   border-radius: 16px;
 }
 
-.apexcharts-xaxis {
-  display: none !important;
-}
-
 .unarchive-btn {
   border: none;
   width: 40px;
   background: none;
   border: none;
   cursor: pointer;
-  transition: opacity 0.3s ease; /* Smooth transition for opacity */
+  transition: opacity 0.3s ease;
 }
 
 .custom-li-class .archived-btn {
@@ -2349,10 +2345,10 @@ textarea {
   background: none;
   border: none;
   cursor: pointer;
-  opacity: 0; /* Hidden by default */
-  transition: opacity 0.3s ease; /* Smooth transition for opacity */
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .custom-li-class:hover .archived-btn {
-  opacity: 1; /* Show button on hover */
+  opacity: 1;
 }

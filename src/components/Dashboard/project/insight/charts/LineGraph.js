@@ -1,152 +1,150 @@
 import React from "react";
-import Chart from "react-apexcharts";
+import ApexCharts from "react-apexcharts";
+import PropTypes from "prop-types";
+import { Loader } from "@/components/shared/loader";
+import { getCategoryColor } from "@/utils/colorMapping";
 
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+const periods = {
+  monthly: [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ],
+  quarterly: ["Q1", "Q2", "Q3", "Q4"],
+  weekly: Array.from({ length: 52 }, (_, i) => `Week ${i + 1}`),
+};
 
-const quarters = ["Q1", "Q2", "Q3", "Q4"];
-
-const LineGraph = ({ data = {}, loading }) => {
-  if (loading) {
-    return (
-      <div className="loader">
-        <div className="spinner"></div>
-        Loading...
-      </div>
-    );
+const LineGraph = ({ data = {}, period, height = 500 }) => {
+  if (!data || !period) {
+    return <Loader />;
   }
 
-  if (!data || typeof data !== "object") {
-    return <div>No data available</div>;
-  }
-
-  const labelType = "monthly"; // Assuming monthly for simplicity
-
-  const generateLabels = () => {
-    const labels = [];
-    const now = new Date();
-    const currentYear = now.getFullYear();
-
-    if (labelType === "monthly") {
-      for (let i = 0; i < 12; i++) {
-        labels.push(`${months[i]} ${currentYear}`);
-      }
-    } else if (labelType === "quarterly") {
-      for (let i = 0; i < 4; i++) {
-        labels.push(`Q${i + 1} ${currentYear}`);
-      }
-    } else if (labelType === "weekly") {
-      const startOfYear = new Date(currentYear, 0, 1);
-      let currentDate = startOfYear;
-      while (currentDate.getFullYear() === currentYear) {
-        const weekNumber = Math.ceil(
-          ((currentDate - startOfYear) / 86400000 + 1) / 7
-        );
-        labels.push(`W${weekNumber}`);
-        currentDate.setDate(currentDate.getDate() + 7);
-      }
+  const getCategory = (date) => {
+    const month = new Date(date).getMonth();
+    if (period === "monthly") {
+      return periods.monthly[month];
+    } else if (period === "quarterly") {
+      return periods.quarterly[Math.floor(month / 3)];
+    } else if (period === "weekly") {
+      const startOfYear = new Date(new Date(date).getFullYear(), 0, 1);
+      const pastDaysOfYear = (new Date(date) - startOfYear) / 86400000;
+      return `Week ${Math.ceil(
+        (pastDaysOfYear + startOfYear.getDay() + 1) / 7
+      )}`;
     }
-
-    return labels;
   };
 
-  const labels = generateLabels();
+  const categories = Array.from(
+    new Set(
+      Object.keys(data).flatMap((category) =>
+        data[category].map((entry) => getCategory(entry.date))
+      )
+    )
+  );
 
-  const transformedData = Object.keys(data).map((category) => {
-    return {
-      name: category,
-      data: data[category].map((item) => ({
-        x: new Date(item.date).getTime(),
-        y: item.count,
-      })),
-    };
-  });
+  const series = Object.keys(data).map((key) => ({
+    name: key,
+    data: data[key].map((item) => item.count),
+  }));
+
+  const colors = Object.keys(data).map((key) => getCategoryColor(key));
 
   const options = {
     chart: {
       type: "line",
-      height: 350,
-      zoom: {
-        enabled: false,
-      },
-    },
-    dataLabels: {
-      enabled: false,
+      height,
     },
     stroke: {
       curve: "smooth",
     },
     xaxis: {
-      type: "category",
+      categories,
       title: {
-        text: "Date",
-      },
-      categories: labels,
-      labels: {
-        formatter: function (value) {
-          return labels[0] || value; // Display the label for all x-axis values
+        style: {
+          color: "#00000099",
+          fontSize: "14px",
+          fontFamily: "Arial, sans-serif",
         },
       },
+      labels: {
+        show: true,
+        style: {
+          colors: "#00000099",
+          fontSize: "12px",
+          fontFamily: "Arial, sans-serif",
+        },
+        rotate: 0,
+        trim: false,
+      },
+      tickPlacement: "on",
     },
     yaxis: {
       title: {
-        text: "Count",
+        style: {
+          color: "#00000099",
+          fontSize: "14px",
+          fontFamily: "Arial, sans-serif",
+        },
       },
+      labels: {
+        style: {
+          colors: "#00000099",
+          fontSize: "12px",
+          fontFamily: "Arial, sans-serif",
+        },
+      },
+      tickAmount: 5,
       min: 0,
       max: 40,
-      tickAmount: 4,
-      labels: {
-        formatter: function (value) {
-          return value.toFixed(0);
-        },
-      },
     },
     legend: {
+      show: true,
       position: "top",
-      horizontalAlign: "right",
+      horizontalAlign: "left",
+      markers: {
+        width: 10,
+        height: 10,
+        radius: 50,
+      },
+      itemMargin: {
+        horizontal: 10,
+        vertical: 0,
+      },
     },
     tooltip: {
-      shared: true,
-      intersect: false,
-      x: {
-        format: "dd MMM",
-      },
-      y: {
-        formatter: function (
-          value,
-          { series, seriesIndex, dataPointIndex, w }
-        ) {
-          // Return the category name for the hovered data point
-          const categoryName = w.config.series[seriesIndex].name;
-          return `${categoryName}: ${value}`;
-        },
-      },
-      style: {
-        fontSize: "14px",
-        color: "#000000", // Set tooltip text color to black
-      },
+      enabled: false,
     },
+    grid: {
+      borderColor: "#e0e0e0",
+    },
+    colors,
   };
 
-  const series = transformedData;
-
   return (
-    <div id="chart">
-      <Chart options={options} series={series} type="line" height={350} />
+    <div>
+      <ApexCharts
+        options={options}
+        series={series}
+        type="line"
+        height={height}
+      />
     </div>
   );
+};
+
+LineGraph.propTypes = {
+  data: PropTypes.object.isRequired,
+  period: PropTypes.oneOf(["monthly", "quarterly", "weekly"]).isRequired,
+  height: PropTypes.number,
 };
 
 export default LineGraph;

@@ -68,6 +68,7 @@ const Insight = () => {
   const [selectedOptionItem, setSelectedOptionItem] = useState(
     getCurrentQuarter()
   );
+  const [period, setPeriod] = useState();
 
   const project_id = params.id;
 
@@ -98,6 +99,7 @@ const Insight = () => {
         selectedOptionItem,
         effortsListData
       );
+      setPeriod(period);
 
       const [
         valueRatioResult,
@@ -433,12 +435,12 @@ const Insight = () => {
             </div>
 
             <div className="col-lg-6">
-            <div className="effort-count-container">
-      <h2 className="value-text mb-16">
-      OV:DE Ratio™  Organisation value to design efforts ratio 
-      </h2>
-              <BarChart data={data.valueRatio} />
-      </div>
+              <div className="effort-count-container">
+                <h2 className="value-text mb-16">
+                  OV:DE Ratio™ Organisation value to design efforts ratio
+                </h2>
+                <BarChart data={data.valueRatio} />
+              </div>
             </div>
             <div className="col-lg-6">
               <div className="effort-count-container">
@@ -470,7 +472,7 @@ const Insight = () => {
                             <h2 className="effort-complete">Efforts done</h2>
                             <h2 className="count-text">{count}</h2>
                           </div>
-                          <CategoryByCountChart count={count} />
+                          <CategoryByCountChart count={count} category={category}/>
                         </div>
                       </div>
                     </div>
@@ -481,7 +483,10 @@ const Insight = () => {
             <div className="col-lg-6">
               <div className="effort-count-container">
                 <h2 className="value-text mb-16">Design efforts comparison</h2>
-                <LineGraph data={data?.effortGraphData?.data} />
+                <LineGraph
+                  data={data?.effortGraphData}
+                  period={period}
+                />
               </div>
             </div>
           </div>
@@ -496,12 +501,12 @@ const Insight = () => {
             </div>
 
             <div className="col-lg-6">
-            <div className="effort-count-container">
-      <h2 className="value-text mb-16">
-        BO:DE Ratio™ Business objectives to design effort ratio
-      </h2>
-              <BarChart data={data.objectiveRatio} />
-      </div>
+              <div className="effort-count-container">
+                <h2 className="value-text mb-16">
+                  BO:DE Ratio™ Business objectives to design effort ratio
+                </h2>
+                <BarChart data={data.objectiveRatio} />
+              </div>
             </div>
             <div className="col-lg-6">
               <div className="effort-count-container">

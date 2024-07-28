@@ -88,15 +88,10 @@ const Activity = ({ activities }) => {
     return <Loader />;
   }
 
-  // Reverse the order of activities
-  const reversedActivities = activities
-    ? Object.keys(activities).reverse()
-    : [];
-
   return (
     <>
-      {reversedActivities.length > 0 ? (
-        reversedActivities.map((key) => {
+      {activities && Object.keys(activities).length > 0 ? (
+        Object.keys(activities).map((key) => {
           const activity = activities[key];
           const activityStyle =
             activityStyles[activity.project_effort?.value_status] || {};
@@ -118,7 +113,7 @@ const Activity = ({ activities }) => {
                 </h1>
 
                 <ul
-                  className="p-0 d-flex gap-2 align-items-center"
+                  className="p-0 d-flex gap-2 align-items-center flex-wrap"
                   style={{ listStyle: "none" }}
                 >
                   {activity.objectives &&
