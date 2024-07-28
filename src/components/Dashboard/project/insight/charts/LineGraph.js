@@ -24,7 +24,7 @@ const periods = {
 };
 
 const LineGraph = ({ data = {}, period, height = 500 }) => {
-  if (!data || !period) {
+  if (!data) {
     return <Loader />;
   }
 
@@ -43,11 +43,20 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
     }
   };
 
-  const categories = Object.keys(data)
-    .flatMap((category) =>
-      data[category].map((entry) => getCategory(entry.date))
-    )
-    .sort(); // Sort categories to maintain order
+  let categories =
+    period === null
+      ? Array.from({ length: 4 }, () => periods.quarterly).flat()
+      : Object.keys(data)
+          .flatMap((category) =>
+            data[category].map((entry) => getCategory(entry.date))
+          )
+          .sort();
+
+  // Repeat the categories 4 times if all labels are the same
+  const allSame = categories.every((label) => label === categories[0]);
+  if (allSame) {
+    categories = Array.from({ length: 4 }, () => categories).flat();
+  }
 
   const series = Object.keys(data).map((key) => ({
     name: key,
@@ -141,7 +150,7 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
 
 LineGraph.propTypes = {
   data: PropTypes.object.isRequired,
-  period: PropTypes.oneOf(["monthly", "quarterly", "weekly"]).isRequired,
+  period: PropTypes.oneOf(["monthly", "quarterly", "weekly", null]),
   height: PropTypes.number,
 };
 

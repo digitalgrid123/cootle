@@ -69,6 +69,7 @@ const Insight = () => {
     getCurrentQuarter()
   );
   const [period, setPeriod] = useState();
+  const [lifetime, setLifetime] = useState(false);
 
   const project_id = params.id;
 
@@ -164,7 +165,6 @@ const Insight = () => {
       quartersSet.add(quarter);
     });
 
-    const uniqueYears = Array.from(years).sort((a, b) => b - a);
     const uniqueMonths = Array.from(monthsSet);
     const uniqueWeeks = Array.from(weeksSet);
     const uniqueQuarters = Array.from(quartersSet);
@@ -174,8 +174,7 @@ const Insight = () => {
     let period = "quarterly";
     let offset = 0;
 
-    if (selectedOption === "Lifetime") {
-      // Return default values for Lifetime
+    if (lifetime) {
       return { year: null, period: null, offset: null };
     }
 
@@ -293,6 +292,7 @@ const Insight = () => {
   const handleDateClick = (year, option) => {
     setSelectedOptionItem(`${year}-${option}`);
     setIsLifetimeClicked(false);
+    setLifetime(false);
   };
 
   const renderDates = () => {
@@ -413,7 +413,8 @@ const Insight = () => {
   // Function to handle lifetime click
   const handleLifetimeClick = () => {
     setIsLifetimeClicked(true);
-    setSelectedOption("Lifetime");
+    setSelectedOption("Quarterly");
+    setLifetime(true);
     setSelectedOptionItem(null);
     setIsDropdownOpen(false);
   };
@@ -472,7 +473,10 @@ const Insight = () => {
                             <h2 className="effort-complete">Efforts done</h2>
                             <h2 className="count-text">{count}</h2>
                           </div>
-                          <CategoryByCountChart count={count} category={category}/>
+                          <CategoryByCountChart
+                            count={count}
+                            category={category}
+                          />
                         </div>
                       </div>
                     </div>
@@ -483,10 +487,7 @@ const Insight = () => {
             <div className="col-lg-6">
               <div className="effort-count-container">
                 <h2 className="value-text mb-16">Design efforts comparison</h2>
-                <LineGraph
-                  data={data?.effortGraphData}
-                  period={period}
-                />
+                <LineGraph data={data?.effortGraphData} period={period} />
               </div>
             </div>
           </div>
