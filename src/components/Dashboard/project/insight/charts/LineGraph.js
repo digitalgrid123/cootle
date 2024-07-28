@@ -43,13 +43,11 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
     }
   };
 
-  const categories = Array.from(
-    new Set(
-      Object.keys(data).flatMap((category) =>
-        data[category].map((entry) => getCategory(entry.date))
-      )
+  const categories = Object.keys(data)
+    .flatMap((category) =>
+      data[category].map((entry) => getCategory(entry.date))
     )
-  );
+    .sort(); // Sort categories to maintain order
 
   const series = Object.keys(data).map((key) => ({
     name: key,
