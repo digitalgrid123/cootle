@@ -72,20 +72,25 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
     return acc;
   }, {});
 
+  // Determine current month, quarter, and week
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentQuarter = Math.floor(currentMonth / 3);
+  const currentWeek = getISOWeek(currentDate) - 1;
+
   let categories = [];
   if (activePeriod === "monthly") {
-    categories = periods.monthly;
+    categories = periods.monthly.slice(0, currentMonth + 1);
   } else if (activePeriod === "quarterly") {
-    categories = periods.quarterly;
+    categories = periods.quarterly.slice(0, currentQuarter + 1);
   } else if (activePeriod === "weekly") {
-    categories = periods.weekly;
+    categories = periods.weekly.slice(0, currentWeek + 1);
   }
 
   const series = Object.keys(aggregatedData).map((key) => {
     const data = categories.map((cat) => {
       const entry = aggregatedData[key].find((e) => {
-        // Ensure matching logic aligns with your category format
-        const entryCategory = e.category.split("-")[0].trim(); // Extract week number part for matching
+        const entryCategory = e.category.split("-")[0].trim();
         return entryCategory === cat;
       });
 
@@ -148,7 +153,6 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
       },
       tickAmount: 5,
       min: 0,
-      max: 40,
     },
     legend: {
       show: true,
