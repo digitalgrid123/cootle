@@ -3,6 +3,7 @@ import ApexCharts from "react-apexcharts";
 import PropTypes from "prop-types";
 import { Loader } from "@/components/shared/loader";
 import { getCategoryColor } from "@/utils/colorMapping";
+import { getISOWeek, getYear } from "date-fns";
 
 const periods = {
   monthly: [
@@ -28,24 +29,20 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
     return <Loader />;
   }
 
-  // Default period to 'quarterly' if it's null
   const activePeriod = period || "quarterly";
 
   const getCategory = (date) => {
     const d = new Date(date);
     const month = d.getMonth();
-    const year = d.getFullYear().toString().slice(-2);
+    const year = getYear(d).toString().slice(-2);
 
     if (activePeriod === "monthly") {
       return `${periods.monthly[month]}-${year}`;
     } else if (activePeriod === "quarterly") {
       return `${periods.quarterly[Math.floor(month / 3)]}-${year}`;
     } else if (activePeriod === "weekly") {
-      const startOfYear = new Date(d.getFullYear(), 0, 1);
-      const pastDaysOfYear = (d - startOfYear) / 86400000;
-      return `Week ${Math.ceil(
-        (pastDaysOfYear + startOfYear.getDay() + 1) / 7
-      )}-${year}`;
+      const weekNumber = getISOWeek(d);
+      return `Week ${weekNumber}-${year}`;
     }
   };
 
@@ -84,13 +81,22 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
     categories = periods.weekly;
   }
 
-  const series = Object.keys(aggregatedData).map((key) => ({
-    name: key,
-    data: categories.map((cat) => {
-      const entry = aggregatedData[key].find((e) => e.category.startsWith(cat));
+  const series = Object.keys(aggregatedData).map((key) => {
+    const data = categories.map((cat) => {
+      const entry = aggregatedData[key].find((e) => {
+        // Ensure matching logic aligns with your category format
+        const entryCategory = e.category.split("-")[0].trim(); // Extract week number part for matching
+        return entryCategory === cat;
+      });
+
       return entry ? entry.count : 0;
-    }),
-  }));
+    });
+
+    return {
+      name: key,
+      data,
+    };
+  });
 
   const colors = Object.keys(aggregatedData).map((key) =>
     getCategoryColor(key)
