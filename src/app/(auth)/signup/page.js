@@ -43,7 +43,7 @@ const Signup = () => {
       />
       <section className="bg-main vh-100 pt-270">
         <div className="container-fluid">
-          <div className="col-lg-6 offset-lg-3 d-flex justify-content-center">
+          <div className="col-lg-6 padding-24  offset-lg-3 d-flex justify-content-center">
             <div className="authentication-box">
               {renderCurrentTab(currentTab)}
             </div>

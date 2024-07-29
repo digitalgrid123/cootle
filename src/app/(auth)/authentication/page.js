@@ -24,43 +24,38 @@ const AuthPage = () => {
           <div className="row">
             <div className="col-lg-8 offset-lg-2">
               <div className="heading">
-                <div className="relative">
-                  <h1
-                    className="auth_main_heading weight-500"
-                    id="main-heading"
-                  >
-                    Easily
-                    <span className="weight-700"> define</span>,
-                    <span className="weight-700"> track</span> and
-                    <span className="weight-700"> improve </span>
-                    the value of product design in your <br /> organization
-                  </h1>
-                  <div className="content_arrow">
-                    <span>
-                      <img
-                        loading="lazy"
-                        src="/assets/images/mark/arrow.png"
-                        alt="arrow-img"
-                        id="arrow-img"
-                      />
-                    </span>
-                    <span>
-                      <button
-                        className="started_btn weight-600"
-                        onClick={handleNavigation(PATH_AUTH.signup)}
-                      >
-                        Get started
-                      </button>
-                    </span>
-                  </div>
+                <h1 className="auth_main_heading weight-500" id="main-heading">
+                  <span className="weight-700"> Define</span>,
+                  <span className="weight-700"> track</span> and
+                  <span className="weight-700"> improve </span>
+                  the value of product design in your organization.
+                </h1>
+                <div className="content_arrow mt-24 ">
+                  <span>
+                    <img
+                      loading="lazy"
+                      src="/assets/images/mark/arrow.png"
+                      alt="arrow-img"
+                      className="arrow-img"
+                    />
+                  </span>
+                  <span>
+                    <button
+                      className="started_btn weight-600"
+                      onClick={handleNavigation(PATH_AUTH.signup)}
+                    >
+                      Get started
+                    </button>
+                  </span>
                 </div>
                 <div className="img-software">
                   <img
+                    className="software-icon"
                     loading="lazy"
-                    src="/assets/images/mark/software.webp"
+                    src="/assets/images/mark/software.svg"
                     alt="software"
                   />
-                  <h2 className="thanks-text weight-700">
+                  <h2 className="thanks-text weight-700 mb-16">
                     Thanks for checking on us.
                   </h2>
                 </div>

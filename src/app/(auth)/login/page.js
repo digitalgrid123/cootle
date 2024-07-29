@@ -45,7 +45,7 @@ const login = () => {
       <section className="bg-main vh-100 pt-270">
         <div className="container-fluid">
           <div className="row">
-            <div className="col-lg-6 offset-lg-3 d-flex justify-content-center">
+            <div className="padding-24  col-lg-6 offset-lg-3 d-flex justify-content-center">
               <div className="authentication-box">
                 {renderCurrentTab(currentTab)}
               </div>
