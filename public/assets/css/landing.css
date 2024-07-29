@@ -1,0 +1,26 @@
+.bg-main {
+  background-image: url("../images/bg-theme/bg-gradient.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* iPhone 14 / 15 (Standard and Plus) */
+@media only screen and (min-device-width: 375px) and (max-device-width: 430px) and (-webkit-min-device-pixel-ratio: 3) {
+  .bg-main {
+    height: 100vh;
+  }
+}
+
+/* iPhone 14 Pro Max / 15 Pro Max */
+@media only screen and (min-device-width: 428px) and (max-device-width: 430px) and (-webkit-min-device-pixel-ratio: 3) {
+  .bg-main {
+    height: 100vh;
+  }
+}
+
+/* iPad Mini 8.3 */
+@media only screen and (min-device-width: 744px) and (max-device-width: 768px) and (-webkit-min-device-pixel-ratio: 2) {
+  .bg-main {
+    height: 100vh;
+  }
+}

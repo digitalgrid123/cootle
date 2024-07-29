@@ -273,12 +273,6 @@ textarea {
   cursor: not-allowed;
 }
 
-.bg-main {
-  background-image: url("../images/bg-theme/bg-gradient.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
 .navbar-cootle {
   padding: 24px 64px 24px 30px;
   display: flex;

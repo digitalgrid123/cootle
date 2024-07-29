@@ -29,26 +29,56 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
   }
 
   const getCategory = (date) => {
-    const month = new Date(date).getMonth();
+    const d = new Date(date);
+    const month = d.getMonth();
+    const year = d.getFullYear().toString().slice(-2);
+
     if (period === "monthly") {
-      return periods.monthly[month];
+      return `${periods.monthly[month]}-${year}`;
     } else if (period === "quarterly") {
-      return periods.quarterly[Math.floor(month / 3)];
+      return `${periods.quarterly[Math.floor(month / 3)]}-${year}`;
     } else if (period === "weekly") {
-      const startOfYear = new Date(new Date(date).getFullYear(), 0, 1);
-      const pastDaysOfYear = (new Date(date) - startOfYear) / 86400000;
+      const startOfYear = new Date(d.getFullYear(), 0, 1);
+      const pastDaysOfYear = (d - startOfYear) / 86400000;
       return `Week ${Math.ceil(
         (pastDaysOfYear + startOfYear.getDay() + 1) / 7
-      )}`;
+      )}-${year}`;
     }
   };
+
+  // Function to aggregate counts by date
+  const aggregateData = (data) => {
+    const aggregatedData = {};
+
+    Object.keys(data).forEach((key) => {
+      const categoryData = data[key];
+
+      categoryData.forEach((entry) => {
+        if (aggregatedData[entry.date]) {
+          aggregatedData[entry.date] += entry.count;
+        } else {
+          aggregatedData[entry.date] = entry.count;
+        }
+      });
+    });
+
+    return Object.keys(aggregatedData).map((date) => ({
+      date,
+      count: aggregatedData[date],
+    }));
+  };
+
+  const aggregatedData = Object.keys(data).reduce((acc, key) => {
+    acc[key] = aggregateData({ [key]: data[key] });
+    return acc;
+  }, {});
 
   let categories =
     period === null
       ? Array.from({ length: 4 }, () => periods.quarterly).flat()
-      : Object.keys(data)
+      : Object.keys(aggregatedData)
           .flatMap((category) =>
-            data[category].map((entry) => getCategory(entry.date))
+            aggregatedData[category].map((entry) => getCategory(entry.date))
           )
           .sort();
 
@@ -58,12 +88,14 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
     categories = Array.from({ length: 4 }, () => categories).flat();
   }
 
-  const series = Object.keys(data).map((key) => ({
+  const series = Object.keys(aggregatedData).map((key) => ({
     name: key,
-    data: data[key].map((item) => item.count),
+    data: aggregatedData[key].map((item) => item.count),
   }));
 
-  const colors = Object.keys(data).map((key) => getCategoryColor(key));
+  const colors = Object.keys(aggregatedData).map((key) =>
+    getCategoryColor(key)
+  );
 
   const options = {
     chart: {
@@ -128,7 +160,15 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
       },
     },
     tooltip: {
-      enabled: false,
+      enabled: true,
+      theme: "dark",
+      x: {
+        show: true,
+        format: "dd MMM",
+      },
+      y: {
+        formatter: (value) => `${value} count`,
+      },
     },
     grid: {
       borderColor: "#e0e0e0",
