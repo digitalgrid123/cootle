@@ -28,16 +28,19 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
     return <Loader />;
   }
 
+  // Default period to 'quarterly' if it's null
+  const activePeriod = period || "quarterly";
+
   const getCategory = (date) => {
     const d = new Date(date);
     const month = d.getMonth();
     const year = d.getFullYear().toString().slice(-2);
 
-    if (period === "monthly") {
+    if (activePeriod === "monthly") {
       return `${periods.monthly[month]}-${year}`;
-    } else if (period === "quarterly") {
+    } else if (activePeriod === "quarterly") {
       return `${periods.quarterly[Math.floor(month / 3)]}-${year}`;
-    } else if (period === "weekly") {
+    } else if (activePeriod === "weekly") {
       const startOfYear = new Date(d.getFullYear(), 0, 1);
       const pastDaysOfYear = (d - startOfYear) / 86400000;
       return `Week ${Math.ceil(
@@ -46,7 +49,6 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
     }
   };
 
-  // Function to aggregate counts by date
   const aggregateData = (data) => {
     const aggregatedData = {};
 
@@ -54,17 +56,17 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
       const categoryData = data[key];
 
       categoryData.forEach((entry) => {
-        if (aggregatedData[entry.date]) {
-          aggregatedData[entry.date] += entry.count;
-        } else {
-          aggregatedData[entry.date] = entry.count;
+        const category = getCategory(entry.date);
+        if (!aggregatedData[category]) {
+          aggregatedData[category] = 0;
         }
+        aggregatedData[category] += entry.count;
       });
     });
 
-    return Object.keys(aggregatedData).map((date) => ({
-      date,
-      count: aggregatedData[date],
+    return Object.keys(aggregatedData).map((category) => ({
+      category,
+      count: aggregatedData[category],
     }));
   };
 
@@ -73,24 +75,21 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
     return acc;
   }, {});
 
-  let categories =
-    period === null
-      ? Array.from({ length: 4 }, () => periods.quarterly).flat()
-      : Object.keys(aggregatedData)
-          .flatMap((category) =>
-            aggregatedData[category].map((entry) => getCategory(entry.date))
-          )
-          .sort();
-
-  // Repeat the categories 4 times if all labels are the same
-  const allSame = categories.every((label) => label === categories[0]);
-  if (allSame) {
-    categories = Array.from({ length: 4 }, () => categories).flat();
+  let categories = [];
+  if (activePeriod === "monthly") {
+    categories = periods.monthly;
+  } else if (activePeriod === "quarterly") {
+    categories = periods.quarterly;
+  } else if (activePeriod === "weekly") {
+    categories = periods.weekly;
   }
 
   const series = Object.keys(aggregatedData).map((key) => ({
     name: key,
-    data: aggregatedData[key].map((item) => item.count),
+    data: categories.map((cat) => {
+      const entry = aggregatedData[key].find((e) => e.category.startsWith(cat));
+      return entry ? entry.count : 0;
+    }),
   }));
 
   const colors = Object.keys(aggregatedData).map((key) =>
