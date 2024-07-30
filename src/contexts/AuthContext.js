@@ -130,18 +130,34 @@ function AuthProvider({ children }) {
       });
       if (res.status) {
         setSession(res.access, rT, handleTokenExpiration, handleRTExpiration);
+  
+        // Retry fetching user info after token refresh
+        try {
+          const user = await axiosGet(API_ROUTER.USER_INFO);
+          if (user.status) {
+            dispatch({
+              type: "UPDATE",
+              payload: {
+                user: user.data,
+              },
+            });
+          }
+        } catch (error) {
+          console.error("User info fetch failed after token refresh", error);
+        }
       }
     } catch (error) {
       console.error("Failed to handle token expiration", error);
     }
   };
+  
 
   const initialize = async () => {
     try {
       const accessToken = getData(STORAGE_KEYS.AUTH_TOKEN);
       const refreshToken = getData(STORAGE_KEYS.AUTH_REFRESH_TOKEN);
       const localAuth = getData(STORAGE_KEYS.AUTH);
-
+  
       if (accessToken && localAuth) {
         setSession(
           accessToken,
@@ -149,17 +165,23 @@ function AuthProvider({ children }) {
           handleTokenExpiration,
           handleRTExpiration
         );
-
-        const userInfoResponse = await axiosGet(API_ROUTER.USER_INFO);
-        if (userInfoResponse.status) {
-          dispatch({
-            type: "INITIALIZE",
-            payload: {
-              isAuthenticated: true,
-              user: userInfoResponse.data,
-            },
-          });
-        } else {
+  
+        // Fetch user info after token refresh
+        try {
+          const user = await axiosGet(API_ROUTER.USER_INFO);
+          if (user.status) {
+            dispatch({
+              type: "INITIALIZE",
+              payload: {
+                isAuthenticated: true,
+                user: user.data,
+              },
+            });
+          } else {
+            throw new Error("Failed to fetch user info");
+          }
+        } catch (userInfoError) {
+          console.error("User info fetch failed", userInfoError);
           dispatch({
             type: "INITIALIZE",
             payload: {
@@ -187,6 +209,7 @@ function AuthProvider({ children }) {
       });
     }
   };
+  
   useEffect(() => {
     initialize();
   }, []);
