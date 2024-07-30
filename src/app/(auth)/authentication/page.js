@@ -24,10 +24,10 @@ const AuthPage = () => {
           <div className="row">
             <div className="col-lg-8 offset-lg-2">
               <div className="heading">
-                <h1 className="auth_main_heading weight-500" id="main-heading">
-                  <span className="weight-700"> Define</span>,
-                  <span className="weight-700"> track</span> and
-                  <span className="weight-700"> improve </span>
+                <h1 className="auth_main_heading weight-400" id="main-heading">
+                  <span className="weight-600"> Define</span>,
+                  <span className="weight-600"> track</span> and
+                  <span className="weight-600"> improve </span>
                   the value of product design in your organization.
                 </h1>
                 <div className="content_arrow mt-24 ">
@@ -41,7 +41,7 @@ const AuthPage = () => {
                   </span>
                   <span>
                     <button
-                      className="started_btn weight-600"
+                      className="started_btn weight-500"
                       onClick={handleNavigation(PATH_AUTH.signup)}
                     >
                       Get started
@@ -55,7 +55,7 @@ const AuthPage = () => {
                     src="/assets/images/mark/software.webp"
                     alt="software"
                   />
-                  <h2 className="thanks-text weight-700 mb-16">
+                  <h2 className="thanks-text weight-500 mb-16">
                     Thanks for checking on us.
                   </h2>
                 </div>

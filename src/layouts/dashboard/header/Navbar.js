@@ -57,12 +57,12 @@ const Navbar = ({ disableGetStarted, onLogin, onSignup, disableLogin }) => {
                 </h2>
                 {shouldShowLoginButton() && (
                   <button disabled={disableLogin} onClick={onLogin}>
-                    <span className="weight-600">Log in</span>
+                    <span className="weight-500">Log in</span>
                   </button>
                 )}
                 {shouldShowGetStartedButton() && (
                   <button disabled={disableGetStarted} onClick={onSignup}>
-                    <span className="weight-600">Get started for free</span>
+                    <span className="weight-500">Get started for free</span>
                   </button>
                 )}
                 <button
