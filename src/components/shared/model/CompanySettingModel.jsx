@@ -92,14 +92,14 @@ const CompanySettingModel = ({ activeTab, setShowPopup }) => {
     <>
       {activeTab === "settings" && (
         <>
-          <div className="setting-box d-flex align-items-center justify-content-between border_bottom_Semi-Transparent_navy ">
+          <div className="setting-box d-flex align-items-center justify-content-between border_bottom_soft-lavender ">
             <h1 className="company-setup-heading weight-600">Settings</h1>
             <button className="save-btn" onClick={handleSave}>
               <span className="weight-600">Save</span>
             </button>
           </div>
           <form onSubmit={handleFormSubmit}>
-            <div className="company-container border_bottom_Semi-Transparent_navy ">
+            <div className="company-container border_bottom_soft-lavender ">
               <label
                 className="label-company weight-500 "
                 htmlFor="companyName"
@@ -117,6 +117,7 @@ const CompanySettingModel = ({ activeTab, setShowPopup }) => {
                 onChange={handleInputChange}
               />
             </div>
+
             <div>
               <label
                 className="label-company weight-500  margin-11"
@@ -145,7 +146,7 @@ const CompanySettingModel = ({ activeTab, setShowPopup }) => {
                 ) : (
                   <button
                     type="button"
-                    className="custom-file-button weight-500 border-pale "
+                    className="custom-file-button weight-500 border-pastel  "
                     onClick={() => fileInputRef.current.click()}
                   >
                     <span className="plus-icon">
@@ -167,7 +168,7 @@ const CompanySettingModel = ({ activeTab, setShowPopup }) => {
                 />
               </div>
               <p className="organization-note weight-400">
-                Upload your company logo in PNG format.
+                Upload an image here. Company logo is great!
               </p>
             </div>
           </form>

@@ -52,7 +52,7 @@ const AuthPage = () => {
                   <img
                     className="software-icon"
                     loading="lazy"
-                    src="/assets/images/mark/software.svg"
+                    src="/assets/images/mark/software.webp"
                     alt="software"
                   />
                   <h2 className="thanks-text weight-700 mb-16">

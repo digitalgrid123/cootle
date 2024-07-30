@@ -86,7 +86,7 @@ const NotificationModel = ({
                   safeNotifications.map((notification, index) => (
                     <div
                       key={index}
-                      className={`d-flex align-items-center justify-content-between notification-item border_bottom_Semi-Transparent_navy plr-14 pb-20 ${
+                      className={`d-flex align-items-center justify-content-between notification-item border_bottom_soft-lavender plr-14 pb-20 ${
                         notification.is_read ? "read" : "unread"
                       }`}
                     >

@@ -119,7 +119,7 @@ const ProfileFormModel = ({ togglePopup, popupOpen, setPopupOpen }) => {
               </div>
 
               <form ref={formRef} onSubmit={handleSubmit}>
-                <div className="d-flex align-items-center gap-4 profile-input-border border_bottom_Semi-Transparent_navy">
+                <div className="d-flex align-items-center gap-4 profile-input-border border_bottom_soft-lavender">
                   <div className="form-group_profile">
                     <label
                       htmlFor="first-name"
@@ -130,7 +130,7 @@ const ProfileFormModel = ({ togglePopup, popupOpen, setPopupOpen }) => {
                     <input
                       type="text"
                       id="first-name"
-                      className="profile-input f-16 weight-400 border-pale"
+                      className="profile-input f-16 weight-400 border-pastel "
                       placeholder="First Name"
                       value={firstName}
                       onChange={handleFirstNameChange}
@@ -146,7 +146,7 @@ const ProfileFormModel = ({ togglePopup, popupOpen, setPopupOpen }) => {
                     <input
                       type="text"
                       id="last-name"
-                      className="profile-input f-16 weight-400 border-pale"
+                      className="profile-input f-16 weight-400 border-pastel "
                       placeholder="Last Name"
                       value={lastName}
                       onChange={handleLastNameChange}

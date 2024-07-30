@@ -133,7 +133,7 @@ const MainMap = () => {
 
   return (
     <div className="h-100 d-flex flex-column">
-      <div className="d-flex align-items-center justify-content-between mb-3">
+      <div className="d-flex align-items-center justify-content-between mb-3 title-content-container custom-padding-mapping">
         <Title title="Value mapping" />
         <div className="button-group">
           <button
@@ -142,7 +142,7 @@ const MainMap = () => {
             }`}
             onClick={() => handleMappingChange("effort")}
           >
-            Effort Mapping
+            Effort mapping
           </button>
           <button
             className={`mapping_btn weight-400 ${
@@ -150,7 +150,7 @@ const MainMap = () => {
             }`}
             onClick={() => handleMappingChange("OBJ")}
           >
-            Objective Mapping
+            Objective mapping
           </button>
           <button
             className={`mapping_btn weight-400 ${
@@ -158,7 +158,7 @@ const MainMap = () => {
             }`}
             onClick={() => handleMappingChange("VAL")}
           >
-            Value Mapping
+            Value mapping
           </button>
           <button
             className={`mapping_btn weight-400 ${
@@ -166,7 +166,7 @@ const MainMap = () => {
             }`}
             onClick={() => handleMappingChange("OUT")}
           >
-            Product Outcome
+            Product outcomes
           </button>
         </div>
 

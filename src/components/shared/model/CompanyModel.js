@@ -18,7 +18,7 @@ const CompanyModel = ({ activeTab }) => {
     <>
       {activeTab === "settings" && (
         <>
-          <div className="setting-box d-flex align-items-center justify-content-between border_bottom_Semi-Transparent_navy ">
+          <div className="setting-box d-flex align-items-center justify-content-between border_bottom_soft-lavender ">
             <h1 className="company-setup-heading weight-600">Settings</h1>
             {isAdmin && (
               <button className="save-btn" onClick={editCompany}>
@@ -27,7 +27,7 @@ const CompanyModel = ({ activeTab }) => {
             )}
           </div>
           <form>
-            <div className="company-container border_bottom_Semi-Transparent_navy ">
+            <div className="company-container border_bottom_soft-lavender ">
               <label
                 className="label-company weight-500 "
                 htmlFor="companyName"
@@ -47,7 +47,7 @@ const CompanyModel = ({ activeTab }) => {
               </label>
               <div className="custom-file-input">
                 {selectedCompany?.logo ? (
-                  <div className="selected_logo border-pale ">
+                  <div className="selected_logo border-pastel  ">
                     <img
                       className="w-100"
                       src={selectedCompany.logo}
@@ -55,7 +55,7 @@ const CompanyModel = ({ activeTab }) => {
                     />
                   </div>
                 ) : (
-                  <div className="no_logo_container border-pale ">
+                  <div className="no_logo_container border-pastel  ">
                     <h2 className="no_logo weight-500">
                       {selectedCompany?.name?.charAt(0).toUpperCase()}
                     </h2>

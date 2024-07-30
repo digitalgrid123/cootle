@@ -6,7 +6,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 
 :root {
-  --text-color: #faf6fe;
+  --text-color: #ffffff;
+  --light-lavender: #faf6fe;
   --text-black: #000000;
   --eerie-black: #1c1c1e;
   --comic: "Comic Neue", cursive;
@@ -50,7 +51,11 @@
   --Light-grey: #e3e3e4;
   --deepPurple: #1a072c;
   --mediumPurpleGray: #746780;
-  --dark-purple-translucent: #1A072CB2;
+  --dark-purple-translucent: #1a072cb2;
+  --dark-purple-80: #1a072c99;
+  --soft-lavender: #eae5ee;
+  --pastel-lavender: #f0e5fb;
+  --dark-purple-gray: #483956;
 
   /* linear Gradient */
   --linear-gradient: linear-gradient(
@@ -81,9 +86,9 @@ body {
   /* -ms-user-select: none; IE 10 and IE 11 */
   /* user-select: none; Standard syntax */
   color: var(--text-color);
-  background: #f7f7ff;
+  background: var(--light-lavender);
   overflow-x: hidden;
-  font-family: var(--open);
+  font-family: var(--open) !important;
   font-weight: normal;
 }
 h1,
@@ -116,10 +121,18 @@ a {
 .b-deepsea {
   border: 1px solid var(--Hazy-Deep-Sea) !important;
 }
+.p-0 {
+  padding: 0;
+}
 textarea {
   resize: none;
 }
-
+.mb-0 {
+  margin-bottom: 0;
+}
+.ml-12 {
+  margin-left: 12px;
+}
 .p-80 {
   padding: 80px !important;
 }
@@ -140,10 +153,19 @@ textarea {
 .h-300 {
   height: 300px;
 }
+.custom-padding {
+  padding: 11px 15px 13px 15px;
+}
+.custom-padding-mapping {
+  padding: 2px 8px 2px 15px;
+}
 
 /* Boder Styling */
 .border-pale {
   border: 1px solid var(--Pale-Blue-Gray);
+}
+.border-pastel {
+  border: 1px solid var(--pastel-lavender);
 }
 .border_bottom_Light {
   border-bottom: 1px solid var(--Very-Light-Gray);
@@ -160,6 +182,14 @@ textarea {
 .border_bottom_Semi-Transparent_navy {
   border-bottom: 1px solid var(--Semi-Transparent-Midnight-Navy);
 }
+
+.border_bottom_soft-lavender {
+  border-bottom: 1px solid var(--soft-lavender);
+}
+.border_bottom_pastel {
+  border-bottom: 1px solid var(--pastel-lavender);
+}
+
 .border-bottom-grey {
   border-bottom: 1px solid var(--Light-grey);
 }
@@ -284,20 +314,23 @@ textarea {
   width: 28rem;
 }
 
+.dropdown-arrow {
+  transition: transform 0.3s ease; /* Smooth transition for rotation */
+}
+
+.rotate-up {
+  transform: rotate(180deg); /* Rotate arrow up */
+}
+
+.rotate-down {
+  transform: rotate(0deg); /* Rotate arrow down */
+}
+
 .cootle-text {
   font-size: 20px;
   line-height: 0;
   text-align: left;
   color: var(--text-color);
-}
-
-.comic-passdetail {
-  font-family: var(--comic);
-  font-size: 14px;
-  line-height: 18px;
-  margin-top: 8px;
-  text-align: center;
-  color: var(--text-black);
 }
 
 .reset-dropdown {
@@ -535,7 +568,7 @@ textarea {
 
 /* //////////////sidebar menu////////////////////////////// */
 .organization-note {
-  color: var(--Midnight-Blue);
+  color: var(--deepPurple);
   font-size: 14px;
   line-height: 20.3px;
   text-align: left;
@@ -554,7 +587,7 @@ textarea {
   font-weight: 400;
   line-height: 24px;
   text-align: left;
-  color: var(--Semi-Transparent-Midnight-Blue);
+  color: var(--dark-purple-80);
 }
 .company-form {
   display: flex;
@@ -562,7 +595,7 @@ textarea {
   margin-top: 15px;
 }
 .label-company {
-  color: var(--Midnight-Blue);
+  color: var(--deepPurple);
 
   font-size: 14px;
 
@@ -575,7 +608,7 @@ textarea {
 .save-btn {
   padding: 13px 33px;
   border-radius: 12px;
-  background: var(--Midnight-Navy);
+  background: var(--deepPurple);
   border: none;
 }
 .setting-box {
@@ -588,7 +621,18 @@ textarea {
   text-align: right;
 }
 .menutext {
-  color: var(--Midnight-Blue);
+  transition: color 0.3s ease;
+}
+
+.menutext-active {
+  color: var(--text-color);
+}
+
+.menutext-inactive {
+  color: var(--deepPurple);
+}
+.menutext {
+  /* color: var(--deepPurple); */
   line-height: 19.36px;
   letter-spacing: -0.03em;
   text-align: left;
@@ -601,7 +645,7 @@ textarea {
 }
 .company-sidebar {
   width: 248px;
-  background-color: var(--Lavender-Gray);
+  background-color: var(--light-lavender);
   padding: 24px 16px;
   border: none;
   border-radius: 24px;
@@ -717,14 +761,16 @@ textarea {
 .company-content {
   width: 100%;
   border-radius: 24px;
-  background: var(--Lavender-Gray);
+  background: var(--light-lavender);
   border: none;
   padding: 24px 16px 24px 24px;
+  display: flex;
+  flex-direction: column;
 }
 .mapping_btn {
   border: none;
   background: transparent;
-  color: var(--Charcoal-Mist);
+  color: var(--deepPurple);
   padding: 13px 21px 13px 21px;
   font-size: 17px;
   line-height: 20.57px;
@@ -732,9 +778,9 @@ textarea {
   text-align: left;
 }
 .mapping_btn.active {
-  background-color: var(--text-color);
-  color: var(--Charcoal-Mist);
-  padding: 16px 11px;
+  background-color: var(--deepPurple);
+  color: var(--text-color);
+  padding: 10px 16px 13px 16px;
   border: none;
   border-radius: 16px;
   font-size: 17px;
@@ -744,7 +790,7 @@ textarea {
   text-align: left;
 }
 .button-group {
-  background-color: var(--Semi-Transparent-Sage);
+  background-color: var(--pastel-lavender);
   border-radius: 16px;
   border: none;
   display: flex;
@@ -752,15 +798,15 @@ textarea {
   justify-content: space-between;
 }
 .company-sidebar ul li.active {
-  background-color: var(--text-color);
+  background-color: var(--dark-purple-gray);
   border: none;
   border-radius: 16px;
+  border: 2px solid var(--pastel-lavender);
 }
 .reset_btn {
   border: none;
   border-radius: 16px;
-  background: var(--Semi-Transparent-Sage);
-  padding: 16px 14px;
+  background: transparent;
 }
 .company-sidebar > ul {
   margin-top: 30px !important;
@@ -771,7 +817,7 @@ textarea {
   line-height: 29.05px;
   letter-spacing: -0.03em;
   text-align: left;
-  color: var(--Hazy-Deep-Sea);
+  color: var(--deepPurple);
 }
 
 .invitation-overlay {
@@ -808,7 +854,7 @@ textarea {
 .detail-profile-box {
   width: 100%;
   border-radius: 24px;
-  background: var(--Lavender-Gray);
+  background: var(--light-lavender);
   border: none;
   padding: 8px;
 }
@@ -872,7 +918,7 @@ textarea {
 
 .box-container {
   border-radius: 24px;
-  background-color: var(--Lavender-Gray);
+  background-color: var(--light-lavender);
   border: none;
   gap: 40px;
   padding: 24px 24px 55px 24px;
@@ -887,7 +933,7 @@ textarea {
   font-size: 14px;
   line-height: 14px;
   letter-spacing: -0.03em;
-  color: var(--Midnight-Navy);
+  color: var(--deepPurple);
 }
 .line {
   margin-top: 50px;
@@ -906,7 +952,7 @@ textarea {
   letter-spacing: -0.03em;
 }
 .status-active {
-  color: var(--Midnight-Blue); /* Or any style you want for active status */
+  color: var(--deepPurple); /* Or any style you want for active status */
 }
 
 .status-invitation {
@@ -921,7 +967,7 @@ textarea {
   line-height: 16.94px;
   letter-spacing: -0.03em;
   text-align: left;
-  color: var(--Midnight-Blue);
+  color: var(--deepPurple);
 }
 .member_email {
   font-size: 14px;
@@ -929,7 +975,7 @@ textarea {
   letter-spacing: -0.03em;
   text-align: left;
 
-  color: var(--Midnight-Blue);
+  color: var(--deepPurple);
 }
 .member-item {
   display: flex;
@@ -942,10 +988,10 @@ textarea {
   letter-spacing: -0.03em;
   text-align: left;
 
-  color: var(--Midnight-Navy);
+  color: var(--deepPurple);
 }
 .invitation-detail {
-  background: var(--Soft-Olive-Gray);
+  background: var(--text-color);
   border-radius: 16px;
   border: none;
   height: 180px;
@@ -954,6 +1000,8 @@ textarea {
   margin-top: 24px;
   align-items: center;
   cursor: pointer;
+  box-shadow: 2px 2px 2px 2px #eae5ee40;
+  border: 1px solid var(--pastel-lavender);
 }
 ::file-selector-button {
   display: none;
@@ -963,7 +1011,7 @@ textarea {
 }
 .company-detail {
   cursor: pointer;
-  background: var(--Soft-Olive-Gray);
+  background: var(--text-color);
   border-radius: 16px;
   border: none;
   height: 180px;
@@ -972,6 +1020,8 @@ textarea {
   margin-top: 24px;
   align-items: center;
   justify-content: center;
+  box-shadow: 2px 2px 2px 2px #eae5ee40;
+  border: 1px solid var(--pastel-lavender);
 }
 .profile-input {
   line-height: 24px;
@@ -1024,11 +1074,11 @@ textarea {
   line-height: 40px;
   letter-spacing: -0.03em;
   text-align: left;
-  color: var(--Midnight-Navy);
+  color: var(--deepPurple);
 }
 .selected_company {
   margin-top: 15px;
-  color: var(--Midnight-Blue);
+  color: var(--deepPurple);
   font-size: 24px;
 
   line-height: 36px;
@@ -1039,7 +1089,7 @@ textarea {
   margin: 8px 0;
 }
 .send_btn {
-  background: var(--Midnight-Navy);
+  background: var(--deepPurple);
   border-radius: 16px;
   width: 174px;
   height: 48px;
@@ -1074,7 +1124,7 @@ textarea {
   line-height: 20.57px;
   letter-spacing: -0.03em;
   text-align: left;
-  color: var(--Charcoal-Mist);
+  color: var(--deepPurple);
 }
 
 .invite-content {
@@ -1082,25 +1132,25 @@ textarea {
   line-height: 33.35px;
   letter-spacing: -0.03em;
   text-align: left;
-  color: var(--Semi-Transparent-Charcoal);
+  color: var(--deepPurple);
   padding-left: 20px;
   padding-right: 20px;
 }
 
 .verify-username {
-  border: 1px solid var(--partially-transparent-black);
+  border: 1px solid var(--dark-purple-80);
   border-radius: 16px;
 
   line-height: 32px;
   text-align: left;
-  color: var(--text-black);
+  color: var(--deepPurple);
 }
 .verify-username::placeholder {
   font-size: 16px;
   font-weight: 500;
   line-height: 32px;
   text-align: left;
-  color: var(--text-black);
+  color: var(--deepPurple);
 }
 
 .popup-content > form {
@@ -1113,7 +1163,7 @@ textarea {
 
   line-height: 36px;
   text-align: center;
-  color: var(--grayish-blue);
+  color: var(--deepPurple);
 }
 
 .popup-content > p:last-child {
@@ -1123,7 +1173,7 @@ textarea {
   font-weight: 600;
   line-height: 13px;
   text-align: center;
-  color: var(--semiTransparentBlack);
+  color: var(--dark-purple-translucent);
 }
 .username-note {
   font-family: var(--comic);
@@ -1131,7 +1181,7 @@ textarea {
   font-size: 24px;
   line-height: 30px;
   text-align: center;
-  color: var(--grayish-blue);
+  color: var(--deepPurple);
 }
 .company-logo {
   width: 40px;
@@ -1157,7 +1207,7 @@ textarea {
   background-color: var(--Charcoal-Gray);
 }
 .selected {
-  background-color: var(--Lavender-Gray);
+  background-color: var(--light-lavender);
   border-radius: 16px;
   border: none;
   padding: 14px 16px;
@@ -1222,7 +1272,7 @@ textarea {
 .sub-content {
   width: 100%;
   border-radius: 24px;
-  background: var(--Lavender-Gray);
+  background: var(--light-lavender);
   border: none;
   padding: 16px;
   display: flex;
@@ -1297,11 +1347,16 @@ textarea {
   text-align: left;
   border-radius: 8px;
   padding: 8px;
-  color: var(--transparent-black-color);
+  color: var(--deepPurple);
+}
+.title-content-container {
+  border-radius: 16px;
+  background: var(--text-color);
+  box-shadow: 0px 0.6px 4px 0px #00000040;
 }
 
 .selected-option {
-  background-color: var(--Lavender-Gray);
+  background-color: var(--light-lavender);
 }
 
 .profile-member {
@@ -1314,6 +1369,7 @@ textarea {
 }
 .member-container {
   background-color: var(--text-color);
+  border: 1px solid var(--pastel-lavender);
   padding: 26px 0;
   border-radius: 24px;
   border: none;
@@ -1325,7 +1381,7 @@ textarea {
   line-height: 24.2px;
   letter-spacing: -0.03em;
   text-align: left;
-  color: var(--Midnight-Navy);
+  color: var(--deepPurple);
   margin-left: 14px;
 }
 .notification-badge {
@@ -1341,7 +1397,7 @@ textarea {
 .notification-container {
   width: 750px;
   flex: 1 1;
-  background: var(--Lavender-Gray);
+  background: var(--light-lavender);
   border-radius: 24px;
   padding: 40px 0;
   position: relative; /* Position relative for scrollbar styling */
@@ -1362,7 +1418,7 @@ textarea {
 }
 
 .notification-scroll::-webkit-scrollbar-thumb {
-  background-color: var(--Midnight-Blue); /* Thumb color */
+  background-color: var(--deepPurple); /* Thumb color */
   border-radius: 4px; /* Rounded corners for the thumb */
 }
 
@@ -1374,7 +1430,7 @@ textarea {
 .effort-container {
   display: flex;
   flex-direction: column;
-  background: var(--Lavender-Gray);
+  background: var(--light-lavender);
   border-radius: 24px;
   padding: 24px;
   width: 614px;
@@ -1527,6 +1583,7 @@ textarea {
   box-shadow: var(--box-shadow);
   position: relative;
   flex: 1 1;
+  box-shadow: 0px 0.6px 4px 0px #00000040;
 }
 .design-tab {
   background-color: var(--text-color);
@@ -2076,7 +2133,7 @@ textarea {
 
 .DropdownCheckedlist-menu > li.active,
 .DropdownCheckedlist-menu > li:hover {
-  background: var(--Lavender-Gray) !important;
+  background: var(--light-lavender) !important;
   border-radius: 16px !important;
   border: none !important;
 }
@@ -2175,4 +2232,11 @@ textarea {
 
 .custom-li-class:hover .archived-btn {
   opacity: 1;
+}
+
+.pagination-component {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }

@@ -83,7 +83,7 @@ const InvitationList = ({ setShowInvite, showInvite }) => {
         <div ref={overlayRef} className="invitation-overlay padding-company">
           <div className="company-content w-100 h-100 ">
             <div className="box-invitation">
-              <div className="d-flex align-items-center justify-content-between setting-box border_bottom_Semi-Transparent_navy ">
+              <div className="d-flex align-items-center justify-content-between setting-box border_bottom_soft-lavender ">
                 <h1 className="company-setup-heading weight-600">
                   Invitations
                 </h1>

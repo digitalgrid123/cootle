@@ -32,7 +32,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: var(--Lavender-Gray);
+  background-color: var(--light-lavender);
 
   margin-left: 325px;
 }

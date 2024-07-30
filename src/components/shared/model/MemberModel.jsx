@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 import { useAuth, useToaster, useTabs } from "@/hooks";
 import { useGlobalCompany } from "@/utils/globalState";
@@ -26,6 +26,8 @@ const MemberModel = ({ activeTab }) => {
   const [showDropdown, setShowDropdown] = useState({});
   const [pageLimit, setPageLimit] = useState(calculatePageLimit());
   const [owner, setOwner] = useState(null);
+  // Create refs for dropdown elements
+  const dropdownRefs = useRef([]);
 
   // Pagination state
   const [activePage, setActivePage] = useState(1);
@@ -47,6 +49,22 @@ const MemberModel = ({ activeTab }) => {
 
     return () => {
       window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Handle clicks outside of the dropdown
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRefs.current.every((ref) => ref && !ref.contains(event.target))
+      ) {
+        setShowDropdown({});
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -177,7 +195,7 @@ const MemberModel = ({ activeTab }) => {
 
   return (
     <>
-      <div className="setting-box border_bottom_Semi-Transparent_navy ">
+      <div className="setting-box border_bottom_pastel ">
         <h1 className="company-setup-heading weight-600">
           Add / Remove People from the Company
         </h1>
@@ -204,11 +222,11 @@ const MemberModel = ({ activeTab }) => {
         </form>
       </div>
       {invitations.length > 0 ? (
-        <div className="member-container">
+        <div className="member-container relative">
           <>
             <h1 className="member-list-heading weight-600">Members List</h1>
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead className="member_row border_bottom_Semi-Transparent_navy">
+              <thead className="member_row border_bottom_pastel">
                 <tr>
                   <th className="member-text weight-600 text-start  plr-14">
                     Name
@@ -222,7 +240,7 @@ const MemberModel = ({ activeTab }) => {
                 </tr>
               </thead>
               <tbody>
-                <tr className="border_bottom_Semi-Transparent_navy">
+                <tr className="border_bottom_pastel">
                   <td
                     className="plr-14"
                     style={{
@@ -263,10 +281,7 @@ const MemberModel = ({ activeTab }) => {
                 {invitations
                   .slice((activePage - 1) * pageLimit, activePage * pageLimit)
                   .map((member, index) => (
-                    <tr
-                      key={index}
-                      className="border_bottom_Semi-Transparent_navy"
-                    >
+                    <tr key={index} className="border_bottom_pastel">
                       <td
                         style={{
                           display: "flex",
@@ -432,6 +447,7 @@ const MemberModel = ({ activeTab }) => {
                                         </>
                                       ) : (
                                         <li
+                                          className="mb-0 p-0"
                                           onClick={() =>
                                             handleRemoveMember(member.id)
                                           }
@@ -466,11 +482,13 @@ const MemberModel = ({ activeTab }) => {
                                       onClick={() =>
                                         handleRemoveInvitation(member.id)
                                       }
-                                      className={
-                                        selectedOption === "Remove Member"
-                                          ? "selected-option"
-                                          : ""
-                                      }
+                                      className={`mb-0 p-0
+                                        ${
+                                          selectedOption === "Remove Member "
+                                            ? "selected-option"
+                                            : ""
+                                        }
+                                      `}
                                     >
                                       Remove Invitation
                                     </p>
@@ -501,7 +519,7 @@ const MemberModel = ({ activeTab }) => {
               </tbody>
             </table>
           </>
-          <div className="plr-14 margin-11">
+          <div className="pagination-component">
             <PaginationComponent
               activePage={activePage}
               total={invitations.length}
