@@ -15,37 +15,12 @@ const DropdownCheckedlist = ({
   getStatusStyles,
   getStatusImage,
   fetchEffortData,
-
   user,
 }) => {
   const { effortcheckedBy } = useAuth();
   const { toaster } = useToaster();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(effort?.value_status);
-
-  useEffect(() => {
-    const checkIfUnchanged = async () => {
-      const createdAtDate = new Date(effort?.created_at);
-      const oneWeekAfter = new Date(
-        createdAtDate.getTime() + 7 * 24 * 60 * 60 * 1000
-      );
-      const now = new Date();
-
-      if (!effort?.checked_by && now >= oneWeekAfter) {
-        const result = await effortcheckedBy(effort.id, "UCH");
-
-        if (result.status) {
-          setSelectedStatus("UCH");
-          toaster("Status automatically set to Unchecked", TOAST_TYPES.INFO);
-          fetchEffortData();
-        } else {
-          toaster("Failed to automatically set status", TOAST_TYPES.ERROR);
-        }
-      }
-    };
-
-    checkIfUnchanged();
-  }, [effort, effortcheckedBy, fetchEffortData, , toaster]);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -57,9 +32,9 @@ const DropdownCheckedlist = ({
         setSelectedStatus(status);
         setIsOpen(false);
         fetchEffortData();
-        toaster("Effort added successfully", TOAST_TYPES.SUCCESS);
+        toaster("Effort status updated successfully", TOAST_TYPES.SUCCESS);
       } else {
-        toaster("Failed to add effort", TOAST_TYPES.ERROR);
+        toaster("Failed to update effort status", TOAST_TYPES.ERROR);
       }
     } catch (error) {
       toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);

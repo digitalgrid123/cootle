@@ -256,7 +256,7 @@ const EffortMapping = ({
       <div className="wrapper-company">
         <div className="company-sidebar">
           <div className="d-flex align-items-center w-100 justify-content-between">
-            <h1 className="company-setup-heading weight-600">Categories</h1>
+            <h1 className="mapping-category-heading">Categories</h1>
             {isAdmin && (
               <div className="cursor-pointer" onClick={toggleDropdown}>
                 <img
@@ -277,8 +277,8 @@ const EffortMapping = ({
                   key={category.id}
                   className={`d-flex align-items-center justify-content-start gap-2 ${
                     activeCategory && activeCategory.id === category.id
-                      ? "active"
-                      : ""
+                      ? "active active-tab "
+                      : " inactive-tab"
                   }`}
                   onClick={() => handleCategoryClick(category)}
                 >
@@ -289,7 +289,7 @@ const EffortMapping = ({
           )}
         </div>
         <div className="sub-content">
-          <h1 className="company-setup-heading weight-600 mb-20">
+          <h1 className="main-setup-heading weight-600 mb-20">
             {activeCategory ? activeCategory.name : ""}
           </h1>
           <div className="d-flex gap-2" style={{ flex: "1 1 0" }}>
@@ -315,14 +315,14 @@ const EffortMapping = ({
                       key={subTab.id}
                       className={`custom-li-class d-flex align-items-center justify-content-between ${
                         activeSubTab && activeSubTab.id === subTab.id
-                          ? "active"
-                          : ""
+                          ? "active active-tab "
+                          : "inactive-tab "
                       }`}
                       onClick={() => handleSubTabClick(subTab)}
                     >
-                      <h3 className="menutext f-16 weight-400">
+                      <h2 className="menutext f-16 weight-400">
                         {subTab.title}
-                      </h3>
+                      </h2>
 
                       {isAdmin &&
                       activeSubTab &&
@@ -355,12 +355,12 @@ const EffortMapping = ({
                   Definition
                 </button>
               </div>
-              <div className="content">
+              <div className="content" style={{ flex: "1 1" }}>
                 {activeSubTab && activeContentTab === "Definition" && (
                   <>
                     {editMode ? (
                       <>
-                        <div className="d-flex flex-column w-100 content-defination-area">
+                        <div className="d-flex flex-column w-100 content-defination-area h-100">
                           <div className="d-flex align-item-center justify-content-between w-100">
                             <input
                               className="input-company mb-20 b-deepsea"

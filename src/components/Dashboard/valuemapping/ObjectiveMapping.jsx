@@ -315,7 +315,9 @@ const ObjectiveMapping = ({
               <li
                 key={obj.id}
                 className={`custom-li-class d-flex align-items-center justify-content-between gap-2 ${
-                  activeTab?.id === obj.id ? "active" : ""
+                  activeTab?.id === obj.id
+                    ? "active active-tab "
+                    : " inactive-tab"
                 }`}
                 onClick={() => handleTabClick(obj)}
               >

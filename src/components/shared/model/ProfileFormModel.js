@@ -96,7 +96,7 @@ const ProfileFormModel = ({ togglePopup, popupOpen, setPopupOpen }) => {
         <div className="invitation-overlay">
           <div className="proflie-content">
             <div className="detail-profile-box">
-              <div className="border_setting d-flex align-items-center justify-content-between">
+              <div className="border_setting border_bottom_soft-lavender d-flex align-items-center justify-content-between">
                 <h2 className="my_profile_setting weight-600">
                   My account settings
                 </h2>
@@ -106,7 +106,7 @@ const ProfileFormModel = ({ togglePopup, popupOpen, setPopupOpen }) => {
                     type="button"
                     onClick={togglePopup}
                   >
-                    <span className="weight-600">Cancel</span>
+                    <span className="weight-600">Close</span>
                   </button>
                   <button
                     type="button"
@@ -130,7 +130,7 @@ const ProfileFormModel = ({ togglePopup, popupOpen, setPopupOpen }) => {
                     <input
                       type="text"
                       id="first-name"
-                      className="profile-input f-16 weight-400 border-pastel "
+                      className="profile-input f-16 weight-400 "
                       placeholder="First Name"
                       value={firstName}
                       onChange={handleFirstNameChange}
@@ -146,17 +146,17 @@ const ProfileFormModel = ({ togglePopup, popupOpen, setPopupOpen }) => {
                     <input
                       type="text"
                       id="last-name"
-                      className="profile-input f-16 weight-400 border-pastel "
+                      className="profile-input f-16 weight-400 "
                       placeholder="Last Name"
                       value={lastName}
                       onChange={handleLastNameChange}
                     />
                   </div>
                 </div>
-                <div className="form_groupimage border_bottom_faint">
+                <div className="form_groupimage border_bottom_purple-haze ">
                   <label
                     htmlFor="profile-pic"
-                    className="label-company weight-500 margin-11"
+                    className="label-profile weight-500 margin-11"
                   >
                     Image
                   </label>

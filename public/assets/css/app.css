@@ -56,6 +56,8 @@
   --soft-lavender: #eae5ee;
   --pastel-lavender: #f0e5fb;
   --dark-purple-gray: #483956;
+  --purple-shadow: #1a072ccc;
+  --purple-haze: #1a072c33;
 
   /* linear Gradient */
   --linear-gradient: linear-gradient(
@@ -159,7 +161,13 @@ textarea {
 .custom-padding-mapping {
   padding: 2px 8px 2px 15px;
 }
-
+.active-tab {
+  background-color: var(--deepPurple) !important            ;
+  color: var(--text-color) !important;
+}
+.inactive-tab > h2 {
+  color: var(--deepPurple) !important;
+}
 /* Boder Styling */
 .border-pale {
   border: 1px solid var(--Pale-Blue-Gray);
@@ -189,7 +197,9 @@ textarea {
 .border_bottom_pastel {
   border-bottom: 1px solid var(--pastel-lavender);
 }
-
+.border_bottom_purple-haze {
+  border-bottom: 1px solid var(--purple-haze);
+}
 .border-bottom-grey {
   border-bottom: 1px solid var(--Light-grey);
 }
@@ -369,8 +379,7 @@ textarea {
 }
 .account_text {
   padding: 0 0 18px 8px;
-  color: var(--transparent-black-color);
-
+  color: var(--deepPurple);
   font-size: 14px;
   line-height: 20.3px;
   letter-spacing: -0.03em;
@@ -393,7 +402,7 @@ textarea {
   border-radius: 12px;
   border: none;
   padding: 13px 16px 13px 16px;
-  background-color: var(--eerie-black);
+  background-color: var(--deepPurple);
 }
 .update_btn > span {
   font-size: 14px;
@@ -402,7 +411,6 @@ textarea {
   color: var(--text-color);
 }
 .border_setting {
-  border-bottom: 1px solid var(--Faint-Black);
   padding: 18px 8px 28px 8px;
 }
 .form-group_profile {
@@ -411,7 +419,7 @@ textarea {
   gap: 8px;
 }
 .label_profile {
-  color: var(--Charcoal-Mist);
+  color: var(--purple-shadow);
 
   font-size: 14px;
   line-height: 20.3px;
@@ -422,7 +430,7 @@ textarea {
   line-height: 29.05px;
   letter-spacing: -0.03em;
   text-align: left;
-  color: var(--text-black);
+  color: var(--deepPurple);
 }
 .logout-text {
   font-size: 18px;
@@ -510,6 +518,23 @@ textarea {
   margin-top: 8px;
   margin-bottom: 32px;
 }
+.mapping-category-heading {
+  color: var(--deepPurple);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19.36px;
+  letter-spacing: -0.03em;
+  text-align: left;
+}
+.main-setup-heading {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 21.78px;
+  letter-spacing: -0.03em;
+  text-align: left;
+  color: var(--deepPurple);
+}
+
 .create-company {
   font-size: 17px;
   line-height: 20.57px;
@@ -522,17 +547,22 @@ textarea {
 
   line-height: 20.3px;
   text-align: left;
-  color: var(--Charcoal-Mist);
+  color: var(--purple-shadow);
 }
 .email_container {
   padding: 17px 8px 36px 8px;
 }
 .profile_email {
-  color: var(--text-black);
-  padding-top: 20px;
+  background-color: var(--soft-lavender);
+  color: var(--deepPurple);
+  padding: 12px 16px;
   padding-left: 16px;
   line-height: 24px;
   text-align: left;
+  border: none;
+  border-radius: 8px;
+  margin-top: 8px;
+  width: 90%;
 }
 .form_groupimage {
   display: flex;
@@ -544,7 +574,7 @@ textarea {
   font-size: 14px;
   line-height: 20.3px;
   text-align: left;
-  color: var(--partially-transparent-black);
+  color: var(--dark-purple-80);
 }
 .scroll-property {
   margin-top: 13px;
@@ -594,14 +624,21 @@ textarea {
   flex-direction: column;
   margin-top: 15px;
 }
-.label-company {
-  color: var(--deepPurple);
-
+.label-company,
+.label-profile {
   font-size: 14px;
-
   line-height: 20.3px;
   text-align: left;
 }
+
+.label-company {
+  color: var(--deepPurple);
+}
+
+.label-profile {
+  color: var(--purple-shadow);
+}
+
 .padding-company {
   padding: 55px 90px 90px 119px !important;
 }
@@ -661,7 +698,7 @@ textarea {
 }
 .profile-file-button {
   background-color: transparent;
-  border: 2px solid var(--grayish-blue);
+  border: 2px solid var(--text-color);
   border-radius: 50%;
   width: 64px;
   height: 64px;
@@ -1027,7 +1064,7 @@ textarea {
   line-height: 24px;
   text-align: left;
   color: var(--text-black);
-
+  border: none;
   border-radius: 8px;
   padding: 12px 16px 12px 16px;
   background: var(--text-color);
@@ -1274,14 +1311,14 @@ textarea {
   border-radius: 24px;
   background: var(--light-lavender);
   border: none;
-  padding: 16px;
+  padding: 24px 16px;
   display: flex;
   flex-direction: column;
 }
 
 .sub_category {
   width: 310px;
-  background-color: var(--Semi-Transparent-Sage);
+  background-color: var(--text-color);
   padding: 26px 16px;
   border: none;
   border-radius: 26px;
@@ -1300,22 +1337,22 @@ textarea {
 }
 
 .content-tabs {
-  background-color: var(--Semi-Transparent-Sage);
+  background-color: var(--pastel-lavender);
   border-radius: 16px;
   border: none;
   width: 100%;
-  padding: 0 43px;
+  padding: 0 38px;
 }
 .content-tab {
   border: none;
   background: transparent;
-  color: var(--Charcoal-Mist);
+  color: var(--deepPurple);
   font-size: 17px;
   line-height: 20.57px;
   letter-spacing: -0.03em;
   text-align: left;
   position: relative;
-  padding: 10px 20px;
+  padding: 10px 5px;
   cursor: pointer;
 }
 
