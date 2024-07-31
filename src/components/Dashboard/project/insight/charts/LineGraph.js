@@ -158,6 +158,10 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
       show: true,
       position: "top",
       horizontalAlign: "left",
+      labels: {
+        colors: "#1A072CCC",
+        useSeriesColors: false,
+      },
       markers: {
         width: 10,
         height: 10,
