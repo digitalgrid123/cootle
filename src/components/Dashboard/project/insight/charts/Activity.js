@@ -113,7 +113,7 @@ const Activity = ({ activities }) => {
                 </h1>
 
                 <ul
-                  className="p-0 d-flex gap-2 align-items-center flex-wrap"
+                  className="p-0 d-flex gap-2 align-items-center flex-wrap mb-0"
                   style={{ listStyle: "none" }}
                 >
                   {activity.objectives &&
