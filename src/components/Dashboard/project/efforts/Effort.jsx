@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams } from "next/navigation";
 import { useAuth, useToaster } from "@/hooks";
 
@@ -76,6 +76,26 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   const [link, setLink] = useState("");
 
   const [links, setLinks] = useState([]);
+
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   useEffect(() => {
     const fetchUserinfo = async () => {
@@ -837,7 +857,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                   <h1 className="timeline-text">Lifetime</h1>
                 </div>
                 {isDropdownOpen && (
-                  <ul className="timeline-dropdown">
+                  <ul className="timeline-dropdown" ref={dropdownRef}>
                     <li
                       onClick={() => handleOptionClick("Monthly")}
                       className={selectedOption === "Monthly" ? "active" : ""}

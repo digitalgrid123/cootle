@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams } from "next/navigation";
 import { useAuth, useToaster } from "@/hooks";
 
@@ -60,6 +60,25 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
 
   const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
   const [user, setUser] = useState(null);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   const fetchUserinfo = async () => {
     const res = await userinfo();
@@ -637,7 +656,7 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                 <h1 className="timeline-text">Lifetime</h1>
               </div>
               {isDropdownOpen && (
-                <ul className="timeline-dropdown">
+                <ul className="timeline-dropdown" ref={dropdownRef}>
                   <li
                     onClick={() => handleOptionClick("Monthly")}
                     className={selectedOption === "Monthly" ? "active" : ""}

@@ -1978,7 +1978,7 @@ textarea {
 
 .timeline-dropdown li {
   padding: 8px 16px;
-  color: #000000cc;
+  color: var(--deepPurple);
   font-size: 16px;
   font-weight: 500;
   line-height: 16px;
@@ -1989,7 +1989,7 @@ textarea {
 
 .timeline-dropdown li:hover,
 .timeline-dropdown li.active {
-  background-color: #e0dfe3 !important;
+  background-color: var(--soft-lavender) !important;
   border-radius: 8px !important;
 }
 
@@ -2049,7 +2049,7 @@ textarea {
   line-height: 14.52px;
   letter-spacing: -0.03em;
   text-align: right;
-  color: #000000;
+  color: var(--deepPurple);
 }
 .question-mark {
   font-size: 18px !important;
@@ -2113,21 +2113,21 @@ textarea {
   height: 39px;
 } */
 
-.category-text {
+.main-insight-text {
   font-size: 18px;
-  font-weight: 500;
-  line-height: 18px;
+  font-weight: 600;
+  line-height: 21.78px;
   letter-spacing: -0.03em;
   text-align: left;
-  color: #000000cc;
+  color: var(--deepPurple);
 }
 .effort-complete {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   line-height: 16px;
   letter-spacing: -0.03em;
   text-align: left;
-  color: #000000cc;
+  color: var(--deepPurple);
 }
 
 .count-text {
@@ -2136,7 +2136,7 @@ textarea {
   line-height: 32px;
   letter-spacing: -0.03em;
   text-align: left;
-  color: #000000cc;
+  color: var(--deepPurple);
 }
 .effort-count-container {
   height: 100%;
@@ -2144,6 +2144,7 @@ textarea {
   border-radius: 24px;
   background-color: var(--text-color);
   padding: 16px;
+  border: 1px solid var(--pastel-lavender);
 }
 .Design_effort_text {
   font-size: 24px;
@@ -2155,16 +2156,16 @@ textarea {
 }
 
 .value-text {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
-  line-height: 21.78px;
+  line-height: 19.78px;
   letter-spacing: -0.03em;
   text-align: left;
-  color: #000000cc;
+  color: var(--deepPurple);
 }
 
 .bar-label {
-  color: #000000cc;
+  color: var(--deepPurple);
 
   font-size: 16px;
   font-weight: 500;
@@ -2242,7 +2243,7 @@ textarea {
 }
 
 .objective-text {
-  color: #000000cc;
+  color: var(--deepPurple);
   font-size: 16px;
   font-weight: 400;
   line-height: 19.36px;
@@ -2255,7 +2256,7 @@ textarea {
   line-height: 16.94px;
   letter-spacing: -0.03em;
   text-align: left;
-  color: #000000cc;
+  color: var(--deepPurple);
 }
 .checked-insight-status {
   font-size: 14px;
@@ -2265,7 +2266,7 @@ textarea {
   color: #ffffff;
 }
 .insight-sidebar {
-  background-color: #eeecf2;
+  background-color: var(--light-lavender);
   padding: 16px;
   border: none;
   border-radius: 24px;

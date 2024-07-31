@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams } from "next/navigation";
 import BarChart from "./charts/BarChart";
 import { useAuth } from "@/hooks";
@@ -72,6 +72,25 @@ const Insight = () => {
   const [lifetime, setLifetime] = useState(false);
 
   const project_id = params.id;
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   // Function to fetch effort data
   const fetchEffortData = async () => {
@@ -424,8 +443,8 @@ const Insight = () => {
       <div className="wrapper-company w-100 d-flex flex-column">
         <div className="insight-sidebar w-100 d-flex flex-column gap-4">
           <div className="row">
-            <div className="d-flex align-items-center justify-content-between mb-16">
-              <h1 className="page-title-heading weight-700">
+            <div className="d-flex align-items-center justify-content-between mb-20 ">
+              <h1 className="main-insight-text">
                 Value proportion analysis
                 <span className="tm-symbol">™</span>
               </h1>
@@ -456,7 +475,7 @@ const Insight = () => {
         <div className="insight-sidebar w-100 d-flex flex-column gap-4">
           <div className="row">
             <div className="col-lg-12">
-              <h1 className="page-title-heading weight-700 mb-16">
+              <h1 className="main-insight-text mb-20 ">
                 Design efforts focused Ratio
               </h1>
             </div>
@@ -467,7 +486,7 @@ const Insight = () => {
                   ([category, count], index) => (
                     <div key={index} className="col-lg-6 mb-24">
                       <div className="effort-count-container">
-                        <h3 className="category-text mb-24">{category}</h3>
+                        <h3 className="value-text mb-24">{category}</h3>
                         <div className="d-flex align-items-start justify-content-between">
                           <div className="d-flex flex-column gap-1">
                             <h2 className="effort-complete">Efforts done</h2>
@@ -495,7 +514,7 @@ const Insight = () => {
         <div className="insight-sidebar w-100 d-flex flex-column gap-4">
           <div className="row">
             <div className="col-lg-12">
-              <h1 className="page-title-heading weight-700 mb-16">
+              <h1 className="main-insight-text mb-20 ">
                 Business objectives proportion analysis
                 <span className="tm-symbol">™</span>
               </h1>
@@ -521,7 +540,7 @@ const Insight = () => {
         </div>
       </div>
       <div className="wrapper-company h-100">
-        <div className="company-sidebar bg-grey-light  w-100 d-flex flex-column gap-4 h-100">
+        <div className="company-sidebar  w-100 d-flex flex-column gap-4 h-100">
           <div className="filter-container">
             <div className="d-flex align-items-center flex-column border_bottom_faint pb-24 ">
               <div
@@ -543,7 +562,7 @@ const Insight = () => {
                 <h1 className="timeline-text">Lifetime</h1>
               </div>
               {isDropdownOpen && (
-                <ul className="timeline-dropdown">
+                <ul className="timeline-dropdown" ref={dropdownRef}>
                   <li
                     onClick={() => handleOptionClick("Monthly")}
                     className={selectedOption === "Monthly" ? "active" : ""}
