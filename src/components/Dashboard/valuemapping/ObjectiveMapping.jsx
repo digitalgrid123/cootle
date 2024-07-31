@@ -299,7 +299,7 @@ const ObjectiveMapping = ({
       <div className="wrapper-company">
         <div className="company-sidebar">
           <div className="d-flex align-items-center w-100 justify-content-between">
-            <h1 className="company-setup-heading weight-600">Objectives</h1>
+            <h1 className="mapping-category-heading">Objectives</h1>
             {isAdmin && (
               <div className="cursor-pointer" onClick={toggleDropdown}>
                 <img

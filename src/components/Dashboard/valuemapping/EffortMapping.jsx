@@ -292,10 +292,10 @@ const EffortMapping = ({
           <h1 className="main-setup-heading weight-600 mb-20">
             {activeCategory ? activeCategory.name : ""}
           </h1>
-          <div className="d-flex gap-2" style={{ flex: "1 1 0" }}>
+          <div className="d-flex gap-3" style={{ flex: "1 1 0" }}>
             <div className="sub_category">
               <div className="d-flex align-items-center w-100 justify-content-between mb-20">
-                <h1 className="company-setup-heading weight-600">Efforts</h1>
+                <h1 className="mapping-category-heading">Efforts</h1>
                 {isAdmin && (
                   <div
                     className="cursor-pointer"

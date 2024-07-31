@@ -330,8 +330,10 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                   activeDates.has(`${year}-${month}`) && (
                     <li
                       key={`${year}-${month}-${index}`}
-                      className={`cursor-pointer ${isActive(year, month)} ${
-                        index === months.length - 1 ? "last-item" : ""
+                      className={`cursor-pointer  ${isActive(year, month)} ${
+                        index === months.length - 1
+                          ? "last-item active-tab"
+                          : ""
                       }`}
                       onClick={() => handleDateClick(year, month)}
                     >
@@ -347,8 +349,8 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                   activeDates.has(`${year}-${week}`) && (
                     <li
                       key={`${year}-${week}-${index}`}
-                      className={`cursor-pointer ${isActive(year, week)} ${
-                        index === weeks.length - 1 ? "last-item" : ""
+                      className={`cursor-pointer  ${isActive(year, week)} ${
+                        index === weeks.length - 1 ? "last-item active-tab" : ""
                       }`}
                       onClick={() => handleDateClick(year, week)}
                     >
@@ -364,8 +366,8 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                   activeDates.has(`${year}-${quarter}`) && (
                     <li
                       key={`${year}-${quarter}-${index}`}
-                      className={`cursor-pointer ${isActive(year, quarter)} ${
-                        index === quarters.length - 1 ? "last-item" : ""
+                      className={`cursor-pointer   ${isActive(year, quarter)} ${
+                        index === quarters.length - 1 ? "last-item " : ""
                       }`}
                       onClick={() => handleDateClick(year, quarter)}
                     >
@@ -375,8 +377,10 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                   )
               )}
 
-            {/* Render faint bottom border after each year */}
-            <div className="border_bottom_faint w-100" key={`border-${year}`} />
+            <div
+              className="border_bottom_soft-lavender w-100"
+              key={`border-${year}`}
+            />
           </React.Fragment>
         ))}
       </ul>
@@ -473,19 +477,27 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                 />
               ) : (
                 <div key={purpose.id} className="section-project">
-                  <div className="pb-24 d-flex align-items-center justify-content-between w-100 border-bottom-grey">
-                    <div className="d-flex align-items-center gap-4">
-                      <h1 className="create-id">{`#pur${
-                        purpose?.local_id < 10
-                          ? `00${purpose?.local_id}`
-                          : purpose?.local_id < 100
-                          ? `0${purpose?.local_id}`
-                          : purpose?.local_id
-                      }`}</h1>
-                      <h1 className="create-id">#{purpose?.title}</h1>
+                  <div className="pb-24 d-flex align-items-center justify-content-between w-100 border_bottom_pastel">
+                    <div className="d-flex align-items-center gap-3">
+                      <h1 className="create-id">
+                        <span className="f-14">#pur</span>
+                        {`${
+                          purpose?.local_id < 10
+                            ? `00${purpose?.local_id}`
+                            : purpose?.local_id < 100
+                            ? `0${purpose?.local_id}`
+                            : purpose?.local_id
+                        }`}
+                      </h1>
+
+                      <h1 className="create-id">
+                        <span className="f-14">#</span>
+                        {purpose?.title}
+                      </h1>
                     </div>
-                    <div className="d-flex align-items-center gap-2">
+                    <div className="d-flex align-items-center gap-3">
                       <div className="d-flex align-items-center gap-2">
+                        <h2 className="create-name weight-500">Created by:</h2>
                         {userdetail.some((user) => user.id === purpose.user) ? (
                           <>
                             <div className="create_profile">
@@ -536,43 +548,63 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                       )}
                     </div>
                   </div>
-                  <div className="d-flex align-items-center gap-4 pb-24 border-bottom-grey pt-24">
-                    <h2 className="selectedone weight-500">Problem summary:</h2>
-                    <p className="selectedone m-0">{purpose.description}</p>
+                  <div className="d-flex align-items-center  pb-24 border_bottom_pastel pt-24">
+                    <div className="col-lg-2">
+                      <h2 className="selectedone weight-500">
+                        Problem summary:
+                      </h2>
+                    </div>
+                    <div className="col-lg-10">
+                      <p className="selectedone m-0">{purpose.description}</p>
+                    </div>
                   </div>
-                  <div className="d-flex align-items-center gap-4 pb-24 border-bottom-grey pt-24">
-                    <h2 className="selectedone weight-500">
-                      Desired outcomes:
-                    </h2>
-                    {purpose?.desired_outcomes.map((effortId) => {
-                      const matchingObjective = objectives.find(
-                        (obj) => obj.id === effortId
-                      );
-                      return (
-                        <li key={effortId} className="p-0 selectedone">
-                          <span className="dot black"></span>
-                          {matchingObjective?.title}
-                        </li>
-                      );
-                    })}
+                  <div className="d-flex align-items-center  pb-24 border_bottom_pastel pt-24">
+                    <div className="col-lg-2">
+                      <h2 className="selectedone weight-500">
+                        Desired outcomes:
+                      </h2>
+                    </div>
+                    <div className="col-lg-10">
+                      <div className="d-flex align-items-center gap-3 flex-wrap">
+                        {purpose?.desired_outcomes.map((effortId) => {
+                          const matchingObjective = objectives.find(
+                            (obj) => obj.id === effortId
+                          );
+                          return (
+                            <li key={effortId} className="p-0 selectedone">
+                              <span className="dot black"></span>
+                              {matchingObjective?.title}
+                            </li>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
-                  <div className="d-flex align-items-center gap-4 pb-24 pt-24">
-                    <h2 className="selectedone weight-500">Design efforts:</h2>
-                    {purpose.design_efforts.map((effortId) => (
-                      <li key={effortId} className="p-0 selectedone">
-                        <span className="dot black"></span>
-                        {design
-                          .flatMap((obj) => obj.items)
-                          .map((effort) => {
-                            if (effort && effort.id === effortId) {
-                              return (
-                                <span key={effort.id}>{effort.title}</span>
-                              );
-                            }
-                            return null;
-                          })}
-                      </li>
-                    ))}
+                  <div className="d-flex align-items-center pb-24 pt-24">
+                    <div className="col-lg-2">
+                      <h2 className="selectedone weight-500">
+                        Design efforts:
+                      </h2>
+                    </div>
+                    <div className="col-lg-10">
+                      <div className="d-flex align-items-center gap-3 flex-wrap">
+                        {purpose.design_efforts.map((effortId) => (
+                          <li key={effortId} className="p-0 selectedone">
+                            <span className="dot black"></span>
+                            {design
+                              .flatMap((obj) => obj.items)
+                              .map((effort) => {
+                                if (effort && effort.id === effortId) {
+                                  return (
+                                    <span key={effort.id}>{effort.title}</span>
+                                  );
+                                }
+                                return null;
+                              })}
+                          </li>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )
@@ -585,7 +617,7 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
       <div className="wrapper-company">
         <div className="company-sidebar w-100 d-flex flex-column gap-4">
           <div className="filter-container">
-            <div className="d-flex align-items-center flex-column border_bottom_faint pb-24 ">
+            <div className="d-flex align-items-center flex-column border_bottom_soft-lavender pb-24 ">
               <div
                 className="d-flex align-items-center gap-1 justify-content-center cursor-pointer mb-24"
                 onClick={toggleDropdown}

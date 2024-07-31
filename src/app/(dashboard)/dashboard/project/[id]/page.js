@@ -68,10 +68,14 @@ const Page = () => {
     if (selectedMapping === "purpose") {
       return (
         <div
-          className="relative d-flex align-items-center gap-3 cursor-pointer"
+          className="relative d-flex align-items-center gap-1 cursor-pointer hover-effect"
           onClick={handleToggleNewPurpose}
         >
-          <img src="/assets/images/mark/second-plus.svg" alt="plus-icon" />
+          <img
+            src="/assets/images/mark/plus_16px.svg"
+            alt="plus-icon"
+            className="hover-image"
+          />
           <h2 className="add-purpose">New purpose</h2>
         </div>
       );
@@ -80,10 +84,14 @@ const Page = () => {
     if (selectedMapping === "efforts") {
       return (
         <div
-          className="relative d-flex align-items-center gap-3 cursor-pointer"
+          className="relative d-flex align-items-center gap-3 cursor-pointer hover-effect"
           onClick={handleToggleNewEffort}
         >
-          <img src="/assets/images/mark/second-plus.svg" alt="plus-icon" />
+          <img
+            src="/assets/images/mark/plus_16px.svg"
+            alt="plus-icon"
+            className="hover-image"
+          />
           <h2 className="add-purpose">New effort</h2>
         </div>
       );
@@ -111,7 +119,7 @@ const Header = ({
   setSelectedMapping,
   renderAdminButton,
 }) => (
-  <div className="d-flex align-items-center justify-content-between mb-3">
+  <div className="d-flex align-items-center justify-content-between mb-3 title-content-container custom-padding-purpose">
     <Title title={title} />
     <div className="button-group">
       {["purpose", "efforts", "insight"].map((mapping) => (
