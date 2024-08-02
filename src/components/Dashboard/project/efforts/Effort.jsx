@@ -11,26 +11,14 @@ import SingleProjectDesignEffort from "@/components/shared/model/SingleProjectDe
 import PurposeList from "@/components/shared/model/PurposeList";
 import EditEffortSection from "./EditEffortSection";
 import DropdownCheckedlist from "./Dropdown/DropdownCheckedlist";
-
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-// Generate weeks dynamically
-const weeks = Array.from({ length: 52 }, (_, i) => `Week ${i + 1}`);
-
-const quarters = ["Q1", "Q2", "Q3", "Q4"];
+import SidebarTimelineComponent from "@/components/shared/SidebarTimelineComponent";
+import {
+  months,
+  weeks,
+  quarters,
+  getCurrentDate,
+  getCurrentQuarter,
+} from "@/utils/timeConstants";
 
 const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   const {
@@ -76,26 +64,6 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   const [link, setLink] = useState("");
 
   const [links, setLinks] = useState([]);
-
-  const dropdownRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    if (isDropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isDropdownOpen]);
 
   useEffect(() => {
     const fetchUserinfo = async () => {
@@ -258,14 +226,6 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
     return `#eff${paddedNumber}`;
   };
 
-  const getCurrentDate = () => {
-    const date = new Date();
-    const formattedDate = `${
-      date.getMonth() + 1
-    }/${date.getDate()}/${date.getFullYear()}`;
-    return formattedDate;
-  };
-
   const handleSaveEffort = async () => {
     try {
       // Transforming links array to match the desired structure
@@ -319,7 +279,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
     switch (status) {
       case "YBC":
         return {
-          backgroundColor: "#000000CC",
+          backgroundColor: "#483956",
           color: "white",
           padding: "12px 16px",
           borderRadius: "8px",
@@ -333,14 +293,14 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
         };
       case "UPA":
         return {
-          backgroundColor: "#E0DFE3",
-          color: "black",
+          backgroundColor: "#723D46",
+          color: "white",
           padding: "12px 16px",
           borderRadius: "8px",
         };
       case "REA":
         return {
-          backgroundColor: "#0ACF83",
+          backgroundColor: "#128E5E",
           color: "white",
           padding: "12px 16px",
           borderRadius: "8px",
@@ -494,26 +454,14 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
               )}
 
             {/* Render faint bottom border after each year */}
-            <div className="border_bottom_faint w-100" key={`border-${year}`} />
+            <div
+              className="border_bottom_soft-lavender w-100"
+              key={`border-${year}`}
+            />
           </React.Fragment>
         ))}
       </ul>
     );
-  };
-
-  const getCurrentQuarter = () => {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    if (month >= 1 && month <= 3) {
-      return `${year}-Q1`;
-    } else if (month >= 4 && month <= 6) {
-      return `${year}-Q2`;
-    } else if (month >= 7 && month <= 9) {
-      return `${year}-Q3`;
-    } else {
-      return `${year}-Q4`;
-    }
   };
 
   useEffect(() => {
@@ -559,7 +507,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
       <div className="d-flex flex-row gap-3 h-100  justify-content-between">
         <div className="wrapper-company w-100">
           <div className="company-sidebar w-100 d-flex flex-column gap-4 ">
-            <div className="row">
+            <div className="effort-list">
               <NewEffortSection
                 onToggleNewEffort={onToggleNewEffort}
                 showNewEffortInput={showNewEffortInput}
@@ -607,11 +555,11 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                       }
                     </>
                   ) : (
-                    <div key={effort.id} className="col-lg-6">
+                    <div key={effort.id}>
                       <div className="section-project mb-24">
-                        <div className="pb-24 d-flex align-items-center justify-content-between w-100 border-bottom-grey">
+                        <div className="pb-26 d-flex align-items-center justify-content-between w-100 border_bottom_lavender-blush">
                           <div className="d-flex align-items-center justify-content-between w-100">
-                            <h1 className="create-id">{`#eff${
+                            <h1 className="create-id f-16">{`#eff${
                               effort?.local_id < 10
                                 ? `00${effort?.local_id}`
                                 : effort?.local_id < 100
@@ -637,174 +585,130 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                                     onClick={() => handleEditClick(effort)}
                                   >
                                     <img
+                                      className="edit-image"
                                       src="/assets/images/mark/edit.svg"
-                                      alt=""
+                                      alt="edit-con"
                                     />
                                   </button>
                                 )}
                             </div>
                           </div>
                         </div>
-                        <div className="pb-24 d-flex gap-2  justify-content-between flex-column w-100 border-bottom-grey pt-24">
-                          <div className="d-flex align-items-center gap-4">
-                            <h2 className="create-name weight-500">By:</h2>
-                            <div className="d-flex align-items-center gap-1">
-                              {(() => {
-                                // Find user in userdetail
-                                const user = userdetail.find(
-                                  (user) => user.id === effort.user
-                                );
 
-                                // If user is not found in userdetail, check memberlistdata
-                                const userInMemberList = user
-                                  ? user
-                                  : memberlist.find(
-                                      (member) => member.id === effort.user
-                                    );
-
-                                if (userInMemberList) {
-                                  return (
-                                    <>
-                                      <div className="create_profile">
-                                        <img
-                                          src={
-                                            userInMemberList.profile_pic
-                                              ? userInMemberList.profile_pic
-                                              : "/assets/images/mark/profile.png"
-                                          }
-                                          alt="profile"
-                                          style={{
-                                            position: "absolute",
-                                            top: "0",
-                                            objectFit: "cover",
-                                            height: "100%",
-                                            width: "100%",
-                                          }}
-                                        />
-                                      </div>
-                                      <h2 className="create-name">
-                                        {userInMemberList.fullname}
-                                      </h2>
-                                    </>
-                                  );
-                                } else {
-                                  return <></>;
-                                }
-                              })()}
-                            </div>
-                          </div>
-                          <div className="d-flex align-items-center gap-4">
-                            <h1 className="select-outcome-text">Type:</h1>
-                            {effort.design_effort && (
-                              <li
-                                key={effort.design_effort}
-                                className="p-0 selectedone"
-                              >
-                                <span className="dot black"></span>
-                                {design
-                                  .flatMap((category) => category.items)
-                                  .find(
-                                    (obj) => obj.id === effort.design_effort
-                                  )?.title || ""}
-                              </li>
-                            )}
-                          </div>
-                          <div className="d-flex align-items-center gap-4">
-                            <h1 className="select-outcome-text">Outcome:</h1>
-                            {effort.outcomes &&
-                              effort.outcomes.map((outcomeId) => (
-                                <li key={outcomeId} className="p-0 selectedone">
-                                  <span className="dot black"></span>
-                                  {objectives.find(
-                                    (obj) => obj.id === outcomeId
-                                  )?.title || ""}
-                                </li>
-                              ))}
-                          </div>
-                        </div>
-                        <div className="pb-24 d-flex gap-2  justify-content-between flex-column w-100 border-bottom-grey pt-24 pb-32">
-                          <div className="d-flex align-items-center gap-4">
-                            <h1 className="select-outcome-text">Purpose:</h1>
-                            {effort.purpose && (
-                              <li
-                                key={effort.purpose}
-                                className="p-0 selectedone"
-                              >
-                                <span className="dot black"></span>
-                                {purposeListData?.find(
-                                  (obj) => obj.id === effort.purpose
-                                )?.title || ""}
-                              </li>
-                            )}
-                          </div>
-
-                          <div className="d-flex align-items-center gap-4">
-                            <h1 className="select-outcome-text">
-                              Value status:
-                            </h1>
-                            <DropdownCheckedlist
-                              effort={effort}
-                              getStatusImage={getStatusImage}
-                              getStatusStyles={getStatusStyles}
-                              isAdmin={isAdmin}
-                              user={user}
-                              fetchEffortData={fetchEffortData}
-                            />
-                          </div>
-
-                          <div className="d-flex align-items-center gap-4">
-                            <h1 className="select-outcome-text">Checked By:</h1>
-
+                        <div className="d-flex align-items-center gap-2 border_bottom_lavender-blush pt-18 pb-18">
+                          <h2 className="create-name weight-500">
+                            Effort created by:
+                          </h2>
+                          <div className="d-flex align-items-center gap-1">
                             {(() => {
-                              // Try to find checked member in userdetail
-                              let checkedMember = userdetail?.find(
-                                (member) => member.id === effort.checked_by
+                              // Find user in userdetail
+                              const user = userdetail.find(
+                                (user) => user.id === effort.user
                               );
 
-                              // If not found in userdetail, try memberlist
-                              if (!checkedMember) {
-                                checkedMember = memberlist?.find(
-                                  (member) => member.id === effort.checked_by
-                                );
-                              }
+                              // If user is not found in userdetail, check memberlistdata
+                              const userInMemberList = user
+                                ? user
+                                : memberlist.find(
+                                    (member) => member.id === effort.user
+                                  );
 
-                              // Render checked member or placeholder if not found
-                              if (checkedMember) {
+                              if (userInMemberList) {
                                 return (
-                                  <div className="checkedby-container d-flex align-items-center gap-1">
-                                    <div className="checkby-image relative">
+                                  <>
+                                    <div className="create_profile">
                                       <img
                                         src={
-                                          checkedMember.profile_pic
-                                            ? checkedMember.profile_pic
+                                          userInMemberList.profile_pic
+                                            ? userInMemberList.profile_pic
                                             : "/assets/images/mark/profile.png"
                                         }
-                                        alt={checkedMember.fullname}
+                                        alt="profile"
                                         style={{
                                           position: "absolute",
                                           top: "0",
-                                          borderRadius: "50%",
                                           objectFit: "cover",
                                           height: "100%",
+                                          width: "100%",
                                         }}
                                       />
                                     </div>
-                                    <h2 className="checkby-name">
-                                      <span>{checkedMember.fullname}</span>
+                                    <h2 className="create-name">
+                                      {userInMemberList.fullname}
                                     </h2>
-                                  </div>
+                                  </>
                                 );
                               } else {
-                                // If neither found, render placeholder
-                                return <div className="no-checked"></div>;
+                                return <></>;
                               }
                             })()}
                           </div>
                         </div>
-
-                        <div className="pb-24 d-flex gap-2  justify-content-between flex-column w-100 border-bottom-grey pt-24 pb-32">
-                          <div className="d-flex align-items-center gap-4">
-                            <h1 className="select-outcome-text">Links:</h1>
+                        <div className="d-flex gap-2  justify-content-between flex-column w-100 border_bottom_lavender-blush pt-18 pb-18">
+                          <div className="d-flex align-items-start gap-4 mb-24">
+                            <div className="col-lg-2">
+                              <h1 className="select-outcome-text">
+                                Effort type:
+                              </h1>
+                            </div>
+                            <div className="col-lg-10">
+                              {effort.design_effort && (
+                                <li
+                                  key={effort.design_effort}
+                                  className="p-0 selectedone"
+                                >
+                                  <span className="dot black"></span>
+                                  {design
+                                    .flatMap((category) => category.items)
+                                    .find(
+                                      (obj) => obj.id === effort.design_effort
+                                    )?.title || ""}
+                                </li>
+                              )}
+                            </div>
+                          </div>
+                          <div className="d-flex align-items-start gap-4 mb-24">
+                            <div className="col-lg-2">
+                              <h1 className="select-outcome-text">Outcome:</h1>
+                            </div>
+                            <div className="col-lg-10">
+                              {effort.outcomes &&
+                                effort.outcomes.map((outcomeId) => (
+                                  <li
+                                    key={outcomeId}
+                                    className="p-0 selectedone"
+                                  >
+                                    <span className="dot black"></span>
+                                    {objectives.find(
+                                      (obj) => obj.id === outcomeId
+                                    )?.title || ""}
+                                  </li>
+                                ))}
+                            </div>
+                          </div>
+                          <div className="d-flex align-items-start gap-4 mb-24">
+                            <div className="col-lg-2">
+                              <h1 className="select-outcome-text">Purpose:</h1>
+                            </div>
+                            <div className="col-lg-10">
+                              {effort.purpose && (
+                                <li
+                                  key={effort.purpose}
+                                  className="p-0 selectedone"
+                                >
+                                  <span className="dot black"></span>
+                                  {purposeListData?.find(
+                                    (obj) => obj.id === effort.purpose
+                                  )?.title || ""}
+                                </li>
+                              )}
+                            </div>
+                          </div>
+                          <div className="d-flex align-items-start gap-4">
+                            <div className="col-lg-2">
+                              <h1 className="select-outcome-text">Links:</h1>
+                            </div>
+                            <div className="col-lg-10"></div>
                             {effort.links && effort.links.length > 0 ? (
                               effort.links.map((linkObj, index) => (
                                 <li
@@ -827,6 +731,85 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                             )}
                           </div>
                         </div>
+                        <div className=" d-flex gap-2  justify-content-between flex-column w-100  pt-18">
+                          <div className="d-flex align-items-center gap-2 mb-24">
+                            <h1 className="select-outcome-text">
+                              Value status:
+                            </h1>
+                            <DropdownCheckedlist
+                              effort={effort}
+                              getStatusImage={getStatusImage}
+                              getStatusStyles={getStatusStyles}
+                              isAdmin={isAdmin}
+                              user={user}
+                              fetchEffortData={fetchEffortData}
+                            />
+                          </div>
+                          <div className="d-flex align-items-center justify-content-between">
+                            <div className="d-flex align-items-center gap-2">
+                              <h1 className="select-outcome-text">
+                                Checked By:
+                              </h1>
+
+                              {(() => {
+                                // Try to find checked member in userdetail
+                                let checkedMember = userdetail?.find(
+                                  (member) => member.id === effort.checked_by
+                                );
+
+                                // If not found in userdetail, try memberlist
+                                if (!checkedMember) {
+                                  checkedMember = memberlist?.find(
+                                    (member) => member.id === effort.checked_by
+                                  );
+                                }
+
+                                // Render checked member or placeholder if not found
+                                if (checkedMember) {
+                                  return (
+                                    <div className="d-flex align-items-center gap-1">
+                                      <div className="checkby-image relative">
+                                        <img
+                                          src={
+                                            checkedMember.profile_pic
+                                              ? checkedMember.profile_pic
+                                              : "/assets/images/mark/profile.png"
+                                          }
+                                          alt={checkedMember.fullname}
+                                          style={{
+                                            position: "absolute",
+                                            top: "0",
+                                            borderRadius: "50%",
+                                            objectFit: "cover",
+                                            height: "100%",
+                                          }}
+                                        />
+                                      </div>
+                                      <h2 className="checkby-name">
+                                        <span>{checkedMember.fullname}</span>
+                                      </h2>
+                                    </div>
+                                  );
+                                } else {
+                                  return <></>;
+                                }
+                              })()}
+                            </div>
+
+                            <div className="d-flex align-items-center gap-2">
+                              <h2 className="create-name weight-500">On:</h2>
+                              {effort.checked_by ? (
+                                <h2 className="create-name">
+                                  {new Date(
+                                    effort.checked_at
+                                  ).toLocaleDateString()}
+                                </h2>
+                              ) : (
+                                <div className="space-effort-date "></div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )
@@ -834,55 +817,14 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
             </div>
           </div>
         </div>
-        <div className="wrapper-company">
-          <div className="company-sidebar w-100 d-flex flex-column gap-4">
-            <div className="filter-container">
-              <div className="d-flex align-items-center flex-column border_bottom_faint pb-24 ">
-                <div
-                  className="d-flex align-items-center gap-1 justify-content-center cursor-pointer mb-24"
-                  onClick={toggleDropdown}
-                >
-                  <h1 className="timeline-text">Timeline</h1>
-                  <img
-                    src="/assets/images/mark/dropdown-icon.svg"
-                    alt="dropdown-icon"
-                  />
-                </div>
-                <div
-                  onClick={() => handleOptionClick("Lifetime")}
-                  className={`cursor-pointer lifetime ${
-                    isLifetimeClicked ? "active" : ""
-                  }`}
-                >
-                  <h1 className="timeline-text">Lifetime</h1>
-                </div>
-                {isDropdownOpen && (
-                  <ul className="timeline-dropdown" ref={dropdownRef}>
-                    <li
-                      onClick={() => handleOptionClick("Monthly")}
-                      className={selectedOption === "Monthly" ? "active" : ""}
-                    >
-                      Monthly
-                    </li>
-                    <li
-                      onClick={() => handleOptionClick("Weekly")}
-                      className={selectedOption === "Weekly" ? "active" : ""}
-                    >
-                      Weekly
-                    </li>
-                    <li
-                      onClick={() => handleOptionClick("Quarterly")}
-                      className={selectedOption === "Quarterly" ? "active" : ""}
-                    >
-                      Quarterly
-                    </li>
-                  </ul>
-                )}
-              </div>
-              {renderDates()}
-            </div>
-          </div>
-        </div>
+        <SidebarTimelineComponent
+          isLifetimeClicked={isLifetimeClicked}
+          isDropdownOpen={isDropdownOpen}
+          selectedOption={selectedOption}
+          toggleDropdown={toggleDropdown}
+          handleOptionClick={handleOptionClick}
+          renderDates={renderDates}
+        />
       </div>
       <SingleProductOutcomesModel
         designdropdownOpen={designdropdownOpen}

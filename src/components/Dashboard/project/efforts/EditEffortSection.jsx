@@ -118,138 +118,131 @@ const EditEffortSection = ({
 
   return (
     <>
-      <div className="col-lg-6">
-        <div className="new-purpose-section w-100 mb-24">
-          <div className="new-purpose-create w-100">
-            <div className="mb-24 d-flex align-items-center justify-content-between w-100">
-              <h1 className="create-id">{`#eff${
-                effort?.local_id < 10
-                  ? `00${effort?.local_id}`
-                  : effort?.local_id < 100
-                  ? `0${effort?.local_id}`
-                  : effort?.local_id
-              }`}</h1>
+      <div className="new-effort-create  w-100 ">
+        <div className="pb-16 d-flex align-items-center border_bottom_lavender-blush justify-content-between w-100">
+          <h1 className="create-id f-16">{`#eff${
+            effort?.local_id < 10
+              ? `00${effort?.local_id}`
+              : effort?.local_id < 100
+              ? `0${effort?.local_id}`
+              : effort?.local_id
+          }`}</h1>
 
-              <div className="d-flex align-items-center gap-2">
-                <button
-                  className="delete-btn mr-12"
-                  onClick={handleDeleteClick}
-                >
-                  <img src="/assets/images/mark/delete.png" alt="delete-icon" />
-                </button>
-                <div className="d-flex align-items-center gap-2 border-left-faint pl-12">
-                  <button className="close_effort_btn" onClick={handleCancel}>
-                    <span>Cancel</span>
-                  </button>
-                  <button className="save_effort_btn" onClick={handleSaveClick}>
-                    <span>Save</span>
-                  </button>
-                </div>
-              </div>
+          <div className="d-flex align-items-center gap-2">
+            <button className="delete-btn mr-12" onClick={handleDeleteClick}>
+              <img src="/assets/images/mark/delete.png" alt="delete-icon" />
+            </button>
+            <div className="d-flex align-items-center gap-2 border-left-lavender-blush  pl-12">
+              <button className="close_effort_btn" onClick={handleCancel}>
+                <span>Cancel</span>
+              </button>
+              <button className="save_effort_btn" onClick={handleSaveClick}>
+                <span>Save</span>
+              </button>
             </div>
-            <div className="ptb-34 border-bottom-grey">
-              <div className="d-flex align-items-center gap-2 mb-24">
-                <h2 className="create-name weight-500">Created by:</h2>
-                <div className="d-flex align-items-center gap-1">
-                  <div className="create_profile">
-                    <img
-                      src={
-                        user.profile_pic
-                          ? user.profile_pic
-                          : "/assets/images/mark/profile.png"
-                      }
-                      alt="profile"
-                      style={{
-                        position: "absolute",
-                        top: "0",
-                        height: "100%",
-                        objectFit: "cover",
-                        width: "100%",
-                      }}
-                    />
-                  </div>
-                  <h2 className="create-name">{user.fullname}</h2>
-                </div>
-              </div>
-              <div className="d-flex align-items-center mb-20">
-                <div
-                  className="d-flex align-items-center  "
-                  style={{ gap: "50px" }}
-                >
-                  <h1 className="select-outcome-text">Type:</h1>
-                  <button
-                    className="add-project_btn "
-                    onClick={() => toggleDesignDropdown(true)}
-                  >
-                    <span className="add-text">add</span>
-                    <span>
-                      <img
-                        src="/assets/images/mark/addoutcomesbtn.svg"
-                        alt="add-btn"
-                      />
-                    </span>
-                  </button>
-                </div>
-                <ul className=" d-flex align-items-center ">
-                  {selectedDesignEfforts.map((value) => (
-                    <li key={value} className="p-0 selectedone">
+          </div>
+        </div>
+
+        <div className="d-flex align-items-center gap-2 pt-16 pb-16 border_bottom_lavender-blush">
+          <h2 className="create-name weight-500">By:</h2>
+          <div className="d-flex align-items-center gap-1">
+            <div className="create_profile">
+              <img
+                src={
+                  user.profile_pic
+                    ? user.profile_pic
+                    : "/assets/images/mark/profile.png"
+                }
+                alt="profile"
+                style={{
+                  position: "absolute",
+                  top: "0",
+                  height: "100%",
+                  objectFit: "cover",
+                  width: "100%",
+                }}
+              />
+            </div>
+            <h2 className="create-name">{user.fullname}</h2>
+          </div>
+        </div>
+
+        <div className="border_bottom_lavender-blush pt-16 pb-16 d-flex align-items-center gap-3">
+          <button
+            className="add-project_btn d-flex align-items-center "
+            onClick={() => toggleDesignDropdown(true)}
+          >
+            <img src="/assets/images/mark/addoutcomesbtn.svg" alt="add-btn" />
+
+            <span className="add-text">Effort type</span>
+          </button>
+          <button
+            className="add-project_btn d-flex align-items-center"
+            onClick={() => toggledesigndropdown(true)}
+          >
+            <img src="/assets/images/mark/addoutcomesbtn.svg" alt="add-btn" />
+
+            <span className="add-text">Outcome</span>
+          </button>
+          <button
+            className="add-project_btn d-flex align-items-center"
+            onClick={() => togglePurposeDropdown(true)}
+          >
+            <img src="/assets/images/mark/addoutcomesbtn.svg" alt="add-btn" />
+
+            <span className="add-text">Purpose</span>
+          </button>
+          <button
+            className="add-project_btn d-flex align-items-center"
+            onClick={tooglelinkmodel}
+          >
+            <img src="/assets/images/mark/addoutcomesbtn.svg" alt="add-btn" />
+
+            <span className="add-text">Links</span>
+          </button>
+        </div>
+        <div className="pt-16">
+          <div className="d-flex align-items-center mb-24">
+            <div className="col-lg-2">
+              <h1 className="select-outcome-text">Effort type:</h1>
+            </div>
+            <div className="col-lg-10">
+              <ul className=" d-flex align-items-center m-0">
+                {selectedDesignEfforts.map((value) => (
+                  <li key={value} className="p-0 selectedone">
+                    <span className="dot black"></span>
+                    {design
+                      .flatMap((category) => category.items)
+                      .find((obj) => obj.id === value)?.title || ""}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="d-flex align-items-start mb-24">
+            <div className="col-lg-2">
+              <h1 className="select-outcome-text">Outcome:</h1>
+            </div>
+            <div className="col-lg-10">
+              <ul className=" d-flex align-items-center m-0">
+                {selectedProductOutcomes &&
+                  selectedProductOutcomes.map((outcomeId) => (
+                    <li key={outcomeId} className="p-0 selectedone">
                       <span className="dot black"></span>
-                      {design
-                        .flatMap((category) => category.items)
-                        .find((obj) => obj.id === value)?.title || ""}
+                      {objectives.find((obj) => obj.id === outcomeId)?.title ||
+                        ""}
                     </li>
                   ))}
-                </ul>
-              </div>
-              <div className="d-flex align-items-center">
-                <div
-                  className="d-flex align-items-center "
-                  style={{ gap: "20px" }}
-                >
-                  <h1 className="select-outcome-text">Outcome:</h1>
-                  <button
-                    className="add-project_btn"
-                    onClick={() => toggledesigndropdown(true)}
-                  >
-                    <span className="add-text">add</span>
-                    <span>
-                      <img
-                        src="/assets/images/mark/addoutcomesbtn.svg"
-                        alt="add-btn"
-                      />
-                    </span>
-                  </button>
-                </div>
-                <ul className="mt-20 d-flex align-items-center ">
-                  {selectedProductOutcomes &&
-                    selectedProductOutcomes.map((outcomeId) => (
-                      <li key={outcomeId} className="p-0 selectedone">
-                        <span className="dot black"></span>
-                        {objectives.find((obj) => obj.id === outcomeId)
-                          ?.title || ""}
-                      </li>
-                    ))}
-                </ul>
-              </div>
+              </ul>
             </div>
+          </div>
 
-            <div className="ptb-34 border-bottom-grey d-flex align-items-center">
-              <div className="d-flex align-items-center gap-4">
-                <h1 className="select-outcome-text">Purpose:</h1>
-                <button
-                  className="add-project_btn"
-                  onClick={() => togglePurposeDropdown(true)}
-                >
-                  <span className="add-text">add</span>
-                  <span>
-                    <img
-                      src="/assets/images/mark/addoutcomesbtn.svg"
-                      alt="add-btn"
-                    />
-                  </span>
-                </button>
-              </div>
-              <ul className="mt-20 d-flex align-items-center gap-4">
+          <div className="  d-flex align-items-start mb-24">
+            <div className="col-lg-2">
+              <h1 className="select-outcome-text">Purpose:</h1>
+            </div>
+            <div className="col-lg-10">
+              <ul className="d-flex align-items-center gap-4">
                 {selectedPurpose && (
                   <li key={selectedPurpose} className="p-0 selectedone">
                     <span className="dot black"></span>
@@ -259,27 +252,20 @@ const EditEffortSection = ({
                 )}
               </ul>
             </div>
-            <div className="mt-20 ">
-              <LinkModel
-                showLinkModel={showLinkModel}
-                link={link}
-                setLink={setLink}
-                addLink={addLink}
-                setShowLinkModel={setShowLinkModel}
-              />
-              <div className="d-flex align-items-center">
-                <div className="d-flex align-items-center gap-4 mt-20 ">
-                  <h1 className="select-outcome-text">Add link:</h1>
-                  <button className="add-project_btn" onClick={tooglelinkmodel}>
-                    <span className="add-text">link</span>
-                    <span>
-                      <img
-                        src="/assets/images/mark/addoutcomesbtn.svg"
-                        alt="add-btn"
-                      />
-                    </span>
-                  </button>
-                </div>
+          </div>
+          <div className="">
+            <LinkModel
+              showLinkModel={showLinkModel}
+              link={link}
+              setLink={setLink}
+              addLink={addLink}
+              setShowLinkModel={setShowLinkModel}
+            />
+            <div className="d-flex align-items-center">
+              <div className="col-lg-2">
+                <h1 className="select-outcome-text">Links:</h1>
+              </div>
+              <div className="col-lg-10">
                 <ul className="d-flex flex-wrap align-items-center m-0 gap-2 flex-wrap">
                   {selectedLinks?.map((link, index) => (
                     <div
@@ -308,6 +294,7 @@ const EditEffortSection = ({
           </div>
         </div>
       </div>
+
       <ProductOutcomesModel
         designdropdownOpen={designdropdownOpen}
         toggledesignDropdown={setDesigndropdownOpen}

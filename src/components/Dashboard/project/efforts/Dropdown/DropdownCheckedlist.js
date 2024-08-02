@@ -7,7 +7,7 @@ const statusDescriptions = {
   UCH: "Unchecked", // This will be filtered out from the dropdown options
   UPA: "Unplanned Activity",
   REA: "Value Realised",
-  VUR: "Unrealised",
+  VUR: "Value Unrealised",
 };
 
 const DropdownCheckedlist = ({

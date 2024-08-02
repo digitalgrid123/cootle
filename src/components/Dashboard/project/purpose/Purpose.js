@@ -7,28 +7,17 @@ import NewPurposeSection from "./NewPurposeSection";
 import EditPurposeSection from "./EditPurposeSection";
 import ProductOutcomesModel from "@/components/shared/model/ProductOutcomesModel";
 import ProjectDesignEffort from "@/components/shared/model/ProjectDesignEffort";
+import SidebarTimelineComponent from "@/components/shared/SidebarTimelineComponent";
+import {
+  months,
+  weeks,
+  quarters,
+  getCurrentQuarter,
+  getCurrentDate,
+} from "@/utils/timeConstants";
+import CombinedDropdown from "@/components/shared/model/CombinedDropdown";
 
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-// Generate weeks dynamically
-const weeks = Array.from({ length: 52 }, (_, i) => `Week ${i + 1}`);
-
-const quarters = ["Q1", "Q2", "Q3", "Q4"];
-
-const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
+const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
   const {
     purposelist,
     userinfo,
@@ -42,7 +31,7 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
   const params = useParams();
   const [lastIdNumber, setLastIdNumber] = useState(0);
   const [objectives, setObjectives] = useState([]);
-  const [designdropdownOpen, setDesigndropdownOpen] = useState(false);
+  const [productdropdownOpen, setProductdropdownOpen] = useState(false);
   const [designDropdownOpen, setDesignDropdownOpen] = useState(false);
   const [selectedProductOutcomes, setSelectedProductOutcomes] = useState([]);
 
@@ -60,26 +49,13 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
 
   const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
   const [user, setUser] = useState(null);
-  const dropdownRef = useRef(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [tab, setTab] = useState("");
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    if (isDropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isDropdownOpen]);
-
+ const handleButtonClick = (tabName) => {
+    setTab(tabName);
+    setDropdownOpen((prev) => !prev);
+  };
   const fetchUserinfo = async () => {
     const res = await userinfo();
 
@@ -209,14 +185,6 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
     return `#pur${paddedNumber}`;
   };
 
-  const getCurrentDate = () => {
-    const date = new Date();
-    const formattedDate = `${
-      date.getMonth() + 1
-    }/${date.getDate()}/${date.getFullYear()}`;
-    return formattedDate;
-  };
-
   const handleSavePurpose = async () => {
     try {
       const result = await createPurpose(
@@ -253,12 +221,14 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
     setPurposeToEdit(null);
   };
 
-  const toggledesigndropdown = (state) => {
-    setDesigndropdownOpen(state);
+  const toggleproductdropdown = (state) => {
+    setProductdropdownOpen(state);
+    setTab("outcomes");
   };
 
   const toggleDesignDropdown = (state) => {
     setDesignDropdownOpen(state);
+    setTab("design");
   };
 
   const toggleDropdown = () => {
@@ -406,21 +376,6 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
     );
   };
 
-  const getCurrentQuarter = () => {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    if (month >= 1 && month <= 3) {
-      return `${year}-Q1`;
-    } else if (month >= 4 && month <= 6) {
-      return `${year}-Q2`;
-    } else if (month >= 7 && month <= 9) {
-      return `${year}-Q3`;
-    } else {
-      return `${year}-Q4`;
-    }
-  };
-
   useEffect(() => {
     // Set selectedOptionItem to current quarter initially
     setSelectedOptionItem(getCurrentQuarter());
@@ -473,12 +428,13 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
             newPurposeDescription={newPurposeDescription}
             setNewPurposeDescription={setNewPurposeDescription}
             handleSavePurpose={handleSavePurpose}
-            toggledesigndropdown={toggledesigndropdown}
+            toggledesigndropdown={toggleproductdropdown}
             selectedProductOutcomes={selectedProductOutcomes}
             objectives={objectives}
             toggleDesignDropdown={toggleDesignDropdown}
             selectedDesignEfforts={selectedDesignEfforts}
             design={design}
+            handleButtonClick={handleButtonClick}
           />
           {filteredPurposes && filteredPurposes.length > 0 ? (
             filteredPurposes.reverse().map((purpose) =>
@@ -498,7 +454,7 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                 <div key={purpose.id} className="section-project">
                   <div className="pb-24 d-flex align-items-center justify-content-between w-100 border_bottom_pastel">
                     <div className="d-flex align-items-center gap-3">
-                      <h1 className="create-id">
+                      <h1 className="create-id f-18">
                         <span className="f-14">#pur</span>
                         {`${
                           purpose?.local_id < 10
@@ -509,7 +465,7 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                         }`}
                       </h1>
 
-                      <h1 className="create-id">
+                      <h1 className="create-id f-18">
                         <span className="f-14">#</span>
                         {purpose?.title}
                       </h1>
@@ -562,12 +518,16 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                           className="edit-button"
                           onClick={() => handleEditClick(purpose)}
                         >
-                          <img src="/assets/images/mark/edit.svg" alt="Edit" />
+                          <img
+                            src="/assets/images/mark/edit.svg"
+                            alt="Edit"
+                            className="edit-image"
+                          />
                         </button>
                       )}
                     </div>
                   </div>
-                  <div className="d-flex align-items-center  pb-24 border_bottom_pastel pt-24">
+                  <div className="d-flex align-items-start  pb-24 border_bottom_pastel pt-24">
                     <div className="col-lg-2">
                       <h2 className="selectedone weight-500">
                         Problem summary:
@@ -577,7 +537,7 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                       <p className="selectedone m-0">{purpose.description}</p>
                     </div>
                   </div>
-                  <div className="d-flex align-items-center  pb-24 border_bottom_pastel pt-24">
+                  <div className="d-flex align-items-start  pb-24 border_bottom_pastel pt-24">
                     <div className="col-lg-2">
                       <h2 className="selectedone weight-500">
                         Desired outcomes:
@@ -599,10 +559,10 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
                       </div>
                     </div>
                   </div>
-                  <div className="d-flex align-items-center pb-24 pt-24">
+                  <div className="d-flex align-items-start pb-16 pt-24">
                     <div className="col-lg-2">
                       <h2 className="selectedone weight-500">
-                        Design efforts:
+                        Design effort(s):
                       </h2>
                     </div>
                     <div className="col-lg-10">
@@ -633,58 +593,17 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
           )}
         </div>
       </div>
-      <div className="wrapper-company">
-        <div className="company-sidebar w-100 d-flex flex-column gap-4">
-          <div className="filter-container">
-            <div className="d-flex align-items-center flex-column border_bottom_soft-lavender pb-24 ">
-              <div
-                className="d-flex align-items-center gap-1 justify-content-center cursor-pointer mb-24"
-                onClick={toggleDropdown}
-              >
-                <h1 className="timeline-text">Timeline</h1>
-                <img
-                  src="/assets/images/mark/dropdown-icon.svg"
-                  alt="dropdown-icon"
-                />
-              </div>
-              <div
-                onClick={() => handleOptionClick("Lifetime")}
-                className={`cursor-pointer lifetime ${
-                  isLifetimeClicked ? "active" : ""
-                }`}
-              >
-                <h1 className="timeline-text">Lifetime</h1>
-              </div>
-              {isDropdownOpen && (
-                <ul className="timeline-dropdown" ref={dropdownRef}>
-                  <li
-                    onClick={() => handleOptionClick("Monthly")}
-                    className={selectedOption === "Monthly" ? "active" : ""}
-                  >
-                    Monthly
-                  </li>
-                  <li
-                    onClick={() => handleOptionClick("Weekly")}
-                    className={selectedOption === "Weekly" ? "active" : ""}
-                  >
-                    Weekly
-                  </li>
-                  <li
-                    onClick={() => handleOptionClick("Quarterly")}
-                    className={selectedOption === "Quarterly" ? "active" : ""}
-                  >
-                    Quarterly
-                  </li>
-                </ul>
-              )}
-            </div>
-            {renderDates()}
-          </div>
-        </div>
-      </div>
-      <ProductOutcomesModel
-        designdropdownOpen={designdropdownOpen}
-        toggledesignDropdown={setDesigndropdownOpen}
+      <SidebarTimelineComponent
+        isLifetimeClicked={isLifetimeClicked}
+        isDropdownOpen={isDropdownOpen}
+        selectedOption={selectedOption}
+        toggleDropdown={toggleDropdown}
+        handleOptionClick={handleOptionClick}
+        renderDates={renderDates}
+      />
+      {/* <ProductOutcomesModel
+        designdropdownOpen={productdropdownOpen}
+        toggledesignDropdown={setProductdropdownOpen}
         objectives={objectives}
         selectedProductOutcomes={selectedProductOutcomes}
         setSelectedProductOutcomes={setSelectedProductOutcomes}
@@ -696,6 +615,18 @@ const Purpose = ({ isAdmin, onToggleNewPurpose, showNewPurposeInput }) => {
         selectedDesignEfforts={selectedDesignEfforts}
         design={design}
         setDesign={setDesign}
+      /> */}
+      <CombinedDropdown
+        dropdownOpen={dropdownOpen}
+        toggleDropdown={handleButtonClick}
+        selectedDesignEfforts={selectedDesignEfforts}
+        setSelectedDesignEfforts={setSelectedDesignEfforts}
+        selectedProductOutcomes={selectedProductOutcomes}
+        setSelectedProductOutcomes={setSelectedProductOutcomes}
+        design={design}
+        objectives={objectives}
+        setDesign={setDesign}
+        tab={tab}
       />
     </div>
   );

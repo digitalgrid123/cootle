@@ -407,6 +407,7 @@ const EffortMapping = ({
                                 <img
                                   src="/assets/images/mark/edit.svg"
                                   alt="edit"
+                                   className="edit-image"
                                 />
                               </button>
                             )}

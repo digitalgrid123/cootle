@@ -12,9 +12,7 @@ AuthGuard.propTypes = {
 
 export default function AuthGuard({ children }) {
   const { isAuthenticated, isInitialized } = useAuth();
-
   const { pathname, push, replace } = useRouter();
-
   const [requestedLocation, setRequestedLocation] = useState(null);
 
   useEffect(() => {
@@ -24,15 +22,19 @@ export default function AuthGuard({ children }) {
     }
   }, [pathname, push, requestedLocation]);
 
+  useEffect(() => {
+    if (!isAuthenticated && isInitialized && pathname !== requestedLocation) {
+      setRequestedLocation(pathname);
+      replace("/authentication");
+    }
+  }, [isAuthenticated, isInitialized, pathname, replace, requestedLocation]);
+
   if (!isInitialized) {
     return <FullScreenLoading />;
   }
 
   if (!isAuthenticated) {
-    if (pathname !== requestedLocation) {
-      setRequestedLocation(pathname);
-    }
-    return replace("/authentication");
+    return null;
   }
 
   return <>{children}</>;

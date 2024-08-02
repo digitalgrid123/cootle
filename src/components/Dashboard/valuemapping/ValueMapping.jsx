@@ -400,7 +400,7 @@ const ValueMapping = ({
                           onClick={handleEditButtonClick}
                           className="edit-button"
                         >
-                          <img src="/assets/images/mark/edit.svg" alt="edit" />
+                          <img src="/assets/images/mark/edit.svg" alt="edit"  className="edit-image" />
                         </button>
                       )}
                     </div>

@@ -5,25 +5,9 @@ import { useAuth } from "@/hooks";
 import CategoryByCountChart from "./charts/CategoryByCountChart";
 import Activity from "./charts/Activity";
 import LineGraph from "./charts/LineGraph";
+import SidebarTimelineComponent from "@/components/shared/SidebarTimelineComponent";
+import { months, weeks, quarters } from "@/utils/timeConstants";
 
-// Constants for months, weeks, and quarters
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-const weeks = Array.from({ length: 52 }, (_, i) => `Week ${i + 1}`);
-const quarters = ["Q1", "Q2", "Q3", "Q4"];
-// Function to get the current quarter
 const getCurrentQuarter = () => {
   const date = new Date();
   const year = date.getFullYear();
@@ -72,25 +56,6 @@ const Insight = () => {
   const [lifetime, setLifetime] = useState(false);
 
   const project_id = params.id;
-  const dropdownRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    if (isDropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isDropdownOpen]);
 
   // Function to fetch effort data
   const fetchEffortData = async () => {
@@ -405,7 +370,10 @@ const Insight = () => {
                 ) : null;
               })}
 
-            <div className="border_bottom_faint w-100" key={`border-${year}`} />
+            <div
+              className="border_bottom_soft-lavender  w-100"
+              key={`border-${year}`}
+            />
           </React.Fragment>
         ))}
       </ul>
@@ -539,55 +507,14 @@ const Insight = () => {
           </div>
         </div>
       </div>
-      <div className="wrapper-company h-100">
-        <div className="company-sidebar  w-100 d-flex flex-column gap-4 h-100">
-          <div className="filter-container">
-            <div className="d-flex align-items-center flex-column border_bottom_faint pb-24 ">
-              <div
-                className="d-flex align-items-center gap-1 justify-content-center cursor-pointer mb-24"
-                onClick={toggleDropdown}
-              >
-                <h1 className="timeline-text">Timeline</h1>
-                <img
-                  src="/assets/images/mark/dropdown-icon.svg"
-                  alt="dropdown-icon"
-                />
-              </div>
-              <div
-                onClick={() => handleOptionClick("Lifetime")}
-                className={`cursor-pointer lifetime ${
-                  isLifetimeClicked ? "active" : ""
-                }`}
-              >
-                <h1 className="timeline-text">Lifetime</h1>
-              </div>
-              {isDropdownOpen && (
-                <ul className="timeline-dropdown" ref={dropdownRef}>
-                  <li
-                    onClick={() => handleOptionClick("Monthly")}
-                    className={selectedOption === "Monthly" ? "active" : ""}
-                  >
-                    Monthly
-                  </li>
-                  <li
-                    onClick={() => handleOptionClick("Weekly")}
-                    className={selectedOption === "Weekly" ? "active" : ""}
-                  >
-                    Weekly
-                  </li>
-                  <li
-                    onClick={() => handleOptionClick("Quarterly")}
-                    className={selectedOption === "Quarterly" ? "active" : ""}
-                  >
-                    Quarterly
-                  </li>
-                </ul>
-              )}
-            </div>
-            {renderDates()}
-          </div>
-        </div>
-      </div>
+      <SidebarTimelineComponent
+        isLifetimeClicked={isLifetimeClicked}
+        isDropdownOpen={isDropdownOpen}
+        selectedOption={selectedOption}
+        toggleDropdown={toggleDropdown}
+        handleOptionClick={handleOptionClick}
+        renderDates={renderDates}
+      />
     </div>
   );
 };

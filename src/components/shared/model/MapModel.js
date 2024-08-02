@@ -82,12 +82,12 @@ const MapModel = ({
           >
             <div className="effort-container">
               <div className="dropdown-header d-flex align-items-center justify-content-between">
-                <h2 className="category-heading weight-600 mb-24">
+                <h2 className="category-heading weight-600 mb-16">
                   Update effort categories
                 </h2>
               </div>
-              <div className="border_bottom_faint pb-32">
-                <div className="search-container border_bottom_faint ">
+              <div className="border_bottom_faint pb-16">
+                <div className="search-container ">
                   <div className="search-icon">
                     <img
                       src="/assets/images/mark/search.svg"
@@ -97,7 +97,7 @@ const MapModel = ({
                   <input
                     type="text"
                     placeholder="Search or enter an effort category"
-                    className="dropdown-search"
+                    className="dropdown-search "
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
                   />
@@ -122,7 +122,9 @@ const MapModel = ({
                         key={tab.category_id} // Assuming category_id is the unique identifier
                         className="d-flex align-items-center justify-content-between list-item mb-24"
                       >
-                        <h2 className="menutext f-16 weight-500">{tab.name}</h2>
+                        <h2 className="categories-text f-16 weight-400">
+                          {tab.name}
+                        </h2>
                         <button
                           className="remove_btn"
                           onClick={() => handleRemoveCategory(tab.id)}

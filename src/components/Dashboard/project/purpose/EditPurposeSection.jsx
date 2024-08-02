@@ -3,6 +3,7 @@ import ProjectDesignEffort from "@/components/shared/model/ProjectDesignEffort";
 import React, { useState } from "react";
 import { useAuth, useToaster } from "@/hooks";
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
+import CombinedDropdown from "@/components/shared/model/CombinedDropdown";
 
 const EditPurposeSection = ({
   purpose,
@@ -27,6 +28,14 @@ const EditPurposeSection = ({
   const [selectedDesignEfforts, setSelectedDesignEfforts] = useState(
     purpose?.design_efforts || ""
   );
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [tab, setTab] = useState("");
+
+  const handleButtonClick = (tabName) => {
+    setTab(tabName);
+    setDropdownOpen((prev) => !prev);
+  };
 
   const handleSaveClick = async () => {
     // Prepare edited purpose data
@@ -86,139 +95,151 @@ const EditPurposeSection = ({
 
   return (
     <>
-      <div className="new-purpose-section w-100">
-        <div className="new-purpose-create w-100">
-          <div className="mb-24 d-flex align-items-center justify-content-between w-100">
-            <h1 className="create-id">{`#pur${
-              purpose?.local_id < 10
-                ? `00${purpose?.local_id}`
-                : purpose?.local_id < 100
-                ? `0${purpose?.local_id}`
-                : purpose?.local_id
-            }`}</h1>
+      <div className="new-purpose-create w-100">
+        <div className=" d-flex align-items-center  border_bottom_lavender-blush pb-16 justify-content-between w-100">
+          <h1 className="create-id f-18">{`#pur${
+            purpose?.local_id < 10
+              ? `00${purpose?.local_id}`
+              : purpose?.local_id < 100
+              ? `0${purpose?.local_id}`
+              : purpose?.local_id
+          }`}</h1>
+          <div className="d-flex align-items-center gap-2">
             <div className="d-flex align-items-center gap-2">
-              <div className="d-flex align-items-center gap-2">
-                <h2 className="create-name weight-500">Created by:</h2>
-                <div className="d-flex align-items-center gap-1">
-                  <div className="create_profile">
-                    <img
-                      src={
-                        user.profile_pic || "/assets/images/mark/profile.png"
-                      }
-                      alt="profile"
-                      style={{
-                        position: "absolute",
-                        top: "0",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                  </div>
-                  <h2 className="create-name">{user?.fullname}</h2>
+              <h2 className="create-name weight-500">Created by:</h2>
+              <div className="d-flex align-items-center gap-1">
+                <div className="create_profile">
+                  <img
+                    src={user.profile_pic || "/assets/images/mark/profile.png"}
+                    alt="profile"
+                    style={{
+                      position: "absolute",
+                      top: "0",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
                 </div>
-              </div>
-              <div className="d-flex align-items-center gap-2">
-                <h2 className="create-name weight-500">Created on:</h2>
-                <h2 className="create-name">
-                  {new Date(purpose.created_at).toLocaleDateString()}
-                </h2>
+                <h2 className="create-name">{user?.fullname}</h2>
               </div>
             </div>
             <div className="d-flex align-items-center gap-2">
-              <button className="delete-btn mr-12" onClick={handleDeleteClick}>
-                <img src="/assets/images/mark/delete.png" alt="delete-icon" />
-              </button>
-              <div className="d-flex align-items-center gap-2 border-left-faint pl-12">
-                <button className="close_effort_btn" onClick={handleCancel}>
-                  <span>Cancel</span>
-                </button>
-                <button className="save_effort_btn" onClick={handleSaveClick}>
-                  <span>Save</span>
-                </button>
-              </div>
+              <h2 className="create-name weight-500">Created on:</h2>
+              <h2 className="create-name">
+                {new Date(purpose.created_at).toLocaleDateString()}
+              </h2>
             </div>
           </div>
-          <div className="d-flex flex-column pb-24 border-bottom-grey">
-            <input
-              className="title-input mb-24"
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="#Title"
-            />
-            <input
-              className="description-input"
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="A brief about it"
-            />
+          <div className="d-flex align-items-center gap-2">
+            <button className="delete-btn mr-12" onClick={handleDeleteClick}>
+              <img src="/assets/images/mark/delete.png" alt="delete-icon" />
+            </button>
+            <div className="d-flex align-items-center gap-2 border-left-lavender-blush  pl-12">
+              <button className="close_effort_btn" onClick={handleCancel}>
+                <span>Cancel</span>
+              </button>
+              <button className="save_effort_btn" onClick={handleSaveClick}>
+                <span>Save</span>
+              </button>
+            </div>
           </div>
-          <div className="ptb-34 border-bottom-grey">
-            <div className="d-flex align-items-center gap-4">
+        </div>
+        <div className="d-flex flex-column pt-16 pb-16  border_bottom_lavender-blush">
+          <input
+            className="title-input mb-8 "
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="# Title"
+          />
+          <input
+            className="description-input"
+            type="text"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="A brief about it"
+          />
+        </div>
+        <div className="border_bottom_lavender-blush pt-16 pb-16 d-flex align-items-center gap-3">
+          <button
+            className="add-project_btn"
+            onClick={() => handleButtonClick("outcomes")}
+          >
+            <img src="/assets/images/mark/addoutcomesbtn.svg" alt="add-btn" />
+            <span className="add-text">Desired outcome(s)</span>
+          </button>
+          <button
+            className="add-project_btn"
+            onClick={() => handleButtonClick("design")}
+          >
+            <img src="/assets/images/mark/addoutcomesbtn.svg" alt="add-btn" />
+            <span className="add-text">Design effort(s)</span>
+          </button>
+        </div>
+        <div className="pt-16">
+          <div className="d-flex align-items-start mb-24">
+            <div className="col-lg-2">
               <h1 className="select-outcome-text">Desired outcome(s):</h1>
-              <button
-                className="add-project_btn"
-                onClick={() => toggledesigndropdown(true)}
-              >
-                <span className="add-text">add</span>
-                <span>
-                  <img
-                    src="/assets/images/mark/addoutcomesbtn.svg"
-                    alt="add-btn"
-                  />
-                </span>
-              </button>
             </div>
-            <ul className="mt-20 d-flex align-items-center gap-4">
-              {selectedProductOutcomes.map((effortId) => {
-                const matchingObjective = objectives.find(
-                  (obj) => obj.id === effortId
-                );
-                return (
-                  <li key={effortId} className="p-0 selectedone">
-                    <span className="dot black"></span>
-                    {matchingObjective?.title}
-                  </li>
-                );
-              })}
-            </ul>
+            <div className="col-lg-10">
+              <ul
+                className="m-0 d-flex align-items-center "
+                style={{ gap: "2.5rem" }}
+              >
+                {selectedProductOutcomes.map((effortId) => {
+                  const matchingObjective = objectives.find(
+                    (obj) => obj.id === effortId
+                  );
+                  return (
+                    <li key={effortId} className="p-0 selectedone">
+                      {matchingObjective?.title}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
           </div>
-          <div>
-            <div className="d-flex align-items-center gap-4 ptb-34">
+          <div className="d-flex align-items-start ">
+            <div className="col-lg-2">
               <h1 className="select-outcome-text">Design effort(s):</h1>
-              <button
-                className="add-project_btn"
-                onClick={() => toggleDesignDropdown(true)}
-              >
-                <span className="add-text">add</span>
-                <span>
-                  <img
-                    src="/assets/images/mark/addoutcomesbtn.svg"
-                    alt="add-btn"
-                  />
-                </span>
-              </button>
             </div>
-            <ul className="mt-20 d-flex align-items-center gap-4">
-              {selectedDesignEfforts.map((effortId) => (
-                <li key={effortId} className="p-0 selectedone">
-                  <span className="dot black"></span>
-                  {design
-                    .flatMap((obj) => obj.items)
-                    .map((effort) => {
-                      if (effort && effort.id === effortId) {
-                        return <span key={effort.id}>{effort.title}</span>;
-                      }
-                      return null;
-                    })}
-                </li>
-              ))}
-            </ul>
+            <div className="col-lg-10">
+              <ul
+                className="m-0 d-flex align-items-center "
+                style={{ gap: "2.5rem" }}
+              >
+                {selectedDesignEfforts.map((effortId) => (
+                  <li key={effortId} className="p-0 selectedone">
+                    {design
+                      .flatMap((obj) => obj.items)
+                      .map((effort) => {
+                        if (effort && effort.id === effortId) {
+                          return <span key={effort.id}>{effort.title}</span>;
+                        }
+                        return null;
+                      })}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-      <ProductOutcomesModel
+
+      <CombinedDropdown
+        dropdownOpen={dropdownOpen}
+        toggleDropdown={handleButtonClick}
+        selectedDesignEfforts={selectedDesignEfforts}
+        setSelectedDesignEfforts={setSelectedDesignEfforts}
+        selectedProductOutcomes={selectedProductOutcomes}
+        setSelectedProductOutcomes={setSelectedProductOutcomes}
+        design={design}
+        objectives={objectives}
+        setDesign={setDesign}
+        tab={tab}
+      />
+
+      {/* <ProductOutcomesModel
         designdropdownOpen={designdropdownOpen}
         toggledesignDropdown={setDesigndropdownOpen}
         objectives={objectives}
@@ -232,7 +253,7 @@ const EditPurposeSection = ({
         selectedDesignEfforts={selectedDesignEfforts}
         design={design}
         setDesign={setDesign}
-      />
+      /> */}
     </>
   );
 };
