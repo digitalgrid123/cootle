@@ -27,8 +27,8 @@ const SidebarHeader = () => {
   }, []);
 
   return (
-    <div className="sidebar-header">
-      <div className="sidebar-notify d-flex align-items-center justify-content-between w-100 border_bottom_Light">
+    <div className="sidebar-header mt-24 ">
+      <div className="pb-24 d-flex align-items-center justify-content-between w-100 border_bottom_Light">
         <div className="cootle-container">
           <img src="/assets/images/mark/logo.svg" alt="logo" />
         </div>
@@ -38,7 +38,11 @@ const SidebarHeader = () => {
           onClick={handleBellClick}
           style={{ cursor: "pointer" }}
         >
-          <img src="/assets/images/mark/shape.png" alt="bell" />
+          <img
+            src="/assets/images/mark/shape.svg"
+            alt="bell"
+            style={{ width: "24px" }}
+          />
           {count > 0 && <span className="notification-badge"></span>}
         </div>
       </div>

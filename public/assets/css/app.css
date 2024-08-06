@@ -194,6 +194,9 @@ textarea {
 .border-pastel {
   border: 1px solid var(--pastel-lavender);
 }
+.border_top-white {
+  border-top: 1px solid var(--text-color);
+}
 .border_bottom_Light {
   border-bottom: 1px solid var(--Very-Light-Gray);
 }
@@ -731,8 +734,8 @@ textarea {
   text-align: left;
 }
 .profile-name {
-  font-size: 17px;
-  line-height: 20.57px;
+  font-size: 16px;
+  line-height: 19.57px;
   letter-spacing: -0.03em;
   text-align: left;
 }
@@ -780,7 +783,6 @@ textarea {
 }
 .profile-email {
   font-size: 14px;
-
   line-height: 16.94px;
   letter-spacing: -0.03em;
   text-align: left;
@@ -836,8 +838,10 @@ textarea {
   padding: 0 16px;
 }
 .bottom-profile {
-  position: fixed !important;
+  position: absolute !important;
   bottom: 0;
+
+  width: 270px;
 }
 .companyinvite {
   font-size: 20px;
@@ -1838,7 +1842,7 @@ textarea {
   text-align: left;
 }
 .projectitem {
-  padding: 12px 13px;
+  padding: 12px 0px;
 }
 
 .projects-menu {

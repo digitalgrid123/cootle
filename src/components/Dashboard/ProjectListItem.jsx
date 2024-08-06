@@ -53,16 +53,17 @@ const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
       onDoubleClick={handleDoubleClick}
       onContextMenu={handleRightClick}
     >
-      <div className="d-flex align-items-center gap-2">
+      <div className="d-flex align-items-center gap-3">
         <img
           src={
             isActive
               ? "/assets/images/mark/activeproject.svg"
               : "/assets/images/mark/inactiveproject.svg"
           }
+          style={{ width: "24px" }}
           alt="project-icon"
         />
-        <h4 className="mapping f-16 weight-500">{project.name}</h4>
+        <h4 className="mapping f-16 weight-400">{project.name}</h4>
       </div>
 
       {isAdmin && dropdownVisible && (

@@ -175,7 +175,7 @@ const Menus = () => {
                   logo={selectedCompany.logo}
                   name={selectedCompany.name}
                 />
-                <h4 className="company-name weight-500">
+                <h4 className="company-name weight-400">
                   {selectedCompany.name}
                 </h4>
               </div>
@@ -237,13 +237,13 @@ const Menus = () => {
         ) : (
           <li className="d-flex align-items-center justify-content-start gap-2 cursor-pointer mb-20">
             <CompanyLogo logo={null} name="No company" />
-            <h4 className="company-name weight-500">No company</h4>
+            <h4 className="company-name weight-400">No company</h4>
           </li>
         )}
         <div className="d-flex w-100 flex-column gap-3">
           {isAdmin && (
             <li
-              className={`d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100 padding-lr-sixteen ${
+              className={`d-flex align-items-center justify-content-start gap-3 cursor-pointer w-100 padding-lr-sixteen ${
                 activeMenuItem === PATH_DASHBOARD.createcompany.root ||
                 pathname === PATH_DASHBOARD.createcompany.edit
                   ? "navigate-select"
@@ -258,13 +258,14 @@ const Menus = () => {
                     ? "/assets/images/mark/company.svg"
                     : "/assets/images/mark/inactive-company.svg"
                 }
+                style={{ width: "24px" }}
                 alt="company-icon"
               />
-              <h4 className="mapping f-16 weight-500">Company</h4>
+              <h4 className="mapping f-16 weight-400">Company</h4>
             </li>
           )}
           <li
-            className={`d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100 padding-lr-sixteen ${
+            className={`d-flex align-items-center justify-content-start gap-3 cursor-pointer w-100 padding-lr-sixteen ${
               activeMenuItem === PATH_DASHBOARD.root ? "navigate-select" : ""
             }`}
             onClick={() => handleSelect(PATH_DASHBOARD.root)}
@@ -275,20 +276,25 @@ const Menus = () => {
                   ? "/assets/images/mark/value-mapping-active.svg"
                   : "/assets/images/mark/value-mapping-inactive.svg"
               }
+              style={{ width: "24px" }}
               alt="Value Mapping"
             />
-            <h4 className="mapping f-16 weight-500">Value mapping</h4>
+            <span className="mapping f-16 weight-400">Value mapping</span>
           </li>
         </div>
       </ul>
       <ul className="projects-menu" id="menu">
         {isAdmin && (
           <li
-            className="d-flex align-items-center justify-content-start gap-2 cursor-pointer w-100 mb-16"
+            className="d-flex align-items-center justify-content-start gap-3 cursor-pointer w-100 mb-16"
             onClick={() => togglePopup(setShowProjectPopup)}
           >
-            <img src="/assets/images/mark/plus.svg" alt="New Project" />
-            <h4 className="project weight-500">New Project</h4>
+            <img
+              src="/assets/images/mark/plus.svg"
+              style={{ width: "24px" }}
+              alt="New Project"
+            />
+            <span className="project weight-400">New Project</span>
           </li>
         )}
         <div className="project-list">{renderProjectList()}</div>

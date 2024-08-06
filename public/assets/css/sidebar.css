@@ -82,7 +82,7 @@
 
   bottom: 0;
 
-  padding: 26px 28px 0 28px;
+  padding: 0px 28px 0 28px;
 
   z-index: 5;
 
@@ -121,7 +121,7 @@
 
   padding-bottom: 20px;
 
-  margin: 112px 28px 20px 28px;
+  margin: 116px 28px 20px 28px;
 
   -webkit-box-orient: vertical;
 
@@ -150,11 +150,9 @@
   display: -webkit-box;
 
   display: -ms-flexbox;
-
+  margin: 0 28px;
   display: flex;
-
-  padding: 24px 28px 24px 28px;
-  width: 325px;
+  padding: 24px 0px 24px 0px;
 }
 
 .sidebar-wrapper .metismenu-projects {
@@ -166,7 +164,7 @@
 
   display: flex;
 
-  padding-bottom: 20px;
+  padding-bottom: 24px;
 
   margin: 30px 28px 20px 28px;
   gap: 50px;

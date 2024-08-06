@@ -58,7 +58,7 @@ const ProfileHeader = () => {
   return (
     <>
       <div
-        className="metismenu-profile bottom-profile d-flex align-items-center flex-row cursor-pointer justify-content-between"
+        className="metismenu-profile bottom-profile d-flex align-items-center flex-row cursor-pointer justify-content-between border_top-white "
         onClick={toggleDropdown}
       >
         <div className="d-flex align-items-center gap-2">
