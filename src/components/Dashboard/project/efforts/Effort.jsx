@@ -19,6 +19,7 @@ import {
   getCurrentDate,
   getCurrentQuarter,
 } from "@/utils/timeConstants";
+import CombinedEffortModel from "@/components/shared/model/CombinedEffortModel";
 
 const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   const {
@@ -58,6 +59,14 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
   const [user, setUser] = useState(null);
   const [memberlist, setMemberList] = useState([]);
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [tab, setTab] = useState("");
+
+  const handleButtonClick = (tabName) => {
+    setTab(tabName);
+    setDropdownOpen((prev) => !prev);
+  };
 
   const { toaster } = useToaster();
 
@@ -528,6 +537,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                 setLink={setLink}
                 links={links}
                 setLinks={setLinks}
+                handleButtonClick={handleButtonClick}
               />
 
               {filteredEffort &&
@@ -708,7 +718,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                             <div className="col-lg-2">
                               <h1 className="select-outcome-text">Links:</h1>
                             </div>
-                            <div className="col-lg-10"></div>
+
                             {effort.links && effort.links.length > 0 ? (
                               effort.links.map((linkObj, index) => (
                                 <li
@@ -826,7 +836,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
           renderDates={renderDates}
         />
       </div>
-      <SingleProductOutcomesModel
+      {/* <SingleProductOutcomesModel
         designdropdownOpen={designdropdownOpen}
         toggledesignDropdown={setDesigndropdownOpen}
         objectives={objectives}
@@ -848,6 +858,25 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
         selectedPurpose={selectedPurpose}
         setPurpose={setPurposeListData}
         purpose={purposeListData}
+      /> */}
+      <CombinedEffortModel
+        tab={tab}
+        dropdownOpen={dropdownOpen}
+        toggleDropdown={handleButtonClick}
+        objectives={objectives}
+        purpose={purposeListData}
+        design={design}
+        selectedProductOutcomes={selectedProductOutcomes}
+        setSelectedProductOutcomes={setSelectedProductOutcomes}
+        selectedPurpose={selectedPurpose}
+        setSelectedPurpose={setSelectedPurpose}
+        selectedDesignEfforts={selectedDesignEfforts}
+        setSelectedDesignEfforts={setSelectedDesignEfforts}
+        setDesign={setDesign}
+        link={link}
+        setLink={setLink}
+        links={links}
+        setLinks={setLinks}
       />
     </>
   );

@@ -240,6 +240,31 @@ const CombinedPurposeDropdown = ({
       </div>
     );
   };
+  const handleAddClick = () => {
+    if (filteredDesign.length > 0 && filteredDesign[0].items.length > 0) {
+      const firstResult = filteredDesign[0].items.find(
+        (item) => !selectedDesignEfforts.includes(item.id)
+      );
+      if (firstResult) {
+        handleTabClick(firstResult.id);
+        setSearchTerm("");
+      }
+    } else if (filteredObjectives.length > 0) {
+      const firstResult = filteredObjectives.find(
+        (obj) => !selectedProductOutcomes.includes(obj.id)
+      );
+      if (firstResult) {
+        handleTabClick(firstResult.id);
+        setSearchTerm("");
+      }
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleAddClick();
+    }
+  };
 
   return (
     <div>
@@ -249,29 +274,43 @@ const CombinedPurposeDropdown = ({
             <div className="effort-container w-100">
               <div className="row">
                 <div className="col-lg-12">
-                  <div className="d-flex align-items-center gap-4 border_bottom_soft-lavender pb-16">
-                    <button
-                      className={
-                        activeTab === "outcomes" ? "active-outcomes" : ""
-                      }
-                      onClick={() => setActiveTab("outcomes")}
-                    >
-                      <img
-                        src="/assets/images/mark/addoutcomesbtn.svg"
-                        alt="add-btn"
-                      />
-                      <span className="add-text">Desired outcome(s)</span>
-                    </button>
-                    <button
-                      className={activeTab === "design" ? "active-design" : ""}
-                      onClick={() => setActiveTab("design")}
-                    >
-                      <img
-                        src="/assets/images/mark/addoutcomesbtn.svg"
-                        alt="add-btn"
-                      />
-                      <span>Design Effort(s)</span>
-                    </button>
+                  <div className="d-flex align-items-center pb-16 border_bottom_soft-lavender justify-content-between">
+                    <div className="d-flex align-items-center gap-4 ">
+                      <button
+                        className={`tab-button ${
+                          activeTab === "outcomes" ? "active-outcomes" : ""
+                        }`}
+                        onClick={() => setActiveTab("outcomes")}
+                      >
+                        <img
+                          src="/assets/images/mark/addoutcomesbtn.svg"
+                          alt="add-btn"
+                        />
+                        <span className="add-text">Desired outcome(s)</span>
+                      </button>
+                      <button
+                        className={`tab-button ${
+                          activeTab === "design" ? "active-design" : ""
+                        }`}
+                        onClick={() => setActiveTab("design")}
+                      >
+                        <img
+                          src="/assets/images/mark/addoutcomesbtn.svg"
+                          alt="add-btn"
+                        />
+                        <span>Design Effort(s)</span>
+                      </button>
+                    </div>
+
+                    <div className="d-flex justify-content-end w-100">
+                      <button
+                        className="close-button"
+                        onClick={closeDropdown}
+                        aria-label="Close dropdown"
+                      >
+                        <span>close</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <div className="col-lg-12">
@@ -293,6 +332,9 @@ const CombinedPurposeDropdown = ({
                           </div>
                           <input
                             type="text"
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            onKeyDown={handleKeyPress}
                             placeholder={
                               activeTab === "design"
                                 ? "Search or enter a design effort"
@@ -304,10 +346,10 @@ const CombinedPurposeDropdown = ({
                                 ? "Search or enter a design effort"
                                 : "Search or enter a product desired outcomes"
                             }
-                            value={searchTerm}
-                            onChange={handleSearchChange}
                           />
                           <button
+                            type="button"
+                            onClick={handleAddClick}
                             className="plus-button"
                             aria-label="Add new category"
                           >
@@ -322,17 +364,7 @@ const CombinedPurposeDropdown = ({
                         </div>
                       </div>
                     </div>
-                    <div className="col-lg-6">
-                      <div className="d-flex justify-content-end w-100">
-                        <button
-                          className="send_btn"
-                          onClick={closeDropdown}
-                          aria-label="Close dropdown"
-                        >
-                          <span>close</span>
-                        </button>
-                      </div>
-                    </div>
+                    <div className="col-lg-6"></div>
                   </div>
                 </div>
                 <div

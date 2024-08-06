@@ -44,14 +44,13 @@ const DesignEffortModel = ({
         const res = await designEffort();
 
         if (res?.status) {
-          // Prepare data for grouped rendering
           const groupedDesign = res.data.reduce((acc, curr) => {
             const existingCategory = acc.find(
               (item) => item.category === curr.category
             );
 
             if (existingCategory) {
-              existingCategory.items.push(curr); // Store entire item for later reference
+              existingCategory.items.push(curr);
             } else {
               acc.push({
                 category: curr.category,
@@ -64,7 +63,6 @@ const DesignEffortModel = ({
 
           setDesign(groupedDesign);
 
-          // Initialize selectedTabs with all ids from DesignEffort
           const initialSelectedTabs = DesignEffort.map((effort) => effort.id);
           setSelectedTabs(initialSelectedTabs);
         } else {
@@ -76,12 +74,12 @@ const DesignEffortModel = ({
     };
 
     fetchDesignEffort();
-  }, [designEffort, DesignEffort]); // Include DesignEffort in dependency array
+  }, [designEffort, DesignEffort]);
 
   useEffect(() => {
     function calculateContainerHeight() {
       const windowHeight = window.innerHeight;
-      const calculatedHeight = windowHeight - 385; // Subtract 220px
+      const calculatedHeight = windowHeight - 385;
 
       setContainerHeight(calculatedHeight);
     }
@@ -107,24 +105,42 @@ const DesignEffortModel = ({
       }
 
       if (selectedTabs.includes(id)) {
-        // Tab is active, so perform removeEffortByMapping
         await removeEffortByMapping(id, categoryId, type);
-        setSelectedTabs(selectedTabs.filter((tabId) => tabId !== id)); // Deselect id locally
+        setSelectedTabs(selectedTabs.filter((tabId) => tabId !== id));
         fetchObjectives();
       } else {
-        // Tab is inactive, so perform addEffortByMapping
         await addEffortByMapping(id, categoryId, type);
-        setSelectedTabs([...selectedTabs, id]); // Select id locally
+        setSelectedTabs([...selectedTabs, id]);
         fetchObjectives();
       }
     } catch (error) {
       console.error("Error performing API operation:", error);
-      // Handle error appropriately (e.g., show error message)
     }
   };
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
+  };
+
+  const handleAddFirstUnselected = async () => {
+    const firstUnselected = design
+      .flatMap((category) => category.items)
+      .find(
+        (item) =>
+          !selectedTabs.includes(item.id) &&
+          item.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+    if (firstUnselected) {
+      await handleTabClick(firstUnselected.id);
+    }
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleAddFirstUnselected();
+    }
   };
 
   const filteredDesign = design
@@ -135,6 +151,27 @@ const DesignEffortModel = ({
       ),
     }))
     .filter((category) => category.items.length > 0);
+
+  // Separate selected and unselected items
+  const selectedItems = design
+    .flatMap((category) => category.items)
+    .filter((item) => selectedTabs.includes(item.id));
+
+  const unselectedItems = design
+    .flatMap((category) => category.items)
+    .filter(
+      (item) =>
+        !selectedTabs.includes(item.id) &&
+        item.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+  // Extract unique categories for unselected items
+  const unselectedCategories = [
+    ...new Set(unselectedItems.map((item) => item.category)),
+  ].map((category) => ({
+    category,
+    items: unselectedItems.filter((item) => item.category === category),
+  }));
 
   return (
     <div>
@@ -167,15 +204,17 @@ const DesignEffortModel = ({
                     </div>
                     <input
                       type="text"
-                      placeholder="Search or enter an product desired outcomes"
+                      placeholder="Search or enter a product desired outcome"
                       className="dropdown-search"
-                      aria-label="Search or enter an product desired outcomes"
+                      aria-label="Search or enter a product desired outcome"
                       value={searchTerm}
                       onChange={handleSearchChange}
+                      onKeyDown={handleKeyDown}
                     />
                     <button
                       className="plus-button"
-                      aria-label="Add new category"
+                      aria-label="Add first unselected item"
+                      onClick={handleAddFirstUnselected}
                     >
                       <span className="add-text weight-500">add</span>
                       <span>
@@ -187,38 +226,23 @@ const DesignEffortModel = ({
                 <div className="border_bottom_faint pb-32"></div>
 
                 <div
-                  className="col-lg-12 mt-20 "
+                  className="col-lg-12 mt-20"
                   style={{
                     maxHeight: `${containerHeight}px`,
                     overflowY: "auto",
                   }}
                 >
-                  {filteredDesign.map((category, index) => (
-                    <React.Fragment key={index}>
-                      {selectedTabs.some((tabId) =>
-                        category.items.some((item) => item.id === tabId)
-                      ) ? (
-                        <h3 className="category-headingeffort mb-20 mt-24 ">
-                          {category.category}: selected effort
-                        </h3>
-                      ) : (
-                        <h3 className="category-headingeffort mb-20 mt-24 ">
-                          {category.category}
-                        </h3>
-                      )}
-
+                  {/* Render selected items */}
+                  {selectedItems.length > 0 && (
+                    <>
+                      <h3 className="category-headingeffort mb-20 mt-24 ">
+                        Selected Efforts
+                      </h3>
                       <div className="row border_bottom_faint pb-20">
-                        {category.items.map((item, idx) => (
-                          <div
-                            key={`${index}-${idx}`}
-                            className="col-lg-3 mb-3"
-                          >
+                        {selectedItems.map((item, idx) => (
+                          <div key={idx} className="col-lg-3 mb-3">
                             <li
-                              className={`design-tab d-flex align-items-center justify-content-between gap-2  ${
-                                selectedTabs.includes(item.id)
-                                  ? "selected-tab"
-                                  : ""
-                              }`}
+                              className="design-tab d-flex align-items-center justify-content-between gap-2 selected-tab"
                               onClick={() => handleTabClick(item.id)}
                             >
                               <div className="d-flex align-items-center gap-2">
@@ -229,11 +253,41 @@ const DesignEffortModel = ({
                               </div>
                               <div>
                                 <img
-                                  src={`${
-                                    selectedTabs.includes(item.id)
-                                      ? "/assets/images/mark/remove-design.svg"
-                                      : "/assets/images/mark/add-design.svg"
-                                  }`}
+                                  src="/assets/images/mark/remove-design.svg"
+                                  alt="remove-btn"
+                                />
+                              </div>
+                            </li>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+
+                  {unselectedCategories.map((category, index) => (
+                    <React.Fragment key={index}>
+                      <h3 className="category-headingeffort mb-20 mt-24 ">
+                        {category.category}
+                      </h3>
+                      <div className="row border_bottom_faint pb-20">
+                        {category.items.map((item, idx) => (
+                          <div
+                            key={`${index}-${idx}`}
+                            className="col-lg-3 mb-3"
+                          >
+                            <li
+                              className="design-tab d-flex align-items-center justify-content-between gap-2"
+                              onClick={() => handleTabClick(item.id)}
+                            >
+                              <div className="d-flex align-items-center gap-2">
+                                <div className="dot"></div>
+                                <div className="text-start effort-selection">
+                                  {item.title}
+                                </div>
+                              </div>
+                              <div>
+                                <img
+                                  src="/assets/images/mark/add-design.svg"
                                   alt="add-btn"
                                 />
                               </div>

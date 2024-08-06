@@ -52,7 +52,7 @@ const DropdownCheckedlist = ({
           }
         }}
       >
-        <span className="checked-status">
+        <span className="checked-status text-align-center">
           {statusDescriptions[selectedStatus]}
         </span>
         {effort.user !== user?.id &&

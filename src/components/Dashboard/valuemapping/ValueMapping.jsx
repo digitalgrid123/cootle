@@ -21,7 +21,9 @@ const ValueMapping = ({
   const { mappingList, updatemapping, reteriveEffort, mappingachieve } =
     useAuth();
   const [activeTab, setActiveTab] = useState(null);
-  const [activeContentTab, setActiveContentTab] = useState(TABS.DEFINITION);
+  const [activeContentTab, setActiveContentTab] = useState(
+    TABS.PRODUCT_OUTCOMES
+  );
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [objectives, setObjectives] = useState([]);
   const [activeProductOutcome, setActiveProductOutcome] = useState(null);
@@ -345,19 +347,19 @@ const ValueMapping = ({
             <div className="content-tabs">
               <button
                 className={`content-tab weight-500 ${
-                  activeContentTab === TABS.DEFINITION ? "active" : ""
-                }`}
-                onClick={() => handleContentTabClick(TABS.DEFINITION)}
-              >
-                Definition
-              </button>
-              <button
-                className={`content-tab weight-500 ${
                   activeContentTab === TABS.PRODUCT_OUTCOMES ? "active" : ""
                 }`}
                 onClick={() => handleContentTabClick(TABS.PRODUCT_OUTCOMES)}
               >
                 Associated design efforts
+              </button>
+              <button
+                className={`content-tab weight-500 ${
+                  activeContentTab === TABS.DEFINITION ? "active" : ""
+                }`}
+                onClick={() => handleContentTabClick(TABS.DEFINITION)}
+              >
+                Definition
               </button>
             </div>
 
@@ -400,7 +402,11 @@ const ValueMapping = ({
                           onClick={handleEditButtonClick}
                           className="edit-button"
                         >
-                          <img src="/assets/images/mark/edit.svg" alt="edit"  className="edit-image" />
+                          <img
+                            src="/assets/images/mark/edit.svg"
+                            alt="edit"
+                            className="edit-image"
+                          />
                         </button>
                       )}
                     </div>
@@ -462,11 +468,13 @@ const ValueMapping = ({
                       )}
                     </ul>
                   </div>
-                  {activeProductOutcome && (
-                    <div className="d-flex flex-column w-100">
-                      <div>
-                        <h1 className="defination-heading">Definition</h1>
+                  <div className="d-flex flex-column w-100">
+                    <div className="content-tabs padding-lr-30">
+                      <div className="content-tab weight-500 active padding-10-18">
+                        <h1 className="defination-heading">Defination</h1>
                       </div>
+                    </div>
+                    {activeProductOutcome && (
                       <div className="product-outcome-content content-defination-area w-100">
                         {activeTab.design_efforts
                           .filter(
@@ -490,8 +498,8 @@ const ValueMapping = ({
                             </div>
                           ))}
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </>
               )}
             </div>

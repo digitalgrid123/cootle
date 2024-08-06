@@ -8,7 +8,7 @@ const NewEffortSection = ({
   showNewEffortInput,
   generateId,
   user,
-
+  handleButtonClick,
   handleSaveEffort,
   toggledesigndropdown,
   selectedProductOutcomes,
@@ -24,11 +24,6 @@ const NewEffortSection = ({
   setLinks,
   links,
 }) => {
-  const [showLinkModel, setShowLinkModel] = useState(false);
-
-  const tooglelinkmodel = () => {
-    setShowLinkModel((prev) => !prev);
-  };
   if (!showNewEffortInput) {
     return null;
   }
@@ -39,7 +34,6 @@ const NewEffortSection = ({
   const handleCancel = () => {
     setLink(""); // Clear the link state
     onToggleNewEffort(); // Toggle the new effort input
-    setShowLinkModel(false);
   };
 
   return (
@@ -81,26 +75,29 @@ const NewEffortSection = ({
       <div className="border_bottom_lavender-blush pt-16 pb-16 d-flex align-items-center gap-3">
         <button
           className="add-project_btn "
-          onClick={() => toggleDesignDropdown(true)}
+          onClick={() => handleButtonClick("effort")}
         >
           <img src="/assets/images/mark/addoutcomesbtn.svg" alt="add-btn" />
           <span className="add-text">Effort type</span>
         </button>
         <button
           className="add-project_btn"
-          onClick={() => toggledesigndropdown(true)}
+          onClick={() => handleButtonClick("outcomes")}
         >
           <img src="/assets/images/mark/addoutcomesbtn.svg" alt="add-btn" />
           <span className="add-text">Outcome</span>
         </button>
         <button
           className="add-project_btn"
-          onClick={() => togglePurposeDropdown(true)}
+          onClick={() => handleButtonClick("purpose")}
         >
           <img src="/assets/images/mark/addoutcomesbtn.svg" alt="add-btn" />
           <span className="add-text">purpose</span>
         </button>
-        <button className="add-project_btn" onClick={tooglelinkmodel}>
+        <button
+          className="add-project_btn"
+          onClick={() => handleButtonClick("links")}
+        >
           <img src="/assets/images/mark/addoutcomesbtn.svg" alt="add-btn" />
           <span className="add-text">Links</span>
         </button>
@@ -170,16 +167,9 @@ const NewEffortSection = ({
           </div>
         </div>
         <div className="">
-          <LinkModel
-            showLinkModel={showLinkModel}
-            link={link}
-            setLink={setLink}
-            addLink={addLink}
-            setShowLinkModel={setShowLinkModel}
-          />
+          {/* <LinkModel link={link} setLink={setLink} addLink={addLink} /> */}
           <div className="d-flex align-items-center mb-24">
             <h1 className="select-outcome-text">Links:</h1>
-
             <ul className="d-flex flex-wrap align-items-center m-0 gap-2 flex-wrap">
               {links?.map((link, index) => (
                 <div className="show-selectedone selectedone">

@@ -6,6 +6,7 @@ import SingleProductOutcomesModel from "@/components/shared/model/SingleProductO
 import SingleProjectDesignEffort from "@/components/shared/model/SingleProjectDeisngEffort";
 import PurposeList from "@/components/shared/model/PurposeList";
 import ProductOutcomesModel from "@/components/shared/model/ProductOutcomesModel";
+import CombinedEffortModel from "@/components/shared/model/CombinedEffortModel";
 
 const EditEffortSection = ({
   effort,
@@ -19,9 +20,12 @@ const EditEffortSection = ({
   purposeListData,
   setPurposeListData,
   fetchEffortData,
+  setLink,
+  link,
+  setLinks,
+  links,
 }) => {
   const { updateEffort, removeEffort } = useAuth();
-  const [link, setLink] = useState();
 
   const [purposedropdownOpen, setPurposeDropdownOpen] = useState(false);
   const [designdropdownOpen, setDesigndropdownOpen] = useState(false);
@@ -39,24 +43,25 @@ const EditEffortSection = ({
 
   const [selectedPurpose, setSelectedPurpose] = useState(effort?.purpose || "");
 
-  const [showLinkModel, setShowLinkModel] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [tab, setTab] = useState("");
 
-  const tooglelinkmodel = () => {
-    setShowLinkModel((prev) => !prev);
+  const handleButtonClick = (tabName) => {
+    setTab(tabName);
+    setDropdownOpen((prev) => !prev);
   };
+
   const togglePurposeDropdown = (state) => {
     setPurposeDropdownOpen(state);
   };
   const handleEditLink = (index) => {
     const editedLink = selectedLinks[index];
     setLink(editedLink.link);
-    setShowLinkModel(true);
   };
 
   const addLink = (url) => {
     // Implement adding link logic here
     setSelectedLinks([...selectedLinks, { url }]);
-    setShowLinkModel(false);
   };
 
   const handleSaveClick = async () => {
@@ -169,35 +174,31 @@ const EditEffortSection = ({
 
         <div className="border_bottom_lavender-blush pt-16 pb-16 d-flex align-items-center gap-3">
           <button
-            className="add-project_btn d-flex align-items-center "
-            onClick={() => toggleDesignDropdown(true)}
+            className="add-project_btn "
+            onClick={() => handleButtonClick("effort")}
           >
             <img src="/assets/images/mark/addoutcomesbtn.svg" alt="add-btn" />
-
             <span className="add-text">Effort type</span>
           </button>
           <button
-            className="add-project_btn d-flex align-items-center"
-            onClick={() => toggledesigndropdown(true)}
+            className="add-project_btn"
+            onClick={() => handleButtonClick("outcomes")}
           >
             <img src="/assets/images/mark/addoutcomesbtn.svg" alt="add-btn" />
-
             <span className="add-text">Outcome</span>
           </button>
           <button
-            className="add-project_btn d-flex align-items-center"
-            onClick={() => togglePurposeDropdown(true)}
+            className="add-project_btn"
+            onClick={() => handleButtonClick("purpose")}
           >
             <img src="/assets/images/mark/addoutcomesbtn.svg" alt="add-btn" />
-
-            <span className="add-text">Purpose</span>
+            <span className="add-text">purpose</span>
           </button>
           <button
-            className="add-project_btn d-flex align-items-center"
-            onClick={tooglelinkmodel}
+            className="add-project_btn"
+            onClick={() => handleButtonClick("links")}
           >
             <img src="/assets/images/mark/addoutcomesbtn.svg" alt="add-btn" />
-
             <span className="add-text">Links</span>
           </button>
         </div>
@@ -254,19 +255,12 @@ const EditEffortSection = ({
             </div>
           </div>
           <div className="">
-            <LinkModel
-              showLinkModel={showLinkModel}
-              link={link}
-              setLink={setLink}
-              addLink={addLink}
-              setShowLinkModel={setShowLinkModel}
-            />
             <div className="d-flex align-items-center">
               <div className="col-lg-2">
                 <h1 className="select-outcome-text">Links:</h1>
               </div>
               <div className="col-lg-10">
-                <ul className="d-flex flex-wrap align-items-center m-0 gap-2 flex-wrap">
+                <ul className="d-flex flex-wrap align-items-center m-0 gap-2 flex-wrap p-0">
                   {selectedLinks?.map((link, index) => (
                     <div
                       key={index}
@@ -295,7 +289,7 @@ const EditEffortSection = ({
         </div>
       </div>
 
-      <ProductOutcomesModel
+      {/* <ProductOutcomesModel
         designdropdownOpen={designdropdownOpen}
         toggledesignDropdown={setDesigndropdownOpen}
         objectives={objectives}
@@ -317,6 +311,25 @@ const EditEffortSection = ({
         selectedPurpose={selectedPurpose}
         setPurpose={setPurposeListData}
         purpose={purposeListData}
+      /> */}
+      <CombinedEffortModel
+        tab={tab}
+        dropdownOpen={dropdownOpen}
+        toggleDropdown={handleButtonClick}
+        objectives={objectives}
+        purpose={purposeListData}
+        design={design}
+        selectedProductOutcomes={selectedProductOutcomes}
+        setSelectedProductOutcomes={setSelectedProductOutcomes}
+        selectedPurpose={selectedPurpose}
+        setSelectedPurpose={setSelectedPurpose}
+        selectedDesignEfforts={selectedDesignEfforts}
+        setSelectedDesignEfforts={setSelectedDesignEfforts}
+        setDesign={setDesign}
+        link={link}
+        setLink={setLink}
+        links={selectedLinks}
+        setLinks={setSelectedLinks}
       />
     </>
   );
