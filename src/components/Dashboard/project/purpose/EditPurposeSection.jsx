@@ -3,7 +3,7 @@ import ProjectDesignEffort from "@/components/shared/model/ProjectDesignEffort";
 import React, { useState } from "react";
 import { useAuth, useToaster } from "@/hooks";
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
-
+import CombinedPurposeDropdown from "@/components/shared/model/CombinedPurposeDropdown";
 
 const EditPurposeSection = ({
   purpose,
@@ -226,7 +226,7 @@ const EditPurposeSection = ({
         </div>
       </div>
 
-      <CombinedDropdown
+      <CombinedPurposeDropdown
         dropdownOpen={dropdownOpen}
         toggleDropdown={handleButtonClick}
         selectedDesignEfforts={selectedDesignEfforts}

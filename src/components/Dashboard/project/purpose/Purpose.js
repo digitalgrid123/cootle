@@ -15,7 +15,8 @@ import {
   getCurrentQuarter,
   getCurrentDate,
 } from "@/utils/timeConstants";
-import CombinedDropdown from "@/components/shared/model/CombinedDropdown";
+import CombinedDropdown from "@/components/shared/model/CombinedPurposeDropdown";
+import CombinedPurposeDropdown from "@/components/shared/model/CombinedPurposeDropdown";
 
 const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
   const {
@@ -52,7 +53,7 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [tab, setTab] = useState("");
 
- const handleButtonClick = (tabName) => {
+  const handleButtonClick = (tabName) => {
     setTab(tabName);
     setDropdownOpen((prev) => !prev);
   };
@@ -616,7 +617,7 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
         design={design}
         setDesign={setDesign}
       /> */}
-      <CombinedDropdown
+      <CombinedPurposeDropdown
         dropdownOpen={dropdownOpen}
         toggleDropdown={handleButtonClick}
         selectedDesignEfforts={selectedDesignEfforts}

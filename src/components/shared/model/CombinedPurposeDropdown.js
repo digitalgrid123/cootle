@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useAuth } from "@/hooks";
 
-const CombinedDropdown = ({
+const CombinedPurposeDropdown = ({
   dropdownOpen,
   toggleDropdown,
   selectedDesignEfforts,
