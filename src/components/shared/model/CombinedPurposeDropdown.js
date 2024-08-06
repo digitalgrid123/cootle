@@ -357,4 +357,4 @@ const CombinedDropdown = ({
   );
 };
 
-export default CombinedDropdown;
+export default CombinedPurposeDropdown;

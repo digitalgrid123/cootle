@@ -233,7 +233,9 @@ textarea {
 .relative {
   position: relative;
 }
-
+.deeppurple {
+  color: var(--deepPurple) !important;
+}
 .black {
   color: var(--text-black);
 }
@@ -1320,7 +1322,7 @@ textarea {
   line-height: 24.05px;
   letter-spacing: -0.03em;
   text-align: left;
-  color: var(--Dimmed-Black);
+  color: var(--deepPurple);
   text-transform: capitalize;
 }
 .company-dropdown-name {
@@ -1606,8 +1608,8 @@ textarea {
 .cross_btn {
   background-color: transparent;
   border: none;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
 }
 .cross_btn:hover {
   fill: gray;
@@ -1727,7 +1729,7 @@ textarea {
   height: 100%;
 }
 .defination-text {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 400;
   line-height: 30px;
   letter-spacing: -0.03em;

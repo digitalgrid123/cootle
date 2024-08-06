@@ -56,13 +56,11 @@ const NotificationModel = ({
           className="invitation-content"
           style={{ flex: "0" }}
         >
-          <div className="h-100 d-flex flex-column c">
-            <div className="mb-20">
-              <Title title="Notifications" />
-            </div>
+          <div className="notification-container">
+            <div className="h-100 d-flex flex-column c">
+              <div className="w-100 d-flex justify-content-between align-items-center mb-20 plr-14 gap-4">
+                <Title title="Notifications" />
 
-            <div className="notification-container">
-              <div className="w-100 d-flex justify-content-end mb-20 plr-14 gap-4">
                 <button className="save-btn" onClick={handleShowInvite}>
                   <span>See All Invitations</span>
                 </button>
@@ -86,15 +84,15 @@ const NotificationModel = ({
                   safeNotifications.map((notification, index) => (
                     <div
                       key={index}
-                      className={`d-flex align-items-center justify-content-between notification-item border_bottom_soft-lavender plr-14 pb-20 ${
+                      className={`d-flex align-items-start justify-content-between notification-item border_bottom_soft-lavender plr-14 pb-20 ${
                         notification.is_read ? "read" : "unread"
                       }`}
                     >
                       <div>
-                        <p className="menutext weight-500 m-0">
+                        <p className="menutext weight-500 m-0 deeppurple">
                           {notification.message}
                         </p>
-                        <p className="menutext weight-500 m-0">
+                        <p className="menutext weight-500 m-0 deeppurple">
                           Received at:{" "}
                           {new Date(
                             notification.created_at
@@ -107,7 +105,7 @@ const NotificationModel = ({
                         onClick={() => deleteNotification(notification.id)}
                       >
                         <img
-                          src="/assets/images/mark/close.png"
+                          src="/assets/images/mark/close.svg"
                           alt="close_btn"
                         />
                       </button>
