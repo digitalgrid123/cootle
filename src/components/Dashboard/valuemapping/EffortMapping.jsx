@@ -344,7 +344,7 @@ const EffortMapping = ({
                 )}
               </ul>
             </div>
-            <div className="content-area w-100 d-flex gap-4 flex-column">
+            <div className="content-area w-100 d-flex gap-3 flex-column">
               <div className="content-tabs">
                 <button
                   className={`content-tab weight-500 ${
@@ -407,7 +407,7 @@ const EffortMapping = ({
                                 <img
                                   src="/assets/images/mark/edit.svg"
                                   alt="edit"
-                                   className="edit-image"
+                                  className="edit-image"
                                 />
                               </button>
                             )}

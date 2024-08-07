@@ -341,7 +341,7 @@ const ProductOutcomes = ({
             {activeTab?.title}
           </h1>
 
-          <div className="content-area w-100 d-flex gap-4 flex-column h-100">
+          <div className="content-area w-100 d-flex gap-3 flex-column h-100">
             <div className="content-tabs">
               <button
                 className={`content-tab weight-500 ${
@@ -468,7 +468,7 @@ const ProductOutcomes = ({
                     </ul>
                   </div>
                   <div className="d-flex flex-column w-100">
-                    <div className="content-tabs padding-lr-30">
+                    <div className="content-tabs padding-lr-30 mb-16">
                       <div className="content-tab weight-500 active padding-10-18">
                         <h1 className="defination-heading">Defination</h1>
                       </div>
