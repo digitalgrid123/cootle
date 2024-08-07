@@ -54,7 +54,7 @@ const NewProjectModal = ({
         <div className="company-content w-100 h-100">
           <div className="box-invitation">
             <div className="d-flex align-items-center justify-content-between border_bottom_faint pb-20">
-              <h2 className="company-setup-heading weight-600">
+              <h2 className="company-setup-heading weight-500">
                 Create New Project
               </h2>
               <div className="d-flex align-items-center gap-3">

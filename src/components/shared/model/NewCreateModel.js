@@ -5,7 +5,7 @@ import { PATH_DASHBOARD } from "@/routes/paths";
 import { useRouter } from "next/navigation";
 import { useGlobalCompany } from "@/utils/globalState";
 
-const NewCreateModel = ({ activeTab, setShowPopup }) => {
+const NewCreateModel = ({ activeTab, setShowPopup, showPopup }) => {
   const { createcompany, setcompany } = useAuth();
 
   const [companyName, setCompanyName] = useState();
@@ -76,16 +76,26 @@ const NewCreateModel = ({ activeTab, setShowPopup }) => {
     }
     await handleSave();
   };
+  const handleClose = () => {
+    setShowPopup(false); // Close the popup when "Close" button is clicked
+  };
 
   return (
     <>
       {activeTab === "settings" && (
         <>
           <div className="setting-box d-flex align-items-center justify-content-between border_bottom_soft-lavender ">
-            <h1 className="company-setup-heading weight-600">Settings</h1>
-            <button className="save-btn" onClick={handleSave}>
-              <span className="weight-600">Save</span>
-            </button>
+            <h1 className="company-setup-heading weight-500">Settings</h1>
+            <div className="d-flex align-items-center gap-3">
+              {showPopup && (
+                <button className="close_btn" onClick={handleClose}>
+                  <span className="weight-600">Close</span>
+                </button>
+              )}
+              <button className="update_btn" onClick={handleSave}>
+                <span className="weight-600">Save</span>
+              </button>
+            </div>
           </div>
           <form onSubmit={handleFormSubmit}>
             <div className="company-container border_bottom_soft-lavender ">

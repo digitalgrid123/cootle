@@ -4,7 +4,8 @@ import { useAuth, useToaster, useTabs } from "@/hooks";
 import { useGlobalCompany } from "@/utils/globalState";
 import PaginationComponent from "../table/Pagination";
 
-const MemberModel = ({ activeTab }) => {
+const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
+  console.log("🚀 ~ MemberModel ~ showPopup:", showPopup);
   const { toaster } = useToaster();
   const {
     inviteuser,
@@ -192,13 +193,24 @@ const MemberModel = ({ activeTab }) => {
   };
 
   const isOwner = user?.is_owner && owner?.is_owner && user?.id === owner?.id;
-
+  const handleClose = () => {
+    setShowPopup(false); // Close the popup when "Close" button is clicked
+  };
   return (
     <>
-      <div className="setting-box border_bottom_pastel ">
-        <h1 className="company-setup-heading weight-600">
+      <div className="setting-box border_bottom_pastel d-flex align-items-center justify-content-between">
+        <h1
+          className={`company-setup-heading weight-500 ${
+            !showPopup ? "mt-10" : ""
+          }`}
+        >
           Add / Remove People from the Company
         </h1>
+        {showPopup && (
+          <button className="close_btn" onClick={handleClose}>
+            <span className="weight-600">Close</span>
+          </button>
+        )}
       </div>
       <div className="company-container  ">
         <form onSubmit={handleSubmit}>

@@ -49,7 +49,7 @@ const CreateNewModel = ({ showPopup, setShowPopup, contentRef }) => {
           <div ref={contentRef} className="invitation-content w-100 h-100">
             <div className="wrapper-company">
               <div className="company-sidebar h-100">
-                <h1 className="company-setup-heading weight-600">
+                <h1 className="company-setup-heading weight-500 padding-left-20">
                   Company setup
                 </h1>
                 <ul className="">
@@ -96,8 +96,13 @@ const CreateNewModel = ({ showPopup, setShowPopup, contentRef }) => {
                 <NewCreateModel
                   activeTab={activeTab}
                   setShowPopup={setShowPopup}
+                  showPopup={showPopup}
                 />
-                <MemberModel activeTab={activeTab} />
+                <MemberModel
+                  activeTab={activeTab}
+                  setShowPopup={setShowPopup}
+                  showPopup={showPopup}
+                />
               </div>
             </div>
           </div>

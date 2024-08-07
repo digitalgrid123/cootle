@@ -341,7 +341,7 @@ const ObjectiveMapping = ({
         </div>
 
         <div className="sub-content">
-          <h1 className="company-setup-heading weight-600 mb-20">
+          <h1 className="company-setup-heading weight-500 mb-20">
             {activeTab?.title}
           </h1>
 
@@ -431,7 +431,7 @@ const ObjectiveMapping = ({
                 <>
                   <div className="product-outcome-tabs h-100 ">
                     <div className="d-flex align-items-center w-100 justify-content-between mb-20">
-                      <h1 className="company-setup-heading weight-600">
+                      <h1 className="company-setup-heading weight-500">
                         Efforts
                       </h1>
                       {isAdmin && (

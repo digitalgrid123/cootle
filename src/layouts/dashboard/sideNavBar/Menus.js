@@ -159,6 +159,14 @@ const Menus = () => {
     });
   };
 
+  const truncateCompanyName = (name, wordLimit) => {
+    const words = name.split(" ");
+    if (words.length > wordLimit) {
+      return words.slice(0, wordLimit).join(" ") + "...";
+    }
+    return name;
+  };
+
   return (
     <>
       <ul className="metismenu border_bottom_Light" id="menu">
@@ -176,7 +184,7 @@ const Menus = () => {
                   name={selectedCompany.name}
                 />
                 <h4 className="company-name weight-400">
-                  {selectedCompany.name}
+                  {truncateCompanyName(selectedCompany.name, 10)}
                 </h4>
               </div>
               <div>

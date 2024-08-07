@@ -16,7 +16,9 @@ const Edit = () => {
       <div className="box-content">
         <div className="wrapper-company">
           <div className="company-sidebar h-100">
-            <h1 className="company-setup-heading weight-600">Company setup</h1>
+            <h1 className="company-setup-heading weight-500 padding-left-20">
+              Company setup
+            </h1>
             <ul>
               <li
                 className={`d-flex align-items-center justify-content-start gap-2 ${
@@ -24,7 +26,10 @@ const Edit = () => {
                 }`}
                 onClick={() => setActiveTab("settings")}
               >
-                <img src="/assets/images/mark/setting.svg" alt="setting-icon" />
+                <img
+                  src="/assets/images/mark/setting-active.svg"
+                  alt="setting-icon"
+                />
                 <h2 className="menutext f-16  weight-500">Settings</h2>
               </li>
             </ul>

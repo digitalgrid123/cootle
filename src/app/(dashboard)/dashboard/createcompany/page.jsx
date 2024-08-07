@@ -26,7 +26,9 @@ const createcompany = () => {
       <div className="box-content">
         <div className="wrapper-company">
           <div className="company-sidebar h-100">
-            <h1 className="company-setup-heading weight-600">Company setup</h1>
+            <h1 className="company-setup-heading weight-500 padding-left-20">
+              Company setup
+            </h1>
             <ul className="">
               <li
                 className={`d-flex align-items-center justify-content-start gap-2 ${

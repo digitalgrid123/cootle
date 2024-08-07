@@ -15,7 +15,7 @@ const CompanyModel = ({ showPopup, setShowPopup, contentRef }) => {
           <div ref={contentRef} className="invitation-content w-100 h-100">
             <div className="wrapper-company">
               <div className="company-sidebar h-100">
-                <h1 className="company-setup-heading weight-600">
+                <h1 className="company-setup-heading weight-500 padding-left-20">
                   Company setup
                 </h1>
                 <ul className="">
@@ -25,7 +25,7 @@ const CompanyModel = ({ showPopup, setShowPopup, contentRef }) => {
                     }`}
                     onClick={() => setActiveTab("settings")}
                   >
-                    <img src="/assets/images/mark/setting.svg" alt="" />
+                    <img src="/assets/images/mark/setting-active.svg" alt="" />
                     <h2 className="menutext f-16  weight-500">Settings</h2>
                   </li>
                   {user?.is_admin && (
