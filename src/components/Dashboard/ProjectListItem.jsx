@@ -46,7 +46,7 @@ const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
   return (
     <li
       key={project.id}
-      className={`d-flex align-items-center justify-content-between gap-2 cursor-pointer w-100 projectitem mb-16 ${
+      className={`d-flex align-items-center justify-content-between gap-2 cursor-pointer w-100 padding-lr-sixteen mb-16 ${
         isActive ? "navigate-select" : ""
       }`}
       onClick={handleClick}

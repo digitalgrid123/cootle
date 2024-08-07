@@ -60,6 +60,7 @@
   --purple-haze: #1a072c33;
   --deep-purple-overlay: #1a072c80;
   --lavender-blush: #f6effd;
+  --semi-transparent-white: #ffffff33;
   /* linear Gradient */
   --linear-gradient: linear-gradient(
     90deg,
@@ -195,7 +196,7 @@ textarea {
   border: 1px solid var(--pastel-lavender);
 }
 .border_top-white {
-  border-top: 1px solid var(--text-color);
+  border-top: 1px solid var(--semi-transparent-white);
 }
 .border_bottom_Light {
   border-bottom: 1px solid var(--Very-Light-Gray);
@@ -787,11 +788,7 @@ textarea {
   letter-spacing: -0.03em;
   text-align: left;
 }
-.indicator {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-}
+
 .accept_btn {
   background-color: var(--Rich-black);
   border: none;
@@ -2384,13 +2381,13 @@ textarea {
   transform: translateX(-50%);
 }
 
-.project-list {
+/* .project-list {
   max-height: 38vh;
   overflow-y: auto;
   padding: 0;
   margin: 0;
   list-style-type: none;
-}
+} */
 
 .project-list::-webkit-scrollbar {
   width: 4px;

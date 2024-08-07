@@ -56,9 +56,6 @@ const LoginForm = ({ selectedRole = "", OTPSent }) => {
     try {
       const res = await login(email, password, selectedRole);
 
-      if (!res.status) {
-        return toaster(res?.message, TOAST_TYPES.ERROR);
-      }
       if (res.status) {
         toaster(TOAST_ALERTS.OTP_SENT_SUCCESS, TOAST_TYPES.SUCCESS);
         OTPSent(email);

@@ -286,12 +286,12 @@ const Menus = () => {
       <ul className="projects-menu" id="menu">
         {isAdmin && (
           <li
-            className="d-flex align-items-center justify-content-start gap-3 cursor-pointer w-100 mb-16"
+            className="d-flex align-items-center justify-content-start gap-3 cursor-pointer w-100 mb-16 padding-lr-sixteen"
             onClick={() => togglePopup(setShowProjectPopup)}
           >
             <img
               src="/assets/images/mark/plus.svg"
-              style={{ width: "24px" }}
+              style={{ width: "20px" }}
               alt="New Project"
             />
             <span className="project weight-400">New Project</span>

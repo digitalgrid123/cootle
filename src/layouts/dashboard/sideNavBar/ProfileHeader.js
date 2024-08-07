@@ -73,17 +73,12 @@ const ProfileHeader = () => {
               src={user?.profile_pic || "/assets/images/mark/profile.png"}
               alt="profile"
             />
-            <img
-              className="indicator"
-              src="/assets/images/mark/indicator.svg"
-              alt="indicator-icon"
-            />
           </div>
           <div>
-            <h1 className="profile-name weight-600">
+            <h1 className="profile-name weight-400">
               {isValidFullName(user?.fullname) ? user.fullname : ""}
             </h1>
-            <p className="profile-email m-0 weight-500 ">{user?.email}</p>
+            <p className="profile-email m-0 weight-400 ">{user?.email}</p>
           </div>
         </div>
         <div>
