@@ -2381,13 +2381,14 @@ textarea {
   transform: translateX(-50%);
 }
 
-/* .project-list {
+.project-list {
   max-height: 38vh;
-  overflow-y: auto;
+  overflow: clip;
+  overflow-clip-margin: 10px;
   padding: 0;
   margin: 0;
   list-style-type: none;
-} */
+}
 
 .project-list::-webkit-scrollbar {
   width: 4px;

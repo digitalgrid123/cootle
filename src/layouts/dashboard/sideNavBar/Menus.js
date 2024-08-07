@@ -297,6 +297,7 @@ const Menus = () => {
             <span className="project weight-400">New Project</span>
           </li>
         )}
+        
         <div className="project-list">{renderProjectList()}</div>
       </ul>
       <div>
