@@ -7,6 +7,7 @@ import { useGlobalCompany } from "@/utils/globalState";
 
 const NewCreateModel = ({ activeTab, setShowPopup, showPopup }) => {
   const { createcompany, setcompany } = useAuth();
+  const selectedCompany = useGlobalCompany();
 
   const [companyName, setCompanyName] = useState();
   const [logoFile, setLogoFile] = useState(null);
@@ -87,7 +88,7 @@ const NewCreateModel = ({ activeTab, setShowPopup, showPopup }) => {
           <div className="setting-box d-flex align-items-center justify-content-between border_bottom_soft-lavender ">
             <h1 className="company-setup-heading weight-500">Settings</h1>
             <div className="d-flex align-items-center gap-3">
-              {showPopup && (
+              {selectedCompany && showPopup && (
                 <button className="close_btn" onClick={handleClose}>
                   <span className="weight-600">Close</span>
                 </button>
