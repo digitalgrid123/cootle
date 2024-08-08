@@ -5,7 +5,6 @@ import { useGlobalCompany } from "@/utils/globalState";
 import PaginationComponent from "../table/Pagination";
 
 const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
-  console.log("🚀 ~ MemberModel ~ showPopup:", showPopup);
   const { toaster } = useToaster();
   const {
     inviteuser,
@@ -52,22 +51,23 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
   useEffect(() => {
-    // Handle clicks outside of the dropdown
     const handleClickOutside = (event) => {
       if (
-        dropdownRefs.current.every((ref) => ref && !ref.contains(event.target))
+        !dropdownRefs.current.some(
+          (ref, i) => ref && ref.contains(event.target) && showDropdown[i]
+        )
       ) {
         setShowDropdown({});
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [showDropdown]);
 
   useEffect(() => {
     const fetchMemberData = async () => {
@@ -193,9 +193,27 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
   };
 
   const isOwner = user?.is_owner && owner?.is_owner && user?.id === owner?.id;
+
   const handleClose = () => {
-    setShowPopup(false); // Close the popup when "Close" button is clicked
+    setShowPopup(false);
   };
+
+  const toggleDropdown = (index) => {
+    setShowDropdown((prev) => {
+      const newDropdownState = {};
+      Object.keys(prev).forEach((key) => {
+        newDropdownState[key] = false; // Close all dropdowns
+      });
+      newDropdownState[index] = !prev[index]; // Toggle the clicked dropdown
+      return newDropdownState;
+    });
+  };
+
+  const handleButtonClick = (event, index) => {
+    event.stopPropagation();
+    toggleDropdown(index);
+  };
+
   return (
     <>
       <div className="setting-box border_bottom_pastel d-flex align-items-center justify-content-between">
@@ -325,31 +343,29 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
                           </h2>
                         </div>
                       </td>
-                      <td
-                        className="relative cursor-pointer text-center"
-                        onClick={() =>
-                          setShowDropdown((prev) => ({
-                            ...prev,
-                            [index]: !prev[index],
-                          }))
-                        }
-                      >
+                      <td className="relative  text-center">
                         {member.accepted ? (
                           <>
-                            <span className="member-title weight-500">
-                              {member.invited_is_admin
-                                ? "Admin"
-                                : selectedOption}
-                            </span>
+                            <button
+                              className="dropdown-btn"
+                              onClick={(e) => handleButtonClick(e, index)}
+                              ref={(el) => (dropdownRefs.current[index] = el)}
+                            >
+                              <span className="member-title weight-500">
+                                {member.invited_is_admin
+                                  ? "Admin"
+                                  : selectedOption}
+                              </span>
+                              <span>
+                                <img
+                                  src="/assets/images/mark/littledrop.svg"
+                                  alt="dropdown"
+                                  // onClick={() => toggleDropdown(index)}
+                                />
+                              </span>
+                            </button>
                             {isOwner && (
                               <>
-                                <span>
-                                  <img
-                                    src="/assets/images/mark/littledrop.svg"
-                                    alt="dropdown"
-                                    // onClick={() => toggleDropdown(index)}
-                                  />
-                                </span>
                                 {showDropdown[index] && (
                                   <div className="member-content">
                                     <p
@@ -415,13 +431,6 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
                             )}
                             {!isOwner && !member.invited_is_admin && (
                               <>
-                                <span>
-                                  <img
-                                    src="/assets/images/mark/littledrop.svg"
-                                    alt="dropdown"
-                                    onClick={() => toggleDropdown(index)}
-                                  />
-                                </span>
                                 {showDropdown[index] && (
                                   <div className="dropdown-menu member-dropdown">
                                     <ul>
@@ -475,19 +484,25 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
                           </>
                         ) : (
                           <>
-                            <span className="member-title weight-500 ">
-                              Non-Member
-                            </span>
+                            <button
+                              className="dropdown-btn"
+                              onClick={(e) => handleButtonClick(e, index)}
+                              ref={(el) => (dropdownRefs.current[index] = el)}
+                            >
+                              <span className="member-title weight-500 ">
+                                Non-Member
+                              </span>
 
+                              <span>
+                                <img
+                                  src="/assets/images/mark/littledrop.svg"
+                                  alt="dropdown"
+                                  // onClick={() => toggleDropdown(index)}
+                                />
+                              </span>
+                            </button>
                             {isOwner && (
                               <>
-                                <span>
-                                  <img
-                                    src="/assets/images/mark/littledrop.svg"
-                                    alt="dropdown"
-                                    // onClick={() => toggleDropdown(index)}
-                                  />
-                                </span>
                                 {showDropdown[index] && (
                                   <div className="member-content">
                                     <p

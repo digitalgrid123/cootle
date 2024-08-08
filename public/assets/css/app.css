@@ -1498,6 +1498,12 @@ textarea {
   border: none;
   flex: 1 1;
 }
+.dropdown-btn {
+  background-color: transparent;
+  border: none;
+  transition: 0.3s;
+  cursor: pointer;
+}
 
 .member-list-heading {
   font-size: 18px;
