@@ -39,7 +39,7 @@ const SidebarHeader = () => {
           style={{ cursor: "pointer" }}
         >
           <img
-            src="/assets/images/mark/shape.svg"
+            src="/assets/images/mark/bell.svg"
             alt="bell"
             style={{ width: "24px" }}
           />
