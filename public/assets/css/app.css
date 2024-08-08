@@ -370,6 +370,7 @@ textarea {
 .mb-45 {
   margin-bottom: 45px;
 }
+
 .mb-16 {
   margin-bottom: 16px;
 }
@@ -1341,7 +1342,7 @@ textarea {
 }
 
 .page-title-heading {
-  font-size: 20px;
+  font-size: 18px;
   line-height: 24.05px;
   letter-spacing: -0.03em;
   text-align: left;
@@ -1499,12 +1500,13 @@ textarea {
 }
 
 .member-list-heading {
-  font-size: 20px;
+  font-size: 18px;
   line-height: 24.2px;
   letter-spacing: -0.03em;
   text-align: left;
   color: var(--deepPurple);
   margin-left: 14px;
+  margin-bottom: 32px;
 }
 .notification-badge {
   position: absolute;
