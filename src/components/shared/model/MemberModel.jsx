@@ -26,8 +26,22 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
   const [showDropdown, setShowDropdown] = useState({});
   const [pageLimit, setPageLimit] = useState(calculatePageLimit());
   const [owner, setOwner] = useState(null);
-  // Create refs for dropdown elements
-  const dropdownRefs = useRef([]);
+
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown({});
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // Pagination state
   const [activePage, setActivePage] = useState(1);
@@ -51,23 +65,6 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        !dropdownRefs.current.some(
-          (ref, i) => ref && ref.contains(event.target) && showDropdown[i]
-        )
-      ) {
-        setShowDropdown({});
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showDropdown]);
 
   useEffect(() => {
     const fetchMemberData = async () => {
@@ -349,7 +346,6 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
                             <button
                               className="dropdown-btn"
                               onClick={(e) => handleButtonClick(e, index)}
-                              ref={(el) => (dropdownRefs.current[index] = el)}
                             >
                               <span className="member-title weight-500">
                                 {member.invited_is_admin
@@ -367,18 +363,23 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
                             {isOwner && (
                               <>
                                 {showDropdown[index] && (
-                                  <div className="member-content">
+                                  <div
+                                    className="member-content"
+                                    ref={dropdownRef}
+                                  >
                                     <p
                                       onClick={() =>
                                         setSelectedOption("Member")
                                       }
-                                      className={
+                                      className={`cursor-pointer ${
                                         selectedOption === "Member"
                                           ? "selected-option"
                                           : ""
-                                      }
+                                      }`}
                                     >
-                                      Member
+                                      {member.invited_is_admin
+                                        ? "Admin"
+                                        : "Member"}
                                     </p>
                                     {member.invited_is_admin ? (
                                       <p
@@ -387,11 +388,11 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
                                             member.invited_user_id
                                           )
                                         }
-                                        className={
+                                        className={`cursor-pointer ${
                                           selectedOption === "Unassign Admin"
                                             ? "selected-option"
                                             : ""
-                                        }
+                                        }`}
                                       >
                                         Unauthorized as admin
                                       </p>
@@ -402,11 +403,11 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
                                             member.invited_user_id
                                           )
                                         }
-                                        className={
+                                        className={`cursor-pointer ${
                                           selectedOption === "Assign Admin"
                                             ? "selected-option"
                                             : ""
-                                        }
+                                        }`}
                                       >
                                         Authorize as admin
                                       </p>
@@ -417,11 +418,11 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
                                           member.invited_user_id
                                         )
                                       }
-                                      className={
+                                      className={`cursor-pointer ${
                                         selectedOption === "Remove Member"
                                           ? "selected-option"
                                           : ""
-                                      }
+                                      }`}
                                     >
                                       Remove Member
                                     </p>
@@ -432,7 +433,10 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
                             {!isOwner && !member.invited_is_admin && (
                               <>
                                 {showDropdown[index] && (
-                                  <div className="dropdown-menu member-dropdown">
+                                  <div
+                                    className="dropdown-menu member-dropdown"
+                                    ref={dropdownRef}
+                                  >
                                     <ul>
                                       {member.invited_user_fullname &&
                                       !member.invited_user_fullname.startsWith(
@@ -441,6 +445,7 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
                                         <>
                                           {isOwner && (
                                             <li
+                                              className="cursor-pointer"
                                               onClick={() =>
                                                 handleRemoveMember(member.id)
                                               }
@@ -450,6 +455,7 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
                                           )}
                                           {member.is_admin ? (
                                             <li
+                                              className="cursor-pointer"
                                               onClick={() =>
                                                 handleUnassignAdmin(member.id)
                                               }
@@ -458,6 +464,7 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
                                             </li>
                                           ) : (
                                             <li
+                                              className="cursor-pointer"
                                               onClick={() =>
                                                 handleAssignAdmin(member.id)
                                               }
@@ -468,7 +475,7 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
                                         </>
                                       ) : (
                                         <li
-                                          className="mb-0 p-0"
+                                          className="mb-0 p-0 cursor-pointer"
                                           onClick={() =>
                                             handleRemoveMember(member.id)
                                           }
@@ -487,7 +494,6 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
                             <button
                               className="dropdown-btn"
                               onClick={(e) => handleButtonClick(e, index)}
-                              ref={(el) => (dropdownRefs.current[index] = el)}
                             >
                               <span className="member-title weight-500 ">
                                 Non-Member
@@ -504,12 +510,15 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
                             {isOwner && (
                               <>
                                 {showDropdown[index] && (
-                                  <div className="member-content">
+                                  <div
+                                    className="member-content"
+                                    ref={dropdownRef}
+                                  >
                                     <p
                                       onClick={() =>
                                         handleRemoveInvitation(member.id)
                                       }
-                                      className={`mb-0 p-0
+                                      className={`mb-0 p-0 cursor-pointer 
                                         ${
                                           selectedOption === "Remove Member "
                                             ? "selected-option"
