@@ -297,7 +297,9 @@ const ProductOutcomes = ({
       <div className="wrapper-company">
         <div className="company-sidebar">
           <div className="d-flex align-items-center w-100 justify-content-between">
-            <h1 className="company-setup-heading weight-500">Outcomes</h1>
+            <h1 className="mapping-category-heading padding-left-20 ">
+              Outcomes
+            </h1>
             {isAdmin && (
               <div className="cursor-pointer" onClick={toggleDropdown}>
                 <img
@@ -319,7 +321,7 @@ const ProductOutcomes = ({
                 }`}
                 onClick={() => handleTabClick(obj)}
               >
-                <h2 className="menutext f-16 weight-500">{obj.title}</h2>
+                <h2 className="menutext f-16 weight-400">{obj.title}</h2>
                 {isAdmin && activeTab?.id === obj.id ? (
                   <button
                     className="archived-btn menutext f-16 weight-500"
@@ -337,7 +339,7 @@ const ProductOutcomes = ({
         </div>
 
         <div className="sub-content">
-          <h1 className="company-setup-heading weight-500 mb-20">
+          <h1 className="company-setup-heading weight-500 pb-16 pl-28">
             {activeTab?.title}
           </h1>
 
@@ -427,7 +429,7 @@ const ProductOutcomes = ({
                 <>
                   <div className="product-outcome-tabs h-100 ">
                     <div className="d-flex align-items-center w-100 justify-content-between mb-20">
-                      <h1 className="company-setup-heading weight-500">
+                      <h1 className="company-setup-heading weight-500 pl-14">
                         Efforts
                       </h1>
                       {isAdmin && (
@@ -450,14 +452,14 @@ const ProductOutcomes = ({
                             key={designEffort.id}
                             className={`product-outcome-tab weight-500 d-flex align-items-center justify-content-start gap-2 ${
                               activeProductOutcome === designEffort.title
-                                ? "active"
-                                : ""
+                                ? "active active-tab"
+                                : "inactive-tab"
                             }`}
                             onClick={() =>
                               handleProductOutcomeClick(designEffort)
                             }
                           >
-                            <h2 className="menutext f-16 weight-500">
+                            <h2 className="menutext f-16 weight-400">
                               {designEffort.title}
                             </h2>
                           </li>

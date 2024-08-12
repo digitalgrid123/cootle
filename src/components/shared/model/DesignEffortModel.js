@@ -173,6 +173,14 @@ const DesignEffortModel = ({
     items: unselectedItems.filter((item) => item.category === category),
   }));
 
+  useEffect(() => {
+    if (designdropdownOpen) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+  }, [designdropdownOpen]);
+
   return (
     <div>
       {designdropdownOpen && (

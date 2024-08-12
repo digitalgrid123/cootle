@@ -9,12 +9,17 @@ const NewCreateModel = ({ activeTab, setShowPopup, showPopup }) => {
   const { createcompany, setcompany } = useAuth();
   const selectedCompany = useGlobalCompany();
 
-  const [companyName, setCompanyName] = useState();
+  const [companyName, setCompanyName] = useState("");
   const [logoFile, setLogoFile] = useState(null);
-  const [filePreview, setFilePreview] = useState();
+  const [filePreview, setFilePreview] = useState(null);
   const fileInputRef = useRef(null);
   const { push } = useRouter();
   const { toaster } = useToaster();
+
+  useEffect(() => {
+    setCompanyName(selectedCompany?.name || "");
+    setFilePreview(selectedCompany?.logo || null);
+  }, [selectedCompany]);
 
   const handleInputChange = (e) => {
     setCompanyName(e.target.value);
@@ -23,6 +28,16 @@ const NewCreateModel = ({ activeTab, setShowPopup, showPopup }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) {
+      setLogoFile(null);
+      setFilePreview(null);
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+    if (!allowedTypes.includes(file.type)) {
+      toaster("Only PNG, JPG, and JPEG files are allowed.", TOAST_TYPES.ERROR);
+      fileInputRef.current.value = ""; // Clear the input
       setLogoFile(null);
       setFilePreview(null);
       return;
@@ -77,6 +92,7 @@ const NewCreateModel = ({ activeTab, setShowPopup, showPopup }) => {
     }
     await handleSave();
   };
+
   const handleClose = () => {
     setShowPopup(false); // Close the popup when "Close" button is clicked
   };

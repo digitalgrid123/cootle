@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { setSelectedCompany, useGlobalCompany } from "@/utils/globalState";
 
 const CompanySettingModel = ({ activeTab, setShowPopup, showPopup }) => {
-  const { createcompany, editcompany } = useAuth();
+  const { editcompany } = useAuth();
   const selectedCompany = useGlobalCompany();
 
   const [companyName, setCompanyName] = useState(selectedCompany?.name || "");
@@ -28,6 +28,17 @@ const CompanySettingModel = ({ activeTab, setShowPopup, showPopup }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) {
+      setLogoFile(null);
+      setFilePreview(null);
+      return;
+    }
+
+    const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+    if (!allowedTypes.includes(file.type)) {
+      toaster(
+        "Invalid file format. Please upload a PNG, JPG, or JPEG image.",
+        TOAST_TYPES.ERROR
+      );
       setLogoFile(null);
       setFilePreview(null);
       return;
@@ -87,9 +98,11 @@ const CompanySettingModel = ({ activeTab, setShowPopup, showPopup }) => {
     }
     await handleSave();
   };
+
   const handleClose = () => {
     push(PATH_DASHBOARD.createcompany.root);
   };
+
   return (
     <>
       {activeTab === "settings" && (

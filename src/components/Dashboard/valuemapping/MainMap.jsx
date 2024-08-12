@@ -133,7 +133,7 @@ const MainMap = () => {
 
   return (
     <div className="h-100 d-flex flex-column">
-      <div className="d-flex align-items-center justify-content-between mb-3 title-content-container custom-padding-mapping">
+      <div className="d-flex align-items-center justify-content-between header-position title-content-container custom-padding-mapping">
         <Title title="Value mapping" />
         <div className="button-group">
           <button
@@ -214,7 +214,7 @@ const MainMap = () => {
         </div>
       </div>
 
-      <div className="box-content">{renderContent()}</div>
+      <div className="box-content mt-60">{renderContent()}</div>
     </div>
   );
 };

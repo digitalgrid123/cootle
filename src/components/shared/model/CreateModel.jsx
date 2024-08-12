@@ -59,6 +59,14 @@ const CreateModel = ({
     };
   }, [dropdownOpen]);
 
+  useEffect(() => {
+    if (dropdownOpen) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+  }, [dropdownOpen]);
+
   return (
     <div>
       {dropdownOpen && (

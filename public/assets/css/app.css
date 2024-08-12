@@ -61,6 +61,7 @@
   --deep-purple-overlay: #1a072c80;
   --lavender-blush: #f6effd;
   --semi-transparent-white: #ffffff33;
+
   /* linear Gradient */
   --linear-gradient: linear-gradient(
     90deg,
@@ -207,9 +208,14 @@ textarea {
 .border_bottom_bluish {
   border-bottom: 1px solid var(--bluish-tint);
 }
+.padding-top-70-bottom-90 {
+  padding-top: 70px;
+  padding-bottom: 90px;
+}
 .padding-left-20 {
   padding-left: 20px !important;
 }
+
 .padding-lr-30 {
   padding: 0 30px !important;
 }
@@ -269,6 +275,9 @@ textarea {
 .pl-12 {
   padding-left: 12px;
 }
+.pl-28 {
+  padding-left: 28px;
+}
 .pb-20 {
   padding-bottom: 20px;
 }
@@ -325,7 +334,9 @@ textarea {
 .pr-70 {
   padding-right: 70px;
 }
-
+.pl-14 {
+  padding-left: 14px;
+}
 .plr-14 {
   padding-left: 14px;
   padding-right: 14px;
@@ -357,6 +368,9 @@ textarea {
 }
 .mt-40 {
   margin-top: 40px;
+}
+.mt-60 {
+  margin-top: 60px;
 }
 .mb-24 {
   margin-bottom: 24px;
@@ -451,6 +465,14 @@ textarea {
   line-height: 20.3px;
   letter-spacing: -0.03em;
   text-align: left;
+}
+.header-position {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 78.5%;
+  margin: 16px 23px 0 0px;
+  z-index: 1000;
 }
 
 .close_btn {
@@ -588,14 +610,13 @@ textarea {
 .mapping-category-heading {
   color: var(--deepPurple);
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 19.36px;
   letter-spacing: -0.03em;
   text-align: left;
 }
 .main-setup-heading {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 16px;
   line-height: 21.78px;
   letter-spacing: -0.03em;
   text-align: left;
@@ -750,7 +771,7 @@ textarea {
 .company-sidebar {
   width: 248px;
   background-color: var(--light-lavender);
-  padding: 27px 16px 16px 16px;
+  padding: 24px 16px 16px 16px;
   border: none;
   border-radius: 24px;
 }
@@ -797,16 +818,17 @@ textarea {
 }
 
 .accept_btn {
-  background-color: var(--Rich-black);
+  background-color: var(--deepPurple);
   border: none;
   border-radius: 16px;
   width: 100%;
-  padding: 13px 50px;
+  padding: 8px 16px;
 }
 .accept_btn > span {
   font-size: 14px;
-  line-height: 14px;
+  line-height: 16px;
   text-align: center;
+
   color: var(--text-color);
 }
 .invite-actions {
@@ -822,10 +844,10 @@ textarea {
 }
 .reject_btn {
   background-color: var(--text-color);
-  border: none;
+  border: 1px solid var(--pastel-lavender);
   border-radius: 16px;
   width: 100%;
-  padding: 13px 50px;
+  padding: 8px 16px;
 }
 .invitation_prompt {
   margin-top: 16px;
@@ -1425,15 +1447,15 @@ textarea {
   border-radius: 16px;
   border: none;
   width: 100%;
-  padding: 0 38px;
+  padding: 0 30px;
   display: flex;
-  gap: 10px;
+  gap: 24px;
 }
 .content-tab {
   border: none;
   background: transparent;
   color: var(--deepPurple);
-  font-size: 17px;
+  font-size: 16px;
   line-height: 20.57px;
   letter-spacing: -0.03em;
   text-align: left;
@@ -1449,7 +1471,8 @@ textarea {
   left: 0;
   width: 100%;
   height: 4px;
-  background-color: var(--Charcoal-Mist);
+  border-radius: 8px;
+  background-color: var(--deepPurple);
 }
 
 .member-content {
@@ -1529,12 +1552,11 @@ textarea {
   flex: 1 1;
   background: var(--light-lavender);
   border-radius: 24px;
-  padding: 40px 0;
+  padding: 18px 16px;
   position: relative; /* Position relative for scrollbar styling */
 }
 
 .notification-scroll {
-  margin-top: 20px;
   overflow: auto; /* Use 'auto' for automatic scrollbar display */
   max-height: 488px;
 }
@@ -1665,7 +1687,7 @@ textarea {
 }
 
 .product-outcome-tabs ul li.active {
-  background-color: var(--text-color);
+  background-color: var(--deepPurple);
   border: none;
   border-radius: 16px;
 }
@@ -1755,7 +1777,6 @@ textarea {
   background-color: var(--text-color);
   border-radius: 24px;
   width: 100%;
-  border: none;
   padding: 24px;
   height: 100%;
 }
@@ -1781,6 +1802,10 @@ textarea {
 .edit-button {
   background-color: transparent;
   border: none;
+  display: none;
+}
+.content-defination-area:hover .edit-button {
+  display: block;
 }
 .textarea-input {
   border-radius: 16px;
@@ -1793,7 +1818,7 @@ textarea {
   max-height: 250px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #f0e5fb #1a072ccc;
+  scrollbar-color: var(--pastel-lavender) #1a072ccc;
 }
 
 .scrollbar-custom::-webkit-scrollbar {
@@ -2517,4 +2542,114 @@ textarea {
   line-height: 14px;
   text-align: right;
   color: var(--text-color);
+}
+.notification-title-heading {
+  color: var(--deepPurple);
+  font-size: 24px;
+
+  line-height: 29.05px;
+  letter-spacing: -0.03em;
+  text-align: left;
+}
+.tab-btn {
+  background-color: var(--dark-purple-gray);
+  border: none;
+
+  font-size: 16px;
+  padding: 12px 8px;
+  cursor: pointer;
+  transition: color 0.3s;
+  border-radius: 8px;
+}
+.tab-btn > span {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: right;
+  color: var(--text-color);
+}
+
+.tab-btn.active {
+  background-color: var(--deepPurple);
+}
+.notify-clean-btn {
+  background-color: var(--pastel-lavender);
+  border: none;
+  border-radius: 24px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.notify-clean-btn > span {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: right;
+  color: var(--deepPurple);
+}
+
+.notify-clean-btn:hover {
+  background-color: var(--deepPurple);
+}
+
+.notify-clean-btn:hover > span {
+  color: var(--text-color);
+}
+
+.notification-message {
+  font-size: 14px;
+
+  line-height: 20.3px;
+  letter-spacing: -0.03em;
+  text-align: left;
+}
+
+.notification-item {
+  position: relative;
+}
+
+.cross_btn {
+  display: none;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.notification-item:hover .cross_btn {
+  display: block;
+}
+
+.caught-text {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.03em;
+  text-align: center;
+  color: var(--dark-purple-gray);
+}
+.no-notification {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: -0.03em;
+  text-align: center;
+  color: var(--dark-purple-gray);
+  margin-top: 8px;
+}
+.no-scroll {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+.skeleton-item {
+  height: 50px;
+  background: var(--lavender-blush);
+
+  margin: 10px 0;
+  border-radius: 4px;
 }
