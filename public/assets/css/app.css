@@ -555,6 +555,7 @@ textarea {
   width: 100% !important;
   box-shadow: var(--box-shadow);
   border-radius: 8px;
+  z-index: 1;
 }
 .scroll-property::-webkit-scrollbar {
   display: none;
