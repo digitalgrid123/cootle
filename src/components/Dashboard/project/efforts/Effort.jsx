@@ -291,35 +291,35 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
           backgroundColor: "#483956",
           color: "white",
           padding: "12px 16px",
-          borderRadius: "8px",
+          borderRadius: "12px",
         };
       case "UCH":
         return {
           backgroundColor: "#F24E1E",
           color: "white",
           padding: "12px 16px",
-          borderRadius: "8px",
+          borderRadius: "12px",
         };
       case "UPA":
         return {
           backgroundColor: "#723D46",
           color: "white",
           padding: "12px 16px",
-          borderRadius: "8px",
+          borderRadius: "12px",
         };
       case "REA":
         return {
           backgroundColor: "#128E5E",
           color: "white",
           padding: "12px 16px",
-          borderRadius: "8px",
+          borderRadius: "12px",
         };
       case "VUR":
         return {
           backgroundColor: "#F58E07",
           color: "white",
           padding: "12px 16px",
-          borderRadius: "8px",
+          borderRadius: "12px",
         };
       default:
         return {};
@@ -409,7 +409,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
 
     return (
       <ul className="timeline-dates">
-        {years.map((year) => (
+        {years.reverse().map((year) => (
           <React.Fragment key={year}>
             {selectedOption === "Monthly" &&
               months.map(
@@ -662,19 +662,20 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                               </h1>
                             </div>
                             <div className="col-lg-10">
-                              {effort.design_effort && (
-                                <li
-                                  key={effort.design_effort}
-                                  className="p-0 selectedone"
-                                >
-                                  <span className="dot black"></span>
-                                  {design
-                                    .flatMap((category) => category.items)
-                                    .find(
-                                      (obj) => obj.id === effort.design_effort
-                                    )?.title || ""}
-                                </li>
-                              )}
+                              <ul className=" d-flex align-items-center m-0 flex-wrap gap-4">
+                                {effort.design_effort && (
+                                  <li
+                                    key={effort.design_effort}
+                                    className="p-0 selectedone"
+                                  >
+                                    {design
+                                      .flatMap((category) => category.items)
+                                      .find(
+                                        (obj) => obj.id === effort.design_effort
+                                      )?.title || ""}
+                                  </li>
+                                )}
+                              </ul>
                             </div>
                           </div>
                           <div className="d-flex align-items-start gap-4 mb-24">
@@ -682,18 +683,22 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                               <h1 className="select-outcome-text">Outcome:</h1>
                             </div>
                             <div className="col-lg-10">
-                              {effort.outcomes &&
-                                effort.outcomes.map((outcomeId) => (
-                                  <li
-                                    key={outcomeId}
-                                    className="p-0 selectedone"
-                                  >
-                                    <span className="dot black"></span>
-                                    {objectives.find(
-                                      (obj) => obj.id === outcomeId
-                                    )?.title || ""}
-                                  </li>
-                                ))}
+                              <ul
+                                className=" d-flex align-items-center m-0 flex-wrap "
+                                style={{ gap: "0 40px" }}
+                              >
+                                {effort.outcomes &&
+                                  effort.outcomes.map((outcomeId) => (
+                                    <li
+                                      key={outcomeId}
+                                      className="p-0 selectedone "
+                                    >
+                                      {objectives.find(
+                                        (obj) => obj.id === outcomeId
+                                      )?.title || ""}
+                                    </li>
+                                  ))}
+                              </ul>
                             </div>
                           </div>
                           <div className="d-flex align-items-start gap-4 mb-24">
@@ -701,44 +706,48 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                               <h1 className="select-outcome-text">Purpose:</h1>
                             </div>
                             <div className="col-lg-10">
-                              {effort.purpose && (
-                                <li
-                                  key={effort.purpose}
-                                  className="p-0 selectedone"
-                                >
-                                  <span className="dot black"></span>
-                                  {purposeListData?.find(
-                                    (obj) => obj.id === effort.purpose
-                                  )?.title || ""}
-                                </li>
-                              )}
+                              <ul className=" d-flex align-items-center m-0 flex-wrap gap-4">
+                                {effort.purpose && (
+                                  <li
+                                    key={effort.purpose}
+                                    className="p-0 selectedone"
+                                  >
+                                    {purposeListData?.find(
+                                      (obj) => obj.id === effort.purpose
+                                    )?.title || ""}
+                                  </li>
+                                )}
+                              </ul>
                             </div>
                           </div>
                           <div className="d-flex align-items-start gap-4">
                             <div className="col-lg-2">
                               <h1 className="select-outcome-text">Links:</h1>
                             </div>
-
-                            {effort.links && effort.links.length > 0 ? (
-                              effort.links.map((linkObj, index) => (
-                                <li
-                                  key={linkObj.id}
-                                  className="p-0 selectedone"
-                                >
-                                  <a
-                                    href={linkObj.link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    style={{ textDecoration: "underline" }}
-                                    className="selectedone"
-                                  >
-                                    {`Link ${index + 1}`}
-                                  </a>
-                                </li>
-                              ))
-                            ) : (
-                              <></>
-                            )}
+                            <div className="col-lg-10">
+                              <ul className=" d-flex align-items-center m-0 flex-wrap gap-4">
+                                {effort.links && effort.links.length > 0 ? (
+                                  effort.links.map((linkObj, index) => (
+                                    <li
+                                      key={linkObj.id}
+                                      className="p-0 selectedone"
+                                    >
+                                      <a
+                                        href={linkObj.link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={{ textDecoration: "underline" }}
+                                        className="selectedone"
+                                      >
+                                        {`Link ${index + 1}`}
+                                      </a>
+                                    </li>
+                                  ))
+                                ) : (
+                                  <></>
+                                )}
+                              </ul>
+                            </div>
                           </div>
                         </div>
                         <div className=" d-flex gap-2  justify-content-between flex-column w-100  pt-18">

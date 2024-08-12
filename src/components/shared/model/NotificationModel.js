@@ -75,7 +75,7 @@ const NotificationModel = ({
   const extractUserName = (message) => {
     const nameRegex = /^[A-Z][a-z]*\s[A-Z][a-z]*\.?/;
     const match = message.match(nameRegex);
-    return match ? match[0] : "User";
+    return match ? match[0] : "";
   };
 
   // Function to extract the rest of the message

@@ -62,6 +62,14 @@ const InvitationModel = ({ showPopup, next, contentRef, setShowPopup }) => {
     }
   };
 
+  useEffect(() => {
+    if (showPopup) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+  }, [showPopup]);
+
   return (
     <div>
       {showPopup && (

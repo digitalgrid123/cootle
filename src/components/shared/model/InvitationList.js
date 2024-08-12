@@ -76,9 +76,16 @@ const InvitationList = ({ setShowInvite, showInvite }) => {
   const handleClose = () => {
     setShowInvite(false);
   };
+  useEffect(() => {
+    if (showInvite) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+  }, [showInvite]);
 
   return (
-    <div>
+    <>
       {showInvite && (
         <div ref={overlayRef} className="invitation-overlay padding-company">
           <div className="company-content w-100 h-100 ">
@@ -132,7 +139,7 @@ const InvitationList = ({ setShowInvite, showInvite }) => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

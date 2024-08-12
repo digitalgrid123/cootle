@@ -340,6 +340,14 @@ const CombinedEffortModel = ({
     ));
   };
 
+  useEffect(() => {
+    if (dropdownOpen) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+  }, [dropdownOpen]);
+
   return (
     <>
       {dropdownOpen && (
@@ -349,9 +357,9 @@ const CombinedEffortModel = ({
               <div className="row">
                 <div className="col-lg-12">
                   <div className="d-flex align-items-center pb-16 border_bottom_soft-lavender justify-content-between">
-                    <div className="d-flex align-items-center gap-4 border_bottom_soft-lavender pb-16">
+                    <div className="d-flex align-items-center gap-4 ">
                       <button
-                        className={` tab-button ${
+                        className={`tab-button  pr-12 ${
                           activeTab === "effort" ? "active-effort" : ""
                         }`}
                         onClick={() => setActiveTab("effort")}
@@ -363,7 +371,7 @@ const CombinedEffortModel = ({
                         <span className="add-text">Efforts</span>
                       </button>
                       <button
-                        className={`tab-button ${
+                        className={`tab-button pr-12 ${
                           activeTab === "outcomes" ? "active-outcomes" : ""
                         }`}
                         onClick={() => setActiveTab("outcomes")}
@@ -375,7 +383,7 @@ const CombinedEffortModel = ({
                         <span className="add-text">Outcomes</span>
                       </button>
                       <button
-                        className={` tab-button ${
+                        className={` tab-button pr-12 ${
                           activeTab === "purpose" ? "active-purpose" : ""
                         }`}
                         onClick={() => setActiveTab("purpose")}
@@ -387,7 +395,7 @@ const CombinedEffortModel = ({
                         <span className="add-text">Purpose</span>
                       </button>
                       <button
-                        className={` tab-button ${
+                        className={` tab-button pr-12 ${
                           activeTab === "links" ? "active-links" : ""
                         }`}
                         onClick={() => setActiveTab("links")}
@@ -399,7 +407,7 @@ const CombinedEffortModel = ({
                         <span className="add-text">Links</span>
                       </button>
                     </div>
-                    <div className="d-flex justify-content-end w-100">
+                    <div className="d-flex justify-content-end">
                       <button
                         className="close-button"
                         onClick={closeDropdown}
@@ -411,10 +419,14 @@ const CombinedEffortModel = ({
                   </div>
                 </div>
                 <div className="col-lg-12">
-                  <div className="dropdown-header d-flex align-items-center justify-content-between pt-16 pb-16 border_bottom_soft-lavender ">
+                  <div
+                    className={`dropdown-header d-flex align-items-center justify-content-between pt-16 pb-16 ${
+                      activeTab === "links" ? "" : "border_bottom_soft-lavender"
+                    }`}
+                  >
                     <div className="col-lg-6">
                       <div className="d-flex align-items-center gap-4">
-                        <h2 className="category-heading weight-600">
+                        <h2 className="category-heading weight-500">
                           {activeTab === "links"
                             ? "Links"
                             : activeTab === "purpose"

@@ -265,6 +265,13 @@ const CombinedPurposeDropdown = ({
       handleAddClick();
     }
   };
+  useEffect(() => {
+    if (dropdownOpen) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+  }, [dropdownOpen]);
 
   return (
     <div>
@@ -317,7 +324,7 @@ const CombinedPurposeDropdown = ({
                   <div className="dropdown-header d-flex align-items-center justify-content-between pt-16 pb-16 border_bottom_soft-lavender ">
                     <div className="col-lg-6">
                       <div className="d-flex align-items-center gap-4">
-                        <h2 className="category-heading weight-600 ">
+                        <h2 className="category-heading weight-500 ">
                           {activeTab === "design"
                             ? "Design Efforts"
                             : "Product Desired Outcomes"}

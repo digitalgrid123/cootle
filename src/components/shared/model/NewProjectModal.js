@@ -1,7 +1,7 @@
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 import { useAuth, useToaster } from "@/hooks";
 import useOutsideClick from "@/hooks/useOutsideClick";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const NewProjectModal = ({
   showProjectPopup,
@@ -48,12 +48,20 @@ const NewProjectModal = ({
     setProjectName(e.target.value);
   };
 
+  useEffect(() => {
+    if (showProjectPopup) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+  }, [showProjectPopup]);
+
   return (
     showProjectPopup && (
       <div ref={overlayRef} className="invitation-overlay padding-company">
-        <div className="company-content w-100 h-100">
+        <div className="company-content w-50 ">
           <div className="box-invitation">
-            <div className="d-flex align-items-center justify-content-between border_bottom_faint pb-20">
+            <div className="d-flex align-items-center justify-content-between border_bottom_faint pb-16">
               <h2 className="company-setup-heading weight-500">
                 Create New Project
               </h2>
@@ -69,13 +77,13 @@ const NewProjectModal = ({
                 </button>
               </div>
             </div>
-            <div className="d-flex flex-column gap-3 mt-20">
+            <div className="d-flex flex-column gap-2 mb-45 mt-16">
               <label htmlFor="projectName" className="label-company weight-500">
                 Add project name
               </label>
               <input
                 id="projectName"
-                className="form-control w-40"
+                className="new-project-control w-40"
                 type="text"
                 placeholder="Project Name"
                 value={projectName}

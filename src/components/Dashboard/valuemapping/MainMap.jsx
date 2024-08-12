@@ -214,7 +214,7 @@ const MainMap = () => {
         </div>
       </div>
 
-      <div className="box-content mt-60">{renderContent()}</div>
+      <div className="box-content mt-16">{renderContent()}</div>
     </div>
   );
 };

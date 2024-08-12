@@ -61,6 +61,13 @@ const UserModel = ({
       }
     }
   };
+  useEffect(() => {
+    if (showPopup) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+  }, [showPopup]);
 
   return (
     <div>

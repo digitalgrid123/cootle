@@ -42,8 +42,16 @@ const CreateNewModel = ({ showPopup, setShowPopup, contentRef }) => {
       ? "/assets/images/mark/member-active.svg"
       : "/assets/images/mark/member-inactive.svg";
 
+  useEffect(() => {
+    if (showPopup) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+  }, [showPopup]);
+
   return (
-    <div>
+    <>
       {showPopup && (
         <div ref={overlayRef} className="invitation-overlay padding-company">
           <div ref={contentRef} className="invitation-content w-100 h-100">
@@ -108,7 +116,7 @@ const CreateNewModel = ({ showPopup, setShowPopup, contentRef }) => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

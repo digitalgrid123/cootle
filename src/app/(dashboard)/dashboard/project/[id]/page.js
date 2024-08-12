@@ -108,7 +108,7 @@ const Page = () => {
         setSelectedMapping={handleTabChange}
         renderAdminButton={renderAdminButton}
       />
-      <div className="box-content mt-60">{renderContent()}</div>
+      <div className="box-content mt-16">{renderContent()}</div>
     </div>
   );
 };
@@ -119,7 +119,7 @@ const Header = ({
   setSelectedMapping,
   renderAdminButton,
 }) => (
-  <div className="d-flex align-items-center justify-content-between mb-3 title-content-container custom-padding-purpose header-position">
+  <div className="d-flex align-items-center justify-content-between  title-content-container custom-padding-purpose header-position">
     <Title title={title} />
     <div className="button-group">
       {["purpose", "efforts", "insight"].map((mapping) => (

@@ -273,7 +273,7 @@ textarea {
   margin-right: 12px;
 }
 .pl-12 {
-  padding-left: 12px;
+  padding-left: 12px !important;
 }
 .pl-28 {
   padding-left: 28px;
@@ -306,7 +306,10 @@ textarea {
   margin-bottom: 8px;
 }
 .pb-32 {
-  padding-bottom: 32px;
+  padding-bottom: 32px !important;
+}
+.padding-thirtytwo {
+  padding: 0 0 32px 0 !important;
 }
 .center {
   display: flex;
@@ -336,6 +339,9 @@ textarea {
 }
 .pl-14 {
   padding-left: 14px;
+}
+.pr-12 {
+  padding-right: 12px !important;
 }
 .plr-14 {
   padding-left: 14px;
@@ -467,12 +473,10 @@ textarea {
   text-align: left;
 }
 .header-position {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 78.5%;
-  margin: 16px 23px 0 0px;
-  z-index: 1000;
+  top: 10px;
+  width: 100%;
+  z-index: 2;
+  position: sticky;
 }
 
 .close_btn {
@@ -889,7 +893,7 @@ textarea {
   padding: 16px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 1px 2px 0px #1b242c1f;
+  /* box-shadow: 0px 1px 2px 0px var(--grayish-blue); */
 }
 .mapping_btn {
   border: none;
@@ -1680,10 +1684,11 @@ textarea {
 
 .product-outcome-tabs {
   width: 248px;
-  background-color: #ffffff66;
+  background-color: var(--text-color);
   padding: 24px 16px;
   border: none;
   border-radius: 24px;
+  border: 1px solid var(--soft-lavender);
 }
 
 .product-outcome-tabs ul li.active {
@@ -1805,6 +1810,9 @@ textarea {
   display: none;
 }
 .content-defination-area:hover .edit-button {
+  display: block;
+}
+.section-project:hover .edit-button {
   display: block;
 }
 .textarea-input {
@@ -2082,7 +2090,7 @@ textarea {
   padding: 0;
   border: none;
   border-radius: 8px;
-  box-shadow: 0px 1px 2px 0px #1b242c1f;
+  box-shadow: 0px 1px 2px 0px var(--grayish-blue);
   background-color: white;
   position: absolute;
   padding: 8px;
@@ -2296,22 +2304,21 @@ textarea {
   position: absolute;
   background: var(--text-color) !important;
   z-index: 1000;
-  box-shadow: var(--box-shadow);
+  box-shadow: 0px 1px 2px 0px #1b242c1f;
+  border: 1px solid #f6effd;
   border-radius: 8px;
+  padding: 16px 27px;
 }
 
 .DropdownCheckedlist-menu > li {
-  font-size: 17px;
-  line-height: 20.57px;
+  color: var(--deepPurple);
+  font-size: 16px;
+  line-height: 16px;
   letter-spacing: -0.03em;
-  text-align: left;
-  color: var(--Charcoal-Mist);
-  font-weight: 500;
-  padding: 8px;
+  text-align: center;
 }
 
-.DropdownCheckedlist-menu > li.active,
-.DropdownCheckedlist-menu > li:hover {
+.DropdownCheckedlist-menu > li.active {
   background: var(--light-lavender) !important;
   border-radius: 16px !important;
   border: none !important;
@@ -2423,7 +2430,7 @@ textarea {
 .project-list {
   max-height: 38vh;
   overflow: clip;
-  overflow-clip-margin: 10px;
+  overflow-clip-margin: 200px;
   padding: 0;
   margin: 0;
   list-style-type: none;
@@ -2448,13 +2455,15 @@ textarea {
 
 /* Default button styles */
 .tab-button {
-  background-color: var(--dark-purple-gray);
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  white-space: nowrap;
+  width: auto;
+  flex-grow: 1;
+  background-color: var(--dark-purple-gray);
   gap: 8px;
   border: none;
-  padding: 10px 20px;
-  padding: 12px 8px 12px 8px;
+  padding: 12px 24px 12px 8px;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
@@ -2531,7 +2540,7 @@ textarea {
 }
 .close-button {
   background-color: var(--deepPurple);
-  padding: 13px 16px 13px 16px;
+  padding: 8px 16px;
   border-radius: 12px;
   border: none;
 }
@@ -2652,4 +2661,47 @@ textarea {
 
   margin: 10px 0;
   border-radius: 4px;
+}
+.project-dropdown-menu {
+  border-radius: 8px;
+  box-shadow: 0px 1px 2px 0px var(--grayish-blue);
+  background-color: var(--text-color) !important;
+  padding: 18px 16px 10px 16px !important;
+
+  position: absolute;
+  top: 4px;
+  right: -154px;
+  z-index: 999999;
+}
+.project-dropdown-menu > li > .span {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: -0.03em;
+  text-align: left;
+  padding-left: 5px;
+}
+
+.project-dropdown-menu > li > .delete-project-text {
+  color: var(--Bright-Orange);
+}
+
+.project-dropdown-menu > li > .edit-project-text {
+  color: var(--deepPurple);
+}
+.error-message {
+  color: var(--Bright-Orange);
+}
+.new-project-control {
+  padding: 12px 8px 12px 8px !important;
+  border: none !important;
+  border-radius: 8px !important;
+  background-color: var(--text-color) !important;
+}
+.new-project-control ::placeholder {
+  color: #1a072c66 !important;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: right;
 }

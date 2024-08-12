@@ -1,6 +1,6 @@
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 import { useAuth, useToaster } from "@/hooks";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const statusDescriptions = {
   YBC: "Yet to be checked",
@@ -41,6 +41,34 @@ const DropdownCheckedlist = ({
     }
   };
 
+  const getStyledDescription = (description) => {
+    // Define keywords with weight-600
+    const weight600Keywords = ["Unplanned", "Realised", "Unrealised"];
+
+    // Split the description into words
+    const words = description.split(" ");
+
+    // Map through words and apply styles conditionally
+    return words.map((word, index) => {
+      const isWeight600 = weight600Keywords.some((keyword) =>
+        word.includes(keyword)
+      );
+      const className = isWeight600 ? "weight-600" : "weight-500";
+      return (
+        <span key={index} className={className}>
+          {word}
+          {index < words.length - 1 && " "}{" "}
+          {/* Add space between words except after the last word */}
+        </span>
+      );
+    });
+  };
+
+  // Generate status keys and filter out the ones you don't want
+  const filteredStatusKeys = Object.keys(statusDescriptions).filter(
+    (statusKey) => statusKey !== "UCH" && statusKey !== "YBC"
+  );
+
   return (
     <div className="DropdownCheckedlist-wrapper">
       <div
@@ -53,7 +81,7 @@ const DropdownCheckedlist = ({
         }}
       >
         <span className="checked-status text-align-center">
-          {statusDescriptions[selectedStatus]}
+          {getStyledDescription(statusDescriptions[selectedStatus])}
         </span>
         {effort.user !== user?.id &&
           getStatusImage() &&
@@ -66,19 +94,19 @@ const DropdownCheckedlist = ({
       </div>
       {isOpen && effort.user !== user?.id && selectedStatus !== "UCH" && (
         <ul className="DropdownCheckedlist-menu">
-          {Object.keys(statusDescriptions)
-            .filter((statusKey) => statusKey !== "UCH") // Filter out 'UCH'
-            .map((statusKey) => (
-              <li
-                key={statusKey}
-                onClick={() => handleStatusSelect(statusKey)}
-                className={`cursor-pointer mb-8 ${
-                  selectedStatus === statusKey ? "active" : ""
-                }`}
-              >
-                {statusDescriptions[statusKey]}
-              </li>
-            ))}
+          {filteredStatusKeys.map((statusKey, index) => (
+            <li
+              key={statusKey}
+              onClick={() => handleStatusSelect(statusKey)}
+              className={`cursor-pointer mb-8 ${
+                index === filteredStatusKeys.length - 1
+                  ? "p-0"
+                  : "padding-thirtytwo"
+              } ${selectedStatus === statusKey ? "active" : ""}`}
+            >
+              {getStyledDescription(statusDescriptions[statusKey])}
+            </li>
+          ))}
         </ul>
       )}
     </div>

@@ -225,7 +225,10 @@ const EditEffortSection = ({
               <h1 className="select-outcome-text">Outcome:</h1>
             </div>
             <div className="col-lg-10">
-              <ul className=" d-flex align-items-center m-0">
+              <ul
+                className=" d-flex align-items-center m-0 flex-wrap "
+                style={{ gap: "0 40px" }}
+              >
                 {selectedProductOutcomes &&
                   selectedProductOutcomes.map((outcomeId) => (
                     <li key={outcomeId} className="p-0 selectedone">

@@ -312,7 +312,7 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
 
     return (
       <ul className="timeline-dates">
-        {years.map((year) => (
+        {years.reverse().map((year) => (
           <React.Fragment key={year}>
             {selectedOption === "Monthly" &&
               months.map(
