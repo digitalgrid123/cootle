@@ -315,57 +315,71 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
         {years.reverse().map((year) => (
           <React.Fragment key={year}>
             {selectedOption === "Monthly" &&
-              months.map(
-                (month, index) =>
-                  activeDates.has(`${year}-${month}`) && (
-                    <li
-                      key={`${year}-${month}-${index}`}
-                      className={`cursor-pointer  ${isActive(year, month)} ${
-                        index === months.length - 1
-                          ? "last-item active-tab"
-                          : ""
-                      }`}
-                      onClick={() => handleDateClick(year, month)}
-                    >
-                      <span>{month}</span>
-                      <span>{year}</span>
-                    </li>
-                  )
-              )}
+              months
+                .slice()
+                .reverse()
+                .map(
+                  (month, index) =>
+                    activeDates.has(`${year}-${month}`) && (
+                      <li
+                        key={`${year}-${month}-${index}`}
+                        className={`cursor-pointer  ${isActive(year, month)} ${
+                          index === months.length - 1
+                            ? "last-item active-tab"
+                            : ""
+                        }`}
+                        onClick={() => handleDateClick(year, month)}
+                      >
+                        <span>{month}</span>
+                        <span>{year}</span>
+                      </li>
+                    )
+                )}
 
             {selectedOption === "Weekly" &&
-              weeks.map(
-                (week, index) =>
-                  activeDates.has(`${year}-${week}`) && (
-                    <li
-                      key={`${year}-${week}-${index}`}
-                      className={`cursor-pointer  ${isActive(year, week)} ${
-                        index === weeks.length - 1 ? "last-item active-tab" : ""
-                      }`}
-                      onClick={() => handleDateClick(year, week)}
-                    >
-                      <span className="week">{week}</span>
-                      <span className="year">{year}</span>
-                    </li>
-                  )
-              )}
+              weeks
+                .slice()
+                .reverse()
+                .map(
+                  (week, index) =>
+                    activeDates.has(`${year}-${week}`) && (
+                      <li
+                        key={`${year}-${week}-${index}`}
+                        className={`cursor-pointer  ${isActive(year, week)} ${
+                          index === weeks.length - 1
+                            ? "last-item active-tab"
+                            : ""
+                        }`}
+                        onClick={() => handleDateClick(year, week)}
+                      >
+                        <span className="week">{week}</span>
+                        <span className="year">{year}</span>
+                      </li>
+                    )
+                )}
 
             {selectedOption === "Quarterly" &&
-              quarters.map(
-                (quarter, index) =>
-                  activeDates.has(`${year}-${quarter}`) && (
-                    <li
-                      key={`${year}-${quarter}-${index}`}
-                      className={`cursor-pointer   ${isActive(year, quarter)} ${
-                        index === quarters.length - 1 ? "last-item " : ""
-                      }`}
-                      onClick={() => handleDateClick(year, quarter)}
-                    >
-                      <span className="quarter">{quarter}</span>
-                      <span className="year">{year}</span>
-                    </li>
-                  )
-              )}
+              quarters
+                .slice()
+                .reverse()
+                .map(
+                  (quarter, index) =>
+                    activeDates.has(`${year}-${quarter}`) && (
+                      <li
+                        key={`${year}-${quarter}-${index}`}
+                        className={`cursor-pointer   ${isActive(
+                          year,
+                          quarter
+                        )} ${
+                          index === quarters.length - 1 ? "last-item " : ""
+                        }`}
+                        onClick={() => handleDateClick(year, quarter)}
+                      >
+                        <span className="quarter">{quarter}</span>
+                        <span className="year">{year}</span>
+                      </li>
+                    )
+                )}
 
             <div
               className="border_bottom_soft-lavender w-100"
@@ -555,7 +569,6 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
                           );
                           return (
                             <li key={effortId} className="p-0 selectedone">
-                              <span className="dot black"></span>
                               {matchingObjective?.title}
                             </li>
                           );
@@ -570,11 +583,12 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
                       </h2>
                     </div>
                     <div className="col-lg-10">
-                      <div className=" d-flex align-items-center m-0 flex-wrap "
-                                style={{ gap: "0 40px" }}>
+                      <div
+                        className=" d-flex align-items-center m-0 flex-wrap "
+                        style={{ gap: "0 40px" }}
+                      >
                         {purpose.design_efforts.map((effortId) => (
                           <li key={effortId} className="p-0 selectedone">
-                            <span className="dot black"></span>
                             {design
                               .flatMap((obj) => obj.items)
                               .map((effort) => {

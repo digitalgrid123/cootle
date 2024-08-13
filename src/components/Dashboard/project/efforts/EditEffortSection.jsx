@@ -111,7 +111,8 @@ const EditEffortSection = ({
 
       if (response.status) {
         toaster("Purpose deleted successfully:", TOAST_TYPES.SUCCESS);
-        fetchData();
+
+        fetchEffortData();
         setPurposeToEdit(null);
       } else {
         toaster("Failed to delete purpose", TOAST_TYPES.ERROR);
@@ -203,91 +204,79 @@ const EditEffortSection = ({
           </button>
         </div>
         <div className="pt-16">
-          <div className="d-flex align-items-center mb-24">
-            <div className="col-lg-2">
-              <h1 className="select-outcome-text">Effort type:</h1>
-            </div>
-            <div className="col-lg-10">
-              <ul className=" d-flex align-items-center m-0">
-                {selectedDesignEfforts.map((value) => (
-                  <li key={value} className="p-0 selectedone">
-                    <span className="dot black"></span>
-                    {design
-                      .flatMap((category) => category.items)
-                      .find((obj) => obj.id === value)?.title || ""}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <div className="d-flex align-items-start mb-24">
-            <div className="col-lg-2">
-              <h1 className="select-outcome-text">Outcome:</h1>
-            </div>
-            <div className="col-lg-10">
-              <ul
-                className=" d-flex align-items-center m-0 flex-wrap "
-                style={{ gap: "0 40px" }}
-              >
-                {selectedProductOutcomes &&
-                  selectedProductOutcomes.map((outcomeId) => (
-                    <li key={outcomeId} className="p-0 selectedone">
-                      <span className="dot black"></span>
-                      {objectives.find((obj) => obj.id === outcomeId)?.title ||
-                        ""}
-                    </li>
-                  ))}
-              </ul>
-            </div>
+          <div className="d-flex align-items-center mb-24 gap-3">
+            <h1 className="select-outcome-text w-20">Effort type:</h1>
+
+            <ul className=" d-flex align-items-center m-0 w-80 p-0">
+              {selectedDesignEfforts.map((value) => (
+                <li key={value} className="p-0 selectedone">
+                  {design
+                    .flatMap((category) => category.items)
+                    .find((obj) => obj.id === value)?.title || ""}
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <div className="  d-flex align-items-start mb-24">
-            <div className="col-lg-2">
-              <h1 className="select-outcome-text">Purpose:</h1>
-            </div>
-            <div className="col-lg-10">
-              <ul className="d-flex align-items-center gap-4">
-                {selectedPurpose && (
-                  <li key={selectedPurpose} className="p-0 selectedone">
-                    <span className="dot black"></span>
-                    {purposeListData?.find((obj) => obj.id === selectedPurpose)
-                      ?.title || ""}
+          <div className="d-flex align-items-start mb-24 gap-3">
+            <h1 className="select-outcome-text w-20">Outcome:</h1>
+
+            <ul
+              className=" d-flex align-items-center m-0 flex-wrap w-80 p-0"
+              style={{ gap: "0 40px" }}
+            >
+              {selectedProductOutcomes &&
+                selectedProductOutcomes.map((outcomeId) => (
+                  <li key={outcomeId} className="p-0 selectedone">
+                    {objectives.find((obj) => obj.id === outcomeId)?.title ||
+                      ""}
                   </li>
-                )}
-              </ul>
-            </div>
+                ))}
+            </ul>
           </div>
-          <div className="">
-            <div className="d-flex align-items-center">
-              <div className="col-lg-2">
-                <h1 className="select-outcome-text">Links:</h1>
-              </div>
-              <div className="col-lg-10">
-                <ul className="d-flex flex-wrap align-items-center m-0 gap-2 flex-wrap p-0">
-                  {selectedLinks?.map((link, index) => (
-                    <div
-                      key={index}
-                      className="show-selectedone selectedone cursor-pointer"
-                      onClick={() => handleEditLink(index)}
+
+          <div className="  d-flex align-items-start mb-24 gap-3">
+            <h1 className="select-outcome-text w-20">Purpose:</h1>
+
+            <ul className="d-flex align-items-center gap-4 w-80 p-0">
+              {selectedPurpose && (
+                <li key={selectedPurpose} className="p-0 selectedone">
+                  {purposeListData?.find((obj) => obj.id === selectedPurpose)
+                    ?.title || ""}
+                </li>
+              )}
+            </ul>
+          </div>
+
+          <div className="d-flex align-items-center gap-3">
+            <h1 className="select-outcome-text w-20">Links:</h1>
+
+            <ul
+              className="d-flex flex-wrap align-items-center m-0  p-0 w-80 "
+              style={{ gap: "0 40px" }}
+            >
+              {selectedLinks?.map((link, index) => (
+                <div
+                  key={index}
+                  className="show-selectedone selectedone cursor-pointer"
+                  onClick={() => handleEditLink(index)}
+                >
+                  <li className="p-0">
+                    <a
+                      style={{
+                        textDecoration: "underline",
+                      }}
+                      className="selectedone"
+                      href={link.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      <li className="p-0">
-                        <a
-                          style={{
-                            textDecoration: "underline",
-                          }}
-                          className="selectedone"
-                          href={link.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {`Link ${index + 1}`}{" "}
-                        </a>
-                      </li>
-                    </div>
-                  ))}
-                </ul>
-              </div>
-            </div>
+                      {`Link ${index + 1}`}{" "}
+                    </a>
+                  </li>
+                </div>
+              ))}
+            </ul>
           </div>
         </div>
       </div>

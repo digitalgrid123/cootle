@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import * as yup from "yup";
 
 const LinkModel = ({ link, setLink, addLink, links, setLinks }) => {
-  console.log("🚀 ~ LinkModel ~ links:", links);
   const [editIndex, setEditIndex] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [error, setError] = useState("");
@@ -12,7 +11,7 @@ const LinkModel = ({ link, setLink, addLink, links, setLinks }) => {
 
   const handleLinkChange = (e) => {
     setLink(e.target.value);
-    setError(""); // Clear the error when the input changes
+    setError("");
   };
 
   const handleKeyPress = (e) => {

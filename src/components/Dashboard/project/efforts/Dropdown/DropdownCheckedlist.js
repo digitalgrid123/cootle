@@ -1,13 +1,21 @@
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 import { useAuth, useToaster } from "@/hooks";
-import React, { useState } from "react";
+import useOutsideClick from "@/hooks/useOutsideClick";
+import React, { useRef, useState } from "react";
 
+const status = {
+  YBC: "Yet to be checked",
+  UCH: "Unchecked", // This will be filtered out from the dropdown options
+  REA: "Value Realised",
+  VUR: "Value Unrealised",
+  UPA: "Unplanned Activity",
+};
 const statusDescriptions = {
   YBC: "Yet to be checked",
   UCH: "Unchecked", // This will be filtered out from the dropdown options
-  UPA: "Unplanned Activity",
-  REA: "Value Realised",
-  VUR: "Value Unrealised",
+  REA: "value Realised",
+  VUR: "value Unrealised",
+  UPA: "Unplanned activity",
 };
 
 const DropdownCheckedlist = ({
@@ -21,6 +29,9 @@ const DropdownCheckedlist = ({
   const { toaster } = useToaster();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(effort?.value_status);
+  const dropdownRef = useRef(null);
+
+  useOutsideClick(dropdownRef, () => setIsOpen(false));
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -70,9 +81,9 @@ const DropdownCheckedlist = ({
   );
 
   return (
-    <div className="DropdownCheckedlist-wrapper">
+    <div className="DropdownCheckedlist-wrapper relative">
       <div
-        className="DropdownCheckedlist-header d-flex align-items-center gap-1 cursor-pointer"
+        className="DropdownCheckedlist-header d-flex align-items-center gap-2 cursor-pointer"
         style={getStatusStyles(effort?.value_status)}
         onClick={() => {
           if (effort.user !== user?.id && selectedStatus !== "UCH") {
@@ -81,7 +92,7 @@ const DropdownCheckedlist = ({
         }}
       >
         <span className="checked-status text-align-center">
-          {getStyledDescription(statusDescriptions[selectedStatus])}
+          {getStyledDescription(status[selectedStatus])}
         </span>
         {effort.user !== user?.id &&
           getStatusImage() &&
@@ -93,7 +104,7 @@ const DropdownCheckedlist = ({
           )}
       </div>
       {isOpen && effort.user !== user?.id && selectedStatus !== "UCH" && (
-        <ul className="DropdownCheckedlist-menu">
+        <ul className="DropdownCheckedlist-menu" ref={dropdownRef}>
           {filteredStatusKeys.map((statusKey, index) => (
             <li
               key={statusKey}

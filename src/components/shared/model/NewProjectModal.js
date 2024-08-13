@@ -59,11 +59,11 @@ const NewProjectModal = ({
   return (
     showProjectPopup && (
       <div ref={overlayRef} className="invitation-overlay padding-company">
-        <div className="company-content w-50 ">
+        <div className="company-content w-50 bg-white ">
           <div className="box-invitation">
             <div className="d-flex align-items-center justify-content-between border_bottom_faint pb-16">
               <h2 className="company-setup-heading weight-500">
-                Create New Project
+                Create new project
               </h2>
               <div className="d-flex align-items-center gap-3">
                 <button

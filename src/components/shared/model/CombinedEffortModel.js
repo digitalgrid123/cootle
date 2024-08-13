@@ -169,7 +169,7 @@ const CombinedEffortModel = ({
         break;
       case "effort":
         setSelectedDesignEfforts((prev) => {
-          const newSelection = prev.includes(id) ? [] : [id];
+          const newSelection = prev?.includes(id) ? [] : [id];
           return newSelection;
         });
         break;

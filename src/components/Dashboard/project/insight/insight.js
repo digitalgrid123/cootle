@@ -320,55 +320,64 @@ const Insight = () => {
         {sortedYears.map((year) => (
           <React.Fragment key={year}>
             {selectedOption === "Monthly" &&
-              months.map((month) => {
-                const item = `${year}-${month}`;
-                return activeDates.has(item) ? (
-                  <li
-                    key={item}
-                    className={`cursor-pointer ${isActive(year, month)} ${
-                      getOffset(month, months) === 0 ? "last-item" : ""
-                    }`}
-                    onClick={() => handleDateClick(year, month)}
-                  >
-                    <span>{month}</span>
-                    <span>{year}</span>
-                  </li>
-                ) : null;
-              })}
+              months
+                .slice()
+                .reverse()
+                .map((month) => {
+                  const item = `${year}-${month}`;
+                  return activeDates.has(item) ? (
+                    <li
+                      key={item}
+                      className={`cursor-pointer ${isActive(year, month)} ${
+                        getOffset(month, months) === 0 ? "last-item" : ""
+                      }`}
+                      onClick={() => handleDateClick(year, month)}
+                    >
+                      <span>{month}</span>
+                      <span>{year}</span>
+                    </li>
+                  ) : null;
+                })}
 
             {selectedOption === "Weekly" &&
-              weeks.map((week) => {
-                const item = `${year}-${week}`;
-                return activeDates.has(item) ? (
-                  <li
-                    key={item}
-                    className={`cursor-pointer ${isActive(year, week)} ${
-                      getOffset(week, weeks) === 0 ? "last-item" : ""
-                    }`}
-                    onClick={() => handleDateClick(year, week)}
-                  >
-                    <span className="week">{week}</span>
-                    <span className="year">{year}</span>
-                  </li>
-                ) : null;
-              })}
+              weeks
+                .slice()
+                .reverse()
+                .map((week) => {
+                  const item = `${year}-${week}`;
+                  return activeDates.has(item) ? (
+                    <li
+                      key={item}
+                      className={`cursor-pointer ${isActive(year, week)} ${
+                        getOffset(week, weeks) === 0 ? "last-item" : ""
+                      }`}
+                      onClick={() => handleDateClick(year, week)}
+                    >
+                      <span className="week">{week}</span>
+                      <span className="year">{year}</span>
+                    </li>
+                  ) : null;
+                })}
 
             {selectedOption === "Quarterly" &&
-              quarters.map((quarter) => {
-                const item = `${year}-${quarter}`;
-                return activeDates.has(item) ? (
-                  <li
-                    key={item}
-                    className={`cursor-pointer ${isActive(year, quarter)} ${
-                      getOffset(quarter, quarters) === 0 ? "last-item" : ""
-                    }`}
-                    onClick={() => handleDateClick(year, quarter)}
-                  >
-                    <span className="quarter">{quarter}</span>
-                    <span className="year">{year}</span>
-                  </li>
-                ) : null;
-              })}
+              quarters
+                .slice()
+                .reverse()
+                .map((quarter) => {
+                  const item = `${year}-${quarter}`;
+                  return activeDates.has(item) ? (
+                    <li
+                      key={item}
+                      className={`cursor-pointer ${isActive(year, quarter)} ${
+                        getOffset(quarter, quarters) === 0 ? "last-item" : ""
+                      }`}
+                      onClick={() => handleDateClick(year, quarter)}
+                    >
+                      <span className="quarter">{quarter}</span>
+                      <span className="year">{year}</span>
+                    </li>
+                  ) : null;
+                })}
 
             <div
               className="border_bottom_soft-lavender  w-100"

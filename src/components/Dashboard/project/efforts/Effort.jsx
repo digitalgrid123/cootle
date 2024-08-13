@@ -311,14 +311,14 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
         return {
           backgroundColor: "#128E5E",
           color: "white",
-          padding: "12px 16px",
+          padding: "12px 28px",
           borderRadius: "12px",
         };
       case "VUR":
         return {
           backgroundColor: "#F58E07",
           color: "white",
-          padding: "12px 16px",
+          padding: "12px 20px",
           borderRadius: "12px",
         };
       default:
@@ -412,55 +412,64 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
         {years.reverse().map((year) => (
           <React.Fragment key={year}>
             {selectedOption === "Monthly" &&
-              months.map(
-                (month, index) =>
-                  activeDates.has(`${year}-${month}`) && (
-                    <li
-                      key={`${year}-${month}-${index}`}
-                      className={`cursor-pointer ${isActive(year, month)} ${
-                        index === months.length - 1 ? "last-item" : ""
-                      }`}
-                      onClick={() => handleDateClick(year, month)}
-                    >
-                      <span>{month}</span>
-                      <span>{year}</span>
-                    </li>
-                  )
-              )}
+              months
+                .slice()
+                .reverse()
+                .map(
+                  (month, index) =>
+                    activeDates.has(`${year}-${month}`) && (
+                      <li
+                        key={`${year}-${month}-${index}`}
+                        className={`cursor-pointer ${isActive(year, month)} ${
+                          index === months.length - 1 ? "last-item" : ""
+                        }`}
+                        onClick={() => handleDateClick(year, month)}
+                      >
+                        <span>{month}</span>
+                        <span>{year}</span>
+                      </li>
+                    )
+                )}
 
             {selectedOption === "Weekly" &&
-              weeks.map(
-                (week, index) =>
-                  activeDates.has(`${year}-${week}`) && (
-                    <li
-                      key={`${year}-${week}-${index}`}
-                      className={`cursor-pointer ${isActive(year, week)} ${
-                        index === weeks.length - 1 ? "last-item" : ""
-                      }`}
-                      onClick={() => handleDateClick(year, week)}
-                    >
-                      <span className="week">{week}</span>
-                      <span className="year">{year}</span>
-                    </li>
-                  )
-              )}
+              weeks
+                .slice()
+                .reverse()
+                .map(
+                  (week, index) =>
+                    activeDates.has(`${year}-${week}`) && (
+                      <li
+                        key={`${year}-${week}-${index}`}
+                        className={`cursor-pointer ${isActive(year, week)} ${
+                          index === weeks.length - 1 ? "last-item" : ""
+                        }`}
+                        onClick={() => handleDateClick(year, week)}
+                      >
+                        <span className="week">{week}</span>
+                        <span className="year">{year}</span>
+                      </li>
+                    )
+                )}
 
             {selectedOption === "Quarterly" &&
-              quarters.map(
-                (quarter, index) =>
-                  activeDates.has(`${year}-${quarter}`) && (
-                    <li
-                      key={`${year}-${quarter}-${index}`}
-                      className={`cursor-pointer ${isActive(year, quarter)} ${
-                        index === quarters.length - 1 ? "last-item" : ""
-                      }`}
-                      onClick={() => handleDateClick(year, quarter)}
-                    >
-                      <span className="quarter">{quarter}</span>
-                      <span className="year">{year}</span>
-                    </li>
-                  )
-              )}
+              quarters
+                .slice()
+                .reverse()
+                .map(
+                  (quarter, index) =>
+                    activeDates.has(`${year}-${quarter}`) && (
+                      <li
+                        key={`${year}-${quarter}-${index}`}
+                        className={`cursor-pointer ${isActive(year, quarter)} ${
+                          index === quarters.length - 1 ? "last-item" : ""
+                        }`}
+                        onClick={() => handleDateClick(year, quarter)}
+                      >
+                        <span className="quarter">{quarter}</span>
+                        <span className="year">{year}</span>
+                      </li>
+                    )
+                )}
 
             {/* Render faint bottom border after each year */}
             <div
@@ -561,6 +570,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                           setDesign={setDesign}
                           setPurposeToEdit={setEffortToEdit}
                           fetchEffortData={fetchEffortData}
+                          fetchData={fetchData}
                         />
                       }
                     </>
@@ -655,99 +665,94 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                           </div>
                         </div>
                         <div className="d-flex gap-2  justify-content-between flex-column w-100 border_bottom_lavender-blush pt-18 pb-18">
-                          <div className="d-flex align-items-start gap-4 mb-24">
-                            <div className="col-lg-2">
-                              <h1 className="select-outcome-text">
-                                Effort type:
-                              </h1>
-                            </div>
-                            <div className="col-lg-10">
-                              <ul className=" d-flex align-items-center m-0 flex-wrap gap-4">
-                                {effort.design_effort && (
-                                  <li
-                                    key={effort.design_effort}
-                                    className="p-0 selectedone"
-                                  >
-                                    {design
-                                      .flatMap((category) => category.items)
-                                      .find(
-                                        (obj) => obj.id === effort.design_effort
-                                      )?.title || ""}
-                                  </li>
-                                )}
-                              </ul>
-                            </div>
+                          <div className="d-flex align-items-start  gap-3 mb-24">
+                            <h1 className="select-outcome-text w-20">
+                              Effort type:
+                            </h1>
+
+                            <ul className=" d-flex align-items-center m-0 flex-wrap gap-4 w-80 p-0">
+                              {effort.design_effort && (
+                                <li
+                                  key={effort.design_effort}
+                                  className="p-0 selectedone"
+                                >
+                                  {design
+                                    .flatMap((category) => category.items)
+                                    .find(
+                                      (obj) => obj.id === effort.design_effort
+                                    )?.title || ""}
+                                </li>
+                              )}
+                            </ul>
                           </div>
-                          <div className="d-flex align-items-start gap-4 mb-24">
-                            <div className="col-lg-2">
-                              <h1 className="select-outcome-text">Outcome:</h1>
-                            </div>
-                            <div className="col-lg-10">
-                              <ul
-                                className=" d-flex align-items-center m-0 flex-wrap "
-                                style={{ gap: "0 40px" }}
-                              >
-                                {effort.outcomes &&
-                                  effort.outcomes.map((outcomeId) => (
-                                    <li
-                                      key={outcomeId}
-                                      className="p-0 selectedone "
-                                    >
-                                      {objectives.find(
-                                        (obj) => obj.id === outcomeId
-                                      )?.title || ""}
-                                    </li>
-                                  ))}
-                              </ul>
-                            </div>
-                          </div>
-                          <div className="d-flex align-items-start gap-4 mb-24">
-                            <div className="col-lg-2">
-                              <h1 className="select-outcome-text">Purpose:</h1>
-                            </div>
-                            <div className="col-lg-10">
-                              <ul className=" d-flex align-items-center m-0 flex-wrap gap-4">
-                                {effort.purpose && (
+                          <div className="d-flex align-items-start gap-3  mb-24">
+                            <h1 className="select-outcome-text w-20">
+                              Outcome:
+                            </h1>
+
+                            <ul
+                              className=" d-flex align-items-center m-0 flex-wrap  w-80 p-0"
+                              style={{ gap: "0 40px" }}
+                            >
+                              {effort.outcomes &&
+                                effort.outcomes.map((outcomeId) => (
                                   <li
-                                    key={effort.purpose}
-                                    className="p-0 selectedone"
+                                    key={outcomeId}
+                                    className="p-0 selectedone "
                                   >
-                                    {purposeListData?.find(
-                                      (obj) => obj.id === effort.purpose
+                                    {objectives.find(
+                                      (obj) => obj.id === outcomeId
                                     )?.title || ""}
                                   </li>
-                                )}
-                              </ul>
-                            </div>
+                                ))}
+                            </ul>
                           </div>
-                          <div className="d-flex align-items-start gap-4">
-                            <div className="col-lg-2">
-                              <h1 className="select-outcome-text">Links:</h1>
-                            </div>
-                            <div className="col-lg-10">
-                              <ul className=" d-flex align-items-center m-0 flex-wrap gap-4">
-                                {effort.links && effort.links.length > 0 ? (
-                                  effort.links.map((linkObj, index) => (
-                                    <li
-                                      key={linkObj.id}
-                                      className="p-0 selectedone"
+                          <div className="d-flex align-items-start gap-3  mb-24">
+                            <h1 className="select-outcome-text w-20">
+                              Purpose:
+                            </h1>
+
+                            <ul className=" d-flex align-items-center m-0 flex-wrap gap-4 w-80 p-0">
+                              {effort.purpose && (
+                                <li
+                                  key={effort.purpose}
+                                  className="p-0 selectedone"
+                                >
+                                  {purposeListData?.find(
+                                    (obj) => obj.id === effort.purpose
+                                  )?.title || ""}
+                                </li>
+                              )}
+                            </ul>
+                          </div>
+                          <div className="d-flex align-items-start gap-3">
+                            <h1 className="select-outcome-text w-20">Links:</h1>
+
+                            <ul
+                              className=" d-flex align-items-center m-0 flex-wrap  w-80 p-0"
+                              style={{ gap: "0 40px" }}
+                            >
+                              {effort.links && effort.links.length > 0 ? (
+                                effort.links.map((linkObj, index) => (
+                                  <li
+                                    key={linkObj.id}
+                                    className="p-0 selectedone"
+                                  >
+                                    <a
+                                      href={linkObj.link}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      style={{ textDecoration: "underline" }}
+                                      className="selectedone"
                                     >
-                                      <a
-                                        href={linkObj.link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        style={{ textDecoration: "underline" }}
-                                        className="selectedone"
-                                      >
-                                        {`Link ${index + 1}`}
-                                      </a>
-                                    </li>
-                                  ))
-                                ) : (
-                                  <></>
-                                )}
-                              </ul>
-                            </div>
+                                      {`Link ${index + 1}`}
+                                    </a>
+                                  </li>
+                                ))
+                              ) : (
+                                <></>
+                              )}
+                            </ul>
                           </div>
                         </div>
                         <div className=" d-flex gap-2  justify-content-between flex-column w-100  pt-18">
