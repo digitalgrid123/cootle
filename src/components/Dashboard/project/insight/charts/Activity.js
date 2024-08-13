@@ -23,13 +23,19 @@ const statusStyles = {
     borderRadius: "8px",
   },
   REA: {
-    backgroundColor: "#0ACF83",
+    backgroundColor: "#128E5E",
     color: "white",
     padding: "6px 12px",
     borderRadius: "8px",
   },
   VUR: {
     backgroundColor: "#F58E07",
+    color: "white",
+    padding: "6px 12px",
+    borderRadius: "8px",
+  },
+  UCH: {
+    backgroundColor: "#F24E1E",
     color: "white",
     padding: "6px 12px",
     borderRadius: "8px",
@@ -54,6 +60,11 @@ const activityStyles = {
   },
   VUR: {
     backgroundColor: "#F58E071A",
+    padding: "7px 7px 7px 20px",
+    borderRadius: "16px",
+  },
+  UCH: {
+    backgroundColor: "#F24E1E1A",
     padding: "7px 7px 7px 20px",
     borderRadius: "16px",
   },

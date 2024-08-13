@@ -158,8 +158,8 @@ const CombinedEffortModel = ({
     switch (type) {
       case "outcomes":
         setSelectedProductOutcomes((prev) => {
-          const newSelection = prev.includes(id)
-            ? prev.filter((objId) => objId !== id)
+          const newSelection = prev?.includes(id)
+            ? prev?.filter((objId) => objId !== id)
             : [...prev, id];
           return newSelection;
         });
@@ -183,7 +183,7 @@ const CombinedEffortModel = ({
   };
 
   const renderSelectedObjectives = () => {
-    const selectedObjectives = objectives.filter((obj) =>
+    const selectedObjectives = objectives?.filter((obj) =>
       selectedProductOutcomes?.includes(obj.id)
     );
 
@@ -223,7 +223,7 @@ const CombinedEffortModel = ({
   const renderSampleObjectives = () => {
     const filteredObjectives = objectives.filter(
       (obj) =>
-        obj.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        obj.title.toLowerCase()?.includes(searchTerm.toLowerCase()) &&
         !selectedProductOutcomes?.includes(obj.id)
     );
 
