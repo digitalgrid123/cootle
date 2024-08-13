@@ -281,7 +281,7 @@ const CombinedEffortModel = ({
 
     const selectedEfforts = filteredDesign
       .flatMap((category) => category.items)
-      .filter((item) => selectedDesignEfforts.includes(item.id));
+      .filter((item) => selectedDesignEfforts?.includes(item.id));
 
     return (
       <div className="selected-efforts border_bottom_soft-lavender mb-45">
