@@ -109,8 +109,8 @@ const NewPurposeSection = ({
           </div>
           <div className="col-lg-10">
             <ul
-              className="m-0 d-flex align-items-center "
-              style={{ gap: "2.5rem" }}
+              className=" d-flex align-items-center m-0 flex-wrap "
+              style={{ gap: "0 40px" }}
             >
               {selectedProductOutcomes.map((effortId) => {
                 const matchingObjective = objectives.find(
@@ -131,8 +131,8 @@ const NewPurposeSection = ({
           </div>
           <div className="col-lg-10">
             <ul
-              className="m-0 d-flex align-items-center "
-              style={{ gap: "2.5rem" }}
+              className=" d-flex align-items-center m-0 flex-wrap "
+              style={{ gap: "0 40px" }}
             >
               {selectedDesignEfforts.map((effortId) => (
                 <li key={effortId} className="p-0 selectedone">

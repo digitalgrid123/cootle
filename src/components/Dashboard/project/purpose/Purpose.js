@@ -545,7 +545,10 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
                       </h2>
                     </div>
                     <div className="col-lg-10">
-                      <div className="d-flex align-items-center gap-3 flex-wrap">
+                      <div
+                        className=" d-flex align-items-center m-0 flex-wrap "
+                        style={{ gap: "0 40px" }}
+                      >
                         {purpose?.desired_outcomes.map((effortId) => {
                           const matchingObjective = objectives.find(
                             (obj) => obj.id === effortId
@@ -567,7 +570,8 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
                       </h2>
                     </div>
                     <div className="col-lg-10">
-                      <div className="d-flex align-items-center gap-3 flex-wrap">
+                      <div className=" d-flex align-items-center m-0 flex-wrap "
+                                style={{ gap: "0 40px" }}>
                         {purpose.design_efforts.map((effortId) => (
                           <li key={effortId} className="p-0 selectedone">
                             <span className="dot black"></span>
