@@ -128,7 +128,7 @@ a {
   border: 1px solid var(--Hazy-Deep-Sea) !important;
 }
 .p-0 {
-  padding: 0;
+  padding: 0 !important;
 }
 textarea {
   resize: none;
@@ -2015,7 +2015,7 @@ textarea {
 }
 .show-selectedone {
   background-color: var(--soft-lavender);
-  padding: 13px 16px 13px 32px !important;
+  /* padding: 13px 16px 13px 32px !important; */
   border-radius: 12px;
 }
 .delete-btn {

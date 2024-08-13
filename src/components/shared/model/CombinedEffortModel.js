@@ -194,13 +194,13 @@ const CombinedEffortModel = ({
             <h3 className="category-headingeffort mb-24 mt-24">
               Selected outcomes
             </h3>
-            <ul className="p-0">
+            <ul className="p-0 m-0">
               <div className="row">
                 {selectedObjectives.map((objective) => (
                   <div key={objective.id} className="col-lg-3">
                     <li
                       onClick={() => handleTabClick(objective.id, "outcomes")}
-                      className="d-flex design-tab selected-tab align-items-center justify-content-between text-align-left"
+                      className="d-flex design-tab selected-tab align-items-center justify-content-between text-align-left mb-16"
                     >
                       {objective.title}
                       <div>

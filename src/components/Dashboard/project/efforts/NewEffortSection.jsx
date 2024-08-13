@@ -107,37 +107,42 @@ const NewEffortSection = ({
           <div className="col-lg-2">
             <h1 className="select-outcome-text">Effort type:</h1>
           </div>
-          <ul className=" d-flex align-items-center m-0">
-            {selectedDesignEfforts?.map((effortId) => (
-              <div className="show-selectedone selectedone">
-                <li key={effortId} className="p-0  ">
-                  <span className="dot black"></span>
-                  {design
-                    .flatMap((obj) => obj.items)
-                    .map((effort) => {
-                      if (effort && effort.id === effortId) {
-                        return <span key={effort.id}>{effort.title}</span>;
-                      }
-                      return null;
-                    })}
-                </li>
-              </div>
-            ))}
-          </ul>
-          <div className="col-lg-10"></div>
+
+          <div className="col-lg-10">
+            <ul className=" d-flex align-items-center m-0">
+              {selectedDesignEfforts?.map((effortId) => (
+                <div className="show-selectedone selectedone">
+                  <li key={effortId} className="p-0  ">
+                    <span className="dot black"></span>
+                    {design
+                      .flatMap((obj) => obj.items)
+                      .map((effort) => {
+                        if (effort && effort.id === effortId) {
+                          return <span key={effort.id}>{effort.title}</span>;
+                        }
+                        return null;
+                      })}
+                  </li>
+                </div>
+              ))}
+            </ul>
+          </div>
         </div>
         <div className="d-flex align-items-start mb-24">
           <div className="col-lg-2">
             <h1 className="select-outcome-text">Outcome:</h1>
           </div>
           <div className="col-lg-10">
-            <ul className="mt-20 d-flex align-items-center m-0">
+            <ul
+              className=" d-flex align-items-center m-0 flex-wrap "
+              style={{ gap: "0 40px" }}
+            >
               {selectedProductOutcomes?.map((effortId) => {
                 const matchingObjective = objectives.find(
                   (obj) => obj.id === effortId
                 );
                 return (
-                  <div className="selectedone show-selectedone ">
+                  <div className="selectedone show-selectedone p-0 ">
                     <li key={effortId} className="p-0 ">
                       <span className="dot black"></span>
                       {matchingObjective?.title}
@@ -154,9 +159,9 @@ const NewEffortSection = ({
             <h1 className="select-outcome-text">Purpose:</h1>
           </div>
           <div className="col-lg-10">
-            <ul className="mt-20 d-flex align-items-center gap-4 m-0">
+            <ul className=" d-flex align-items-center gap-4 m-0">
               {selectedPurpose && (
-                <div className="show-selectedone selectedone">
+                <div className="show-selectedone selectedone p-0">
                   <li key={selectedPurpose} className="p-0 ">
                     <span className="dot black"></span>
                     {purpose.find((p) => p.id === selectedPurpose)?.title}
@@ -169,24 +174,31 @@ const NewEffortSection = ({
         <div className="">
           {/* <LinkModel link={link} setLink={setLink} addLink={addLink} /> */}
           <div className="d-flex align-items-center mb-24">
-            <h1 className="select-outcome-text">Links:</h1>
-            <ul className="d-flex flex-wrap align-items-center m-0 gap-2 flex-wrap">
-              {links?.map((link, index) => (
-                <div className="show-selectedone selectedone">
-                  <li key={index} className="p-0 ">
-                    <a
-                      style={{ textDecoration: "underline" }}
-                      className="selectedone"
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {`Link ${index + 1}`}
-                    </a>
-                  </li>
-                </div>
-              ))}
-            </ul>
+            <div className="col-lg-2">
+              <h1 className="select-outcome-text">Links:</h1>
+            </div>
+            <div className="col-lg-10">
+              <ul
+                className="d-flex flex-wrap align-items-center m-0 "
+                style={{ gap: "0 40px" }}
+              >
+                {links?.map((link, index) => (
+                  <div className="show-selectedone selectedone">
+                    <li key={index} className="p-0 ">
+                      <a
+                        style={{ textDecoration: "underline" }}
+                        className="selectedone"
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {`Link ${index + 1}`}
+                      </a>
+                    </li>
+                  </div>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
