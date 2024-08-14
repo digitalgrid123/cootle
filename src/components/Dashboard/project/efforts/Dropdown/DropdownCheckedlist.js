@@ -1,7 +1,6 @@
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 import { useAuth, useToaster } from "@/hooks";
-import useOutsideClick from "@/hooks/useOutsideClick";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 const status = {
   YBC: "Yet to be checked",
@@ -31,8 +30,6 @@ const DropdownCheckedlist = ({
   const [selectedStatus, setSelectedStatus] = useState(effort?.value_status);
   const dropdownRef = useRef(null);
 
-  useOutsideClick(dropdownRef, () => setIsOpen(false));
-
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   const handleStatusSelect = async (status) => {
@@ -53,13 +50,8 @@ const DropdownCheckedlist = ({
   };
 
   const getStyledDescription = (description) => {
-    // Define keywords with weight-600
     const weight600Keywords = ["Unplanned", "Realised", "Unrealised"];
-
-    // Split the description into words
     const words = description.split(" ");
-
-    // Map through words and apply styles conditionally
     return words.map((word, index) => {
       const isWeight600 = weight600Keywords.some((keyword) =>
         word.includes(keyword)
@@ -68,20 +60,31 @@ const DropdownCheckedlist = ({
       return (
         <span key={index} className={className}>
           {word}
-          {index < words.length - 1 && " "}{" "}
-          {/* Add space between words except after the last word */}
+          {index < words.length - 1 && " "}
         </span>
       );
     });
   };
 
-  // Generate status keys and filter out the ones you don't want
   const filteredStatusKeys = Object.keys(statusDescriptions).filter(
     (statusKey) => statusKey !== "UCH" && statusKey !== "YBC"
   );
 
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="DropdownCheckedlist-wrapper relative">
+    <div ref={dropdownRef} className="DropdownCheckedlist-wrapper relative">
       <div
         className="DropdownCheckedlist-header d-flex align-items-center gap-2 cursor-pointer"
         style={getStatusStyles(effort?.value_status)}
@@ -92,7 +95,7 @@ const DropdownCheckedlist = ({
         }}
       >
         <span className="checked-status text-align-center">
-          {getStyledDescription(status[selectedStatus])}
+          {status[selectedStatus]}
         </span>
         {effort.user !== user?.id &&
           getStatusImage() &&
@@ -104,7 +107,7 @@ const DropdownCheckedlist = ({
           )}
       </div>
       {isOpen && effort.user !== user?.id && selectedStatus !== "UCH" && (
-        <ul className="DropdownCheckedlist-menu" ref={dropdownRef}>
+        <ul className="DropdownCheckedlist-menu">
           {filteredStatusKeys.map((statusKey, index) => (
             <li
               key={statusKey}

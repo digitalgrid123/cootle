@@ -119,17 +119,23 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
       categories,
       title: {
         style: {
-          color: "#00000099",
+          color: "#1A072C",
+          fontFamily: "Open Runde, sans-serif",
           fontSize: "14px",
-          fontFamily: "Arial, sans-serif",
+          fontWeight: 400,
+          lineHeight: "14px",
+          letterSpacing: "-0.03em",
         },
       },
       labels: {
         show: true,
         style: {
-          colors: "#00000099",
-          fontSize: "12px",
-          fontFamily: "Arial, sans-serif",
+          colors: "#1A072C",
+          fontFamily: "Open Runde, sans-serif",
+          fontSize: "14px",
+          fontWeight: 400,
+          lineHeight: "14px",
+          letterSpacing: "-0.03em",
         },
         rotate: 0,
         trim: false,
@@ -139,38 +145,29 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
     yaxis: {
       title: {
         style: {
-          color: "#00000099",
+          color: "#1A072C",
+          fontFamily: "Open Runde, sans-serif",
           fontSize: "14px",
-          fontFamily: "Arial, sans-serif",
+          fontWeight: 400,
+          lineHeight: "14px",
+          letterSpacing: "-0.03em",
         },
       },
       labels: {
         style: {
-          colors: "#00000099",
-          fontSize: "12px",
-          fontFamily: "Arial, sans-serif",
+          colors: "#1A072C",
+          fontFamily: "Open Runde, sans-serif",
+          fontSize: "14px",
+          fontWeight: 400,
+          lineHeight: "14px",
+          letterSpacing: "-0.03em",
         },
       },
       tickAmount: 5,
       min: 0,
     },
     legend: {
-      show: true,
-      position: "top",
-      horizontalAlign: "left",
-      labels: {
-        colors: "#1A072CCC",
-        useSeriesColors: false,
-      },
-      markers: {
-        width: 10,
-        height: 10,
-        radius: 50,
-      },
-      itemMargin: {
-        horizontal: 10,
-        vertical: 0,
-      },
+      show: false, // Disable the default legend
     },
     tooltip: {
       enabled: true,
@@ -189,15 +186,40 @@ const LineGraph = ({ data = {}, period, height = 500 }) => {
     colors,
   };
 
-  return (
-    <div>
-      <ApexCharts
-        options={options}
-        series={series}
-        type="line"
-        height={height}
-      />
+  // Custom Legend
+  const renderCustomLegend = () => (
+    <div className="legend-item">
+      {series.map((s, index) => (
+        <div key={index}>
+          <div
+            className="legend-marker"
+            style={{
+              backgroundColor: colors[index],
+              width: 10,
+              height: 10,
+              borderRadius: 4,
+              display: "inline-block",
+              marginRight: 8,
+            }}
+          ></div>
+          <span className="apexchart-legend-name ">{s.name}</span>
+        </div>
+      ))}
     </div>
+  );
+
+  return (
+    <>
+      {renderCustomLegend()} {/* Display the custom legend */}
+      <div className="relative" style={{ left: "-15px" }}>
+        <ApexCharts
+          options={options}
+          series={series}
+          type="line"
+          height={height}
+        />
+      </div>
+    </>
   );
 };
 

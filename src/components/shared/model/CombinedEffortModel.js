@@ -160,7 +160,7 @@ const CombinedEffortModel = ({
         setSelectedProductOutcomes((prev) => {
           const newSelection = prev?.includes(id)
             ? prev?.filter((objId) => objId !== id)
-            : [...prev, id];
+            : [...(prev || []), id];
           return newSelection;
         });
         break;
@@ -169,7 +169,9 @@ const CombinedEffortModel = ({
         break;
       case "effort":
         setSelectedDesignEfforts((prev) => {
-          const newSelection = prev?.includes(id) ? [] : [id];
+          const newSelection = prev?.includes(id)
+            ? prev?.filter((objId) => objId !== id)
+            : [...(prev || []), id];
           return newSelection;
         });
         break;

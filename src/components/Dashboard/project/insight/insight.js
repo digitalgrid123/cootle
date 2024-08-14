@@ -508,7 +508,7 @@ const Insight = () => {
             <div className="col-lg-6">
               <div className="effort-count-container">
                 <h2 className="value-text mb-16">
-                  Latest business outcome driven product activities
+                  Latest business objectives-focused design efforts
                 </h2>
                 <Activity activities={data.latestObjective} />
               </div>

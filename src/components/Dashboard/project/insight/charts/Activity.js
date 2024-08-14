@@ -7,6 +7,7 @@ const statusDescriptions = {
   UPA: "Unplanned Activity",
   REA: "Value Realised",
   VUR: "Unrealised",
+  UCH: "Unchecked",
 };
 
 const statusStyles = {
@@ -17,7 +18,7 @@ const statusStyles = {
     borderRadius: "8px",
   },
   UPA: {
-    backgroundColor: "#E0DFE3",
+    backgroundColor: "#723D46",
     color: "black",
     padding: "6px 12px",
     borderRadius: "8px",

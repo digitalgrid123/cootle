@@ -1837,7 +1837,7 @@ textarea {
   max-height: 250px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--pastel-lavender) #1a072ccc;
+  scrollbar-color: var(--pastel-lavender) var(--purple-shadow);
 }
 
 .scrollbar-custom::-webkit-scrollbar {
@@ -2006,7 +2006,7 @@ textarea {
   font-size: 16px;
   color: var(--deepPurple);
   font-weight: 400;
-  line-height: 19px;
+  line-height: 24px;
   letter-spacing: -0.03em;
   text-align: left;
 }
@@ -2167,6 +2167,7 @@ textarea {
   font-weight: 500;
   line-height: 16px;
   text-align: right;
+  white-space: nowrap;
 }
 
 .no-checked {
@@ -2393,7 +2394,8 @@ textarea {
   font-weight: 400;
   line-height: 20.3px;
   text-align: left;
-  color: #ffffff;
+  color: var(--text-color);
+  white-space: nowrap;
 }
 .insight-sidebar {
   background-color: var(--light-lavender);
@@ -2719,4 +2721,24 @@ textarea {
   font-weight: 500;
   line-height: 16px;
   text-align: right;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0 16px;
+}
+.apexcharts-legend {
+  padding: 0 4px !important;
+}
+.apexcharts-legend-marker {
+  margin-right: 8px !important;
+}
+.apexchart-legend-name {
+  color: var(--purple-shadow);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 14px;
+  letter-spacing: -0.03em;
+  text-align: left;
 }
