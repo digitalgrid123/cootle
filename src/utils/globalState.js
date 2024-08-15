@@ -35,23 +35,23 @@ export const useGlobalCompany = () => {
 
   // Fetch member details after company is set
   useEffect(() => {
-    if (company && company.id && !isCurrentCompanyUpdated.current) {
-      const fetchCompanyData = async () => {
+    const fetchCompanyData = async () => {
+      if (company && company.id && !isCurrentCompanyUpdated.current) {
         try {
           const res = await companyset(company.id);
           if (res && res.data) {
-            await fetchMember();
+            await fetchMember(); // Ensure fetchMember is an async function
             const updatedCompany = { ...company };
             setSelectedCompany(updatedCompany);
-            isCurrentCompanyUpdated.current = true; // Mark as updated
+            isCurrentCompanyUpdated.current = true;
           }
         } catch (error) {
           console.error("API call failed:", error);
         }
-      };
+      }
+    };
 
-      fetchCompanyData();
-    }
+    fetchCompanyData();
   }, [company, companyset]);
 
   // Fetch member details

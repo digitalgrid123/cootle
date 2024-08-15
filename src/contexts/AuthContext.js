@@ -125,14 +125,45 @@ function AuthProvider({ children }) {
   const handleTokenExpiration = async () => {
     try {
       const rT = getData(STORAGE_KEYS.AUTH_REFRESH_TOKEN);
-      const res = await axiosPost(API_ROUTER.REFRESH_TOKEN, {
-        refresh: rT,
-      });
-      if (res.status) {
+
+      if (!navigator.onLine) {
+        // If offline, don't attempt to refresh the token, just wait for the connection to be restored
+        window.addEventListener("online", async () => {
+          const res = await attemptTokenRefresh(rT);
+          if (res) {
+            setSession(
+              res.access,
+              rT,
+              handleTokenExpiration,
+              handleRTExpiration
+            );
+          } else {
+            handleRTExpiration();
+          }
+        });
+        return;
+      }
+
+      const res = await attemptTokenRefresh(rT);
+      if (res) {
         setSession(res.access, rT, handleTokenExpiration, handleRTExpiration);
+      } else {
+        handleRTExpiration();
       }
     } catch (error) {
       console.error("Failed to handle token expiration", error);
+    }
+  };
+
+  const attemptTokenRefresh = async (refreshToken) => {
+    try {
+      const res = await axiosPost(API_ROUTER.REFRESH_TOKEN, {
+        refresh: refreshToken,
+      });
+      return res.status ? res : null;
+    } catch (error) {
+      console.error("Token refresh failed", error);
+      return null;
     }
   };
 
@@ -150,7 +181,7 @@ function AuthProvider({ children }) {
           handleRTExpiration
         );
 
-        const userInfoResponse    = await axiosGet(API_ROUTER.USER_INFO);
+        const userInfoResponse = await axiosGet(API_ROUTER.USER_INFO);
         if (userInfoResponse.status) {
           dispatch({
             type: "INITIALIZE",
