@@ -420,7 +420,7 @@ const Insight = () => {
       <div className="wrapper-company w-100 d-flex flex-column">
         <div className="insight-sidebar w-100 d-flex flex-column gap-4">
           <div className="row">
-            <div className="d-flex align-items-center justify-content-between mb-20 ">
+            <div className="d-flex align-items-center justify-content-between mb-16 ">
               <h1 className="main-insight-text">
                 Value proportion analysis
                 <span className="tm-symbol">™</span>
@@ -452,7 +452,7 @@ const Insight = () => {
         <div className="insight-sidebar w-100 d-flex flex-column gap-4">
           <div className="row">
             <div className="col-lg-12">
-              <h1 className="main-insight-text mb-20 ">
+              <h1 className="main-insight-text mb-16 ">
                 Design efforts focused Ratio
               </h1>
             </div>
@@ -491,7 +491,7 @@ const Insight = () => {
         <div className="insight-sidebar w-100 d-flex flex-column gap-4">
           <div className="row">
             <div className="col-lg-12">
-              <h1 className="main-insight-text mb-20 ">
+              <h1 className="main-insight-text mb-16 ">
                 Business objectives proportion analysis
                 <span className="tm-symbol">™</span>
               </h1>

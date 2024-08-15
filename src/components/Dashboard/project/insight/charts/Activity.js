@@ -50,7 +50,7 @@ const activityStyles = {
     borderRadius: "16px",
   },
   UPA: {
-    backgroundColor: "#E0DFE31A",
+    backgroundColor: "#723D461A",
     padding: "7px 7px 7px 20px",
     borderRadius: "16px",
   },
