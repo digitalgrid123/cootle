@@ -274,7 +274,7 @@ const CombinedPurposeDropdown = ({
   }, [dropdownOpen]);
 
   return (
-    <div>
+    <>
       {dropdownOpen && (
         <div className="invitation-overlay p-80">
           <div className="invitation-content" ref={dropdownRef}>
@@ -392,7 +392,7 @@ const CombinedPurposeDropdown = ({
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
