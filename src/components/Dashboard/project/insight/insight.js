@@ -433,7 +433,10 @@ const Insight = () => {
                 Value proportion analysis
                 <span className="tm-symbol">™</span>
               </h1>
-              <h2 className="define-text cursor-pointer" onClick={handleDefinitionsClick}>
+              <h2
+                className="define-text cursor-pointer"
+                onClick={handleDefinitionsClick}
+              >
                 Definitions
                 <span className="question-mark">?</span>
               </h2>
