@@ -62,9 +62,9 @@ const ValueMapping = ({
     setActiveProductOutcome(designEffort.title); // Set active design effort based on clicked item
   }, []);
 
-  const fetchDesignEfforts = useCallback(async (designEffortIds) => {
+  const fetchDesignEfforts = useCallback(async (allDesignEffortIds) => {
     try {
-      const response = await reteriveEffort(designEffortIds);
+      const response = await reteriveEffort(allDesignEffortIds);
       if (response.status) {
         return response.data;
       } else {
@@ -83,20 +83,29 @@ const ValueMapping = ({
       if (res?.status && Array.isArray(res.data) && res.data.length > 0) {
         const objectivesData = res.data;
 
-        // Fetch design efforts for each objective
-        const designEffortPromises = objectivesData.map(async (obj) => {
+        // Collect all design effort IDs into a single array
+        const allDesignEffortIds = [];
+        objectivesData.forEach((obj) => {
           if (obj.design_efforts.length > 0) {
-            const designEffortData = await fetchDesignEfforts(
-              obj.design_efforts
+            allDesignEffortIds.push(...obj.design_efforts);
+          }
+        });
+
+        // Fetch all design efforts at once
+        const allDesignEffortData = await fetchDesignEfforts(
+          allDesignEffortIds
+        );
+
+        // Map design efforts back to their respective objectives
+        const objectivesWithDesignEfforts = objectivesData.map((obj) => {
+          if (obj.design_efforts.length > 0) {
+            const designEffortData = obj.design_efforts.map((id) =>
+              allDesignEffortData.find((effort) => effort.id === id)
             );
             return { ...obj, design_efforts: designEffortData };
           }
           return obj;
         });
-
-        const objectivesWithDesignEfforts = await Promise.all(
-          designEffortPromises
-        );
 
         // Separate archived and non-archived objectives
         const archivedObjectives = objectivesWithDesignEfforts.filter(
@@ -110,7 +119,7 @@ const ValueMapping = ({
         const reversedNonArchivedObjectives = nonArchivedObjectives.reverse();
 
         setObjectives(reversedNonArchivedObjectives);
-        setArchivedObjectives(archivedObjectives); // Assuming you have a state for archived objectives
+        setArchivedObjectives(archivedObjectives);
 
         // Retrieve active tab index from localStorage if available
         const storedActiveTabId = localStorage.getItem("activeTabId");
@@ -137,13 +146,7 @@ const ValueMapping = ({
     } finally {
       setLoading(false);
     }
-  }, [
-    mappingList,
-    selectedMapping,
-    fetchDesignEfforts,
-    selectedCompany,
-    reset,
-  ]);
+  }, [mappingList, selectedMapping, fetchDesignEfforts, reset]);
 
   const fetchlastObjectives = useCallback(async () => {
     try {

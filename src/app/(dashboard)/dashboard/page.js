@@ -12,7 +12,6 @@ const Dashboard = () => {
   const { userinfo, logout } = useAuth();
   const [user, setUser] = useState(null);
   const selectedCompany = useGlobalCompany();
-  console.log("🚀 ~ Dashboard ~ selectedCompany:", selectedCompany);
 
   const [showPopup, setShowPopup] = useState(false);
   const { currentTab, setCurrentTab } = useTabs(getInitialTab());
@@ -46,12 +45,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (user && user.startsWith("User#")) {
       setShowPopup(true);
-    } else if (
-      !selectedCompany ||
-      (selectedCompany &&
-        Object.keys(selectedCompany).length === 0 &&
-        user !== null)
-    ) {
+    } else if (selectedCompany === undefined && user !== null) {
       setShowPopup(true);
       setCurrentTab(2);
     }

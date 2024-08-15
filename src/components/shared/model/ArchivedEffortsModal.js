@@ -74,7 +74,7 @@ const ArchivedEffortsModal = ({
                   <span>close</span>
                 </button>
               </div>
-              <div className="archived-efforts-list ptb-34 overflow-scroll ">
+              <div className="archived-efforts-list ptb-34 overflow-scroll-y ">
                 {archivedDesignEfforts.length > 0 ? (
                   archivedDesignEfforts.map((effort) => (
                     <div
@@ -98,7 +98,7 @@ const ArchivedEffortsModal = ({
                     </div>
                   ))
                 ) : (
-                  <p>No archived design efforts found.</p>
+                  <></>
                 )}
               </div>
             </div>

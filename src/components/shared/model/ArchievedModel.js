@@ -67,7 +67,7 @@ const ArchievedModel = ({
                   <span>close</span>
                 </button>
               </div>
-              <div className="archived-objectives-list ptb-34 overflow-scroll ">
+              <div className="archived-objectives-list ptb-34 overflow-scroll-y ">
                 {archivedObjectives.length > 0 ? (
                   archivedObjectives.map((obj) => (
                     <div
@@ -89,7 +89,7 @@ const ArchievedModel = ({
                     </div>
                   ))
                 ) : (
-                  <p>No archived objectives found.</p>
+                  <></>
                 )}
               </div>
             </div>

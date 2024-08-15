@@ -30,7 +30,7 @@ const EffortMapping = ({
 
   useEffect(() => {
     fetchCategories();
-  }, [categories, selectedCompany, reset, isAdmin]);
+  }, [reset]);
 
   const fetchCategories = async () => {
     setLoading(true);

@@ -129,6 +129,7 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
   const fetchDesignEfforts = useCallback(
     async (designEffortIds) => {
       try {
+        // Assuming reteriveEffort can accept an array of IDs and return data for all of them
         const response = await reteriveEffort(designEffortIds);
         if (response.status) {
           return response.data;
@@ -150,19 +151,36 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
 
         if (res?.status && Array.isArray(res.data) && res.data.length > 0) {
           const objectivesData = res.data;
-          const designEffortPromises = objectivesData.map(async (obj) => {
-            if (obj.design_efforts.length > 0) {
-              const designEffortData = await fetchDesignEfforts(
-                obj.design_efforts
-              );
-              return { ...obj, design_efforts: designEffortData };
-            }
-            return obj;
-          });
-          const objectivesWithDesignEfforts = await Promise.all(
-            designEffortPromises
+
+          // Collect all design effort IDs from all objectives
+          const allDesignEffortIds = objectivesData.flatMap(
+            (obj) => obj.design_efforts
           );
-          setObjectives(objectivesWithDesignEfforts);
+
+          if (allDesignEffortIds.length > 0) {
+            // Fetch all design efforts in a single call
+            const allDesignEfforts = await fetchDesignEfforts(
+              allDesignEffortIds
+            );
+
+            // Create a map of design effort IDs to their corresponding data
+            const designEffortsMap = allDesignEfforts.reduce((acc, effort) => {
+              acc[effort.id] = effort;
+              return acc;
+            }, {});
+
+            // Map objectives to include the fetched design efforts
+            const objectivesWithDesignEfforts = objectivesData.map((obj) => {
+              const designEfforts = obj.design_efforts.map(
+                (id) => designEffortsMap[id]
+              );
+              return { ...obj, design_efforts: designEfforts };
+            });
+
+            setObjectives(objectivesWithDesignEfforts);
+          } else {
+            setObjectives(objectivesData);
+          }
         } else {
           console.error("No data found in the response");
         }
@@ -170,6 +188,7 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
         console.error("Error fetching data:", err);
       }
     };
+
     fetchObjectives();
   }, [fetchDesignEfforts, mappingList]);
 

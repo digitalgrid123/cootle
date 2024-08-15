@@ -13,7 +13,7 @@ import { getData, saveData } from "@/utils/storage";
 import NewProjectModal from "@/components/shared/model/NewProjectModal";
 
 const Menus = () => {
-  const { companylist, projectlist, memberslist, userinfo } = useAuth();
+  const { companylist, projectlist } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const dropdownRef = useRef(null);
@@ -50,7 +50,7 @@ const Menus = () => {
     };
 
     fetchCompanyList();
-  }, [companylist]);
+  }, []);
 
   const fetchProjectList = useCallback(async () => {
     try {
@@ -63,11 +63,11 @@ const Menus = () => {
     } catch (err) {
       console.error("Error fetching project list:", err);
     }
-  }, [projectlist]);
+  }, []);
 
   useEffect(() => {
     fetchProjectList();
-  }, [fetchProjectList, selectedCompany]);
+  }, [selectedCompany]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
