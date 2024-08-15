@@ -1,11 +1,13 @@
 import CompanyLogo from "@/components/Dashboard/CompanyLogo";
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 import { useAuth, useToaster } from "@/hooks";
+import { useSharedState } from "@/hooks/useSharedState";
 import React, { useEffect, useState } from "react";
 
 const InvitationModel = ({ showPopup, next, contentRef, setShowPopup }) => {
   const { invitation, acceptreject, acceptinvite, setcompany } = useAuth();
   const [invite, setInvite] = useState(null);
+  const { trigger } = useSharedState();
   const { toaster } = useToaster();
   const nextbox = () => {
     next();
@@ -31,7 +33,7 @@ const InvitationModel = ({ showPopup, next, contentRef, setShowPopup }) => {
     };
 
     fetchUserInfo();
-  }, [invitation]);
+  }, [trigger]);
 
   const handleAccept = async () => {
     try {

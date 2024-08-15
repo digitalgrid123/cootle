@@ -3,6 +3,7 @@ import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 import { useAuth, useToaster, useTabs } from "@/hooks";
 import { useGlobalCompany } from "@/utils/globalState";
 import PaginationComponent from "../table/Pagination";
+import { useSharedState } from "@/hooks/useSharedState";
 
 const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
   const { toaster } = useToaster();
@@ -25,6 +26,7 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
   const [selectedOption, setSelectedOption] = useState("Member");
   const [showDropdown, setShowDropdown] = useState({});
   const [pageLimit, setPageLimit] = useState(calculatePageLimit());
+  const { triggerFetch } = useSharedState();
   const [owner, setOwner] = useState(null);
 
   const dropdownRef = useRef(null);
@@ -92,6 +94,7 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
         toaster(response.message, TOAST_TYPES.SUCCESS);
         setEmails("");
         setFetchTrigger((prev) => !prev);
+        triggerFetch();
       } else {
         toaster(response.message, TOAST_TYPES.ERROR);
       }
