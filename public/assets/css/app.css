@@ -318,8 +318,8 @@ textarea {
 .pb-32 {
   padding-bottom: 32px !important;
 }
-.padding-thirtytwo {
-  padding: 0 0 32px 0 !important;
+.padding-dropdown-custom {
+  padding: 8px 24px !important;
 }
 .center {
   display: flex;
@@ -2250,7 +2250,7 @@ textarea {
 
 .main-insight-text {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 21.78px;
   letter-spacing: -0.03em;
   text-align: left;
@@ -2323,7 +2323,8 @@ textarea {
   box-shadow: 0px 1px 2px 0px #1b242c1f;
   border: 1px solid #f6effd;
   border-radius: 8px;
-  padding: 16px 27px;
+  padding: 10px;
+  width: 100%;
 }
 
 .DropdownCheckedlist-menu > li {
@@ -2332,11 +2333,12 @@ textarea {
   line-height: 16px;
   letter-spacing: -0.03em;
   text-align: center;
+  white-space: nowrap;
 }
 
 .DropdownCheckedlist-menu > li.active {
   background: var(--light-lavender) !important;
-  border-radius: 16px !important;
+  border-radius: 8px !important;
   border: none !important;
 }
 

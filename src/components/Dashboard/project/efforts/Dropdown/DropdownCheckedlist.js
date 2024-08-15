@@ -112,10 +112,8 @@ const DropdownCheckedlist = ({
             <li
               key={statusKey}
               onClick={() => handleStatusSelect(statusKey)}
-              className={`cursor-pointer mb-8 ${
-                index === filteredStatusKeys.length - 1
-                  ? "p-0"
-                  : "padding-thirtytwo"
+              className={`cursor-pointer mb-8 padding-dropdown-custom ${
+                index === filteredStatusKeys.length - 1 ? "mb-0" : "mb-16"
               } ${selectedStatus === statusKey ? "active" : ""}`}
             >
               {getStyledDescription(statusDescriptions[statusKey])}

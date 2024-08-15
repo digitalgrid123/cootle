@@ -311,14 +311,14 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
         return {
           backgroundColor: "#128E5E",
           color: "white",
-          padding: "12px 28px",
+          padding: "12px 16px",
           borderRadius: "12px",
         };
       case "VUR":
         return {
           backgroundColor: "#F58E07",
           color: "white",
-          padding: "12px 20px",
+          padding: "12px 16px",
           borderRadius: "12px",
         };
       default:
