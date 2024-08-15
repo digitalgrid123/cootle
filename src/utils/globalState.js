@@ -16,6 +16,7 @@ export const useGlobalCompany = () => {
   const { companyset, checkmember } = useAuth();
   const isCurrentCompanyUpdated = useRef(false);
 
+  // Add a listener to global state for updates
   useEffect(() => {
     const listener = (newCompany) => setCompany(newCompany);
     globalState.listeners.push(listener);
@@ -27,32 +28,36 @@ export const useGlobalCompany = () => {
     };
   }, []);
 
+  // Reset the ref when company ID changes
   useEffect(() => {
-    // Reset the ref if the company ID changes
     isCurrentCompanyUpdated.current = false;
   }, [company?.id]);
 
+  // Fetch member details after company is set
   useEffect(() => {
     if (company && company.id && !isCurrentCompanyUpdated.current) {
-      companyset(company.id)
-        .then((res) => {
+      const fetchCompanyData = async () => {
+        try {
+          const res = await companyset(company.id);
           if (res && res.data) {
-            fetchMember();
+            await fetchMember();
             const updatedCompany = { ...company };
             setSelectedCompany(updatedCompany);
             isCurrentCompanyUpdated.current = true; // Mark as updated
           }
-        })
-        .catch((error) => {
+        } catch (error) {
           console.error("API call failed:", error);
-        });
+        }
+      };
+
+      fetchCompanyData();
     }
   }, [company, companyset]);
 
+  // Fetch member details
   const fetchMember = async () => {
     try {
       const res = await checkmember(company.id);
-
       if (res.is_admin || res.is_owner) {
         isCurrentCompanyUpdated.current = true;
       }
@@ -61,12 +66,13 @@ export const useGlobalCompany = () => {
     }
   };
 
+  // Optionally set an interval if you need periodic fetching
+  // Uncomment and adjust if needed
   useEffect(() => {
-    const intervalId = setInterval(fetchMember, 15000);
-
-    return () => {
-      clearInterval(intervalId); // Clear interval on component unmount
-    };
+    if (company) {
+      const intervalId = setInterval(fetchMember, 15000);
+      return () => clearInterval(intervalId); // Clear interval on component unmount or company change
+    }
   }, [company]);
 
   return company;

@@ -9,9 +9,10 @@ import MainMap from "@/components/Dashboard/valuemapping/MainMap";
 import { useGlobalCompany } from "@/utils/globalState";
 
 const Dashboard = () => {
-  const { userinfo } = useAuth();
+  const { userinfo, logout } = useAuth();
   const [user, setUser] = useState(null);
   const selectedCompany = useGlobalCompany();
+  console.log("🚀 ~ Dashboard ~ selectedCompany:", selectedCompany);
 
   const [showPopup, setShowPopup] = useState(false);
   const { currentTab, setCurrentTab } = useTabs(getInitialTab());
@@ -45,8 +46,14 @@ const Dashboard = () => {
   useEffect(() => {
     if (user && user.startsWith("User#")) {
       setShowPopup(true);
-    } else if (selectedCompany === undefined && user !== null) {
+    } else if (
+      !selectedCompany ||
+      (selectedCompany &&
+        Object.keys(selectedCompany).length === 0 &&
+        user !== null)
+    ) {
       setShowPopup(true);
+      setCurrentTab(2);
     }
   }, [user]);
 
