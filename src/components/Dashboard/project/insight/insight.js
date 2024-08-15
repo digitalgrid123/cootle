@@ -415,6 +415,14 @@ const Insight = () => {
     setIsDropdownOpen(false);
   };
 
+  const handleDefinitionsClick = () => {
+    window.open(
+      "https://ritzy-time-de0.notion.site/Cootle-Definitions-638ecf0682544a3382e8b43a91688ddc",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
+
   return (
     <div className="d-flex flex-row gap-3 h-100  justify-content-between">
       <div className="wrapper-company w-100 d-flex flex-column">
@@ -425,7 +433,7 @@ const Insight = () => {
                 Value proportion analysis
                 <span className="tm-symbol">™</span>
               </h1>
-              <h2 className="define-text cursor-pointer">
+              <h2 className="define-text cursor-pointer" onClick={handleDefinitionsClick}>
                 Definitions
                 <span className="question-mark">?</span>
               </h2>
