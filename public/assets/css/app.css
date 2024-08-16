@@ -137,6 +137,15 @@ a {
 .w-80 {
   width: 80%;
 }
+.gap-16 {
+  gap: 16px;
+}
+.gap-64 {
+  gap: 64px;
+}
+.gap-35 {
+  gap: 35px;
+}
 textarea {
   resize: none;
 }
@@ -2009,6 +2018,7 @@ textarea {
   line-height: 24px;
   letter-spacing: -0.03em;
   text-align: left;
+  white-space: nowrap;
 }
 .effort-list {
   display: grid;
@@ -2743,4 +2753,47 @@ textarea {
   line-height: 14px;
   letter-spacing: -0.03em;
   text-align: left;
+}
+
+/* Default styling for larger screens */
+.responsive-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 1px solid #dcdcdc; /* Example border style */
+  padding-bottom: 24px;
+}
+
+.responsive-container .d-flex {
+  display: flex;
+  align-items: center;
+  gap: 3rem; /* Adjust the gap as needed */
+}
+.absolute-edit-button {
+  position: relative;
+}
+
+/* Media query for smaller screens (1240px and below) */
+@media (max-width: 1300px) {
+  .responsive-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .responsive-container .first-row,
+  .responsive-container .second-row {
+    width: 100%;
+    margin-bottom: 16px; /* Space between rows */
+  }
+
+  .responsive-container .second-row {
+    justify-content: space-between;
+    margin-bottom: 0;
+  }
+  .absolute-edit-button {
+    position: absolute;
+    right: 0;
+    top: -42px;
+  }
 }

@@ -447,6 +447,7 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
         return true; // Show all if no selection
     }
   });
+
   return (
     <div className="d-flex flex-row gap-3 h-100  justify-content-between">
       <div className="wrapper-company w-100">
@@ -486,8 +487,8 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
                 />
               ) : (
                 <div key={purpose.id} className="section-project">
-                  <div className="pb-24 d-flex align-items-center justify-content-between w-100 border_bottom_pastel">
-                    <div className="d-flex align-items-center gap-3">
+                  <div className="responsive-container pb-24 d-flex align-items-center justify-content-between w-100 border_bottom_pastel">
+                    <div className="d-flex align-items-center gap-3 first-row">
                       <h1 className="create-id f-18">
                         <span className="f-14">#pur</span>
                         {`${
@@ -499,12 +500,12 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
                         }`}
                       </h1>
 
-                      <h1 className="create-id f-18">
+                      <h1 className="create-id f-18" title={purpose?.title}>
                         <span className="f-14">#</span>
                         {purpose?.title}
                       </h1>
                     </div>
-                    <div className="d-flex align-items-center gap-3">
+                    <div className="d-flex align-items-center gap-3 second-row relative">
                       <div className="d-flex align-items-center gap-2">
                         <h2 className="create-name weight-500">Created by:</h2>
                         {userdetail.some((user) => user.id === purpose.user) ? (
@@ -549,7 +550,7 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
                       </div>
                       {purpose.user === user?.id && (
                         <button
-                          className="edit-button"
+                          className="edit-button absolute-edit-button"
                           onClick={() => handleEditClick(purpose)}
                         >
                           <img
@@ -561,66 +562,57 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
                       )}
                     </div>
                   </div>
-                  <div className="d-flex align-items-start  pb-24 border_bottom_pastel pt-24">
-                    <div className="col-lg-2">
-                      <h2 className="selectedone weight-500">
-                        Problem summary:
-                      </h2>
-                    </div>
-                    <div className="col-lg-10">
-                      <p className="selectedone m-0">{purpose.description}</p>
-                    </div>
+
+                  <div className="d-flex align-items-start  pb-24 border_bottom_pastel pt-24 gap-16">
+                    <h2 className="selectedone weight-500">Problem summary:</h2>
+
+                    <p className="selectedone m-0">{purpose.description}</p>
                   </div>
-                  <div className="d-flex align-items-start  pb-24 border_bottom_pastel pt-24">
-                    <div className="col-lg-2">
-                      <h2 className="selectedone weight-500">
-                        Desired outcomes:
-                      </h2>
-                    </div>
-                    <div className="col-lg-10">
-                      <div
-                        className=" d-flex align-items-center m-0 flex-wrap "
-                        style={{ gap: "0 40px" }}
-                      >
-                        {purpose?.desired_outcomes.map((effortId) => {
-                          const matchingObjective = objectives.find(
-                            (obj) => obj.id === effortId
-                          );
-                          return (
-                            <li key={effortId} className="p-0 selectedone">
-                              {matchingObjective?.title}
-                            </li>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="d-flex align-items-start pb-16 pt-24">
-                    <div className="col-lg-2">
-                      <h2 className="selectedone weight-500">
-                        Design effort(s):
-                      </h2>
-                    </div>
-                    <div className="col-lg-10">
-                      <div
-                        className=" d-flex align-items-center m-0 flex-wrap "
-                        style={{ gap: "0 40px" }}
-                      >
-                        {purpose.design_efforts.map((effortId) => (
+                  <div className="d-flex align-items-start  pb-24 border_bottom_pastel pt-24 gap-16">
+                    <h2 className="selectedone weight-500">
+                      Desired outcomes:
+                    </h2>
+
+                    <div
+                      className=" d-flex align-items-center m-0 flex-wrap "
+                      style={{ gap: "0 40px" }}
+                    >
+                      {purpose?.desired_outcomes.map((effortId) => {
+                        const matchingObjective = objectives.find(
+                          (obj) => obj.id === effortId
+                        );
+                        return (
                           <li key={effortId} className="p-0 selectedone">
-                            {design
-                              .flatMap((obj) => obj.items)
-                              .map((effort) => {
-                                if (effort && effort.id === effortId) {
-                                  return (
-                                    <span key={effort.id}>{effort.title}</span>
-                                  );
-                                }
-                                return null;
-                              })}
+                            {matchingObjective?.title}
                           </li>
-                        ))}
-                      </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="d-flex align-items-start pb-16 pt-24 gap-35">
+                    <h2 className="selectedone weight-500">
+                      Design effort(s):
+                    </h2>
+
+                    <div
+                      className=" d-flex align-items-center m-0 flex-wrap "
+                      style={{ gap: "0 40px" }}
+                    >
+                      {purpose.design_efforts.map((effortId) => (
+                        <li key={effortId} className="p-0 selectedone">
+                          {design
+                            .flatMap((obj) => obj.items)
+                            .map((effort) => {
+                              if (effort && effort.id === effortId) {
+                                return (
+                                  <span key={effort.id}>{effort.title}</span>
+                                );
+                              }
+                              return null;
+                            })}
+                        </li>
+                      ))}
                     </div>
                   </div>
                 </div>

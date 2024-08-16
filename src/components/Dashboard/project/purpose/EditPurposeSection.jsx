@@ -177,51 +177,45 @@ const EditPurposeSection = ({
           </button>
         </div>
         <div className="pt-16">
-          <div className="d-flex align-items-start mb-24">
-            <div className="col-lg-2">
-              <h1 className="select-outcome-text">Desired outcome(s):</h1>
-            </div>
-            <div className="col-lg-10">
-              <ul
-                className=" d-flex align-items-center m-0 flex-wrap "
-                style={{ gap: "0 40px" }}
-              >
-                {selectedProductOutcomes.map((effortId) => {
-                  const matchingObjective = objectives.find(
-                    (obj) => obj.id === effortId
-                  );
-                  return (
-                    <li key={effortId} className="p-0 selectedone">
-                      {matchingObjective?.title}
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          </div>
-          <div className="d-flex align-items-start ">
-            <div className="col-lg-2">
-              <h1 className="select-outcome-text">Design effort(s):</h1>
-            </div>
-            <div className="col-lg-10">
-              <ul
-                className=" d-flex align-items-center m-0 flex-wrap "
-                style={{ gap: "0 40px" }}
-              >
-                {selectedDesignEfforts.map((effortId) => (
+          <div className="d-flex align-items-start mb-24 gap-35">
+            <h1 className="select-outcome-text">Desired outcome(s):</h1>
+
+            <ul
+              className=" d-flex align-items-center m-0 flex-wrap p-0 "
+              style={{ gap: "0 40px" }}
+            >
+              {selectedProductOutcomes.map((effortId) => {
+                const matchingObjective = objectives.find(
+                  (obj) => obj.id === effortId
+                );
+                return (
                   <li key={effortId} className="p-0 selectedone">
-                    {design
-                      .flatMap((obj) => obj.items)
-                      .map((effort) => {
-                        if (effort && effort.id === effortId) {
-                          return <span key={effort.id}>{effort.title}</span>;
-                        }
-                        return null;
-                      })}
+                    {matchingObjective?.title}
                   </li>
-                ))}
-              </ul>
-            </div>
+                );
+              })}
+            </ul>
+          </div>
+          <div className="d-flex align-items-start gap-64">
+            <h1 className="select-outcome-text">Design effort(s):</h1>
+
+            <ul
+              className=" d-flex align-items-center m-0 flex-wrap p-0"
+              style={{ gap: "0 40px" }}
+            >
+              {selectedDesignEfforts.map((effortId) => (
+                <li key={effortId} className="p-0 selectedone">
+                  {design
+                    .flatMap((obj) => obj.items)
+                    .map((effort) => {
+                      if (effort && effort.id === effortId) {
+                        return <span key={effort.id}>{effort.title}</span>;
+                      }
+                      return null;
+                    })}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
