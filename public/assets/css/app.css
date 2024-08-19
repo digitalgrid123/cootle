@@ -300,6 +300,9 @@ textarea {
 .pb-20 {
   padding-bottom: 20px;
 }
+.pb-66 {
+  padding-bottom: 66px !important;
+}
 .pb-24 {
   padding-bottom: 24px;
 }
@@ -326,6 +329,13 @@ textarea {
 }
 .pb-32 {
   padding-bottom: 32px !important;
+}
+
+.flex-center-padding {
+  display: flex;
+  align-items: center;
+  padding-top: 14px;
+  padding-bottom: 14px;
 }
 .padding-dropdown-custom {
   padding: 8px 24px !important;
@@ -717,7 +727,6 @@ textarea {
   margin-top: 6px;
 }
 .input-company {
-  width: 60%;
   border: none;
   border-radius: 16px;
   padding: 12px 16px 12px 16px;
@@ -910,7 +919,7 @@ textarea {
   border-radius: 32px;
   background: var(--light-lavender);
   border: none;
-  padding: 16px;
+  padding: 24px 16px 16px 16px;
   display: flex;
   flex-direction: column;
   /* box-shadow: 0px 1px 2px 0px var(--grayish-blue); */
@@ -924,6 +933,7 @@ textarea {
   line-height: 20.57px;
   letter-spacing: -0.03em;
   text-align: left;
+  white-space: nowrap;
 }
 .mapping_btn.active {
   background-color: var(--deepPurple);
@@ -931,10 +941,6 @@ textarea {
   padding: 10px 16px 13px 16px;
   border: none;
   border-radius: 16px;
-  font-size: 16px;
-  line-height: 19.57px;
-  letter-spacing: -0.03em;
-  text-align: left;
 }
 .button-group {
   background-color: var(--pastel-lavender);
@@ -1384,7 +1390,7 @@ textarea {
 }
 
 .hover-effect:hover .hover-image {
-  content: url("/assets/images/mark/plus_hover_16px.svg");
+  content: url("../images/mark/plus_hover_16px.svg");
 }
 
 .page-title-heading {
@@ -1771,6 +1777,7 @@ textarea {
   text-align: right;
   color: var(--text-black);
   cursor: pointer;
+  gap: 24px;
 }
 
 .effort-container ul {
@@ -1991,6 +1998,7 @@ textarea {
   align-items: center;
 }
 .add-project_btn > .add-text {
+  white-space: nowrap;
   font-size: 16px;
   font-weight: 500;
   line-height: 16px;
@@ -2460,6 +2468,7 @@ textarea {
   max-height: 38vh;
   overflow: clip;
   overflow-clip-margin: 200px;
+  overflow-y: scroll;
   padding: 0;
   margin: 0;
   list-style-type: none;
@@ -2470,7 +2479,7 @@ textarea {
 }
 
 .project-list::-webkit-scrollbar-thumb {
-  background-color: var(--purple-shadow);
+  background-color: #f4dcff;
   border-radius: 10px;
 }
 
@@ -2773,9 +2782,35 @@ textarea {
 .absolute-edit-button {
   position: relative;
 }
+.input-search-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
 
-/* Media query for smaller screens (1240px and below) */
 @media (max-width: 1300px) {
+  .design-tab {
+    padding: 13px 14px 13px 14px;
+    font-size: 14px;
+  }
+  .input-search-container {
+    flex-direction: column;
+    align-items: start;
+  }
+  .space-adjust-between {
+    justify-content: space-between;
+    margin-top: 16px;
+    width: 100%;
+  }
+  .absolute-buttons-group {
+    position: absolute;
+    right: 0;
+    top: -42px;
+  }
+
+  .effort-list {
+    grid-template-columns: repeat(1, 1fr);
+  }
   .responsive-container {
     flex-direction: column;
     align-items: flex-start;
@@ -2795,5 +2830,105 @@ textarea {
     position: absolute;
     right: 0;
     top: -42px;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .w-40 {
+    width: 60%;
+  }
+  .mapping_btn {
+    padding: 13px 8px 13px 8px;
+    font-size: 14px;
+    line-height: 19.57px;
+    letter-spacing: -0.02em;
+  }
+  .mapping_btn.active {
+    padding: 10px 13px 13px 13px;
+    border: none;
+    border-radius: 16px;
+  }
+  .company-setup-heading {
+    font-size: 18px;
+  }
+  .flex-center-padding {
+    gap: 4px;
+  }
+  .input-company::placeholder {
+    font-size: 12px;
+  }
+  .pr-70 {
+    padding-right: 20px;
+  }
+  .profile-member {
+    margin-right: 0px;
+    width: 30px;
+    height: 30px;
+  }
+  .text-status {
+    font-size: 12px;
+  }
+  .member-title {
+    font-size: 12px;
+  }
+  .member_email {
+    font-size: 11px;
+  }
+  .company-sidebar {
+    padding: 24px 8px 16px 8px;
+  }
+  .company-content {
+    padding: 24px 8px 16px 8px;
+  }
+  .filter-container {
+    padding: 24px 0px;
+  }
+  .timeline-dates li {
+    font-size: 14px;
+    gap: 20px;
+  }
+  .lifetime {
+    padding: 14px 24px;
+  }
+}
+@media only screen and (min-height: 600px) {
+  .project-list {
+    max-height: 15vh;
+  }
+}
+
+@media only screen and (min-height: 768px) {
+  .project-list {
+    max-height: 32vh;
+  }
+}
+
+@media only screen and (min-height: 800px) {
+  .project-list {
+    max-height: 35vh;
+  }
+}
+
+@media only screen and (min-height: 900px) {
+  .project-list {
+    max-height: 40vh;
+  }
+}
+
+@media only screen and (min-height: 1024px) {
+  .project-list {
+    max-height: 49vh;
+  }
+}
+
+@media only screen and (min-height: 1050px) {
+  .project-list {
+    max-height: 51vh;
+  }
+}
+
+@media only screen and (min-height: 1080px) {
+  .project-list {
+    max-height: 53vh;
   }
 }

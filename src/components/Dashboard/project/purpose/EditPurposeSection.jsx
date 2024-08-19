@@ -96,51 +96,57 @@ const EditPurposeSection = ({
   return (
     <>
       <div className="new-purpose-create w-100">
-        <div className=" d-flex align-items-center  border_bottom_lavender-blush pb-16 justify-content-between w-100">
-          <h1 className="create-id f-18">{`#pur${
-            purpose?.local_id < 10
-              ? `00${purpose?.local_id}`
-              : purpose?.local_id < 100
-              ? `0${purpose?.local_id}`
-              : purpose?.local_id
-          }`}</h1>
-          <div className="d-flex align-items-center gap-2">
-            <div className="d-flex align-items-center gap-2">
-              <h2 className="create-name weight-500">Created by:</h2>
-              <div className="d-flex align-items-center gap-1">
-                <div className="create_profile">
-                  <img
-                    src={user.profile_pic || "/assets/images/mark/profile.png"}
-                    alt="profile"
-                    style={{
-                      position: "absolute",
-                      top: "0",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
+        <div className="responsive-container  d-flex align-items-center  border_bottom_lavender-blush pb-16 justify-content-between w-100">
+          <div className="first-row">
+            <h1 className="create-id f-18">{`#pur${
+              purpose?.local_id < 10
+                ? `00${purpose?.local_id}`
+                : purpose?.local_id < 100
+                ? `0${purpose?.local_id}`
+                : purpose?.local_id
+            }`}</h1>
+          </div>
+          <div className="d-flex align-items-center gap-3 second-row relative">
+            <div className="d-flex align-items-center gap-2 space-adjust-between">
+              <div className="d-flex align-items-center gap-2">
+                <h2 className="create-name weight-500">Created by:</h2>
+                <div className="d-flex align-items-center gap-1">
+                  <div className="create_profile">
+                    <img
+                      src={
+                        user.profile_pic || "/assets/images/mark/profile.png"
+                      }
+                      alt="profile"
+                      style={{
+                        position: "absolute",
+                        top: "0",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+                  <h2 className="create-name">{user?.fullname}</h2>
                 </div>
-                <h2 className="create-name">{user?.fullname}</h2>
+              </div>
+              <div className="d-flex align-items-center gap-2">
+                <h2 className="create-name weight-500">Created on:</h2>
+                <h2 className="create-name">
+                  {new Date(purpose.created_at).toLocaleDateString()}
+                </h2>
               </div>
             </div>
-            <div className="d-flex align-items-center gap-2">
-              <h2 className="create-name weight-500">Created on:</h2>
-              <h2 className="create-name">
-                {new Date(purpose.created_at).toLocaleDateString()}
-              </h2>
-            </div>
-          </div>
-          <div className="d-flex align-items-center gap-2">
-            <button className="delete-btn mr-12" onClick={handleDeleteClick}>
-              <img src="/assets/images/mark/delete.png" alt="delete-icon" />
-            </button>
-            <div className="d-flex align-items-center gap-2 border-left-lavender-blush  pl-12">
-              <button className="close_effort_btn" onClick={handleCancel}>
-                <span>Cancel</span>
+            <div className="d-flex align-items-center gap-2 absolute-buttons-group">
+              <button className="delete-btn mr-12" onClick={handleDeleteClick}>
+                <img src="/assets/images/mark/delete.png" alt="delete-icon" />
               </button>
-              <button className="save_effort_btn" onClick={handleSaveClick}>
-                <span>Save</span>
-              </button>
+              <div className="d-flex align-items-center gap-2 border-left-lavender-blush  pl-12">
+                <button className="close_effort_btn" onClick={handleCancel}>
+                  <span>Cancel</span>
+                </button>
+                <button className="save_effort_btn" onClick={handleSaveClick}>
+                  <span>Save</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

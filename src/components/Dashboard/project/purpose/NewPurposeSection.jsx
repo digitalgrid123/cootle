@@ -26,43 +26,47 @@ const NewPurposeSection = ({
 
   return (
     <div className="new-purpose-create w-100">
-      <div className="border_bottom_lavender-blush pb-16 d-flex align-items-center justify-content-between w-100">
-        <h1 className="create-id f-18">{generateId()}</h1>
-        <div className="d-flex align-items-center gap-2">
-          <div className="d-flex align-items-center gap-2">
-            <h2 className="create-name weight-500">Created by:</h2>
-            <div className="d-flex align-items-center gap-1">
-              <div className="create_profile">
-                <img
-                  src={
-                    user?.profile_pic
-                      ? user?.profile_pic
-                      : "/assets/images/mark/profile.png"
-                  }
-                  alt="profile"
-                  style={{
-                    position: "absolute",
-                    top: "0",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
-                />
+      <div className="responsive-container border_bottom_lavender-blush pb-16 d-flex align-items-center justify-content-between w-100">
+        <div className="first-row">
+          <h1 className="create-id f-18">{generateId()}</h1>
+        </div>
+        <div className="d-flex align-items-center gap-3 second-row relative">
+          <div className="d-flex align-items-center gap-2 space-adjust-between">
+            <div className="d-flex align-items-center gap-2">
+              <h2 className="create-name weight-500">Created by:</h2>
+              <div className="d-flex align-items-center gap-1">
+                <div className="create_profile">
+                  <img
+                    src={
+                      user?.profile_pic
+                        ? user?.profile_pic
+                        : "/assets/images/mark/profile.png"
+                    }
+                    alt="profile"
+                    style={{
+                      position: "absolute",
+                      top: "0",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+                <h2 className="create-name">{user?.fullname}</h2>
               </div>
-              <h2 className="create-name">{user?.fullname}</h2>
+            </div>
+            <div className="d-flex align-items-center gap-2">
+              <h2 className="create-name weight-500">Created on:</h2>
+              <h2 className="create-name">{getCurrentDate()}</h2>
             </div>
           </div>
-          <div className="d-flex align-items-center gap-2">
-            <h2 className="create-name weight-500">Created on:</h2>
-            <h2 className="create-name">{getCurrentDate()}</h2>
+          <div className="d-flex align-items-center gap-2 absolute-buttons-group">
+            <button className="close_effort_btn" onClick={onToggleNewPurpose}>
+              <span>Cancel</span>
+            </button>
+            <button className="save_effort_btn" onClick={handleSavePurpose}>
+              <span>Save</span>
+            </button>
           </div>
-        </div>
-        <div className="d-flex align-items-center gap-2">
-          <button className="close_effort_btn" onClick={onToggleNewPurpose}>
-            <span>Cancel</span>
-          </button>
-          <button className="save_effort_btn" onClick={handleSavePurpose}>
-            <span>Save</span>
-          </button>
         </div>
       </div>
 

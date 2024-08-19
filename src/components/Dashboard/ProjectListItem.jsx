@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import { useAuth, useToaster } from "@/hooks";
@@ -13,6 +13,7 @@ const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
   const { toaster } = useToaster();
   const dropdownRef = useRef(null);
   const isAdmin = getData(USER_ROLES.SUPER_ADMIN);
+  const projectRef = useRef(null);
 
   useOutsideClick(dropdownRef, () => setDropdownVisible(false));
 
@@ -46,9 +47,20 @@ const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
       setDropdownVisible(false);
     }
   };
-
+  useEffect(() => {
+    if (isActive && projectRef.current) {
+      projectRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  }, [isActive]);
+  const truncatedProjectName =
+    project.name.length > 15
+      ? `${project.name.substring(0, 15)}...`
+      : project.name;
   return (
-    <div className="relative">
+    <div className="relative" ref={projectRef}>
       <li
         key={project.id}
         className={`d-flex align-items-center justify-content-between gap-2 cursor-pointer w-100 padding-lr-sixteen mb-16 ${
@@ -68,7 +80,7 @@ const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
             style={{ width: "24px" }}
             alt="project-icon"
           />
-          <h4 className="mapping f-16 weight-400">{project.name}</h4>
+          <h4 className="mapping f-16 weight-400">{truncatedProjectName}</h4>
         </div>
       </li>
       {isAdmin && dropdownVisible && (

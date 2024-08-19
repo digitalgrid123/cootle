@@ -192,12 +192,10 @@ const CombinedPurposeDropdown = ({
                   onClick={() => handleTabClick(item.id)}
                   aria-label={`Toggle ${item.title}`}
                 >
-                  <div className="d-flex align-items-center gap-2">
-                    <div className="dot"></div>
-                    <div className="text-start effort-selection">
-                      {item.title}
-                    </div>
+                  <div className="text-start effort-selection">
+                    {item.title}
                   </div>
+
                   <div>
                     <img
                       src="/assets/images/mark/add-design.svg"
@@ -222,12 +220,10 @@ const CombinedPurposeDropdown = ({
               onClick={() => handleTabClick(objective.id)}
               aria-label={`Toggle ${objective.title}`}
             >
-              <div className="d-flex align-items-center gap-2">
-                <div className="dot"></div>
-                <div className="text-start effort-selection">
-                  {objective.title}
-                </div>
+              <div className="text-start effort-selection">
+                {objective.title}
               </div>
+
               <div>
                 <img
                   src="/assets/images/mark/add-design.svg"
@@ -323,7 +319,7 @@ const CombinedPurposeDropdown = ({
                 <div className="col-lg-12">
                   <div className="dropdown-header d-flex align-items-center justify-content-between pt-16 pb-16 border_bottom_soft-lavender ">
                     <div className="col-lg-6">
-                      <div className="d-flex align-items-center gap-4">
+                      <div className="input-search-container">
                         <h2 className="category-heading weight-500 ">
                           {activeTab === "design"
                             ? "Design Efforts"

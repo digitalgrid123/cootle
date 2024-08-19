@@ -240,7 +240,7 @@ const CombinedEffortModel = ({
               <div key={objective.id} className="col-lg-3">
                 <li
                   onClick={() => handleTabClick(objective.id, "outcomes")}
-                  className="d-flex design-tab align-items-center justify-content-between flex-wrap text-align-left mb-16"
+                  className="d-flex design-tab align-items-center justify-content-between flex-nowrap text-align-left mb-16"
                 >
                   {objective.title}
                   <div>
@@ -324,7 +324,7 @@ const CombinedEffortModel = ({
               <div key={effort.id} className="col-lg-3">
                 <li
                   onClick={() => handleTabClick(effort.id, "effort")}
-                  className="d-flex design-tab align-items-center justify-content-between flex-wrap text-align-left mb-16"
+                  className="d-flex design-tab align-items-center justify-content-between flex-nowrap text-align-left mb-16"
                 >
                   {effort.title}
                   <div>
@@ -427,7 +427,7 @@ const CombinedEffortModel = ({
                     }`}
                   >
                     <div className="col-lg-6">
-                      <div className="d-flex align-items-center gap-4">
+                      <div className="input-search-container">
                         <h2 className="category-heading weight-500">
                           {activeTab === "links"
                             ? "Links"
@@ -552,7 +552,7 @@ const CombinedEffortModel = ({
                                   onClick={() =>
                                     handleTabClick(objective.id, "purpose")
                                   }
-                                  className="d-flex design-tab align-items-center justify-content-between flex-wrap text-align-left mb-16"
+                                  className="d-flex design-tab align-items-center justify-content-between flex-nowrap text-align-left mb-16"
                                 >
                                   {objective.title}
                                   <div>

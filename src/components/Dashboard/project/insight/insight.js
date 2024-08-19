@@ -442,15 +442,14 @@ const Insight = () => {
               </h2>
             </div>
 
-            <div className="col-lg-6">
+            <div className="effort-list">
               <div className="effort-count-container">
                 <h2 className="value-text mb-16">
                   OV:DE Ratio™ Organisation value to design efforts ratio
                 </h2>
                 <BarChart data={data.valueRatio} />
               </div>
-            </div>
-            <div className="col-lg-6">
+
               <div className="effort-count-container">
                 <h2 className="value-text mb-16">
                   Latest org. values-focused design efforts
@@ -468,11 +467,11 @@ const Insight = () => {
               </h1>
             </div>
 
-            <div className="col-lg-6">
-              <div className="row">
+            <div className="effort-list">
+              <div className="effort-list">
                 {Object.entries(data.effortCategories).map(
                   ([category, count], index) => (
-                    <div key={index} className="col-lg-6 mb-24">
+                    <div key={index}>
                       <div className="effort-count-container">
                         <h3 className="value-text mb-24">{category}</h3>
                         <div className="d-flex align-items-start justify-content-between">
@@ -490,8 +489,7 @@ const Insight = () => {
                   )
                 )}
               </div>
-            </div>
-            <div className="col-lg-6">
+
               <div className="effort-count-container">
                 <h2 className="value-text mb-16">Design efforts comparison</h2>
                 <LineGraph data={data?.effortGraphData} period={period} />
@@ -508,15 +506,14 @@ const Insight = () => {
               </h1>
             </div>
 
-            <div className="col-lg-6">
+            <div className="effort-list">
               <div className="effort-count-container">
                 <h2 className="value-text mb-16">
                   BO:DE Ratio™ Business objectives to design effort ratio
                 </h2>
                 <BarChart data={data.objectiveRatio} />
               </div>
-            </div>
-            <div className="col-lg-6">
+
               <div className="effort-count-container">
                 <h2 className="value-text mb-16">
                   Latest business objectives-focused design efforts

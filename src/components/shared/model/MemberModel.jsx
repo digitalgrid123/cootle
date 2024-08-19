@@ -217,11 +217,7 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
   return (
     <>
       <div className="setting-box border_bottom_pastel d-flex align-items-center justify-content-between">
-        <h1
-          className={`company-setup-heading weight-500 ${
-            !showPopup ? "mt-10" : ""
-          }`}
-        >
+        <h1 className={`company-setup-heading weight-500 `}>
           Add / Remove People from the Company
         </h1>
         {showPopup && (
@@ -252,7 +248,7 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
         </form>
       </div>
       {invitations.length > 0 ? (
-        <div className="member-container relative">
+        <div className="member-container relative pb-66">
           <>
             <h1 className="member-list-heading weight-600">Members List</h1>
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
@@ -271,15 +267,7 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
               </thead>
               <tbody>
                 <tr className="border_bottom_pastel">
-                  <td
-                    className="plr-14"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      paddingTop: "14px",
-                      paddingBottom: "14px",
-                    }}
-                  >
+                  <td className="plr-14 flex-center-padding">
                     <img
                       className="profile-member"
                       src={
@@ -312,15 +300,7 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
                   .slice((activePage - 1) * pageLimit, activePage * pageLimit)
                   .map((member, index) => (
                     <tr key={index} className="border_bottom_pastel">
-                      <td
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          paddingTop: "14px",
-                          paddingBottom: "14px",
-                        }}
-                        className="plr-14"
-                      >
+                      <td className="plr-14 flex-center-padding">
                         <img
                           className="profile-member"
                           src={
