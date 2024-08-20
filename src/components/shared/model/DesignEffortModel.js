@@ -246,9 +246,9 @@ const DesignEffortModel = ({
                       <h3 className="category-headingeffort mb-20 mt-24 ">
                         Selected Efforts
                       </h3>
-                      <div className="row border_bottom_faint pb-20">
+                      <div className=" grid-container border_bottom_faint pb-20">
                         {selectedItems.map((item, idx) => (
-                          <div key={idx} className="col-lg-3 mb-3">
+                          <div key={idx} className="grid-item ">
                             <li
                               className="design-tab d-flex align-items-center justify-content-between gap-2 selected-tab"
                               onClick={() => handleTabClick(item.id)}
@@ -277,12 +277,9 @@ const DesignEffortModel = ({
                       <h3 className="category-headingeffort mb-20 mt-24 ">
                         {category.category}
                       </h3>
-                      <div className="row border_bottom_faint pb-20">
+                      <div className="grid-container border_bottom_faint pb-20">
                         {category.items.map((item, idx) => (
-                          <div
-                            key={`${index}-${idx}`}
-                            className="col-lg-3 mb-3"
-                          >
+                          <div key={`${index}-${idx}`} className="grid-item ">
                             <li
                               className="design-tab d-flex align-items-center justify-content-between gap-2"
                               onClick={() => handleTabClick(item.id)}
