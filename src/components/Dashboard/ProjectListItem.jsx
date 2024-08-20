@@ -5,11 +5,13 @@ import { useAuth, useToaster } from "@/hooks";
 import { TOAST_TYPES, USER_ROLES } from "@/constants/keywords";
 import { getData } from "@/utils/storage";
 import useOutsideClick from "@/hooks/useOutsideClick";
+import EditProjectModal from "../shared/model/EditProjectModal";
 
 const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
   const router = useRouter();
   const { deleteProject } = useAuth();
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [showEditPopup, setShowEditPopup] = useState(false);
   const { toaster } = useToaster();
   const dropdownRef = useRef(null);
   const isAdmin = getData(USER_ROLES.SUPER_ADMIN);
@@ -47,6 +49,7 @@ const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
       setDropdownVisible(false);
     }
   };
+
   useEffect(() => {
     if (isActive && projectRef.current) {
       projectRef.current.scrollIntoView({
@@ -55,10 +58,17 @@ const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
       });
     }
   }, [isActive]);
+
   const truncatedProjectName =
     project.name.length > 15
       ? `${project.name.substring(0, 15)}...`
       : project.name;
+
+  const handleEditClick = () => {
+    setShowEditPopup(true);
+    setDropdownVisible(false);
+  };
+
   return (
     <div className="relative" ref={projectRef}>
       <li
@@ -84,26 +94,30 @@ const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
         </div>
       </li>
       {isAdmin && dropdownVisible && (
-        <>
-          <ul className="project-dropdown-menu " ref={dropdownRef}>
-            <li className="d-flex algin-items-center gap-2 border_bottom_pastel pb-16 cursor-pointer">
-              <img src="/assets/images/mark/edit.svg" alt="edit-icon" />
-              <span className="edit-project-text">Edit Project</span>
-            </li>
-            <li
-              onClick={handleDelete}
-              className="d-flex algin-items-center gap-2 mt-40 cursor-pointer"
-            >
-              <img
-                src="/assets/images/mark/delete.svg"
-                alt="profile"
-                lazy="loading"
-              />
-              <span className="delete-project-text">Delete project</span>
-            </li>
-          </ul>
-        </>
+        <ul className="project-dropdown-menu" ref={dropdownRef}>
+          <li
+            onClick={handleEditClick}
+            className="d-flex align-items-center gap-2 border_bottom_pastel pb-16 cursor-pointer"
+          >
+            <img src="/assets/images/mark/edit.svg" alt="edit-icon" />
+            <span className="edit-project-text">Edit Project</span>
+          </li>
+          <li
+            onClick={handleDelete}
+            className="d-flex align-items-center gap-2 mt-40 cursor-pointer"
+          >
+            <img src="/assets/images/mark/delete.svg" alt="delete-icon" />
+            <span className="delete-project-text">Delete project</span>
+          </li>
+        </ul>
       )}
+
+      <EditProjectModal
+        showEditPopup={showEditPopup}
+        setShowEditPopup={setShowEditPopup}
+        fetchProjectList={fetchProjectList}
+        projectToEdit={project}
+      />
     </div>
   );
 };

@@ -202,8 +202,8 @@ const DesignEffortModel = ({
                     </button>
                   </div>
                 </div>
-                <div className="col-lg-4">
-                  <div className="search-container">
+                <div className="grid-container">
+                  <div className="search-container four-columns">
                     <div className="search-icon">
                       <img
                         src="/assets/images/mark/search.svg"

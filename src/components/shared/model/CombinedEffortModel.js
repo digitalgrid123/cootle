@@ -204,7 +204,11 @@ const CombinedEffortModel = ({
                       onClick={() => handleTabClick(objective.id, "outcomes")}
                       className="d-flex design-tab selected-tab align-items-center justify-content-between text-align-left mb-16"
                     >
-                      {objective.title}
+                      <div className="d-flex align-items-center gap-2">
+                        <div className="dot"></div>
+
+                        {objective.title}
+                      </div>
                       <div>
                         <img
                           src="/assets/images/mark/remove-design.svg"
@@ -242,7 +246,11 @@ const CombinedEffortModel = ({
                   onClick={() => handleTabClick(objective.id, "outcomes")}
                   className="d-flex design-tab align-items-center justify-content-between flex-nowrap text-align-left mb-16"
                 >
-                  {objective.title}
+                  <div className="d-flex align-items-center gap-2">
+                    <div className="dot"></div>
+
+                    {objective.title}
+                  </div>
                   <div>
                     <img
                       src="/assets/images/mark/add-design.svg"
@@ -296,7 +304,11 @@ const CombinedEffortModel = ({
                   onClick={() => handleTabClick(effort.id, "effort")}
                   className="d-flex design-tab selected-tab align-items-center justify-content-between text-align-left"
                 >
-                  {effort.title}
+                  <div className="d-flex align-items-center gap-2">
+                    <div className="dot"></div>
+
+                    {effort.title}
+                  </div>
                   <div>
                     <img
                       src="/assets/images/mark/remove-design.svg"
@@ -326,7 +338,11 @@ const CombinedEffortModel = ({
                   onClick={() => handleTabClick(effort.id, "effort")}
                   className="d-flex design-tab align-items-center justify-content-between flex-nowrap text-align-left mb-16"
                 >
-                  {effort.title}
+                  <div className="d-flex align-items-center gap-2">
+                    <div className="dot"></div>
+
+                    {effort.title}
+                  </div>
                   <div>
                     <img
                       src="/assets/images/mark/add-design.svg"
@@ -525,7 +541,11 @@ const CombinedEffortModel = ({
                                     }
                                     className="d-flex design-tab selected-tab align-items-center justify-content-between"
                                   >
-                                    {objective.title}
+                                    <div className="d-flex align-items-center gap-2">
+                                      <div className="dot"></div>
+
+                                      {objective.title}
+                                    </div>
                                     <div>
                                       <img
                                         src="/assets/images/mark/remove-design.svg"
@@ -554,7 +574,11 @@ const CombinedEffortModel = ({
                                   }
                                   className="d-flex design-tab align-items-center justify-content-between flex-nowrap text-align-left mb-16"
                                 >
-                                  {objective.title}
+                                  <div className="d-flex align-items-center gap-2">
+                                    <div className="dot"></div>
+
+                                    {objective.title}
+                                  </div>
                                   <div>
                                     <img
                                       src="/assets/images/mark/add-design.svg"

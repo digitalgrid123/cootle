@@ -90,6 +90,9 @@ export const API_ROUTER = {
   //DELETE PROJECT
   DELETE_PROJECT: getNormalRoute("project/delete"),
 
+  //UPDATE PROJECT
+  UPDATE_PROJECT: getNormalRoute("project/edit"),
+
   //REMOVE MEMBER
   REMOVE_MEMBER: getNormalRoute("members/remove"),
 

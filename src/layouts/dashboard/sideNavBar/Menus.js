@@ -17,6 +17,7 @@ const Menus = () => {
   const router = useRouter();
   const pathname = usePathname();
   const dropdownRef = useRef(null);
+  const projectListRef = useRef(null);
   const [companyList, setCompanyList] = useState([]);
   const [projectList, setProjectList] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -166,6 +167,32 @@ const Menus = () => {
     }
     return name;
   };
+  // Adjust height based on available viewport height
+  useEffect(() => {
+    const adjustHeight = () => {
+      if (projectListRef.current) {
+        const viewportHeight = window.innerHeight;
+        const offset = projectListRef.current.getBoundingClientRect().top;
+        const maxHeight = viewportHeight - offset - 110; // 20px for padding
+        projectListRef.current.style.maxHeight = `${maxHeight}px`;
+      }
+    };
+
+    adjustHeight(); // Initial adjustment
+    window.addEventListener("resize", adjustHeight); // Adjust on resize
+
+    // Optional: Re-adjust on content changes or layout shifts
+    const observer = new MutationObserver(adjustHeight);
+    observer.observe(projectListRef.current, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => {
+      window.removeEventListener("resize", adjustHeight);
+      observer.disconnect(); // Clean up the observer
+    };
+  }, []);
 
   return (
     <>
@@ -306,7 +333,14 @@ const Menus = () => {
           </li>
         )}
 
-        <div className="project-list">{renderProjectList()}</div>
+        <div className="d-flex w-100 flex-column">
+          <div
+            ref={projectListRef}
+            className="relative overflow-scroll-y project-list "
+          >
+            {renderProjectList()}
+          </div>
+        </div>
       </ul>
       <div>
         <CreateNewModel

@@ -2465,13 +2465,15 @@ textarea {
 }
 
 .project-list {
-  max-height: 38vh;
+  /* max-height: 38vh;
   overflow: clip;
   overflow-clip-margin: 200px;
-  overflow-y: scroll;
+  overflow-y: scroll; */
+  overflow-x: hidden;
   padding: 0;
   margin: 0;
   list-style-type: none;
+  padding-right: 10px;
 }
 
 .project-list::-webkit-scrollbar {
@@ -2705,11 +2707,11 @@ textarea {
   box-shadow: 0px 1px 2px 0px var(--grayish-blue);
   background-color: var(--text-color) !important;
   padding: 18px 16px 10px 16px !important;
+  position: fixed;
+  transform: translateY(-56px);
+  left: 260px;
 
-  position: absolute;
-  top: 4px;
-  right: -154px;
-  z-index: 999999;
+  z-index: 9999;
 }
 .project-dropdown-menu > li > .span {
   font-size: 18px;
@@ -2787,6 +2789,14 @@ textarea {
   align-items: center;
   gap: 1rem;
 }
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+}
+.four-columns {
+  grid-column: span 5;
+}
 
 @media (max-width: 1300px) {
   .design-tab {
@@ -2834,6 +2844,9 @@ textarea {
 }
 
 @media only screen and (max-width: 1024px) {
+  .four-columns {
+    grid-column: span 8;
+  }
   .w-40 {
     width: 60%;
   }
@@ -2892,14 +2905,20 @@ textarea {
   }
 }
 @media only screen and (min-height: 600px) {
-  .project-list {
+  /* .project-list {
     max-height: 15vh;
+  } */
+  .pt-270 {
+    padding-top: 160px;
   }
 }
 
-@media only screen and (min-height: 768px) {
+/* @media only screen and (min-height: 768px) {
   .project-list {
     max-height: 32vh;
+  }
+  .pt-270 {
+    padding-top: 195px;
   }
 }
 
@@ -2907,15 +2926,18 @@ textarea {
   .project-list {
     max-height: 35vh;
   }
-}
+} */
 
 @media only screen and (min-height: 900px) {
-  .project-list {
+  /* .project-list {
     max-height: 40vh;
+  } */
+  .pt-270 {
+    padding-top: 270px;
   }
 }
 
-@media only screen and (min-height: 1024px) {
+/* @media only screen and (min-height: 1024px) {
   .project-list {
     max-height: 49vh;
   }
@@ -2931,4 +2953,4 @@ textarea {
   .project-list {
     max-height: 53vh;
   }
-}
+} */

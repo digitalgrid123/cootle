@@ -160,7 +160,13 @@ const CombinedPurposeDropdown = ({
                   onClick={() => handleTabClick(item.id)}
                   className="d-flex design-tab selected-tab align-items-center justify-content-between text-align-left mb-3"
                 >
-                  {item.title}
+                  <div className="d-flex align-items-center gap-2">
+                    <div className="dot"></div>
+
+                    <div className="text-start effort-selection">
+                      {item.title}
+                    </div>
+                  </div>
                   <div>
                     <img
                       src="/assets/images/mark/remove-design.svg"
@@ -192,8 +198,12 @@ const CombinedPurposeDropdown = ({
                   onClick={() => handleTabClick(item.id)}
                   aria-label={`Toggle ${item.title}`}
                 >
-                  <div className="text-start effort-selection">
-                    {item.title}
+                  <div className="d-flex align-items-center gap-2">
+                    <div className="dot"></div>
+
+                    <div className="text-start effort-selection">
+                      {item.title}
+                    </div>
                   </div>
 
                   <div>
@@ -220,8 +230,12 @@ const CombinedPurposeDropdown = ({
               onClick={() => handleTabClick(objective.id)}
               aria-label={`Toggle ${objective.title}`}
             >
-              <div className="text-start effort-selection">
-                {objective.title}
+              <div className="d-flex align-items-center gap-2">
+                <div className="dot"></div>
+
+                <div className="text-start effort-selection">
+                  {objective.title}
+                </div>
               </div>
 
               <div>

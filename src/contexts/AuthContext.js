@@ -1726,7 +1726,32 @@ function AuthProvider({ children }) {
       };
     }
   };
+  const updateProject = async (project_id) => {
+    try {
+      const res = await axiosPatch(API_ROUTER.UPDATE_PROJECT, {
+        project_id,
+      });
 
+      if (res.status) {
+        return {
+          status: true,
+          data: res.data,
+        };
+      } else {
+        return {
+          status: false,
+          data: "",
+        };
+      }
+    } catch (error) {
+     
+      return {
+        status: false,
+        data: "",
+        message: "An error occurred while adding purpose",
+      };
+    }
+  };
   return (
     <AuthContext.Provider
       value={{
@@ -1797,6 +1822,7 @@ function AuthProvider({ children }) {
         checkmember,
         removeinvitation,
         deleteProject,
+        updateProject
       }}
     >
       {children}
