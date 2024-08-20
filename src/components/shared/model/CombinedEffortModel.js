@@ -505,7 +505,7 @@ const CombinedEffortModel = ({
                 </div>
 
                 <div
-                  className="tab-content"
+                  className="tab-content project-list"
                   style={{
                     maxHeight: `${containerHeight}px`,
                     overflowY: "auto",
@@ -520,6 +520,7 @@ const CombinedEffortModel = ({
                   )}
                   {activeTab === "purpose" && (
                     <div
+                      className="project-list"
                       style={{
                         maxHeight: `${containerHeight}px`,
                         overflowY: "auto",
@@ -595,6 +596,7 @@ const CombinedEffortModel = ({
                   )}
                   {activeTab === "effort" && (
                     <div
+                     className="project-list"
                       style={{
                         maxHeight: `${containerHeight}px`,
                         overflowY: "auto",
@@ -608,11 +610,7 @@ const CombinedEffortModel = ({
                   {activeTab === "links" && (
                     <div
                       className="col-lg-12"
-                      // style={{
-                      //   maxHeight: `${containerHeight}px`,
-                      //   overflowY: "auto",
-                      //   overflowX: "hidden",
-                      // }}
+                     
                     >
                       <LinkModel
                         link={link}

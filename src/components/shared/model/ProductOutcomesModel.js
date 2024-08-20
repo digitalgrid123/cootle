@@ -182,7 +182,7 @@ const ProductOutcomesModel = ({
                 </div>
                 <div className="border_bottom_faint pb-32"></div>
                 <div
-                  className="col-lg-12 mt-20"
+                  className="col-lg-12 mt-20 project-list"
                   style={{
                     maxHeight: `${containerHeight}px`,
                     overflowY: "auto",

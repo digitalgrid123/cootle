@@ -385,6 +385,7 @@ const CombinedPurposeDropdown = ({
                   </div>
                 </div>
                 <div
+                 className="project-list"
                   style={{
                     maxHeight: `${containerHeight}px`,
                     overflowY: "auto",
