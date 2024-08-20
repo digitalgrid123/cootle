@@ -2801,7 +2801,7 @@ textarea {
   grid-column: span 3;
 }
 
-@media (max-width: 1300px) {
+@media (max-width: 1300px) and (min-width: 1024px) {
   .four-columns {
     grid-column: span 6;
   }
@@ -2849,7 +2849,7 @@ textarea {
   }
 }
 
-@media only screen and (max-width: 1024px) {
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
   .grid-item {
     grid-column: span 6;
   }

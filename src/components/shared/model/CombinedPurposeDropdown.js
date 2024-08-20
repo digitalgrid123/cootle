@@ -153,9 +153,9 @@ const CombinedPurposeDropdown = ({
           {activeTab === "design" ? "Selected Effort" : "Selected Outcomes"}
         </h3>
         <ul className="p-0">
-          <div className="row">
+          <div className="grid-container">
             {selectedItems.map((item) => (
-              <div key={item.id} className="col-lg-3">
+              <div key={item.id} className="grid-item ">
                 <li
                   onClick={() => handleTabClick(item.id)}
                   className="d-flex design-tab selected-tab align-items-center justify-content-between text-align-left mb-3"
@@ -188,11 +188,11 @@ const CombinedPurposeDropdown = ({
         <h3 className="category-headingeffort mb-20 mt-24">
           {category.category}
         </h3>
-        <div className="row border_bottom_soft-lavender pb-20">
+        <div className="grid-container border_bottom_soft-lavender pb-20">
           {category.items
             .filter((item) => !selectedDesignEfforts.includes(item.id))
             .map((item, idx) => (
-              <div key={`${index}-${idx}`} className="col-lg-3 mb-3">
+              <div key={`${index}-${idx}`} className="grid-item">
                 <li
                   className="design-tab d-flex align-items-center justify-content-between gap-2"
                   onClick={() => handleTabClick(item.id)}
@@ -222,9 +222,9 @@ const CombinedPurposeDropdown = ({
 
   const renderObjectives = () => {
     return (
-      <div className="row">
+      <div className="grid-container">
         {filteredObjectives.map((objective) => (
-          <div key={objective.id} className="col-lg-3 mb-3">
+          <div key={objective.id} className="grid-item ">
             <li
               className="design-tab d-flex align-items-center justify-content-between gap-2"
               onClick={() => handleTabClick(objective.id)}
@@ -385,7 +385,7 @@ const CombinedPurposeDropdown = ({
                   </div>
                 </div>
                 <div
-                 className="project-list"
+                  className="project-list"
                   style={{
                     maxHeight: `${containerHeight}px`,
                     overflowY: "auto",

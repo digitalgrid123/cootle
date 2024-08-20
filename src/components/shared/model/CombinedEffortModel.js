@@ -197,9 +197,9 @@ const CombinedEffortModel = ({
               Selected outcomes
             </h3>
             <ul className="p-0 m-0">
-              <div className="row">
+              <div className="grid-container">
                 {selectedObjectives.map((objective) => (
-                  <div key={objective.id} className="col-lg-3">
+                  <div key={objective.id} className="grid-item ">
                     <li
                       onClick={() => handleTabClick(objective.id, "outcomes")}
                       className="d-flex design-tab selected-tab align-items-center justify-content-between text-align-left mb-16"
@@ -239,9 +239,9 @@ const CombinedEffortModel = ({
           Sample desired product outcomes
         </h3>
         <ul className="p-0">
-          <div className="row">
+          <div className="grid-container">
             {filteredObjectives.map((objective) => (
-              <div key={objective.id} className="col-lg-3">
+              <div key={objective.id} className="grid-item ">
                 <li
                   onClick={() => handleTabClick(objective.id, "outcomes")}
                   className="d-flex design-tab align-items-center justify-content-between flex-nowrap text-align-left mb-16"
@@ -297,9 +297,9 @@ const CombinedEffortModel = ({
       <div className="selected-efforts border_bottom_soft-lavender mb-45">
         <h3 className="category-headingeffort mb-24 mt-24">Selected effort</h3>
         <ul className="p-0">
-          <div className="row">
+          <div className="grid-container">
             {selectedEfforts.map((effort) => (
-              <div key={effort.id} className="col-lg-3">
+              <div key={effort.id} className="grid-item ">
                 <li
                   onClick={() => handleTabClick(effort.id, "effort")}
                   className="d-flex design-tab selected-tab align-items-center justify-content-between text-align-left"
@@ -331,9 +331,9 @@ const CombinedEffortModel = ({
           {category.category}
         </h3>
         <ul className="p-0">
-          <div className="row">
+          <div className="grid-container">
             {category.items.map((effort) => (
-              <div key={effort.id} className="col-lg-3">
+              <div key={effort.id} className="grid-item ">
                 <li
                   onClick={() => handleTabClick(effort.id, "effort")}
                   className="d-flex design-tab align-items-center justify-content-between flex-nowrap text-align-left mb-16"
@@ -533,9 +533,9 @@ const CombinedEffortModel = ({
                             Selected purposes
                           </h3>
                           <ul className="p-0">
-                            <div className="row">
+                            <div className="grid-container">
                               {selectedPurposes.map((objective) => (
-                                <div key={objective.id} className="col-lg-3">
+                                <div key={objective.id} className="grid-item ">
                                   <li
                                     onClick={() =>
                                       handleTabClick(objective.id, "purpose")
@@ -566,9 +566,9 @@ const CombinedEffortModel = ({
                           Sample purposes
                         </h3>
                         <ul className="p-0">
-                          <div className="row">
+                          <div className="grid-container">
                             {nonSelectedPurposes.map((objective) => (
-                              <div key={objective.id} className="col-lg-3">
+                              <div key={objective.id} className="grid-item ">
                                 <li
                                   onClick={() =>
                                     handleTabClick(objective.id, "purpose")
