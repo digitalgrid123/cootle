@@ -1726,10 +1726,11 @@ function AuthProvider({ children }) {
       };
     }
   };
-  const updateProject = async (project_id) => {
+  const updateProject = async (project_id, name) => {
     try {
       const res = await axiosPatch(API_ROUTER.UPDATE_PROJECT, {
         project_id,
+        name,
       });
 
       if (res.status) {
@@ -1744,7 +1745,6 @@ function AuthProvider({ children }) {
         };
       }
     } catch (error) {
-     
       return {
         status: false,
         data: "",
@@ -1822,7 +1822,7 @@ function AuthProvider({ children }) {
         checkmember,
         removeinvitation,
         deleteProject,
-        updateProject
+        updateProject,
       }}
     >
       {children}

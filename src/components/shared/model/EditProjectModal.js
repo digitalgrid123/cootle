@@ -28,9 +28,7 @@ const EditProjectModal = ({
     }
 
     try {
-      const res = await updateProjectAPI(projectToEdit.id, {
-        name: projectName,
-      });
+      const res = await updateProjectAPI(projectToEdit.id, projectName);
 
       if (!res.status) {
         return toaster("Uable to edit project name", TOAST_TYPES.ERROR);
@@ -43,8 +41,6 @@ const EditProjectModal = ({
       }
     } catch (error) {
       toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);
-    } finally {
-      setProjectName("");
     }
   };
 
