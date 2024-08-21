@@ -173,8 +173,15 @@ const Menus = () => {
       if (projectListRef.current) {
         const viewportHeight = window.innerHeight;
         const offset = projectListRef.current.getBoundingClientRect().top;
-        const maxHeight = viewportHeight - offset - 110; // 20px for padding
+        const maxHeight = viewportHeight - offset - 110; // 110px for padding and margins
         projectListRef.current.style.maxHeight = `${maxHeight}px`;
+
+        // Check if the content height exceeds the maxHeight
+        if (projectListRef.current.scrollHeight > maxHeight) {
+          projectListRef.current.style.overflowY = "scroll";
+        } else {
+          projectListRef.current.style.overflowY = "visible"; // No scroll if content fits
+        }
       }
     };
 
@@ -334,10 +341,7 @@ const Menus = () => {
         )}
 
         <div className="d-flex w-100 flex-column">
-          <div
-            ref={projectListRef}
-            className="relative overflow-scroll-y project-list "
-          >
+          <div ref={projectListRef} className="relative project-list">
             {renderProjectList()}
           </div>
         </div>

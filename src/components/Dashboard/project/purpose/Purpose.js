@@ -566,7 +566,9 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
                   <div className="d-flex align-items-start  pb-24 border_bottom_pastel pt-24 gap-16">
                     <h2 className="selectedone weight-500">Problem summary:</h2>
 
-                    <p className="selectedone m-0">{purpose.description}</p>
+                    <p className="selectedone m-0 text-wrap ">
+                      {purpose.description}
+                    </p>
                   </div>
                   <div className="d-flex align-items-start  pb-24 border_bottom_pastel pt-24 gap-16">
                     <h2 className="selectedone weight-500">

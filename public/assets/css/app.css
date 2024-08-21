@@ -124,7 +124,9 @@ img {
 a {
   text-decoration: none;
 }
-
+.text-wrap {
+  white-space: wrap !important;
+}
 .b-deepsea {
   border: 1px solid var(--Hazy-Deep-Sea) !important;
 }
@@ -1917,7 +1919,7 @@ textarea {
 }
 
 .projects-menu {
-  margin: 30px 28px 20px 32px !important;
+  margin: 28px 28px 0px 28px !important;
 }
 .add-purpose {
   color: var(--deepPurple);
@@ -2473,7 +2475,9 @@ textarea {
   padding: 0;
   margin: 0;
   list-style-type: none;
-  padding-right: 10px;
+  padding-top: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .project-list::-webkit-scrollbar {
