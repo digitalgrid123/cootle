@@ -620,6 +620,9 @@ textarea {
 .padding-lr-sixteen {
   padding: 11px 16px;
 }
+.padding-lr-fourteen {
+  padding: 11px 14px;
+}
 .show-invitation {
   display: flex !important;
   align-items: center !important;
@@ -1919,7 +1922,7 @@ textarea {
 }
 
 .projects-menu {
-  margin: 28px 28px 0px 28px !important;
+  margin: 28px 28px 0px 32px !important;
 }
 .add-purpose {
   color: var(--deepPurple);
@@ -2475,8 +2478,8 @@ textarea {
   padding: 0;
   margin: 0;
   list-style-type: none;
-  padding-top: 8px;
-  padding-left: 8px;
+  padding-top: 3px;
+  padding-left: 3px;
   padding-right: 8px;
 }
 
