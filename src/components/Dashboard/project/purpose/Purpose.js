@@ -488,7 +488,7 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
               ) : (
                 <div key={purpose.id} className="section-project">
                   <div className="responsive-container pb-24 d-flex align-items-center justify-content-between w-100 border_bottom_pastel">
-                    <div className="d-flex align-items-center gap-3 first-row">
+                    <div className="d-flex align-items-center gap-3 first-row pr-50">
                       <h1 className="create-id f-18">
                         <span className="f-14">#pur</span>
                         {`${
