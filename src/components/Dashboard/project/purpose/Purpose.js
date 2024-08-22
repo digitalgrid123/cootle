@@ -500,7 +500,10 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
                         }`}
                       </h1>
 
-                      <h1 className="create-id f-18" title={purpose?.title}>
+                      <h1
+                        className="create-id f-18 truncate"
+                        title={purpose?.title}
+                      >
                         <span className="f-14">#</span>
                         {purpose?.title}
                       </h1>

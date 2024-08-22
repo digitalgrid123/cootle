@@ -1948,6 +1948,7 @@ textarea {
   letter-spacing: -0.03em;
   text-align: left;
   color: var(--deepPurple);
+  white-space: nowrap;
 }
 .create-id {
   color: var(--deepPurple);
@@ -2483,6 +2484,15 @@ textarea {
   padding-right: 8px;
 }
 
+.truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* Limits the text to one line */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal; /* Allows text to wrap */
+}
+
 .project-list::-webkit-scrollbar {
   width: 4px;
 }
@@ -2918,6 +2928,51 @@ textarea {
   }
   .lifetime {
     padding: 14px 24px;
+  }
+  .four-columns {
+    grid-column: span 6;
+  }
+  .design-tab {
+    padding: 13px 14px 13px 14px;
+    font-size: 14px;
+  }
+  .input-search-container {
+    flex-direction: column;
+    align-items: start;
+  }
+  .space-adjust-between {
+    justify-content: space-between;
+    margin-top: 16px;
+    width: 100%;
+  }
+  .absolute-buttons-group {
+    position: absolute;
+    right: 0;
+    top: -42px;
+  }
+
+  .effort-list {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .responsive-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .responsive-container .first-row,
+  .responsive-container .second-row {
+    width: 100%;
+    margin-bottom: 16px; /* Space between rows */
+  }
+
+  .responsive-container .second-row {
+    justify-content: space-between;
+    margin-bottom: 0;
+  }
+  .absolute-edit-button {
+    position: absolute;
+    right: 0;
+    top: -42px;
   }
 }
 @media only screen and (min-height: 600px) {
