@@ -151,7 +151,7 @@ const NewEffortSection = ({
           <ul className=" d-flex align-items-center gap-4 m-0 w-80 p-0">
             {selectedPurpose && (
               <div className="show-selectedone selectedone p-0">
-                <li key={selectedPurpose} className="p-0 ">
+                <li key={selectedPurpose} className="p-0  text-wrap">
                   {purpose.find((p) => p.id === selectedPurpose)?.title}
                 </li>
               </div>

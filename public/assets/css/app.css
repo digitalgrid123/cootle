@@ -127,6 +127,9 @@ a {
 .text-wrap {
   white-space: wrap !important;
 }
+.text-nowrap {
+  white-space: nowrap !important;
+}
 .b-deepsea {
   border: 1px solid var(--Hazy-Deep-Sea) !important;
 }
@@ -272,7 +275,7 @@ textarea {
   margin-top: 11px;
 }
 .relative {
-  position: relative;
+  position: relative !important;
 }
 .deeppurple {
   color: var(--deepPurple) !important;
@@ -713,9 +716,38 @@ textarea {
   margin-top: 13px;
   flex-direction: column;
   padding-bottom: 33px;
-  overflow: scroll;
+  overflow-y: scroll; /* Only vertical scrolling */
   display: flex;
   gap: 24px;
+  overflow-x: hidden;
+}
+/* For WebKit browsers (Chrome, Safari) */
+.scroll-property::-webkit-scrollbar-button {
+  display: none; /* Hide the up and down buttons */
+}
+
+/* For Firefox */
+.scroll-property {
+  scrollbar-width: thin; /* Thin scrollbar */
+  scrollbar-color: var(--deepPurple) transparent; /* Scrollbar color and track color */
+}
+
+/* Additional custom scrollbar styling */
+.scroll-property::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.scroll-property::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-property::-webkit-scrollbar-thumb {
+  background-color: var(--deepPurple); /* Thumb color */
+  border-radius: 4px; /* Rounded corners for the thumb */
+}
+
+.scroll-property::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Darker color on hover */
 }
 
 .dropdown-list {
@@ -2734,10 +2766,6 @@ textarea {
   box-shadow: 0px 1px 2px 0px var(--grayish-blue);
   background-color: var(--text-color) !important;
   padding: 18px 16px 10px 16px !important;
-  position: fixed;
-  transform: translateY(-56px);
-  left: 260px;
-
   z-index: 9999;
 }
 .project-dropdown-menu > li > .span {
@@ -2828,55 +2856,24 @@ textarea {
   grid-column: span 3;
 }
 
-@media (max-width: 1300px) and (min-width: 1024px) {
-  .four-columns {
-    grid-column: span 6;
-  }
-  .design-tab {
-    padding: 13px 14px 13px 14px;
-    font-size: 14px;
-  }
-  .input-search-container {
-    flex-direction: column;
-    align-items: start;
-  }
-  .space-adjust-between {
-    justify-content: space-between;
-    margin-top: 16px;
-    width: 100%;
-  }
-  .absolute-buttons-group {
-    position: absolute;
-    right: 0;
-    top: -42px;
-  }
-
-  .effort-list {
-    grid-template-columns: repeat(1, 1fr);
-  }
-  .responsive-container {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .responsive-container .first-row,
-  .responsive-container .second-row {
-    width: 100%;
-    margin-bottom: 16px; /* Space between rows */
-  }
-
-  .responsive-container .second-row {
-    justify-content: space-between;
-    margin-bottom: 0;
-  }
-  .absolute-edit-button {
-    position: absolute;
-    right: 0;
-    top: -42px;
+@media only screen and (min-height: 600px) {
+  .pt-270 {
+    padding-top: 160px;
   }
 }
 
-@media only screen and (min-width: 768px) and (max-width: 1024px) {
+@media only screen and (min-height: 900px) {
+  .pt-270 {
+    padding-top: 270px;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  .select-outcome-text {
+    font-size: 14px;
+  }
+  .add-project_btn {
+    padding: 12px 5px 12px 5px;
+  }
   .grid-item {
     grid-column: span 6;
   }
@@ -2982,56 +2979,54 @@ textarea {
   .absolute-edit-button {
     position: absolute;
     right: 0;
+    top: 0;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1400px) {
+  .four-columns {
+    grid-column: span 6;
+  }
+  .design-tab {
+    padding: 13px 14px 13px 14px;
+    font-size: 14px;
+  }
+  .input-search-container {
+    flex-direction: column;
+    align-items: start;
+  }
+  .space-adjust-between {
+    justify-content: space-between;
+    margin-top: 16px;
+    width: 100%;
+  }
+  .absolute-buttons-group {
+    position: absolute;
+    right: 0;
     top: -42px;
   }
-}
-@media only screen and (min-height: 600px) {
-  /* .project-list {
-    max-height: 15vh;
-  } */
-  .pt-270 {
-    padding-top: 160px;
-  }
-}
 
-/* @media only screen and (min-height: 768px) {
-  .project-list {
-    max-height: 32vh;
+  .effort-list {
+    grid-template-columns: repeat(1, 1fr);
   }
-  .pt-270 {
-    padding-top: 195px;
+  .responsive-container {
+    flex-direction: column;
+    align-items: flex-start;
   }
-}
 
-@media only screen and (min-height: 800px) {
-  .project-list {
-    max-height: 35vh;
+  .responsive-container .first-row,
+  .responsive-container .second-row {
+    width: 100%;
+    margin-bottom: 16px;
   }
-} */
 
-@media only screen and (min-height: 900px) {
-  /* .project-list {
-    max-height: 40vh;
-  } */
-  .pt-270 {
-    padding-top: 270px;
+  .responsive-container .second-row {
+    justify-content: space-between;
+    margin-bottom: 0;
+  }
+  .absolute-edit-button {
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 }
-
-/* @media only screen and (min-height: 1024px) {
-  .project-list {
-    max-height: 49vh;
-  }
-}
-
-@media only screen and (min-height: 1050px) {
-  .project-list {
-    max-height: 51vh;
-  }
-}
-
-@media only screen and (min-height: 1080px) {
-  .project-list {
-    max-height: 53vh;
-  }
-} */

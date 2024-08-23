@@ -21,7 +21,9 @@ const CompanyListItem = ({ company, onClick, isSelected }) => (
         <h2>{company.name.charAt(0).toUpperCase()}</h2>
       </div>
     )}
-    <h4 className="company-dropdown-name weight-500">{company.name}</h4>
+    <h4 className="company-dropdown-name weight-500 truncate">
+      {company.name}
+    </h4>
   </li>
 );
 

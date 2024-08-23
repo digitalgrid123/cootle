@@ -14,8 +14,8 @@ const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
   const [showEditPopup, setShowEditPopup] = useState(false);
   const { toaster } = useToaster();
   const dropdownRef = useRef(null);
-  const isAdmin = getData(USER_ROLES.SUPER_ADMIN);
   const projectRef = useRef(null);
+  const isAdmin = getData(USER_ROLES.SUPER_ADMIN);
 
   useOutsideClick(dropdownRef, () => setDropdownVisible(false));
 
@@ -59,9 +59,18 @@ const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
     }
   }, [isActive]);
 
+  useEffect(() => {
+    if (dropdownVisible && dropdownRef.current && projectRef.current) {
+      const { top, left, width } = projectRef.current.getBoundingClientRect();
+      dropdownRef.current.style.position = "fixed";
+      dropdownRef.current.style.top = `${top + 5}px`;
+      dropdownRef.current.style.left = `${left + width - 18}px`; // Position the dropdown to the right of the item
+    }
+  }, [dropdownVisible]);
+
   const truncatedProjectName =
-    project.name.length > 15
-      ? `${project.name.substring(0, 15)}...`
+    project.name.length > 22
+      ? `${project.name.substring(0, 22)}...`
       : project.name;
 
   const handleEditClick = () => {
@@ -90,7 +99,9 @@ const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
             style={{ width: "24px" }}
             alt="project-icon"
           />
-          <h4 className="mapping f-16 weight-400 truncate">{project.name}</h4>
+          <h4 className="mapping f-16 weight-400 truncate" title={project.name}>
+            {truncatedProjectName}
+          </h4>
         </div>
       </li>
       {isAdmin && dropdownVisible && (

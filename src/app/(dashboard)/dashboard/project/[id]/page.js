@@ -76,7 +76,7 @@ const Page = () => {
             alt="plus-icon"
             className="hover-image"
           />
-          <h2 className="add-purpose">New purpose</h2>
+          <h2 className="add-purpose text-nowrap">New purpose</h2>
         </div>
       );
     }
@@ -92,7 +92,7 @@ const Page = () => {
             alt="plus-icon"
             className="hover-image"
           />
-          <h2 className="add-purpose">New effort</h2>
+          <h2 className="add-purpose text-nowrap">New effort</h2>
         </div>
       );
     }

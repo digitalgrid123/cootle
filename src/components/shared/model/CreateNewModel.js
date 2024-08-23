@@ -79,7 +79,7 @@ const CreateNewModel = ({ showPopup, setShowPopup, contentRef }) => {
                     </h2>
                   </li>
 
-                  {user?.is_admin && (
+                  {/* {user?.is_admin && (
                     <li
                       className={`d-flex align-items-center justify-content-start gap-2 ${
                         activeTab === "members" ? "active" : ""
@@ -97,7 +97,7 @@ const CreateNewModel = ({ showPopup, setShowPopup, contentRef }) => {
                         Members
                       </h2>
                     </li>
-                  )}
+                  )} */}
                 </ul>
               </div>
               <div className="company-content h-100">
@@ -106,11 +106,11 @@ const CreateNewModel = ({ showPopup, setShowPopup, contentRef }) => {
                   setShowPopup={setShowPopup}
                   showPopup={showPopup}
                 />
-                <MemberModel
+                {/* <MemberModel
                   activeTab={activeTab}
                   setShowPopup={setShowPopup}
                   showPopup={showPopup}
-                />
+                /> */}
               </div>
             </div>
           </div>

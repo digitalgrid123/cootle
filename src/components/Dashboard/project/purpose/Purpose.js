@@ -487,7 +487,7 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
                 />
               ) : (
                 <div key={purpose.id} className="section-project">
-                  <div className="responsive-container pb-24 d-flex align-items-center justify-content-between w-100 border_bottom_pastel">
+                  <div className="responsive-container pb-24 d-flex align-items-start relative justify-content-between w-100 border_bottom_pastel">
                     <div className="d-flex align-items-start gap-3 first-row pr-50">
                       <h1 className="create-id f-18">
                         <span className="f-14">#pur</span>
@@ -500,15 +500,12 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
                         }`}
                       </h1>
 
-                      <h1
-                        className="create-id f-18 "
-                        title={purpose?.title}
-                      >
+                      <h1 className="create-id f-18 " title={purpose?.title}>
                         <span className="f-14">#</span>
                         {purpose?.title}
                       </h1>
                     </div>
-                    <div className="d-flex align-items-center gap-3 second-row relative">
+                    <div className="d-flex align-items-center gap-3 second-row ">
                       <div className="d-flex align-items-center gap-2">
                         <h2 className="create-name weight-500">Created by:</h2>
                         {userdetail.some((user) => user.id === purpose.user) ? (

@@ -716,7 +716,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                               {effort.purpose && (
                                 <li
                                   key={effort.purpose}
-                                  className="p-0 selectedone"
+                                  className="p-0 selectedone text-wrap"
                                 >
                                   {purposeListData?.find(
                                     (obj) => obj.id === effort.purpose

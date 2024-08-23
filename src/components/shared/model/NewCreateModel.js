@@ -16,10 +16,10 @@ const NewCreateModel = ({ activeTab, setShowPopup, showPopup }) => {
   const { push } = useRouter();
   const { toaster } = useToaster();
 
-  useEffect(() => {
-    setCompanyName(selectedCompany?.name || "");
-    setFilePreview(selectedCompany?.logo || null);
-  }, [selectedCompany]);
+  // useEffect(() => {
+  //   setCompanyName(selectedCompany?.name || "");
+  //   setFilePreview(selectedCompany?.logo || null);
+  // }, [selectedCompany]);
 
   const handleInputChange = (e) => {
     setCompanyName(e.target.value);

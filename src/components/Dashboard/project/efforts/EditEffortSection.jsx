@@ -240,7 +240,7 @@ const EditEffortSection = ({
 
             <ul className="d-flex align-items-center gap-4 w-80 p-0">
               {selectedPurpose && (
-                <li key={selectedPurpose} className="p-0 selectedone">
+                <li key={selectedPurpose} className="p-0 selectedone text-wrap">
                   {purposeListData?.find((obj) => obj.id === selectedPurpose)
                     ?.title || ""}
                 </li>
