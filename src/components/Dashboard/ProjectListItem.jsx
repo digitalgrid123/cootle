@@ -90,14 +90,14 @@ const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
             style={{ width: "24px" }}
             alt="project-icon"
           />
-          <h4 className="mapping f-16 weight-400">{truncatedProjectName}</h4>
+          <h4 className="mapping f-16 weight-400 truncate">{project.name}</h4>
         </div>
       </li>
       {isAdmin && dropdownVisible && (
         <ul className="project-dropdown-menu" ref={dropdownRef}>
           <li
             onClick={handleEditClick}
-            className="d-flex align-items-center gap-2 border_bottom_pastel pb-16 cursor-pointer"
+            className="d-flex align-items-center gap-2 border_bottom_pastel pb-14 cursor-pointer"
           >
             <img src="/assets/images/mark/edit.svg" alt="edit-icon" />
             <span className="edit-project-text">Edit Project</span>
@@ -106,7 +106,7 @@ const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
             onClick={handleDelete}
             className="d-flex align-items-center gap-2 mt-40 cursor-pointer"
           >
-            <img src="/assets/images/mark/delete.svg" alt="delete-icon" />
+            <img src="/assets/images/mark/delete-icon.png" alt="delete-icon" />
             <span className="delete-project-text">Delete project</span>
           </li>
         </ul>

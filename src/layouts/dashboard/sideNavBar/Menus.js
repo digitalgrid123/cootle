@@ -28,6 +28,7 @@ const Menus = () => {
   const [showInvite, setShowInvite] = useState(false);
   const [showProjectPopup, setShowProjectPopup] = useState(false);
   const [activeMenuItem, setActiveMenuItem] = useState("");
+  const [hasScrollbar, setHasScrollbar] = useState(false);
 
   useEffect(() => {
     const fetchCompanyList = async () => {
@@ -177,11 +178,11 @@ const Menus = () => {
         projectListRef.current.style.maxHeight = `${maxHeight}px`;
 
         // Check if the content height exceeds the maxHeight
-        if (projectListRef.current.scrollHeight > maxHeight) {
-          projectListRef.current.style.overflowY = "scroll";
-        } else {
-          projectListRef.current.style.overflowY = "visible"; // No scroll if content fits
-        }
+        const needsScrollbar = projectListRef.current.scrollHeight > maxHeight;
+        projectListRef.current.style.overflowY = needsScrollbar
+          ? "scroll"
+          : "visible";
+        setHasScrollbar(needsScrollbar); // Update the state
       }
     };
 
@@ -325,7 +326,10 @@ const Menus = () => {
           </li>
         </div>
       </ul>
-      <ul className="projects-menu" id="menu">
+      <ul
+        className={hasScrollbar ? "projects-menu-scroll " : "projects-menu"}
+        id="menu"
+      >
         {isAdmin && (
           <li
             className="d-flex align-items-center justify-content-start gap-3 cursor-pointer w-100 mb-16 padding-lr-sixteen"
@@ -341,7 +345,10 @@ const Menus = () => {
         )}
 
         <div className="d-flex w-100 flex-column">
-          <div ref={projectListRef} className="relative project-list">
+          <div
+            ref={projectListRef}
+            className={`relative ${hasScrollbar && "project-list"}`}
+          >
             {renderProjectList()}
           </div>
         </div>

@@ -7,7 +7,9 @@ const Title = ({ title }) => {
 
   return (
     <>
-      <h1 className="page-title-heading weight-500">{truncatedTitle}</h1>
+      <h1 className="page-title-heading weight-500 truncate" title={title}>
+        {truncatedTitle}
+      </h1>
     </>
   );
 };
