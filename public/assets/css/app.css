@@ -721,9 +721,9 @@ textarea {
   gap: 24px;
   overflow-x: hidden;
 }
-/* For WebKit browsers (Chrome, Safari) */
+
 .scroll-property::-webkit-scrollbar-button {
-  display: none; /* Hide the up and down buttons */
+  display: none;
 }
 
 /* For Firefox */

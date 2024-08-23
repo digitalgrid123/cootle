@@ -45,9 +45,6 @@ const Dashboard = () => {
   useEffect(() => {
     if (user && user.startsWith("User#")) {
       setShowPopup(true);
-    } else if (selectedCompany === undefined && user !== null) {
-      setShowPopup(true);
-      setCurrentTab(2);
     }
   }, [user]);
 
