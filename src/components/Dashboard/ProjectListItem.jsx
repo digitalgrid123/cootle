@@ -117,7 +117,7 @@ const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
             onClick={handleDelete}
             className="d-flex align-items-center gap-2 mt-40 cursor-pointer"
           >
-            <img src="/assets/images/mark/delete-icon.png" alt="delete-icon" />
+            <img src="/assets/images/mark/delete.svg" alt="delete-icon" />
             <span className="delete-project-text">Delete project</span>
           </li>
         </ul>
