@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import Select from "react-select";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const AddMappingModal = ({
   show,
@@ -36,10 +38,18 @@ const AddMappingModal = ({
 
   // Handler for design efforts selection
   const handleDesignEffortsChange = (selectedOptions) => {
-    const selectedEfforts = selectedOptions.map((option) => option.value); // Use .value to map selected options correctly
+    const selectedEfforts = selectedOptions.map((option) => option.value);
     setNewMapping((prevState) => ({
       ...prevState,
       design_efforts: selectedEfforts,
+    }));
+  };
+
+  // Handler for description change using ReactQuill
+  const handleDescriptionChange = (value) => {
+    setNewMapping((prevState) => ({
+      ...prevState,
+      description: value,
     }));
   };
 
@@ -80,13 +90,14 @@ const AddMappingModal = ({
           </Form.Group>
           <Form.Group controlId="formMappingDescription">
             <Form.Label>Description</Form.Label>
-            <Form.Control
-              as="textarea"
-              name="description"
+            <ReactQuill
               value={newMapping.description}
-              onChange={handleChange}
+              onChange={handleDescriptionChange}
+              modules={AddMappingModal.modules}
+              formats={AddMappingModal.formats}
             />
           </Form.Group>
+          {/* Uncomment and use this block if you want to select mapping types */}
           {/* <Form.Group controlId="formMappingType">
             <Form.Label>Type</Form.Label>
             <Form.Control
@@ -125,5 +136,30 @@ const AddMappingModal = ({
     </Modal>
   );
 };
+
+// Configuration for ReactQuill toolbar and formats
+AddMappingModal.modules = {
+  toolbar: [
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+    ["bold", "italic", "underline"],
+    ["link"],
+    ["clean"],
+  ],
+};
+
+AddMappingModal.formats = [
+  "header",
+  "list",
+  "bullet",
+  "bold",
+  "italic",
+  "underline",
+  "link",
+];
 
 export default AddMappingModal;

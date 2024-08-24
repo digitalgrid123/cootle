@@ -1891,6 +1891,7 @@ textarea {
   border-radius: 16px;
   padding: 12px 16px 12px 16px;
   background: var(--text-color);
+  color: var(--deepPurple);
   margin-top: 8px;
 }
 

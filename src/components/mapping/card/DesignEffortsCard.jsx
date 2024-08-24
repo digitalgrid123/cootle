@@ -23,16 +23,6 @@ const DesignEffortsCard = ({
     (effort) => effort.category === activeCategory
   );
 
-  // Function to format the description
-  const formatDescription = (description) => {
-    return description.split("\\n").map((line, idx) => (
-      <React.Fragment key={idx}>
-        <span>{line}</span>
-        <br />
-      </React.Fragment>
-    ));
-  };
-
   return (
     <>
       <div className="card mt-4">
@@ -69,7 +59,7 @@ const DesignEffortsCard = ({
                 <p>
                   <strong>Category:</strong> {effort.category}
                 </p>
-                <p>{formatDescription(effort.description)}</p>
+                <div dangerouslySetInnerHTML={{ __html: effort.description }} />
                 <button
                   className="btn btn-secondary me-2"
                   onClick={() => handleEditDesignEffortClick(effort)}

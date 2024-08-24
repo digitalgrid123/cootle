@@ -4,6 +4,9 @@ import MapModel from "@/components/shared/model/MapModel";
 import { useAuth } from "@/hooks";
 import { useGlobalCompany } from "@/utils/globalState";
 import ArchivedEffortsModal from "@/components/shared/model/ArchivedEffortsModal";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import "../../../../public/assets/css/quill.css";
 
 const EffortMapping = ({
   reset,
@@ -347,11 +350,33 @@ const EffortMapping = ({
                               />
                             </button>
                           </div>
-                          <textarea
+                          <div>
+                            <ReactQuill
+                              className="textarea-input  b-deepsea mb-20"
+                              value={editDescription}
+                              onChange={(value) => setEditDescription(value)}
+                              modules={{
+                                toolbar: [
+                                  [
+                                    { list: "ordered" },
+                                    { list: "bullet" },
+                                    { indent: "-1" },
+                                    { indent: "+1" },
+                                  ],
+                                  ["bold", "italic", "underline"],
+
+                                  ["link"],
+                                  ["clean"],
+                                ],
+                              }}
+                            />
+                          </div>
+
+                          {/* <textarea
                             className="textarea-input h-300 b-deepsea mb-20"
                             value={editDescription}
                             onChange={(e) => setEditDescription(e.target.value)}
-                          />
+                          /> */}
                           <button
                             onClick={handleUpdateClick}
                             className="send_btn"
@@ -381,16 +406,11 @@ const EffortMapping = ({
                             )}
                           </div>
                           <div className="defination-text">
-                            <ul className="defination-text">
-                              {activeSubTab.description
-                                .split("\n")
-                                .map((line, index) => {
-                                  if (/^\d+\.(?!\s)/.test(line)) {
-                                    line = line.replace(/^(\d+\.)\s*/, "$1 ");
-                                  }
-                                  return <li key={index}>{line}</li>;
-                                })}
-                            </ul>
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: activeSubTab.description,
+                              }}
+                            />
                           </div>
                         </div>
                       </>

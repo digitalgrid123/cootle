@@ -5,6 +5,9 @@ import DesignEffortModel from "@/components/shared/model/DesignEffortModel";
 import { useGlobalCompany } from "@/utils/globalState";
 import { Loader } from "@/components/shared/loader";
 import ArchievedModel from "@/components/shared/model/ArchievedModel";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import "../../../../public/assets/css/quill.css";
 
 const TABS = {
   DEFINITION: "Definition",
@@ -18,7 +21,6 @@ const ProductOutcomes = ({
   togglearchievedDropdown,
   archieveddropdownOpen,
 }) => {
-  
   const { mappingList, updatemapping, reteriveEffort, mappingachieve } =
     useAuth();
   const [activeTab, setActiveTab] = useState(null);
@@ -389,11 +391,32 @@ const ProductOutcomes = ({
                         />
                       </button>
                     </div>
-                    <textarea
+                    <div>
+                      <ReactQuill
+                        className="textarea-input  b-deepsea mb-20"
+                        value={editedDescription}
+                        onChange={(value) => setEditedDescription(value)}
+                        modules={{
+                          toolbar: [
+                            [
+                              { list: "ordered" },
+                              { list: "bullet" },
+                              { indent: "-1" },
+                              { indent: "+1" },
+                            ],
+                            ["bold", "italic", "underline"],
+
+                            ["link"],
+                            ["clean"],
+                          ],
+                        }}
+                      />
+                    </div>
+                    {/* <textarea
                       className="textarea-input h-300 b-deepsea mb-20"
                       value={editedDescription}
                       onChange={(e) => setEditedDescription(e.target.value)}
-                    />
+                    /> */}
                     <button onClick={handleUpdate} className="send_btn">
                       <span>Update</span>
                     </button>
@@ -416,16 +439,11 @@ const ProductOutcomes = ({
                       )}
                     </div>
                     <div className="defination-text">
-                      <ul className="defination-text">
-                        {activeTab?.description
-                          .split("\n")
-                          .map((line, index) => {
-                            if (/^\d+\.(?!\s)/.test(line)) {
-                              line = line.replace(/^(\d+\.)\s*/, "$1 ");
-                            }
-                            return <li key={index}>{line}</li>;
-                          })}
-                      </ul>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: activeTab?.description,
+                        }}
+                      />
                     </div>
                   </div>
                 )
@@ -488,18 +506,11 @@ const ProductOutcomes = ({
                           )
                           .map((designEffort) => (
                             <div key={designEffort.title}>
-                              {designEffort.description
-                                .split("\n")
-                                .map((line, index) => {
-                                  if (/^\d+\.(?!\s)/.test(line)) {
-                                    line = line.replace(/^(\d+\.)\s*/, "$1 ");
-                                  }
-                                  return (
-                                    <p key={index} className="defination-text">
-                                      {line}
-                                    </p>
-                                  );
-                                })}
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: designEffort.description,
+                                }}
+                              />
                             </div>
                           ))}
                       </div>

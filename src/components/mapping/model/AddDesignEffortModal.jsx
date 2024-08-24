@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const AddDesignEffortModal = ({
   show,
@@ -27,6 +29,13 @@ const AddDesignEffortModal = ({
     setNewDesignEffort((prevDesignEffort) => ({
       ...prevDesignEffort,
       [name]: value,
+    }));
+  };
+
+  const handleDescriptionChange = (value) => {
+    setNewDesignEffort((prevDesignEffort) => ({
+      ...prevDesignEffort,
+      description: value,
     }));
   };
 
@@ -60,6 +69,7 @@ const AddDesignEffortModal = ({
               onChange={handleChange}
             />
           </Form.Group>
+          {/* Uncomment and use this block if you want to select categories */}
           {/* <Form.Group className="mb-3">
             <Form.Label>Category</Form.Label>
             <Form.Control
@@ -77,12 +87,11 @@ const AddDesignEffortModal = ({
           </Form.Group> */}
           <Form.Group className="mb-3">
             <Form.Label>Description</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              name="description"
+            <ReactQuill
               value={newDesignEffort.description}
-              onChange={handleChange}
+              onChange={handleDescriptionChange}
+              modules={AddDesignEffortModal.modules}
+              formats={AddDesignEffortModal.formats}
             />
           </Form.Group>
           <Modal.Footer>
@@ -98,5 +107,29 @@ const AddDesignEffortModal = ({
     </Modal>
   );
 };
+
+AddDesignEffortModal.modules = {
+  toolbar: [
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+    ["bold", "italic", "underline"],
+    ["link"],
+    ["clean"],
+  ],
+};
+
+AddDesignEffortModal.formats = [
+  "header",
+  "list",
+  "bullet",
+  "bold",
+  "italic",
+  "underline",
+  "link",
+];
 
 export default AddDesignEffortModal;

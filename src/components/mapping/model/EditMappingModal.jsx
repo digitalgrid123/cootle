@@ -1,6 +1,8 @@
 import React from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import Select from "react-select";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css"; // Import Quill styles
 
 const EditMappingModal = ({
   show,
@@ -21,6 +23,16 @@ const EditMappingModal = ({
     label: effortTitle,
   }));
 
+  // Handle change in Quill editor
+  const handleEditorChange = (value) => {
+    handleChange({
+      target: {
+        name: "description",
+        value,
+      },
+    });
+  };
+
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -37,14 +49,14 @@ const EditMappingModal = ({
               onChange={handleChange}
             />
           </Form.Group>
+
           <Form.Group controlId="description">
             <Form.Label>Description</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              name="description"
+            <ReactQuill
               value={mapping.description}
-              onChange={handleChange}
+              onChange={handleEditorChange}
+              modules={EditMappingModal.modules}
+              formats={EditMappingModal.formats}
             />
           </Form.Group>
 
@@ -78,5 +90,33 @@ const EditMappingModal = ({
     </Modal>
   );
 };
+
+// Quill editor modules and formats (optional customization)
+EditMappingModal.modules = {
+  toolbar: [
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+    ["bold", "italic", "underline"],
+
+    ["link"],
+    ["clean"],
+  ],
+};
+
+EditMappingModal.formats = [
+  "header",
+  "font",
+  "list",
+  "bullet",
+  "bold",
+  "italic",
+  "underline",
+  "align",
+  "link",
+];
 
 export default EditMappingModal;

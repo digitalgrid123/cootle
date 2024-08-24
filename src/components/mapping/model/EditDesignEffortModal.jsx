@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css"; // Import Quill styles
 
 const EditDesignEffortModal = ({
   show,
@@ -16,16 +18,14 @@ const EditDesignEffortModal = ({
   useEffect(() => {
     setEditedDesignEffort({
       ...designEffort,
-      description: designEffort.description.replace(/\\n/g, "\n"), // Convert saved \n to actual line breaks
+      description: designEffort.description, // Convert saved \n to actual line breaks
     });
   }, [designEffort]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
+  const handleChange = (value) => {
     setEditedDesignEffort((prevState) => ({
       ...prevState,
-      [name]: value,
+      description: value,
     }));
   };
 
@@ -35,7 +35,7 @@ const EditDesignEffortModal = ({
     // Convert actual line breaks to \n for saving
     const modifiedDesignEffort = {
       ...editedDesignEffort,
-      description: editedDesignEffort.description.replace(/\n/g, "\\n"),
+      description: editedDesignEffort.description,
     };
 
     handleSave(modifiedDesignEffort);
@@ -55,17 +55,21 @@ const EditDesignEffortModal = ({
               type="text"
               name="title"
               value={editedDesignEffort.title}
-              onChange={handleChange}
+              onChange={(e) =>
+                setEditedDesignEffort((prevState) => ({
+                  ...prevState,
+                  title: e.target.value,
+                }))
+              }
             />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Description</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              name="description"
+            <ReactQuill
               value={editedDesignEffort.description}
               onChange={handleChange}
+              modules={EditDesignEffortModal.modules}
+              formats={EditDesignEffortModal.formats}
             />
           </Form.Group>
           <Modal.Footer>
@@ -81,5 +85,31 @@ const EditDesignEffortModal = ({
     </Modal>
   );
 };
+
+EditDesignEffortModal.modules = {
+  toolbar: [
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+    ["bold", "italic", "underline"],
+    ["link"],
+    ["clean"],
+  ],
+};
+
+EditDesignEffortModal.formats = [
+  "header",
+  "font",
+  "size",
+  "list",
+  "bullet",
+  "bold",
+  "italic",
+  "underline",
+  "link",
+];
 
 export default EditDesignEffortModal;
