@@ -1,10 +1,11 @@
+import dynamic from "next/dynamic";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import EffortModel from "@/components/shared/model/EffortModel";
 import MapModel from "@/components/shared/model/MapModel";
 import { useAuth } from "@/hooks";
 import { useGlobalCompany } from "@/utils/globalState";
 import ArchivedEffortsModal from "@/components/shared/model/ArchivedEffortsModal";
-import ReactQuill from "react-quill";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 import "../../../../public/assets/css/quill.css";
 

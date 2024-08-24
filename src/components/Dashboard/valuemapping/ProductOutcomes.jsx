@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic';
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useAuth } from "@/hooks"; // Adjust import path as per your project structure
 import CreateModel from "@/components/shared/model/CreateModel";
@@ -5,7 +6,7 @@ import DesignEffortModel from "@/components/shared/model/DesignEffortModel";
 import { useGlobalCompany } from "@/utils/globalState";
 import { Loader } from "@/components/shared/loader";
 import ArchievedModel from "@/components/shared/model/ArchievedModel";
-import ReactQuill from "react-quill";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 import "../../../../public/assets/css/quill.css";
 
