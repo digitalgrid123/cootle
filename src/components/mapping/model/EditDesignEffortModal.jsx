@@ -5,23 +5,41 @@ const EditDesignEffortModal = ({
   show,
   handleClose,
   designEffort,
-  handleChange,
   handleSave,
   categories,
-  activeCategory, // Receive active category state
+  activeCategory,
 }) => {
   const [editedDesignEffort, setEditedDesignEffort] = useState({
     ...designEffort,
   });
 
   useEffect(() => {
-    setEditedDesignEffort({ ...designEffort });
+    setEditedDesignEffort({
+      ...designEffort,
+      description: designEffort.description.replace(/\\n/g, "\n"), // Convert saved \n to actual line breaks
+    });
   }, [designEffort]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setEditedDesignEffort((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleSave(editedDesignEffort); // Pass edited design effort to handleSave
-    handleClose(); // Close modal after saving
+
+    // Convert actual line breaks to \n for saving
+    const modifiedDesignEffort = {
+      ...editedDesignEffort,
+      description: editedDesignEffort.description.replace(/\n/g, "\\n"),
+    };
+
+    handleSave(modifiedDesignEffort);
+    handleClose();
   };
 
   return (

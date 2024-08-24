@@ -9,22 +9,29 @@ const DesignEffortsCard = ({
   setActiveCategory,
   activeCategory,
 }) => {
-  // Effect to set active category to the first valid category on mount or change
   useEffect(() => {
     if (categories.length > 0 && !activeCategory) {
       setActiveCategory(categories[0].name);
     }
   }, [categories, setActiveCategory, activeCategory]);
 
-  // Function to handle category tab click
   const handleCategoryClick = (categoryName) => {
     setActiveCategory(categoryName);
   };
 
-  // Function to filter efforts based on active category
   const filteredEfforts = designEfforts.filter(
     (effort) => effort.category === activeCategory
   );
+
+  // Function to format the description
+  const formatDescription = (description) => {
+    return description.split("\\n").map((line, idx) => (
+      <React.Fragment key={idx}>
+        <span>{line}</span>
+        <br />
+      </React.Fragment>
+    ));
+  };
 
   return (
     <>
@@ -56,16 +63,16 @@ const DesignEffortsCard = ({
             Add Design Effort
           </button>
           <ul className="list-group list-group-flush">
-            {filteredEfforts.map((effort, index) => (
+            {filteredEfforts.map((effort) => (
               <li key={effort.id} className="list-group-item">
                 <h5>{effort.title}</h5>
                 <p>
                   <strong>Category:</strong> {effort.category}
                 </p>
-                <p>{effort.description}</p>
+                <p>{formatDescription(effort.description)}</p>
                 <button
                   className="btn btn-secondary me-2"
-                  onClick={() => handleEditDesignEffortClick(effort, index)}
+                  onClick={() => handleEditDesignEffortClick(effort)}
                 >
                   Edit
                 </button>
