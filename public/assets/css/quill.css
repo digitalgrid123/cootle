@@ -1,11 +1,11 @@
 .ql-editor > p {
   color: #1a072c !important;
-  font-size: 18px;
-  line-height: 24px;
 }
 /* Add this CSS to your global stylesheet or component's CSS module */
 .ql-editor {
   color: #1a072c !important;
+  font-size: 18px !important;
+  line-height: 24px !important;
 }
 
 .ql-container.ql-snow {
