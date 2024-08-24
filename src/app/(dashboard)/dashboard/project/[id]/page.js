@@ -119,22 +119,28 @@ const Header = ({
   setSelectedMapping,
   renderAdminButton,
 }) => (
-  <div className="d-flex align-items-center justify-content-between  title-content-container custom-padding-purpose header-position">
-    <Title title={title} />
-    <div className="button-group">
-      {["purpose", "efforts", "insight"].map((mapping) => (
-        <button
-          key={mapping}
-          className={`mapping_btn weight-400 ${
-            selectedMapping === mapping ? "active" : ""
-          }`}
-          onClick={() => setSelectedMapping(mapping)}
-        >
-          {mapping.charAt(0).toUpperCase() + mapping.slice(1)}
-        </button>
-      ))}
+  <div className="grid-container title-content-container custom-padding-purpose header-position">
+    <div className="four-columns d-flex align-items-center justify-content-start ">
+      <Title title={title} />
     </div>
-    {renderAdminButton()}
+    <div className="four-columns d-flex align-items-center justify-content-center">
+      <div className="button-group ">
+        {["purpose", "efforts", "insight"].map((mapping) => (
+          <button
+            key={mapping}
+            className={`mapping_btn weight-400 ${
+              selectedMapping === mapping ? "active" : ""
+            }`}
+            onClick={() => setSelectedMapping(mapping)}
+          >
+            {mapping.charAt(0).toUpperCase() + mapping.slice(1)}
+          </button>
+        ))}
+      </div>
+    </div>
+    <div className="four-columns d-flex align-items-center justify-content-end">
+      {renderAdminButton()}
+    </div>
   </div>
 );
 

@@ -69,8 +69,8 @@ const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
   }, [dropdownVisible]);
 
   const truncatedProjectName =
-    project.name.length > 22
-      ? `${project.name.substring(0, 22)}...`
+    project.name.length > 25
+      ? `${project.name.substring(0, 25)}...`
       : project.name;
 
   const handleEditClick = () => {
@@ -99,7 +99,10 @@ const ProjectListItem = ({ project, isActive, onClick, fetchProjectList }) => {
             style={{ width: "24px" }}
             alt="project-icon"
           />
-          <h4 className="mapping f-16 weight-400 truncate" title={project.name}>
+          <h4
+            className="mapping f-16 weight-400 text-nowrap"
+            title={project.name}
+          >
             {truncatedProjectName}
           </h4>
         </div>

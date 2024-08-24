@@ -203,7 +203,7 @@ const DesignEffortModel = ({
                   </div>
                 </div>
                 <div className="grid-container">
-                  <div className="search-container four-columns">
+                  <div className="search-container five-columns">
                     <div className="search-icon">
                       <img
                         src="/assets/images/mark/search.svg"
