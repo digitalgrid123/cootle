@@ -41,7 +41,7 @@ const Signup = () => {
         disableGetStarted={pathname === PATH_AUTH.signup}
         onLogin={handlelogin}
       />
-      <section className="bg-main vh-100 pt-270">
+      <section className="bg-main h-100 pt-270 pb-270">
         <div className="container-fluid">
           <div className="col-lg-6 padding-24  offset-lg-3 d-flex justify-content-center">
             <div className="authentication-box">

@@ -42,7 +42,7 @@ const login = () => {
         onSignup={handleSignup}
         disableGetStarted={false}
       />
-      <section className="bg-main vh-100 pt-270">
+      <section className="bg-main h-100 pt-270 pb-270">
         <div className="container-fluid">
           <div className="row">
             <div className="padding-24  col-lg-6 offset-lg-3 d-flex justify-content-center">

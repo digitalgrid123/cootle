@@ -446,6 +446,9 @@ textarea {
 .pt-270 {
   padding-top: 270px;
 }
+.pb-270 {
+  padding-bottom: 270px;
+}
 
 .authentication-box {
   width: 28rem;
