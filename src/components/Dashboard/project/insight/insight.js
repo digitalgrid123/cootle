@@ -49,11 +49,13 @@ const Insight = () => {
   const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Quarterly");
+  console.log("🚀 ~ Insight ~ selectedOption:", selectedOption);
   const [selectedOptionItem, setSelectedOptionItem] = useState(
     getCurrentQuarter()
   );
   const [period, setPeriod] = useState();
   const [lifetime, setLifetime] = useState(false);
+  console.log("🚀 ~ Insight ~ lifetime:", lifetime);
 
   const project_id = params.id;
 
@@ -172,7 +174,7 @@ const Insight = () => {
           if (uniqueMonths) {
             const monthIndex =
               uniqueMonths.length - 1 - uniqueMonths.indexOf(item);
-            console.log("🚀 ~ Insight ~ monthIndex:", monthIndex);
+
             offset = calculateOffset(
               uniqueMonths,
               monthIndex,
@@ -185,7 +187,7 @@ const Insight = () => {
           if (uniqueWeeks) {
             const weekIndex =
               uniqueWeeks.length - 1 - uniqueWeeks.indexOf(item);
-            console.log("🚀 ~ Insight ~ weekIndex:", weekIndex);
+
             offset = calculateOffset(
               uniqueWeeks,
               weekIndex,
@@ -198,7 +200,7 @@ const Insight = () => {
           if (uniqueQuarters) {
             const quarterIndex =
               uniqueQuarters.length - 1 - uniqueQuarters.indexOf(item);
-            console.log("🚀 ~ Insight ~ quarterIndex:", quarterIndex);
+
             offset = calculateOffset(
               uniqueQuarters,
               quarterIndex,
@@ -233,8 +235,8 @@ const Insight = () => {
   };
   useEffect(() => {
     fetchEffortData();
-    fetchData(); // Ensure fetchData uses updated selectedOptionItem
-  }, [project_id, selectedOption, selectedOptionItem]);
+    fetchData();
+  }, [project_id, selectedOption, selectedOptionItem, lifetime]);
 
   // Function to toggle the dropdown
   const toggleDropdown = () => {
