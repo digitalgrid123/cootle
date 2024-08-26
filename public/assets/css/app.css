@@ -2861,6 +2861,10 @@ textarea {
 .grid-item {
   grid-column: span 3;
 }
+.description-editable > p {
+  margin: 0;
+  padding: 0;
+}
 
 @media only screen and (min-height: 600px) {
   .pt-270 {

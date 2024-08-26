@@ -408,6 +408,7 @@ const EffortMapping = ({
                           </div>
                           <div className="defination-text">
                             <div
+                              className="description-editable"
                               dangerouslySetInnerHTML={{
                                 __html: activeSubTab.description,
                               }}

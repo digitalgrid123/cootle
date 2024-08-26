@@ -59,7 +59,10 @@ const DesignEffortsCard = ({
                 <p>
                   <strong>Category:</strong> {effort.category}
                 </p>
-                <div dangerouslySetInnerHTML={{ __html: effort.description }} />
+                <div
+                  className="description-editable"
+                  dangerouslySetInnerHTML={{ __html: effort.description }}
+                />
                 <button
                   className="btn btn-secondary me-2"
                   onClick={() => handleEditDesignEffortClick(effort)}

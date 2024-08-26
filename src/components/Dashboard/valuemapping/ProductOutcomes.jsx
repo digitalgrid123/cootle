@@ -1,4 +1,4 @@
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useAuth } from "@/hooks"; // Adjust import path as per your project structure
 import CreateModel from "@/components/shared/model/CreateModel";
@@ -441,6 +441,7 @@ const ProductOutcomes = ({
                     </div>
                     <div className="defination-text">
                       <div
+                        className="description-editable"
                         dangerouslySetInnerHTML={{
                           __html: activeTab?.description,
                         }}
@@ -508,6 +509,7 @@ const ProductOutcomes = ({
                           .map((designEffort) => (
                             <div key={designEffort.title}>
                               <div
+                                className="description-editable"
                                 dangerouslySetInnerHTML={{
                                   __html: designEffort.description,
                                 }}

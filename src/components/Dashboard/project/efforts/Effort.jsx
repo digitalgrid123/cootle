@@ -98,9 +98,8 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   // Handle lifetime click
   const handleLifetimeClick = () => {
     setIsLifetimeClicked(true);
-    setSelectedOption("Quarterly"); // Set a default option if needed
-    setSelectedOptionItem(null); // Reset selected item
-    setIsDropdownOpen(false); // Close dropdown if open
+    setSelectedOptionItem(null);
+    setIsDropdownOpen(false);
   };
 
   const togglePurposeDropdown = (state) => {
@@ -334,13 +333,13 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   };
 
   const handleOptionClick = (option) => {
-    setSelectedOption(option);
-
     // Handle lifetime reset
     if (option === "Lifetime") {
       handleLifetimeClick();
       return;
     }
+
+    setSelectedOption(option); // Set the selected option
 
     switch (option) {
       case "Monthly":
@@ -360,8 +359,8 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
         setSelectedOptionItem(null);
         break;
     }
-    setIsLifetimeClicked(false);
-    setIsDropdownOpen(false);
+    setIsLifetimeClicked(false); // Disable lifetime view if not selected
+    setIsDropdownOpen(false); // Close the dropdown
   };
 
   const isActive = (year, option) => {
@@ -420,8 +419,10 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                     activeDates.has(`${year}-${month}`) && (
                       <li
                         key={`${year}-${month}-${index}`}
-                        className={`cursor-pointer ${isActive(year, month)} ${
-                          index === months.length - 1 ? "last-item" : ""
+                        className={`cursor-pointer  ${isActive(year, month)} ${
+                          index === months.length - 1
+                            ? "last-item active-tab"
+                            : ""
                         }`}
                         onClick={() => handleDateClick(year, month)}
                       >
@@ -440,8 +441,10 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                     activeDates.has(`${year}-${week}`) && (
                       <li
                         key={`${year}-${week}-${index}`}
-                        className={`cursor-pointer ${isActive(year, week)} ${
-                          index === weeks.length - 1 ? "last-item" : ""
+                        className={`cursor-pointer  ${isActive(year, week)} ${
+                          index === weeks.length - 1
+                            ? "last-item active-tab"
+                            : ""
                         }`}
                         onClick={() => handleDateClick(year, week)}
                       >
@@ -460,22 +463,19 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
                     activeDates.has(`${year}-${quarter}`) && (
                       <li
                         key={`${year}-${quarter}-${index}`}
-                        className={`cursor-pointer ${isActive(year, quarter)} ${
-                          index === quarters.length - 1 ? "last-item" : ""
+                        className={`cursor-pointer   ${isActive(
+                          year,
+                          quarter
+                        )} ${
+                          index === quarters.length - 1 ? "last-item " : ""
                         }`}
                         onClick={() => handleDateClick(year, quarter)}
                       >
-                        <span className="quarter">{quarter}</span>
-                        <span className="year">{year}</span>
+                        <span>{quarter}</span>
+                        <span>{year}</span>
                       </li>
                     )
                 )}
-
-            {/* Render faint bottom border after each year */}
-            <div
-              className="border_bottom_soft-lavender w-100"
-              key={`border-${year}`}
-            />
           </React.Fragment>
         ))}
       </ul>

@@ -1,4 +1,4 @@
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useAuth } from "@/hooks"; // Adjust import path as per your project structure
 import CreateModel from "@/components/shared/model/CreateModel";
@@ -445,6 +445,7 @@ const ObjectiveMapping = ({
                     </div>
                     <div className="defination-text">
                       <div
+                        className="description-editable"
                         dangerouslySetInnerHTML={{
                           __html: activeTab?.description,
                         }}
@@ -517,6 +518,7 @@ const ObjectiveMapping = ({
                               className="defination-text"
                             >
                               <div
+                                className="description-editable"
                                 dangerouslySetInnerHTML={{
                                   __html: designEffort.description,
                                 }}

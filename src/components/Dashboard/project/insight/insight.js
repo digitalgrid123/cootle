@@ -149,9 +149,9 @@ const Insight = () => {
       quartersSet.add(quarter);
     });
 
-    const uniqueMonths = Array.from(monthsSet);
-    const uniqueWeeks = Array.from(weeksSet);
-    const uniqueQuarters = Array.from(quartersSet);
+    const uniqueMonths = Array.from(monthsSet).reverse(); // Reverse here
+    const uniqueWeeks = Array.from(weeksSet).reverse(); // Reverse here
+    const uniqueQuarters = Array.from(quartersSet).reverse(); // Reverse here
 
     // Set default values
     let year = currentYear;
@@ -170,7 +170,9 @@ const Insight = () => {
         case "Monthly":
           period = "monthly";
           if (uniqueMonths) {
-            const monthIndex = uniqueMonths.indexOf(item);
+            const monthIndex =
+              uniqueMonths.length - 1 - uniqueMonths.indexOf(item);
+            console.log("🚀 ~ Insight ~ monthIndex:", monthIndex);
             offset = calculateOffset(
               uniqueMonths,
               monthIndex,
@@ -181,7 +183,9 @@ const Insight = () => {
         case "Weekly":
           period = "weekly";
           if (uniqueWeeks) {
-            const weekIndex = uniqueWeeks.indexOf(item);
+            const weekIndex =
+              uniqueWeeks.length - 1 - uniqueWeeks.indexOf(item);
+            console.log("🚀 ~ Insight ~ weekIndex:", weekIndex);
             offset = calculateOffset(
               uniqueWeeks,
               weekIndex,
@@ -192,7 +196,9 @@ const Insight = () => {
         case "Quarterly":
           period = "quarterly";
           if (uniqueQuarters) {
-            const quarterIndex = uniqueQuarters.indexOf(item);
+            const quarterIndex =
+              uniqueQuarters.length - 1 - uniqueQuarters.indexOf(item);
+            console.log("🚀 ~ Insight ~ quarterIndex:", quarterIndex);
             offset = calculateOffset(
               uniqueQuarters,
               quarterIndex,
@@ -225,10 +231,9 @@ const Insight = () => {
 
     return offset;
   };
-
   useEffect(() => {
     fetchEffortData();
-    fetchData();
+    fetchData(); // Ensure fetchData uses updated selectedOptionItem
   }, [project_id, selectedOption, selectedOptionItem]);
 
   // Function to toggle the dropdown
@@ -243,6 +248,11 @@ const Insight = () => {
       return;
     }
 
+    setLifetime(false); // Reset the lifetime click state
+    setIsLifetimeClicked(false); // Reset the lifetime click state
+    setIsDropdownOpen(false);
+
+    // Update selectedOption and selectedOptionItem based on the selected option
     setSelectedOption(option);
 
     switch (option) {
@@ -263,27 +273,27 @@ const Insight = () => {
         setSelectedOptionItem(null);
         break;
     }
-    setIsLifetimeClicked(false);
-    setIsDropdownOpen(false);
   };
 
   // Function to check if an option is active
   const isActive = (year, option) => {
+    if (lifetime) {
+      return "";
+    }
     return selectedOptionItem === `${year}-${option}` ? "active" : "";
   };
 
   // Function to handle date click
   const handleDateClick = (year, option) => {
     setSelectedOptionItem(`${year}-${option}`);
-    setIsLifetimeClicked(false);
-    setLifetime(false);
+    setIsLifetimeClicked(false); // If a specific date is clicked, it's not lifetime anymore
+    setLifetime(false); // Reset lifetime
   };
 
   const renderDates = () => {
     const activeDates = new Set();
     const years = new Set();
 
-    // Populate activeDates and years based on effortsListData
     effortsListData?.forEach((effort) => {
       const createdDate = new Date(effort.created_at);
       const year = createdDate.getFullYear();
@@ -291,7 +301,7 @@ const Insight = () => {
       const week = `Week ${getISOWeek(createdDate)}`;
       const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
 
-      years.add(year); // Add year to the set of years
+      years.add(year);
 
       switch (selectedOption) {
         case "Monthly":
@@ -308,12 +318,7 @@ const Insight = () => {
       }
     });
 
-    const sortedYears = Array.from(years).sort((a, b) => b - a); // Sort years in descending order
-
-    const getOffset = (item, list) => {
-      const index = list.indexOf(item);
-      return list.length - 1 - index;
-    };
+    const sortedYears = Array.from(years).sort((a, b) => b - a);
 
     return (
       <ul className="timeline-dates">
@@ -328,9 +333,7 @@ const Insight = () => {
                   return activeDates.has(item) ? (
                     <li
                       key={item}
-                      className={`cursor-pointer ${isActive(year, month)} ${
-                        getOffset(month, months) === 0 ? "last-item" : ""
-                      }`}
+                      className={`cursor-pointer ${isActive(year, month)}`}
                       onClick={() => handleDateClick(year, month)}
                     >
                       <span>{month}</span>
@@ -348,9 +351,7 @@ const Insight = () => {
                   return activeDates.has(item) ? (
                     <li
                       key={item}
-                      className={`cursor-pointer ${isActive(year, week)} ${
-                        getOffset(week, weeks) === 0 ? "last-item" : ""
-                      }`}
+                      className={`cursor-pointer ${isActive(year, week)}`}
                       onClick={() => handleDateClick(year, week)}
                     >
                       <span className="week">{week}</span>
@@ -368,9 +369,7 @@ const Insight = () => {
                   return activeDates.has(item) ? (
                     <li
                       key={item}
-                      className={`cursor-pointer ${isActive(year, quarter)} ${
-                        getOffset(quarter, quarters) === 0 ? "last-item" : ""
-                      }`}
+                      className={`cursor-pointer ${isActive(year, quarter)}`}
                       onClick={() => handleDateClick(year, quarter)}
                     >
                       <span className="quarter">{quarter}</span>
@@ -408,11 +407,29 @@ const Insight = () => {
 
   // Function to handle lifetime click
   const handleLifetimeClick = () => {
-    setIsLifetimeClicked(true);
-    setSelectedOption("Quarterly");
     setLifetime(true);
-    setSelectedOptionItem(null);
+    setIsLifetimeClicked(true);
     setIsDropdownOpen(false);
+
+    // Ensure selectedOptionItem is set to the current period
+    switch (selectedOption) {
+      case "Monthly":
+        setSelectedOptionItem(
+          `${new Date().getFullYear()}-${months[new Date().getMonth()]}`
+        );
+        break;
+      case "Weekly":
+        setSelectedOptionItem(
+          `${new Date().getFullYear()}-Week ${getISOWeek(new Date())}`
+        );
+        break;
+      case "Quarterly":
+        setSelectedOptionItem(getCurrentQuarter());
+        break;
+      default:
+        setSelectedOptionItem(null);
+        break;
+    }
   };
 
   const handleDefinitionsClick = () => {

@@ -1,4 +1,4 @@
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useAuth } from "@/hooks"; // Adjust import path as per your project structure
 import CreateModel from "@/components/shared/model/CreateModel";
@@ -401,7 +401,6 @@ const ValueMapping = ({
                         onChange={(value) => setEditedDescription(value)}
                         modules={{
                           toolbar: [
-                           
                             [
                               { list: "ordered" },
                               { list: "bullet" },
@@ -444,6 +443,7 @@ const ValueMapping = ({
                     </div>
                     <div className="defination-text">
                       <div
+                        className="description-editable"
                         dangerouslySetInnerHTML={{
                           __html: activeTab?.description,
                         }}
@@ -514,6 +514,7 @@ const ValueMapping = ({
                               className="defination-text"
                             >
                               <div
+                                className="description-editable"
                                 dangerouslySetInnerHTML={{
                                   __html: designEffort.description,
                                 }}

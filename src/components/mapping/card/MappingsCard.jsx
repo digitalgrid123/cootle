@@ -49,7 +49,10 @@ const MappingsCard = ({
           {mappings.map((mapping, index) => (
             <li key={index} className="list-group-item">
               <h5>{mapping.title}</h5>
-              <div dangerouslySetInnerHTML={{ __html: mapping.description }} />
+              <div
+                className="description-editable"
+                dangerouslySetInnerHTML={{ __html: mapping.description }}
+              />
 
               {/* Uncomment if you decide to display the type */}
               {/* <p>

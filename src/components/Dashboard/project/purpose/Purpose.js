@@ -46,6 +46,7 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Quarterly");
   const [selectedOptionItem, setSelectedOptionItem] = useState(null);
+
   const [userdetail, setUserDetail] = useState([]);
 
   const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
@@ -69,11 +70,11 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
     fetchUserinfo();
   }, [userinfo]);
   // Handle lifetime click
+
   const handleLifetimeClick = () => {
     setIsLifetimeClicked(true);
-    setSelectedOption("Quarterly"); // Set a default option if needed
-    setSelectedOptionItem(null); // Reset selected item
-    setIsDropdownOpen(false); // Close dropdown if open
+    setSelectedOptionItem(null);
+    setIsDropdownOpen(false);
   };
 
   const fetchUserinfoById = async (userId) => {
@@ -256,13 +257,13 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
   };
 
   const handleOptionClick = (option) => {
-    setSelectedOption(option);
-
     // Handle lifetime reset
     if (option === "Lifetime") {
       handleLifetimeClick();
       return;
     }
+
+    setSelectedOption(option); // Set the selected option
 
     switch (option) {
       case "Monthly":
@@ -282,8 +283,8 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
         setSelectedOptionItem(null);
         break;
     }
-    setIsLifetimeClicked(false);
-    setIsDropdownOpen(false);
+    setIsLifetimeClicked(false); // Disable lifetime view if not selected
+    setIsDropdownOpen(false); // Close the dropdown
   };
 
   const isActive = (year, option) => {
@@ -394,16 +395,11 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
                         }`}
                         onClick={() => handleDateClick(year, quarter)}
                       >
-                        <span className="quarter">{quarter}</span>
-                        <span className="year">{year}</span>
+                        <span>{quarter}</span>
+                        <span>{year}</span>
                       </li>
                     )
                 )}
-
-            <div
-              className="border_bottom_soft-lavender w-100"
-              key={`border-${year}`}
-            />
           </React.Fragment>
         ))}
       </ul>
