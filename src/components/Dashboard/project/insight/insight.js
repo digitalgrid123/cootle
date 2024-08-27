@@ -171,41 +171,44 @@ const Insight = () => {
       switch (selectedOption) {
         case "Monthly":
           period = "monthly";
-          if (uniqueMonths) {
+          if (uniqueMonths.length > 0) {
             const monthIndex =
               uniqueMonths.length - 1 - uniqueMonths.indexOf(item);
-
-            offset = calculateOffset(
-              uniqueMonths,
-              monthIndex,
-              year === currentYear
-            );
+            if (monthIndex >= 0) {
+              offset = calculateOffset(uniqueMonths, monthIndex);
+            } else {
+              // Use the last available month if the selected item is not available
+              offset = calculateOffset(uniqueMonths, uniqueMonths.length - 1);
+            }
           }
           break;
         case "Weekly":
           period = "weekly";
-          if (uniqueWeeks) {
+          if (uniqueWeeks.length > 0) {
             const weekIndex =
               uniqueWeeks.length - 1 - uniqueWeeks.indexOf(item);
-
-            offset = calculateOffset(
-              uniqueWeeks,
-              weekIndex,
-              year === currentYear
-            );
+            if (weekIndex >= 0) {
+              offset = calculateOffset(uniqueWeeks, weekIndex);
+            } else {
+              // Use the last available week if the selected item is not available
+              offset = calculateOffset(uniqueWeeks, uniqueWeeks.length - 1);
+            }
           }
           break;
         case "Quarterly":
           period = "quarterly";
-          if (uniqueQuarters) {
+          if (uniqueQuarters.length > 0) {
             const quarterIndex =
               uniqueQuarters.length - 1 - uniqueQuarters.indexOf(item);
-
-            offset = calculateOffset(
-              uniqueQuarters,
-              quarterIndex,
-              year === currentYear
-            );
+            if (quarterIndex >= 0) {
+              offset = calculateOffset(uniqueQuarters, quarterIndex);
+            } else {
+              // Use the last available quarter if the selected item is not available
+              offset = calculateOffset(
+                uniqueQuarters,
+                uniqueQuarters.length - 1
+              );
+            }
           }
           break;
         default:
@@ -218,8 +221,8 @@ const Insight = () => {
 
   const calculateOffset = (optionsArray, currentIndex) => {
     if (currentIndex === -1) return 0;
-    const remainingOptions = optionsArray.slice(currentIndex + 1);
 
+    const remainingOptions = optionsArray.slice(currentIndex + 1);
     if (remainingOptions.length === 0) return 0;
 
     let offset = 0;
@@ -233,6 +236,115 @@ const Insight = () => {
 
     return offset;
   };
+
+  // const getFilterParams = (
+  //   selectedOption,
+  //   selectedOptionItem,
+  //   effortsListData
+  // ) => {
+  //   const currentYear = new Date().getFullYear();
+
+  //   // Extract unique years from effortsListData
+  //   const years = new Set();
+  //   const monthsSet = new Set();
+  //   const weeksSet = new Set();
+  //   const quartersSet = new Set();
+
+  //   effortsListData?.forEach((effort) => {
+  //     const createdDate = new Date(effort.created_at);
+  //     const year = createdDate.getFullYear();
+  //     const month = months[createdDate.getMonth()];
+  //     const week = `Week ${getISOWeek(createdDate)}`;
+  //     const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+
+  //     years.add(year);
+  //     monthsSet.add(month);
+  //     weeksSet.add(week);
+  //     quartersSet.add(quarter);
+  //   });
+
+  //   const uniqueMonths = Array.from(monthsSet).reverse(); // Reverse here
+  //   const uniqueWeeks = Array.from(weeksSet).reverse(); // Reverse here
+  //   const uniqueQuarters = Array.from(quartersSet).reverse(); // Reverse here
+
+  //   // Set default values
+  //   let year = currentYear;
+  //   let period = "quarterly";
+  //   let offset = 0;
+
+  //   if (lifetime) {
+  //     return { year: null, period: null, offset: null };
+  //   }
+
+  //   if (selectedOptionItem) {
+  //     const [itemYear, item] = selectedOptionItem.split("-");
+  //     year = parseInt(itemYear, 10);
+
+  //     switch (selectedOption) {
+  //       case "Monthly":
+  //         period = "monthly";
+  //         if (uniqueMonths) {
+  //           const monthIndex =
+  //             uniqueMonths.length - 1 - uniqueMonths.indexOf(item);
+
+  //           offset = calculateOffset(
+  //             uniqueMonths,
+  //             monthIndex,
+  //             year === currentYear
+  //           );
+  //         }
+  //         break;
+  //       case "Weekly":
+  //         period = "weekly";
+  //         if (uniqueWeeks) {
+  //           const weekIndex =
+  //             uniqueWeeks.length - 1 - uniqueWeeks.indexOf(item);
+
+  //           offset = calculateOffset(
+  //             uniqueWeeks,
+  //             weekIndex,
+  //             year === currentYear
+  //           );
+  //         }
+  //         break;
+  //       case "Quarterly":
+  //         period = "quarterly";
+  //         if (uniqueQuarters) {
+  //           const quarterIndex =
+  //             uniqueQuarters.length - 1 - uniqueQuarters.indexOf(item);
+
+  //           offset = calculateOffset(
+  //             uniqueQuarters,
+  //             quarterIndex,
+  //             year === currentYear
+  //           );
+  //         }
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //   }
+
+  //   return { year, period, offset };
+  // };
+
+  // const calculateOffset = (optionsArray, currentIndex) => {
+  //   if (currentIndex === -1) return 0;
+  //   const remainingOptions = optionsArray.slice(currentIndex + 1);
+
+  //   if (remainingOptions.length === 0) return 0;
+
+  //   let offset = 0;
+  //   for (let i = 0; i < optionsArray.length; i++) {
+  //     if (i > currentIndex && !remainingOptions.includes(optionsArray[i])) {
+  //       offset += 1;
+  //     } else if (i > currentIndex) {
+  //       offset = remainingOptions.indexOf(optionsArray[i]) + 1;
+  //     }
+  //   }
+
+  //   return offset;
+  // };
   useEffect(() => {
     fetchEffortData();
     fetchData();

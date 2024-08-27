@@ -42,11 +42,11 @@ const login = () => {
         onSignup={handleSignup}
         disableGetStarted={false}
       />
-      <section className="bg-main h-100 pt-270 pb-270">
+      <section className="bg-main min-vh-100 d-flex justify-content-center pt-270 pb-270">
         <div className="container-fluid">
           <div className="row">
-            <div className="padding-24  col-lg-6 offset-lg-3 d-flex justify-content-center">
-              <div className="authentication-box">
+            <div className="padding-24 col-lg-6 offset-lg-3 d-flex justify-content-center">
+              <div className="authentication-box ">
                 {renderCurrentTab(currentTab)}
               </div>
             </div>

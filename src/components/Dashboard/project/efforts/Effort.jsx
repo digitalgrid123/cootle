@@ -339,28 +339,77 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
       return;
     }
 
-    setSelectedOption(option); // Set the selected option
+    setSelectedOption(option);
+
+    const currentYear = new Date().getFullYear();
+    let selectedItem = null;
 
     switch (option) {
       case "Monthly":
-        setSelectedOptionItem(
-          `${new Date().getFullYear()}-${months[new Date().getMonth()]}`
-        );
+        selectedItem = `${currentYear}-${months[new Date().getMonth()]}`;
         break;
       case "Weekly":
-        setSelectedOptionItem(
-          `${new Date().getFullYear()}-Week ${getISOWeek(new Date())}`
-        );
+        selectedItem = `${currentYear}-Week ${getISOWeek(new Date())}`;
         break;
       case "Quarterly":
-        setSelectedOptionItem(getCurrentQuarter());
+        selectedItem = getCurrentQuarter();
         break;
       default:
-        setSelectedOptionItem(null);
+        selectedItem = null;
         break;
     }
-    setIsLifetimeClicked(false); // Disable lifetime view if not selected
-    setIsDropdownOpen(false); // Close the dropdown
+
+    // Check if the current selection exists in purposeListData
+    const currentExists = effortsListData?.some((purpose) => {
+      const createdDate = new Date(purpose.created_at);
+      const year = createdDate.getFullYear();
+      const month = months[createdDate.getMonth()];
+      const week = `Week ${getISOWeek(createdDate)}`;
+      const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+
+      switch (option) {
+        case "Monthly":
+          return `${year}-${month}` === selectedItem;
+        case "Weekly":
+          return `${year}-${week}` === selectedItem;
+        case "Quarterly":
+          return `${year}-${quarter}` === selectedItem;
+        default:
+          return false;
+      }
+    });
+
+    // If the current selection doesn't exist, select the last available date
+    if (!currentExists) {
+      const lastAvailableItem = effortsListData
+        ?.map((purpose) => {
+          const createdDate = new Date(purpose.created_at);
+          const year = createdDate.getFullYear();
+          const month = months[createdDate.getMonth()];
+          const week = `Week ${getISOWeek(createdDate)}`;
+          const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+
+          switch (option) {
+            case "Monthly":
+              return `${year}-${month}`;
+            case "Weekly":
+              return `${year}-${week}`;
+            case "Quarterly":
+              return `${year}-${quarter}`;
+            default:
+              return null;
+          }
+        })
+        .filter(Boolean)
+        .reverse()[0];
+
+      setSelectedOptionItem(lastAvailableItem);
+    } else {
+      setSelectedOptionItem(selectedItem);
+    }
+
+    setIsLifetimeClicked(false);
+    setIsDropdownOpen(false);
   };
 
   const isActive = (year, option) => {
