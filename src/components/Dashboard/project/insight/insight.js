@@ -235,8 +235,41 @@ const Insight = () => {
   };
   useEffect(() => {
     fetchEffortData();
-    fetchData();
-  }, [project_id, selectedOption, selectedOptionItem, lifetime]);
+  }, [project_id]);
+
+  useEffect(() => {
+    const checkIfLifetimeShouldBeActive = () => {
+      if (!effortsListData) return;
+
+      const currentYear = new Date().getFullYear();
+      const currentMonth = months[new Date().getMonth()];
+      const currentWeek = `Week ${getISOWeek(new Date())}`;
+      const currentQuarter = getCurrentQuarter();
+
+      const hasCurrentMonth = effortsListData.some((effort) => {
+        const createdDate = new Date(effort.created_at);
+        const month = months[createdDate.getMonth()];
+        return `${currentYear}-${month}` === `${currentYear}-${currentMonth}`;
+      });
+
+      const hasCurrentWeek = effortsListData.some((effort) => {
+        const createdDate = new Date(effort.created_at);
+        const week = `Week ${getISOWeek(createdDate)}`;
+        return `${currentYear}-${week}` === `${currentYear}-${currentWeek}`;
+      });
+
+      const hasCurrentQuarter = effortsListData.some((effort) => {
+        const createdDate = new Date(effort.created_at);
+        const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+        return `${currentYear}-${quarter}` === currentQuarter;
+      });
+
+      setLifetime(!(hasCurrentMonth || hasCurrentWeek || hasCurrentQuarter));
+      fetchData();
+    };
+
+    checkIfLifetimeShouldBeActive();
+  }, [effortsListData, project_id, selectedOption, selectedOptionItem]);
 
   // Function to toggle the dropdown
   const toggleDropdown = () => {
