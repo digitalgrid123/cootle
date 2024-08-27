@@ -81,11 +81,12 @@ const Insight = () => {
       if (!project_id) return;
       setError(null);
 
-      const { year, period, offset } = getFilterParams(
+      const { year, period, offset, availableOptions } = getFilterParams(
         selectedOption,
         selectedOptionItem,
         effortsListData
       );
+
       setPeriod(period);
 
       const [
@@ -132,7 +133,7 @@ const Insight = () => {
   ) => {
     const currentYear = new Date().getFullYear();
 
-    // Extract unique years from effortsListData
+    // Extract unique periods from effortsListData
     const years = new Set();
     const monthsSet = new Set();
     const weeksSet = new Set();
@@ -151,17 +152,18 @@ const Insight = () => {
       quartersSet.add(quarter);
     });
 
-    const uniqueMonths = Array.from(monthsSet).reverse(); // Reverse here
-    const uniqueWeeks = Array.from(weeksSet).reverse(); // Reverse here
-    const uniqueQuarters = Array.from(quartersSet).reverse(); // Reverse here
+    const uniqueMonths = Array.from(monthsSet).reverse();
+    const uniqueWeeks = Array.from(weeksSet).reverse();
+    const uniqueQuarters = Array.from(quartersSet).reverse();
 
     // Set default values
     let year = currentYear;
     let period = "quarterly";
     let offset = 0;
+    let availableOptions = [];
 
     if (lifetime) {
-      return { year: null, period: null, offset: null };
+      return { year: null, period: null, offset: null, availableOptions: [] };
     }
 
     if (selectedOptionItem) {
@@ -171,44 +173,43 @@ const Insight = () => {
       switch (selectedOption) {
         case "Monthly":
           period = "monthly";
-          if (uniqueMonths.length > 0) {
+          availableOptions = uniqueMonths.map((month) => `${year}-${month}`);
+          if (uniqueMonths) {
             const monthIndex =
               uniqueMonths.length - 1 - uniqueMonths.indexOf(item);
-            if (monthIndex >= 0) {
-              offset = calculateOffset(uniqueMonths, monthIndex);
-            } else {
-              // Use the last available month if the selected item is not available
-              offset = calculateOffset(uniqueMonths, uniqueMonths.length - 1);
-            }
+            offset = calculateOffset(
+              uniqueMonths,
+              monthIndex,
+              year === currentYear
+            );
           }
           break;
         case "Weekly":
           period = "weekly";
-          if (uniqueWeeks.length > 0) {
+          availableOptions = uniqueWeeks.map((week) => `${year}-${week}`);
+          if (uniqueWeeks) {
             const weekIndex =
               uniqueWeeks.length - 1 - uniqueWeeks.indexOf(item);
-            if (weekIndex >= 0) {
-              offset = calculateOffset(uniqueWeeks, weekIndex);
-            } else {
-              // Use the last available week if the selected item is not available
-              offset = calculateOffset(uniqueWeeks, uniqueWeeks.length - 1);
-            }
+            offset = calculateOffset(
+              uniqueWeeks,
+              weekIndex,
+              year === currentYear
+            );
           }
           break;
         case "Quarterly":
           period = "quarterly";
-          if (uniqueQuarters.length > 0) {
+          availableOptions = uniqueQuarters.map(
+            (quarter) => `${year}-${quarter}`
+          );
+          if (uniqueQuarters) {
             const quarterIndex =
               uniqueQuarters.length - 1 - uniqueQuarters.indexOf(item);
-            if (quarterIndex >= 0) {
-              offset = calculateOffset(uniqueQuarters, quarterIndex);
-            } else {
-              // Use the last available quarter if the selected item is not available
-              offset = calculateOffset(
-                uniqueQuarters,
-                uniqueQuarters.length - 1
-              );
-            }
+            offset = calculateOffset(
+              uniqueQuarters,
+              quarterIndex,
+              year === currentYear
+            );
           }
           break;
         default:
@@ -216,22 +217,25 @@ const Insight = () => {
       }
     }
 
-    return { year, period, offset };
+    return { year, period, offset, availableOptions };
   };
 
-  const calculateOffset = (optionsArray, currentIndex) => {
-    if (currentIndex === -1) return 0;
+  const calculateOffset = (optionsArray, currentIndex, isCurrentYear) => {
+    // If the current index is invalid or if there are no options left, return 0
+    if (currentIndex === -1 || optionsArray.length === 0) return 0;
 
-    const remainingOptions = optionsArray.slice(currentIndex + 1);
-    if (remainingOptions.length === 0) return 0;
-
+    // Calculate offset based on missing periods
     let offset = 0;
-    for (let i = 0; i < optionsArray.length; i++) {
-      if (i > currentIndex && !remainingOptions.includes(optionsArray[i])) {
+
+    for (let i = currentIndex + 1; i < optionsArray.length; i++) {
+      if (!optionsArray.includes(optionsArray[i])) {
         offset += 1;
-      } else if (i > currentIndex) {
-        offset = remainingOptions.indexOf(optionsArray[i]) + 1;
       }
+    }
+
+    // If it is the current year, adjust offset accordingly
+    if (isCurrentYear) {
+      offset += optionsArray.length - currentIndex - 1;
     }
 
     return offset;
@@ -346,6 +350,22 @@ const Insight = () => {
   //   return offset;
   // };
   useEffect(() => {
+    const storedOption = localStorage.getItem("selectedOption");
+    const storedOptionItem = localStorage.getItem("selectedOptionItem");
+
+    if (storedOption) {
+      setSelectedOption(storedOption);
+    } else {
+      // Default to "Quarterly" and set the current quarter if no option is stored
+      const currentQuarter = getCurrentQuarter();
+      setSelectedOption("Quarterly");
+      setSelectedOptionItem(currentQuarter);
+    }
+
+    if (storedOptionItem) {
+      setSelectedOptionItem(storedOptionItem);
+    }
+
     fetchEffortData();
     fetchData();
   }, [project_id, selectedOption, selectedOptionItem, lifetime]);
@@ -366,27 +386,31 @@ const Insight = () => {
     setIsLifetimeClicked(false); // Reset the lifetime click state
     setIsDropdownOpen(false);
 
-    // Update selectedOption and selectedOptionItem based on the selected option
     setSelectedOption(option);
+
+    const now = new Date();
+    let newSelectedOptionItem;
 
     switch (option) {
       case "Monthly":
-        setSelectedOptionItem(
-          `${new Date().getFullYear()}-${months[new Date().getMonth()]}`
-        );
+        newSelectedOptionItem = `${now.getFullYear()}-${
+          months[now.getMonth()]
+        }`;
         break;
       case "Weekly":
-        setSelectedOptionItem(
-          `${new Date().getFullYear()}-Week ${getISOWeek(new Date())}`
-        );
+        newSelectedOptionItem = `${now.getFullYear()}-Week ${getISOWeek(now)}`;
         break;
       case "Quarterly":
-        setSelectedOptionItem(getCurrentQuarter());
+        newSelectedOptionItem = getCurrentQuarter();
         break;
       default:
-        setSelectedOptionItem(null);
+        newSelectedOptionItem = null;
         break;
     }
+
+    setSelectedOptionItem(newSelectedOptionItem);
+    localStorage.setItem("selectedOption", option);
+    localStorage.setItem("selectedOptionItem", newSelectedOptionItem);
   };
 
   // Function to check if an option is active
@@ -544,6 +568,9 @@ const Insight = () => {
         setSelectedOptionItem(null);
         break;
     }
+
+    localStorage.removeItem("selectedOption");
+    localStorage.removeItem("selectedOptionItem");
   };
 
   const handleDefinitionsClick = () => {
