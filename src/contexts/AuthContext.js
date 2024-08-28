@@ -1333,7 +1333,6 @@ function AuthProvider({ children }) {
   ) => {
     try {
       const queryString = buildQueryString({ year, period, offset });
-    
 
       const url = `${API_ROUTER.EFFORT_VALUE_RATIO(project_id)}${
         queryString ? "?" + queryString : ""

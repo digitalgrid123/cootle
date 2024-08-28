@@ -23,6 +23,31 @@ const getCurrentQuarter = () => {
   }
 };
 
+const monthOffsets = {
+  Jan: 11,
+  Feb: 10,
+  Mar: 9,
+  Apr: 8,
+  May: 7,
+  Jun: 6,
+  Jul: 5,
+  Aug: 4,
+  Sep: 3,
+  Oct: 2,
+  Nov: 1,
+  Dec: 0,
+};
+const weekOffsets = Object.fromEntries(
+  Array.from({ length: 52 }, (_, i) => [`Week ${52 - i}`, i])
+);
+
+const quarterOffsets = {
+  Q1: 3,
+  Q2: 2,
+  Q3: 1,
+  Q4: 0,
+};
+
 const Insight = () => {
   const params = useParams();
   const {
@@ -49,13 +74,12 @@ const Insight = () => {
   const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Quarterly");
-  console.log("🚀 ~ Insight ~ selectedOption:", selectedOption);
+
   const [selectedOptionItem, setSelectedOptionItem] = useState(
     getCurrentQuarter()
   );
   const [period, setPeriod] = useState();
   const [lifetime, setLifetime] = useState(false);
-  console.log("🚀 ~ Insight ~ lifetime:", lifetime);
 
   const project_id = params.id;
 
@@ -124,19 +148,20 @@ const Insight = () => {
       console.error("Error fetching data:", error);
     }
   };
-
   const getFilterParams = (
     selectedOption,
     selectedOptionItem,
     effortsListData
   ) => {
-    const currentYear = new Date().getFullYear();
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonthIndex = currentDate.getMonth();
+    const currentWeek = `Week ${getISOWeek(currentDate)}`;
+    const currentQuarter = `Q${Math.ceil((currentDate.getMonth() + 1) / 3)}`;
 
-    // Extract unique years from effortsListData
+    // Organize efforts by year
     const years = new Set();
-    const monthsSet = new Set();
-    const weeksSet = new Set();
-    const quartersSet = new Set();
+    const yearWiseData = {};
 
     effortsListData?.forEach((effort) => {
       const createdDate = new Date(effort.created_at);
@@ -145,15 +170,103 @@ const Insight = () => {
       const week = `Week ${getISOWeek(createdDate)}`;
       const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
 
+      if (!yearWiseData[year]) {
+        yearWiseData[year] = {
+          monthsSet: new Set(),
+          weeksSet: new Set(),
+          quartersSet: new Set(),
+        };
+      }
+
+      yearWiseData[year].monthsSet.add(month);
+      yearWiseData[year].weeksSet.add(week);
+      yearWiseData[year].quartersSet.add(quarter);
+
       years.add(year);
-      monthsSet.add(month);
-      weeksSet.add(week);
-      quartersSet.add(quarter);
     });
 
-    const uniqueMonths = Array.from(monthsSet).reverse(); // Reverse here
-    const uniqueWeeks = Array.from(weeksSet).reverse(); // Reverse here
-    const uniqueQuarters = Array.from(quartersSet).reverse(); // Reverse here
+    // Convert sets to arrays for easier manipulation
+    const uniqueYears = Array.from(years);
+
+    const uniqueMonthsByYear = {};
+    const uniqueWeeksByYear = {};
+    const uniqueQuartersByYear = {};
+
+    uniqueYears.forEach((year) => {
+      uniqueMonthsByYear[year] = Array.from(yearWiseData[year].monthsSet);
+      uniqueWeeksByYear[year] = Array.from(yearWiseData[year].weeksSet);
+      uniqueQuartersByYear[year] = Array.from(yearWiseData[year].quartersSet);
+    });
+
+    // Identify missing values with the current date consideration
+    const identifyMissingValues = (
+      dataArray,
+      predefinedArray,
+      isCurrentYear,
+      currentPeriod
+    ) => {
+      const filteredPredefinedArray = isCurrentYear
+        ? predefinedArray.slice(0, predefinedArray.indexOf(currentPeriod) + 1)
+        : predefinedArray;
+
+      return filteredPredefinedArray.filter(
+        (item) => !dataArray.includes(item)
+      );
+    };
+
+    // Calculate missing options for the current year
+    const missingMonthsCurrentYear = identifyMissingValues(
+      uniqueMonthsByYear[currentYear] || [],
+      months,
+      true,
+      months[currentMonthIndex]
+    );
+    const missingWeeksCurrentYear = identifyMissingValues(
+      uniqueWeeksByYear[currentYear] || [],
+      weeks,
+      true,
+      currentWeek
+    );
+    const missingQuartersCurrentYear = identifyMissingValues(
+      uniqueQuartersByYear[currentYear] || [],
+      quarters,
+      true,
+      currentQuarter
+    );
+
+    // Calculate missing options for previous years
+    const missingMonthsPreviousYears = uniqueYears.reduce((acc, year) => {
+      if (year !== currentYear) {
+        acc[year] = identifyMissingValues(
+          uniqueMonthsByYear[year] || [],
+          months,
+          false
+        );
+      }
+      return acc;
+    }, {});
+
+    const missingWeeksPreviousYears = uniqueYears.reduce((acc, year) => {
+      if (year !== currentYear) {
+        acc[year] = identifyMissingValues(
+          uniqueWeeksByYear[year] || [],
+          weeks,
+          false
+        );
+      }
+      return acc;
+    }, {});
+
+    const missingQuartersPreviousYears = uniqueYears.reduce((acc, year) => {
+      if (year !== currentYear) {
+        acc[year] = identifyMissingValues(
+          uniqueQuartersByYear[year] || [],
+          quarters,
+          false
+        );
+      }
+      return acc;
+    }, {});
 
     // Set default values
     let year = currentYear;
@@ -168,108 +281,150 @@ const Insight = () => {
       const [itemYear, item] = selectedOptionItem.split("-");
       year = parseInt(itemYear, 10);
 
+      let optionsArray = [];
+      let offsetCalculationFn;
+
       switch (selectedOption) {
         case "Monthly":
           period = "monthly";
-          if (uniqueMonths) {
-            const monthIndex =
-              uniqueMonths.length - 1 - uniqueMonths.indexOf(item);
-
-            offset = calculateOffset(
-              uniqueMonths,
-              monthIndex,
-              year === currentYear
-            );
-          }
+          optionsArray = uniqueMonthsByYear[year] || months;
+          offsetCalculationFn =
+            year === currentYear
+              ? (array, index) =>
+                  calculateCurrentYearOffset(
+                    array,
+                    index,
+                    missingMonthsCurrentYear,
+                    period
+                  )
+              : (array, index) =>
+                  calculatePreviousYearOffset(
+                    array,
+                    index,
+                    missingMonthsPreviousYears[year],
+                    period
+                  );
           break;
         case "Weekly":
           period = "weekly";
-          if (uniqueWeeks) {
-            const weekIndex =
-              uniqueWeeks.length - 1 - uniqueWeeks.indexOf(item);
-
-            offset = calculateOffset(
-              uniqueWeeks,
-              weekIndex,
-              year === currentYear
-            );
-          }
+          optionsArray = uniqueWeeksByYear[year] || weeks;
+          offsetCalculationFn =
+            year === currentYear
+              ? (array, index) =>
+                  calculateCurrentYearOffset(
+                    array,
+                    index,
+                    missingWeeksCurrentYear,
+                    period
+                  )
+              : (array, index) =>
+                  calculatePreviousYearOffset(
+                    array,
+                    index,
+                    missingWeeksPreviousYears[year],
+                    period
+                  );
           break;
         case "Quarterly":
           period = "quarterly";
-          if (uniqueQuarters) {
-            const quarterIndex =
-              uniqueQuarters.length - 1 - uniqueQuarters.indexOf(item);
-
-            offset = calculateOffset(
-              uniqueQuarters,
-              quarterIndex,
-              year === currentYear
-            );
-          }
+          optionsArray = uniqueQuartersByYear[year] || quarters;
+          offsetCalculationFn =
+            year === currentYear
+              ? (array, index) =>
+                  calculateCurrentYearOffset(
+                    array,
+                    index,
+                    missingQuartersCurrentYear,
+                    period
+                  )
+              : (array, index) =>
+                  calculatePreviousYearOffset(
+                    array,
+                    index,
+                    missingQuartersPreviousYears[year],
+                    period
+                  );
           break;
         default:
           break;
+      }
+
+      if (optionsArray.length > 0) {
+        const itemIndex = optionsArray.indexOf(item);
+        offset = offsetCalculationFn(optionsArray, itemIndex);
       }
     }
 
     return { year, period, offset };
   };
 
-  const calculateOffset = (optionsArray, currentIndex) => {
-    if (currentIndex === -1) return 0;
-    const remainingOptions = optionsArray.slice(currentIndex + 1);
-
-    if (remainingOptions.length === 0) return 0;
-
-    let offset = 0;
-    for (let i = 0; i < optionsArray.length; i++) {
-      if (i > currentIndex && !remainingOptions.includes(optionsArray[i])) {
-        offset += 1;
-      } else if (i > currentIndex) {
-        offset = remainingOptions.indexOf(optionsArray[i]) + 1;
+  const calculateCurrentYearOffset = (
+    optionsArray,
+    currentIndex,
+    missingOptionCurrentYear,
+    offsetType = "monthly"
+  ) => {
+    // Combine optionsArray with missingOptionCurrentYear and sort them in sequence
+    const combinedOptions = [...optionsArray, ...missingOptionCurrentYear].sort(
+      (a, b) => {
+        if (offsetType === "monthly") {
+          return months.indexOf(a) - months.indexOf(b);
+        } else if (offsetType === "weekly") {
+          return weeks.indexOf(a) - weeks.indexOf(b);
+        } else if (offsetType === "quarterly") {
+          return quarters.indexOf(a) - quarters.indexOf(b);
+        }
+        return 0;
       }
-    }
+    );
+
+    // Get the updated index of the selected option in the combined array
+    const updatedCurrentIndex = combinedOptions.indexOf(
+      optionsArray[currentIndex]
+    );
+
+    // Calculate the offset based on the combined array
+    if (updatedCurrentIndex === -1) return 0;
+
+    const totalOptions = combinedOptions.length;
+    const offset = totalOptions - 1 - updatedCurrentIndex;
 
     return offset;
   };
+
+  const calculatePreviousYearOffset = (
+    optionsArray,
+    currentIndex,
+    missingOptionPreviousYear,
+    offsetType = "monthly" // Default to "monthly" if not specified
+  ) => {
+    let offsetMap;
+    switch (offsetType) {
+      case "monthly":
+        offsetMap = monthOffsets;
+        break;
+      case "weekly":
+        offsetMap = weekOffsets;
+        break;
+      case "quarterly":
+        offsetMap = quarterOffsets;
+        break;
+      default:
+        throw new Error("Invalid offset type");
+    }
+
+    if (currentIndex === -1) return 0;
+
+    const currentOption = optionsArray[currentIndex];
+    const offset = offsetMap[currentOption] || 0;
+
+    return offset;
+  };
+
   useEffect(() => {
     fetchEffortData();
-  }, [project_id]);
-
-  useEffect(() => {
-    const checkIfLifetimeShouldBeActive = () => {
-      if (!effortsListData) return;
-
-      const currentYear = new Date().getFullYear();
-      const currentMonth = months[new Date().getMonth()];
-      const currentWeek = `Week ${getISOWeek(new Date())}`;
-      const currentQuarter = getCurrentQuarter();
-
-      const hasCurrentMonth = effortsListData.some((effort) => {
-        const createdDate = new Date(effort.created_at);
-        const month = months[createdDate.getMonth()];
-        return `${currentYear}-${month}` === `${currentYear}-${currentMonth}`;
-      });
-
-      const hasCurrentWeek = effortsListData.some((effort) => {
-        const createdDate = new Date(effort.created_at);
-        const week = `Week ${getISOWeek(createdDate)}`;
-        return `${currentYear}-${week}` === `${currentYear}-${currentWeek}`;
-      });
-
-      const hasCurrentQuarter = effortsListData.some((effort) => {
-        const createdDate = new Date(effort.created_at);
-        const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
-        return `${currentYear}-${quarter}` === currentQuarter;
-      });
-
-      setLifetime(!(hasCurrentMonth || hasCurrentWeek || hasCurrentQuarter));
-      fetchData();
-    };
-
-    checkIfLifetimeShouldBeActive();
-  }, [effortsListData, project_id, selectedOption, selectedOptionItem]);
+    fetchData();
+  }, [project_id, selectedOption, selectedOptionItem, lifetime]);
 
   // Function to toggle the dropdown
   const toggleDropdown = () => {
@@ -292,18 +447,69 @@ const Insight = () => {
 
     switch (option) {
       case "Monthly":
-        setSelectedOptionItem(
-          `${new Date().getFullYear()}-${months[new Date().getMonth()]}`
-        );
+        const availableMonths = effortsListData
+          .filter(
+            (effort) =>
+              new Date(effort.created_at).getFullYear() ===
+              new Date().getFullYear()
+          )
+          .map((effort) => months[new Date(effort.created_at).getMonth()]);
+        if (availableMonths.includes(`${months[new Date().getMonth()]}`)) {
+          setSelectedOptionItem(
+            `${new Date().getFullYear()}-${months[new Date().getMonth()]}`
+          );
+        } else {
+          setSelectedOptionItem(
+            `${new Date().getFullYear()}-${
+              availableMonths[availableMonths.length - 1]
+            }`
+          );
+        }
         break;
+
       case "Weekly":
-        setSelectedOptionItem(
-          `${new Date().getFullYear()}-Week ${getISOWeek(new Date())}`
-        );
+        const availableWeeks = effortsListData
+          .filter(
+            (effort) =>
+              new Date(effort.created_at).getFullYear() ===
+              new Date().getFullYear()
+          )
+          .map((effort) => `Week ${getISOWeek(new Date(effort.created_at))}`);
+        if (availableWeeks.includes(`Week ${getISOWeek(new Date())}`)) {
+          setSelectedOptionItem(
+            `${new Date().getFullYear()}-Week ${getISOWeek(new Date())}`
+          );
+        } else {
+          setSelectedOptionItem(
+            `${new Date().getFullYear()}-${
+              availableWeeks[availableWeeks.length - 1]
+            }`
+          );
+        }
         break;
+
       case "Quarterly":
-        setSelectedOptionItem(getCurrentQuarter());
+        const availableQuarters = effortsListData
+          .filter(
+            (effort) =>
+              new Date(effort.created_at).getFullYear() ===
+              new Date().getFullYear()
+          )
+          .map(
+            (effort) =>
+              `Q${Math.ceil((new Date(effort.created_at).getMonth() + 1) / 3)}`
+          );
+        if (availableQuarters.includes(getCurrentQuarter())) {
+          setSelectedOptionItem(getCurrentQuarter());
+        } else {
+          setSelectedOptionItem(
+            `${new Date().getFullYear()}-${
+              availableQuarters[availableQuarters.length - 1]
+            }`
+          );
+        }
         break;
+
       default:
         setSelectedOptionItem(null);
         break;
