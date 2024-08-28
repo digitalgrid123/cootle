@@ -3,16 +3,47 @@ import PropTypes from "prop-types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const Navbar = ({ disableGetStarted, onLogin, onSignup, disableLogin }) => {
+const Navbar = ({
+  disableGetStarted,
+  onLogin,
+  onSignup,
+  disableLogin,
+  showContent,
+  setShowContent,
+}) => {
   const [hovered, setHovered] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
+
   const [closing, setClosing] = useState(false);
-  const [isIphoneOrIpad, setIsIphoneOrIpad] = useState(false);
+
+  const [isMobileScreen, setIsMobileScreen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
-    setIsIphoneOrIpad(/iPhone|iPad/i.test(navigator.userAgent));
+    const handleResize = () => {
+      setIsMobileScreen(window.innerWidth <= 768);
+    };
+
+    handleResize(); // Check initial screen size
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
+  useEffect(() => {
+    // Handle body scroll based on overlay and content state
+    if (showContent || showOverlay) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    // Clean up on component unmount or when states change
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showContent, showOverlay]);
 
   const handleButtonClick = () => {
     setShowOverlay(true);
@@ -23,22 +54,35 @@ const Navbar = ({ disableGetStarted, onLogin, onSignup, disableLogin }) => {
     setClosing(true);
     setTimeout(() => {
       setShowOverlay(false);
+      setShowContent(false);
       setClosing(false);
     }, 500); // Match this duration with the CSS animation duration
   };
 
-  const shouldShowLoginButton = () => {
-    if (isIphoneOrIpad) {
-      return pathname === "/signup" || pathname === "/authentication";
+  const handleLoginClick = () => {
+    if (isMobileScreen) {
+      setShowContent(true);
+      return;
     }
-    return true;
+    if (onLogin) onLogin();
+  };
+
+  const handleGetStartedClick = () => {
+    if (isMobileScreen) {
+      setShowContent(true);
+      return;
+    }
+    if (onSignup) onSignup();
+  };
+
+  const shouldShowLoginButton = () => {
+    return isMobileScreen
+      ? pathname === "/signup" || pathname === "/authentication"
+      : true;
   };
 
   const shouldShowGetStartedButton = () => {
-    if (isIphoneOrIpad) {
-      return pathname === "/login";
-    }
-    return true;
+    return isMobileScreen ? pathname === "/login" : true;
   };
 
   return (
@@ -52,16 +96,19 @@ const Navbar = ({ disableGetStarted, onLogin, onSignup, disableLogin }) => {
                 <h4 className="cootle-text m-0 weight-500">Cootle</h4>
               </Link>
               <div className="nav_cootle">
-                <h2 className="weight-500 hide-on-small-devices ">
+                <h2 className="weight-500 hide-on-small-devices">
                   Contact sales
                 </h2>
                 {shouldShowLoginButton() && (
-                  <button disabled={disableLogin} onClick={onLogin}>
+                  <button disabled={disableLogin} onClick={handleLoginClick}>
                     <span className="weight-500">Log in</span>
                   </button>
                 )}
                 {shouldShowGetStartedButton() && (
-                  <button disabled={disableGetStarted} onClick={onSignup}>
+                  <button
+                    disabled={disableGetStarted}
+                    onClick={handleGetStartedClick}
+                  >
                     <span className="weight-500">Get started for free</span>
                   </button>
                 )}
@@ -87,7 +134,7 @@ const Navbar = ({ disableGetStarted, onLogin, onSignup, disableLogin }) => {
           </div>
         </div>
       </div>
-      {showOverlay && (
+      {(showContent || showOverlay) && (
         <div className={`overlay ${closing ? "closing" : ""}`}>
           <div className="d-flex align-items-center justify-content-between pt-24 overlay-header">
             <div>
@@ -105,16 +152,39 @@ const Navbar = ({ disableGetStarted, onLogin, onSignup, disableLogin }) => {
               />
             </button>
           </div>
-          <div className="navigations-parameters">
-            <button className="nav-button" onClick={onLogin}>
-              <span>Log in</span>
-            </button>
-            <button className="nav-button" onClick={onSignup}>
-              <span>Get Started</span>
-            </button>
-            <button className="contact-sales">
-              <h2>Contact sales</h2>
-            </button>
+          <div>
+            {showContent ? (
+              <div className="navigations-paragraphs">
+                <p className="greet-text">Hey there! </p>
+                <p className="notify-text">
+                  Cootle isn't quite ready to shine on your mobile device just
+                  yet, we're working hard on a mobile-friendly version that will
+                  be here soon.
+                </p>
+                <p className="notify-text">
+                  In the meantime, to get the full Cootle experience, we
+                  recommend using a desktop or laptop browser
+                </p>
+                <p className="notify-text">
+                  For any questions or feedback, feel free to shoot us an email
+                  at support@cootle.com.{" "}
+                </p>
+                <p className="notify-text">We'd love to hear from you!</p>
+                <p className="check-text">Thanks for checking on us.</p>
+              </div>
+            ) : (
+              <div className="navigations-parameters">
+                <button className="nav-button" onClick={handleLoginClick}>
+                  <span>Log in</span>
+                </button>
+                <button className="nav-button" onClick={handleGetStartedClick}>
+                  <span>Get Started</span>
+                </button>
+                <button className="contact-sales">
+                  <h2>Contact sales</h2>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

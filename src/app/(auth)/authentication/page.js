@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PageTitle from "@/components/shared/PageTitle";
 import { useRouter } from "next/navigation";
 import { PATH_AUTH } from "@/routes/paths";
@@ -8,18 +8,45 @@ import Navbar from "@/layouts/dashboard/header/Navbar";
 
 const AuthPage = () => {
   const { push } = useRouter();
+  const [isMobile, setIsMobile] = useState(false);
+  const [showContent, setShowContent] = useState(false);
 
-  const handleNavigation = (path) => () => push(path);
+  // Update the isMobile state based on the viewport width
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); // Adjust this threshold as needed
+    };
+
+    // Set initial state
+    handleResize();
+
+    // Attach event listener
+    window.addEventListener("resize", handleResize);
+
+    // Clean up event listener
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const handleNavigation = (path) => (event) => {
+    if (isMobile) {
+      setShowContent(true);
+      event.preventDefault(); // Prevent navigation on mobile
+    } else {
+      push(path);
+    }
+  };
 
   return (
     <>
       <PageTitle title="Authentication" />
       <Navbar
+        showContent={showContent}
+        setShowContent={setShowContent}
         disableGetStarted={false}
         onLogin={handleNavigation(PATH_AUTH.login)}
         onSignup={handleNavigation(PATH_AUTH.signup)}
       />
-      <section className="bg-main">
+      <section className="bg-main min-vh-100">
         <div className="container-fluid">
           <div className="row">
             <div className="col-lg-8 offset-lg-2">
@@ -39,7 +66,7 @@ const AuthPage = () => {
                       className="arrow-img"
                     />
                   </span>
-                  <span>
+                  <span className="span-started_btn">
                     <button
                       className="started_btn weight-500"
                       onClick={handleNavigation(PATH_AUTH.signup)}

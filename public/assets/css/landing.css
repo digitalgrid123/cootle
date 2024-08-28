@@ -137,7 +137,7 @@
 /* iPhone 14 / 15 (Standard and Plus) */
 @media only screen and (min-device-width: 375px) and (max-device-width: 430px) and (-webkit-min-device-pixel-ratio: 3) {
   .bg-main {
-    height: 100vh;
+    overflow: hidden;
   }
   .auth_main_heading {
     font-size: 28px;
@@ -145,7 +145,7 @@
     text-align: left;
   }
   .heading {
-    padding: 134px 15px 0 15px;
+    padding: 134px 8px 0 8px;
   }
   .arrow-img {
     display: none;
@@ -179,7 +179,6 @@
 /* iPhone 14 Pro Max / 15 Pro Max */
 @media only screen and (min-device-width: 428px) and (max-device-width: 430px) and (-webkit-min-device-pixel-ratio: 3) {
   .bg-main {
-    height: 100vh;
     overflow: hidden;
   }
   .auth_main_heading {
@@ -232,5 +231,48 @@
   .software-icon {
     width: 885px !important;
     max-width: none;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .span-started_btn {
+    width: 100%;
+  }
+  .bg-main {
+    overflow: hidden;
+  }
+  .auth_main_heading {
+    font-size: 28px;
+    line-height: 32px;
+    text-align: left;
+  }
+  .heading {
+    padding: 134px 8px 0 8px;
+  }
+  .arrow-img {
+    display: none;
+  }
+  .started_btn {
+    width: 100%;
+    margin-left: 0;
+    padding: 12px 34px;
+    line-height: 24.2px;
+    font-size: 20px;
+  }
+  .img-software {
+    padding-top: 40px;
+  }
+  .software-icon {
+    width: 670px !important;
+    max-width: none;
+  }
+  .thanks-text {
+    font-size: 35px;
+    margin-top: 33px;
+  }
+  .padding-24 {
+    padding: 0 24px;
+  }
+  .verify-heading {
+    font-size: 42px;
   }
 }
