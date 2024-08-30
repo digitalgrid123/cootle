@@ -7,6 +7,9 @@ let globalState = {
 };
 
 export const setSelectedCompany = (company) => {
+  // Check if the company is already set to avoid redundant updates
+  if (globalState.selectedCompany?.id === company?.id) return;
+
   globalState.selectedCompany = company;
   globalState.listeners.forEach((listener) => listener(company));
 };
@@ -33,15 +36,15 @@ export const useGlobalCompany = () => {
     isCurrentCompanyUpdated.current = false;
   }, [company?.id]);
 
-  // Fetch member details after company is set
+  // Fetch company data and member details if needed
   useEffect(() => {
     const fetchCompanyData = async () => {
       if (company && company.id && !isCurrentCompanyUpdated.current) {
         try {
           const res = await companyset(company.id);
           if (res && res.data) {
-            await fetchMember(); // Ensure fetchMember is an async function
             const updatedCompany = { ...company };
+            await fetchMember(); // Ensure fetchMember is an async function
             setSelectedCompany(updatedCompany);
             isCurrentCompanyUpdated.current = true;
           }
@@ -66,8 +69,6 @@ export const useGlobalCompany = () => {
     }
   };
 
-  // Optionally set an interval if you need periodic fetching
-  // Uncomment and adjust if needed
   useEffect(() => {
     if (company) {
       const intervalId = setInterval(fetchMember, 15000);

@@ -2,6 +2,7 @@ import CompanyLogo from "@/components/Dashboard/CompanyLogo";
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 import { useAuth, useToaster } from "@/hooks";
 import { useSharedState } from "@/hooks/useSharedState";
+import eventBus from "@/utils/eventBus";
 import React, { useEffect, useState } from "react";
 
 const InvitationModel = ({ showPopup, next, contentRef, setShowPopup }) => {
@@ -43,6 +44,7 @@ const InvitationModel = ({ showPopup, next, contentRef, setShowPopup }) => {
         return toaster(TOAST_ALERTS.GENERAL_ERROR, TOAST_TYPES.ERROR);
       }
       toaster(res?.message, TOAST_TYPES.SUCCESS);
+      eventBus.emit("Accepted");
       setcompany(res);
       setShowPopup(false);
     } catch (error) {

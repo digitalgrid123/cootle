@@ -8,6 +8,7 @@ import ArchivedEffortsModal from "@/components/shared/model/ArchivedEffortsModal
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 import "../../../../public/assets/css/quill.css";
+import eventBus from "@/utils/eventBus";
 
 const EffortMapping = ({
   reset,
@@ -30,11 +31,24 @@ const EffortMapping = ({
   const [editDescription, setEditDescription] = useState("");
   const [archivedDesignEfforts, setArchivedDesignEfforts] = useState([]);
 
-  const selectedCompany = useGlobalCompany();
-
   useEffect(() => {
     fetchCategories();
   }, [reset]);
+  useEffect(() => {
+    fetchCategories();
+
+    const handleCompanyCreated = () => {
+      fetchCategories(); // Refresh company list when a new company is created
+    };
+
+    eventBus.on("companyCreated", handleCompanyCreated);
+    eventBus.on("Accepted", handleCompanyCreated);
+
+    return () => {
+      eventBus.off("companyCreated", handleCompanyCreated);
+      eventBus.off("Accepted", handleCompanyCreated);
+    };
+  }, []);
 
   const fetchCategories = async () => {
     setLoading(true);

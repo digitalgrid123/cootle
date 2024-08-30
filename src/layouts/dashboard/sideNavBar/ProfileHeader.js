@@ -14,22 +14,25 @@ const ProfileHeader = () => {
   useEffect(() => {
     const fetchUserinfo = async () => {
       const res = await userinfo();
-
       if (res && res.status) {
         setUser(res.data);
       }
     };
-
     fetchUserinfo();
   }, [userinfo, useradd]);
 
-  const toggleDropdown = () => {
+  const toggleDropdown = (event) => {
+    event.stopPropagation(); // Prevent click event from bubbling up
     setDropdownOpen((prev) => !prev);
+    if (popupOpen) {
+      setPopupOpen(false);
+      document.body.style.overflow = "auto";
+    }
   };
 
   const togglePopup = () => {
     setPopupOpen((prev) => !prev);
-    setDropdownOpen(false);
+    setDropdownOpen(false); // Ensure the dropdown closes when opening the popup
     document.body.style.overflow = popupOpen ? "auto" : "hidden";
   };
 
@@ -58,7 +61,7 @@ const ProfileHeader = () => {
   return (
     <>
       <div
-        className="metismenu-profile bottom-profile d-flex align-items-center flex-row cursor-pointer justify-content-between border_top-white "
+        className="metismenu-profile bottom-profile d-flex align-items-center flex-row cursor-pointer justify-content-between border_top-white"
         onClick={toggleDropdown}
       >
         <div className="d-flex align-items-center gap-2">
@@ -75,13 +78,15 @@ const ProfileHeader = () => {
             />
           </div>
           <div>
-            <h1 className="profile-name weight-400">
+            <h1 className="profile-name weight-400 hide-on-small-screen">
               {isValidFullName(user?.fullname) ? user.fullname : ""}
             </h1>
-            <p className="profile-email m-0 weight-400 ">{user?.email}</p>
+            <p className="profile-email m-0 weight-400 hide-on-small-screen">
+              {user?.email}
+            </p>
           </div>
         </div>
-        <div>
+        <div onClick={toggleDropdown}>
           <img
             src="/assets/images/mark/dropdown.svg"
             alt="dropdown-icon"
@@ -99,7 +104,7 @@ const ProfileHeader = () => {
             My account setting
           </h2>
           <div
-            className=" border-profile d-flex align-items-center justify-content-between w-100 border_bottom_bluish"
+            className="border-profile d-flex align-items-center justify-content-between w-100 border_bottom_bluish"
             onClick={togglePopup}
           >
             <div className="profile-setting_container">
@@ -113,7 +118,7 @@ const ProfileHeader = () => {
               <img src="/assets/images/mark/arrowright.svg" alt="arrow-right" />
             </div>
           </div>
-          <div className="logout_container cursor-pointer " onClick={logout}>
+          <div className="logout_container cursor-pointer" onClick={logout}>
             <img src="/assets/images/mark/logout.svg" alt="logout" />
             <h1 className="logout-text weight-500">Logout</h1>
           </div>

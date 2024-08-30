@@ -4,6 +4,7 @@ import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 import { PATH_DASHBOARD } from "@/routes/paths";
 import { useRouter } from "next/navigation";
 import { useGlobalCompany } from "@/utils/globalState";
+import eventBus from "@/utils/eventBus";
 
 const NewCreateModel = ({ activeTab, setShowPopup, showPopup }) => {
   const { createcompany, setcompany } = useAuth();
@@ -74,6 +75,7 @@ const NewCreateModel = ({ activeTab, setShowPopup, showPopup }) => {
       if (response.status) {
         toaster(response.message, TOAST_TYPES.SUCCESS);
         push(PATH_DASHBOARD.createcompany.root);
+        eventBus.emit("companyCreated");
         setcompany(response);
         setShowPopup(true);
       } else {

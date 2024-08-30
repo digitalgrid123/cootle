@@ -1,17 +1,34 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNotifications } from "@/hooks";
-import Link from "next/link";
-import { PATH_DASHBOARD } from "@/routes/paths";
 import NotificationModel from "@/components/shared/model/NotificationModel";
 
 const SidebarHeader = () => {
-  const { count } = useNotifications(); // Get the count of unread notifications
-  const [isDropdownOpen, setDropdownOpen] = useState(false); // State to manage the dropdown
-  const dropdownRef = useRef(null); // Ref for the dropdown element
+  const { count } = useNotifications();
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const [logoSrc, setLogoSrc] = useState("/assets/images/mark/logo.svg");
 
   const handleBellClick = () => {
-    setDropdownOpen((prev) => !prev); // Toggle dropdown state
+    setDropdownOpen((prev) => !prev);
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1075) {
+        setLogoSrc("/assets/images/mark/mobile-logo.svg");
+      } else {
+        setLogoSrc("/assets/images/mark/logo.svg");
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -27,10 +44,10 @@ const SidebarHeader = () => {
   }, []);
 
   return (
-    <div className="sidebar-header mt-24 ">
+    <div className="sidebar-header mt-24">
       <div className="pb-24 d-flex align-items-center justify-content-between w-100 border_bottom_Light">
         <div className="cootle-container">
-          <img src="/assets/images/mark/logo.svg" alt="logo" />
+          <img src={logoSrc} alt="logo" />
         </div>
 
         <div

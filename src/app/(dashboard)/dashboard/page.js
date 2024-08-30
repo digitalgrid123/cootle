@@ -7,6 +7,7 @@ import InvitationModel from "@/components/shared/model/InvitationModel";
 import CreateNewModel from "@/components/shared/model/CreateNewModel";
 import MainMap from "@/components/Dashboard/valuemapping/MainMap";
 import { useGlobalCompany } from "@/utils/globalState";
+import eventBus from "@/utils/eventBus";
 
 const Dashboard = () => {
   const { userinfo, logout } = useAuth();
@@ -52,6 +53,29 @@ const Dashboard = () => {
   const next = () => {
     setCurrentTab((prev) => prev + 1);
   };
+  useEffect(() => {
+    const handleCheckSelectedCompany = () => {
+      if (!selectedCompany || selectedCompany.length === 0) {
+        setShowPopup(true);
+        setCurrentTab(2);
+      }
+    };
+
+    const timeoutId = setTimeout(() => {
+      handleCheckSelectedCompany();
+    }, 5000);
+
+    const handleCompanyCreated = () => {
+      handleCheckSelectedCompany();
+    };
+
+    eventBus.on("companyCreated", handleCompanyCreated);
+
+    return () => {
+      clearTimeout(timeoutId);
+      eventBus.off("companyCreated", handleCompanyCreated);
+    };
+  }, [selectedCompany]);
 
   // Render the current tab based on currentTab state
   const renderCurrentTab = (activeTab) => {

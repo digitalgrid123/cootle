@@ -4,6 +4,7 @@ import { useAuth, useToaster, useTabs } from "@/hooks";
 import { useGlobalCompany } from "@/utils/globalState";
 import PaginationComponent from "../table/Pagination";
 import { useSharedState } from "@/hooks/useSharedState";
+import eventBus from "@/utils/eventBus";
 
 const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
   const { toaster } = useToaster();
@@ -135,6 +136,7 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
       if (response.status) {
         toaster(response.message, TOAST_TYPES.SUCCESS);
         setFetchTrigger((prev) => !prev);
+        eventBus.emit("companyCreated");
       } else {
         toaster(response.message, TOAST_TYPES.ERROR);
       }

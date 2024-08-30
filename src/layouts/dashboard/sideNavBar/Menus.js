@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks";
 import { PATH_DASHBOARD } from "@/routes/paths";
@@ -11,8 +17,9 @@ import InvitationList from "@/components/shared/model/InvitationList";
 import { USER_ROLES } from "@/constants/keywords";
 import { getData, saveData } from "@/utils/storage";
 import NewProjectModal from "@/components/shared/model/NewProjectModal";
+import eventBus from "@/utils/eventBus";
 
-const Menus = () => {
+const Menus = ({ isSmallScreen }) => {
   const { companylist, projectlist } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -30,28 +37,40 @@ const Menus = () => {
   const [activeMenuItem, setActiveMenuItem] = useState("");
   const [hasScrollbar, setHasScrollbar] = useState(false);
 
-  useEffect(() => {
-    const fetchCompanyList = async () => {
-      try {
-        const res = await companylist();
-        if (res?.status) {
-          setCompanyList(res.data);
-          const savedCompany = localStorage.getItem("selectedCompany");
-          if (savedCompany) {
-            const parsedCompany = JSON.parse(savedCompany);
-            setSelectedCompany(parsedCompany);
-          } else {
-            setSelectedCompany(res.data[res.data.length - 1]);
-          }
+  const fetchCompanyList = async () => {
+    try {
+      const res = await companylist();
+      if (res?.status) {
+        setCompanyList(res.data);
+        const savedCompany = localStorage.getItem("selectedCompany");
+        if (savedCompany) {
+          const parsedCompany = JSON.parse(savedCompany);
+          setSelectedCompany(parsedCompany);
         } else {
-          console.error("Failed to fetch company list");
+          setSelectedCompany(res.data[res.data.length - 1]);
         }
-      } catch (err) {
-        console.error("Error fetching company list:", err);
+      } else {
+        console.error("Failed to fetch company list");
       }
+    } catch (err) {
+      console.error("Error fetching company list:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCompanyList();
+
+    const handleCompanyCreated = () => {
+      fetchCompanyList(); // Refresh company list when a new company is created
     };
 
-    fetchCompanyList();
+    eventBus.on("companyCreated", handleCompanyCreated);
+    eventBus.on("Accepted", handleCompanyCreated);
+
+    return () => {
+      eventBus.off("companyCreated", handleCompanyCreated);
+      eventBus.off("Accepted", handleCompanyCreated);
+    };
   }, []);
 
   const fetchProjectList = useCallback(async () => {
@@ -101,10 +120,12 @@ const Menus = () => {
 
   const handleSelect = useCallback(
     (path) => {
-      setActiveMenuItem(path);
-      router.push(path);
+      if (router.pathname !== path) {
+        setActiveMenuItem(path);
+        router.push(path);
+      }
     },
-    [router]
+    [router, setActiveMenuItem]
   );
 
   const handleCompanySelect = useCallback(
@@ -138,24 +159,26 @@ const Menus = () => {
         />
       ));
 
-  const renderProjectList = () => {
-    // Reverse the projectList array to display the latest project first
-    const reversedProjectList = projectList.slice().reverse();
+  const reversedProjectList = useMemo(
+    () => projectList.slice().reverse(),
+    [projectList]
+  );
 
-    return reversedProjectList.map((project) => {
+  const renderProjectList = () => {
+    return reversedProjectList.map((project, index) => {
       const projectPath = PATH_DASHBOARD.project.view(project.id, project.name);
-      // Extract the base path without query parameters
       const projectBasePath = projectPath.split("?")[0];
       const isActive = pathname.startsWith(projectBasePath);
+
+      const displayName = isSmallScreen ? `p${index + 1}` : project.name;
       return (
         <ProjectListItem
           key={project.id}
-          project={project}
+          project={{ ...project, name: displayName }}
           isActive={isActive}
+          isSmallScreen={isSmallScreen}
           fetchProjectList={fetchProjectList}
-          onClick={() =>
-            handleSelect(PATH_DASHBOARD.project.view(project.id, project.name))
-          }
+          onClick={() => handleSelect(projectPath)}
         />
       );
     });
@@ -200,8 +223,8 @@ const Menus = () => {
       window.removeEventListener("resize", adjustHeight);
       observer.disconnect(); // Clean up the observer
     };
-  }, []);
-
+  }, [projectList]);
+  const gapValue = isSmallScreen ? "11px" : "";
   return (
     <>
       <ul className="metismenu border_bottom_Light" id="menu">
@@ -212,13 +235,16 @@ const Menus = () => {
               dropdownOpen ? "active-dropdown" : ""
             }`}
           >
-            <div className="d-flex align-items-center justify-content-between w-100">
+            <div
+              className={`d-flex align-items-center justify-content-between w-100 `}
+              style={{ gap: gapValue }}
+            >
               <div className="d-flex align-items-center gap-2">
                 <CompanyLogo
                   logo={selectedCompany.logo}
                   name={selectedCompany.name}
                 />
-                <h4 className="company-name weight-400">
+                <h4 className="company-name weight-400 hide-on-small-screen">
                   {truncateCompanyName(selectedCompany.name, 10)}
                 </h4>
               </div>
@@ -286,7 +312,11 @@ const Menus = () => {
         <div className="d-flex w-100 flex-column gap-3">
           {isAdmin && (
             <li
-              className={`d-flex align-items-center justify-content-start gap-3 cursor-pointer w-100 padding-lr-sixteen ${
+              className={`d-flex align-items-center ${
+                isSmallScreen
+                  ? "justify-content-center"
+                  : "justify-content-start"
+              }  gap-3 cursor-pointer w-100 padding-lr-sixteen ${
                 activeMenuItem === PATH_DASHBOARD.createcompany.root ||
                 pathname === PATH_DASHBOARD.createcompany.edit
                   ? "navigate-select"
@@ -304,11 +334,15 @@ const Menus = () => {
                 style={{ width: "24px" }}
                 alt="company-icon"
               />
-              <h4 className="mapping f-16 weight-400">Company</h4>
+              <h4 className="mapping f-16 weight-400 hide-on-small-screen">
+                Company
+              </h4>
             </li>
           )}
           <li
-            className={`d-flex align-items-center justify-content-start gap-3 cursor-pointer w-100 padding-lr-sixteen ${
+            className={`d-flex align-items-center ${
+              isSmallScreen ? "justify-content-center" : "justify-content-start"
+            } gap-3 cursor-pointer w-100 padding-lr-sixteen ${
               activeMenuItem === PATH_DASHBOARD.root ? "navigate-select" : ""
             }`}
             onClick={() => handleSelect(PATH_DASHBOARD.root)}
@@ -322,7 +356,9 @@ const Menus = () => {
               style={{ width: "24px" }}
               alt="Value Mapping"
             />
-            <span className="mapping f-16 weight-400">Value mapping</span>
+            <span className="mapping f-16 weight-400 hide-on-small-screen">
+              Value mapping
+            </span>
           </li>
         </div>
       </ul>
@@ -332,7 +368,7 @@ const Menus = () => {
       >
         {isAdmin && (
           <li
-            className="d-flex align-items-center justify-content-start gap-3 cursor-pointer w-100 mb-16 padding-lr-sixteen"
+            className="d-flex align-items-center justify-content-start gap-3 cursor-pointer w-100 mb-16 padding-lr-sixteen no-padding-lr "
             onClick={() => togglePopup(setShowProjectPopup)}
           >
             <img
@@ -340,7 +376,9 @@ const Menus = () => {
               style={{ width: "20px" }}
               alt="New Project"
             />
-            <span className="project weight-400">New Project</span>
+            <span className="project weight-400">
+              {isSmallScreen ? "Project" : "New Project"}
+            </span>
           </li>
         )}
 

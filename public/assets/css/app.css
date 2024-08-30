@@ -2877,7 +2877,42 @@ textarea {
     padding-top: 270px;
   }
 }
-@media (min-width: 992px) and (max-width: 1199px) {
+
+@media (max-width: 1075px) {
+  .dropdown {
+    position: fixed;
+
+    width: 270px !important;
+  }
+  .no-padding-lr {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .hide-on-small-screen {
+    display: none;
+  }
+  .sidebar-wrapper {
+    width: 140px !important;
+  }
+  .sidebar-header {
+    width: 140px !important;
+    padding: 0px 24px 0 24px !important;
+  }
+  .page-wrapper {
+    margin-left: 140px !important;
+  }
+  .sidebar-wrapper .metismenu {
+    margin: 116px 17px 20px 24px !important;
+  }
+  .projects-menu-scroll {
+    margin: 28px 5px 0px 24px !important;
+  }
+  .bottom-profile {
+    width: auto;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
   .select-outcome-text {
     font-size: 14px;
   }
