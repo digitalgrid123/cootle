@@ -130,8 +130,8 @@ const Menus = ({ isSmallScreen }) => {
 
   const handleCompanySelect = useCallback(
     (company) => {
-      fetchProjectList();
       setSelectedCompany(company);
+      fetchProjectList();
       localStorage.setItem("selectedCompany", JSON.stringify(company));
       setActiveMenuItem(PATH_DASHBOARD.root);
       router.push(PATH_DASHBOARD.root);
