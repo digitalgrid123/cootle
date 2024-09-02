@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 import { useAuth, useToaster } from "@/hooks";
+import { toggleBodyScroll } from "@/utils/scrollUtils";
 
 const formSchema = yup.object().shape({
   fullname: yup
@@ -62,11 +63,7 @@ const UserModel = ({
     }
   };
   useEffect(() => {
-    if (showPopup) {
-      document.body.classList.add("no-scroll");
-    } else {
-      document.body.classList.remove("no-scroll");
-    }
+    toggleBodyScroll(showPopup);
   }, [showPopup]);
 
   return (

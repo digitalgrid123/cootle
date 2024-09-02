@@ -24,6 +24,15 @@ const NewPurposeSection = ({
     return null;
   }
 
+  const areAllFieldsFilled = () => {
+    return (
+      newPurposeTitle.trim() !== "" &&
+      newPurposeDescription.trim() !== "" &&
+      selectedProductOutcomes.length > 0 &&
+      selectedDesignEfforts.length > 0
+    );
+  };
+  const tooltipText = "All info must be filled";
   return (
     <div className="new-purpose-create w-100">
       <div className="responsive-container border_bottom_lavender-blush pb-16 d-flex align-items-center justify-content-between w-100">
@@ -63,7 +72,12 @@ const NewPurposeSection = ({
             <button className="close_effort_btn" onClick={onToggleNewPurpose}>
               <span>Cancel</span>
             </button>
-            <button className="save_effort_btn" onClick={handleSavePurpose}>
+            <button
+              className="save_effort_btn"
+              onClick={handleSavePurpose}
+              disabled={!areAllFieldsFilled()}
+              title={!areAllFieldsFilled() ? tooltipText : ""}
+            >
               <span>Save</span>
             </button>
           </div>

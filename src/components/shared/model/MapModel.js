@@ -1,6 +1,7 @@
 import CompanyLogo from "@/components/Dashboard/CompanyLogo";
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 import { useAuth, useToaster } from "@/hooks";
+import { toggleBodyScroll } from "@/utils/scrollUtils";
 import React, { useEffect, useState, useRef } from "react";
 
 const MapModel = ({
@@ -72,11 +73,7 @@ const MapModel = ({
   };
 
   useEffect(() => {
-    if (dropdownOpen) {
-      document.body.classList.add("no-scroll");
-    } else {
-      document.body.classList.remove("no-scroll");
-    }
+    toggleBodyScroll(dropdownOpen);
   }, [dropdownOpen]);
 
   return (

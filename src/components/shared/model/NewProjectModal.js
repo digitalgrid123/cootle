@@ -1,6 +1,7 @@
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 import { useAuth, useToaster } from "@/hooks";
 import useOutsideClick from "@/hooks/useOutsideClick";
+import { toggleBodyScroll } from "@/utils/scrollUtils";
 import React, { useEffect, useRef, useState } from "react";
 
 const NewProjectModal = ({
@@ -49,11 +50,7 @@ const NewProjectModal = ({
   };
 
   useEffect(() => {
-    if (showProjectPopup) {
-      document.body.classList.add("no-scroll");
-    } else {
-      document.body.classList.remove("no-scroll");
-    }
+    toggleBodyScroll(showProjectPopup);
   }, [showProjectPopup]);
 
   return (
@@ -72,7 +69,11 @@ const NewProjectModal = ({
                 >
                   <span>Close</span>
                 </button>
-                <button className="save_effort_btn" onClick={handleSave}>
+                <button
+                  className="save_effort_btn"
+                  onClick={handleSave}
+                  disabled={projectName.trim() === ""}
+                >
                   <span>Save</span>
                 </button>
               </div>

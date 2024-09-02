@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useAuth } from "@/hooks"; // Assuming useAuth is still needed
 import LinkModel from "./LinkModel";
+import { toggleBodyScroll } from "@/utils/scrollUtils";
 
 const CombinedEffortModel = ({
   dropdownOpen,
@@ -357,13 +358,8 @@ const CombinedEffortModel = ({
       </div>
     ));
   };
-
   useEffect(() => {
-    if (dropdownOpen) {
-      document.body.classList.add("no-scroll");
-    } else {
-      document.body.classList.remove("no-scroll");
-    }
+    toggleBodyScroll(dropdownOpen);
   }, [dropdownOpen]);
 
   return (
@@ -431,7 +427,7 @@ const CombinedEffortModel = ({
                         onClick={closeDropdown}
                         aria-label="Close dropdown"
                       >
-                        <span>close</span>
+                        <span>Close</span>
                       </button>
                     </div>
                   </div>
@@ -596,7 +592,7 @@ const CombinedEffortModel = ({
                   )}
                   {activeTab === "effort" && (
                     <div
-                     className="project-list"
+                      className="project-list"
                       style={{
                         maxHeight: `${containerHeight}px`,
                         overflowY: "auto",
@@ -608,10 +604,7 @@ const CombinedEffortModel = ({
                     </div>
                   )}
                   {activeTab === "links" && (
-                    <div
-                      className="col-lg-12"
-                     
-                    >
+                    <div className="col-lg-12">
                       <LinkModel
                         link={link}
                         links={links}

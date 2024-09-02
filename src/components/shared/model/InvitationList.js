@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useAuth, useToaster } from "@/hooks";
 import useOutsideClick from "@/hooks/useOutsideClick";
 import CompanyLogo from "@/components/Dashboard/CompanyLogo";
+import { toggleBodyScroll } from "@/utils/scrollUtils";
 
 const InvitationList = ({ setShowInvite, showInvite }) => {
   const { invitation, acceptinvite, acceptreject, setcompany } = useAuth();
@@ -76,12 +77,9 @@ const InvitationList = ({ setShowInvite, showInvite }) => {
   const handleClose = () => {
     setShowInvite(false);
   };
+
   useEffect(() => {
-    if (showInvite) {
-      document.body.classList.add("no-scroll");
-    } else {
-      document.body.classList.remove("no-scroll");
-    }
+    toggleBodyScroll(showInvite);
   }, [showInvite]);
 
   return (

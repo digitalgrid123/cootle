@@ -10,7 +10,7 @@ import { useGlobalCompany } from "@/utils/globalState";
 import eventBus from "@/utils/eventBus";
 
 const Dashboard = () => {
-  const { userinfo, logout } = useAuth();
+  const { userinfo } = useAuth();
   const [user, setUser] = useState(null);
   const selectedCompany = useGlobalCompany();
 
@@ -53,30 +53,9 @@ const Dashboard = () => {
   const next = () => {
     setCurrentTab((prev) => prev + 1);
   };
-  useEffect(() => {
-    const handleCheckSelectedCompany = () => {
-      if (!selectedCompany || selectedCompany.length === 0) {
-        setShowPopup(true);
-        setCurrentTab(2);
-      }
-    };
-
-    const timeoutId = setTimeout(() => {
-      handleCheckSelectedCompany();
-    }, 5000);
-
-    const handleCompanyCreated = () => {
-      handleCheckSelectedCompany();
-    };
-
-    eventBus.on("companyCreated", handleCompanyCreated);
-
-    return () => {
-      clearTimeout(timeoutId);
-      eventBus.off("companyCreated", handleCompanyCreated);
-    };
-  }, [selectedCompany]);
-
+  const previous = () => {
+    setCurrentTab((prev) => (prev > 1 ? prev - 1 : prev));
+  };
   // Render the current tab based on currentTab state
   const renderCurrentTab = (activeTab) => {
     switch (activeTab) {
@@ -86,6 +65,7 @@ const Dashboard = () => {
             showPopup={showPopup}
             setShowPopup={setShowPopup}
             next={next}
+            selectedCompany={selectedCompany}
           />
         );
       case 2:
@@ -95,6 +75,7 @@ const Dashboard = () => {
             setShowPopup={setShowPopup}
             next={next}
             contentRef={contentRef}
+            previous={previous}
           />
         );
       case 3:
@@ -103,6 +84,8 @@ const Dashboard = () => {
             showPopup={showPopup}
             setShowPopup={setShowPopup}
             contentRef={contentRef}
+            previous={previous}
+            currentTab={currentTab}
           />
         );
       default:

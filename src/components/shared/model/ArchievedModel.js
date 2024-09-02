@@ -64,7 +64,7 @@ const ArchievedModel = ({
                   onClick={closeDropdown}
                   aria-label="Close dropdown"
                 >
-                  <span>close</span>
+                  <span>Close</span>
                 </button>
               </div>
               <div className="archived-objectives-list ptb-34 overflow-scroll-y ">

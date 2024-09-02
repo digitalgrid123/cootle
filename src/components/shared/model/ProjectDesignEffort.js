@@ -211,7 +211,7 @@ const ProjectDesignEffort = ({
                       onClick={closeDropdown}
                       aria-label="Close dropdown"
                     >
-                      <span>close</span>
+                      <span>Close</span>
                     </button>
                   </div>
                 </div>

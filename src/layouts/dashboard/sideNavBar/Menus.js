@@ -130,6 +130,7 @@ const Menus = ({ isSmallScreen }) => {
 
   const handleCompanySelect = useCallback(
     (company) => {
+      fetchProjectList();
       setSelectedCompany(company);
       localStorage.setItem("selectedCompany", JSON.stringify(company));
       setActiveMenuItem(PATH_DASHBOARD.root);
@@ -184,12 +185,15 @@ const Menus = ({ isSmallScreen }) => {
     });
   };
 
-  const truncateCompanyName = (name, wordLimit) => {
-    const words = name.split(" ");
-    if (words.length > wordLimit) {
-      return words.slice(0, wordLimit).join(" ") + "...";
+  const truncateCompanyName = (name, charLimit) => {
+    // Trim extra whitespace from the name
+    const trimmedName = name.trim() || "";
+
+    // Check if the length of the name exceeds the charLimit
+    if (trimmedName.length > charLimit) {
+      return trimmedName.slice(0, charLimit) + "...";
     }
-    return name;
+    return trimmedName;
   };
   // Adjust height based on available viewport height
   useEffect(() => {
@@ -225,6 +229,7 @@ const Menus = ({ isSmallScreen }) => {
     };
   }, [projectList]);
   const gapValue = isSmallScreen ? "11px" : "";
+
   return (
     <>
       <ul className="metismenu border_bottom_Light" id="menu">
@@ -244,8 +249,8 @@ const Menus = ({ isSmallScreen }) => {
                   logo={selectedCompany.logo}
                   name={selectedCompany.name}
                 />
-                <h4 className="company-name weight-400 hide-on-small-screen">
-                  {truncateCompanyName(selectedCompany.name, 10)}
+                <h4 className="company-name weight-400 hide-on-small-screen text-nowrap ">
+                  {truncateCompanyName(selectedCompany.name, 15) || ""}
                 </h4>
               </div>
               <div>

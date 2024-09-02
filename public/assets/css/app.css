@@ -2758,6 +2758,7 @@ textarea {
   position: fixed;
   width: 100%;
 }
+
 .skeleton-item {
   height: 50px;
   background: var(--lavender-blush);

@@ -27,56 +27,51 @@ import { setSelectedCompany } from "@/utils/globalState";
 const initialState = {
   isAuthenticated: false,
   isInitialized: false,
-  user: null,
+  accessToken: null,
+  refreshToken: null,
 };
 
 const handlers = {
   INITIALIZE: (state, action) => {
-    const { isAuthenticated, user } = action.payload;
+    const { isAuthenticated, accessToken, refreshToken } = action.payload;
     return {
       ...state,
       isAuthenticated,
       isInitialized: true,
-      user,
+      accessToken,
+      refreshToken,
     };
   },
   LOGIN: (state, action) => {
-    const { user } = action.payload;
-
+    const { accessToken, refreshToken } = action.payload;
     return {
       ...state,
       isAuthenticated: true,
-      user,
+      accessToken,
+      refreshToken,
     };
   },
-  SIGNUP: (state, action) => {
-    const { userData } = action.payload;
-
+  REGISTER: (state, action) => {
+    const { accessToken, refreshToken } = action.payload;
     return {
       ...state,
       isAuthenticated: true,
-      userData,
+      accessToken,
+      refreshToken,
     };
   },
   LOGOUT: (state) => ({
     ...state,
     isAuthenticated: false,
-    user: null,
+    accessToken: null,
+    refreshToken: null,
   }),
-  REGISTER: (state, action) => {
-    const { user } = action.payload;
-
+  UPDATE_TOKENS: (state, action) => {
+    const { accessToken, refreshToken } = action.payload;
     return {
       ...state,
-      isAuthenticated: true,
-      user,
-    };
-  },
-  UPDATE: (state, action) => {
-    const { user } = action.payload;
-    return {
-      ...state,
-      user,
+      accessToken,
+      refreshToken,
     };
   },
 };
@@ -109,12 +104,13 @@ function AuthProvider({ children }) {
 
   const handleRTExpiration = async () => {
     try {
-      setSession(null);
+      clearSession();
       dispatch({
         type: "INITIALIZE",
         payload: {
           isAuthenticated: false,
-          user: null,
+          accessToken: null,
+          refreshToken: null,
         },
       });
     } catch (error) {
@@ -124,19 +120,25 @@ function AuthProvider({ children }) {
 
   const handleTokenExpiration = async () => {
     try {
-      const rT = getData(STORAGE_KEYS.AUTH_REFRESH_TOKEN);
+      const refreshToken = getData(STORAGE_KEYS.AUTH_REFRESH_TOKEN);
 
       if (!navigator.onLine) {
-        // If offline, don't attempt to refresh the token, just wait for the connection to be restored
         window.addEventListener("online", async () => {
-          const res = await attemptTokenRefresh(rT);
+          const res = await attemptTokenRefresh(refreshToken);
           if (res) {
             setSession(
               res.access,
-              rT,
+              res.refresh,
               handleTokenExpiration,
               handleRTExpiration
             );
+            dispatch({
+              type: "UPDATE_TOKENS",
+              payload: {
+                accessToken: res.access,
+                refreshToken: res.refresh,
+              },
+            });
           } else {
             handleRTExpiration();
           }
@@ -144,9 +146,21 @@ function AuthProvider({ children }) {
         return;
       }
 
-      const res = await attemptTokenRefresh(rT);
+      const res = await attemptTokenRefresh(refreshToken);
       if (res) {
-        setSession(res.access, rT, handleTokenExpiration, handleRTExpiration);
+        setSession(
+          res.access,
+          res.refresh,
+          handleTokenExpiration,
+          handleRTExpiration
+        );
+        dispatch({
+          type: "UPDATE_TOKENS",
+          payload: {
+            accessToken: res.access,
+            refreshToken: res.refresh,
+          },
+        });
       } else {
         handleRTExpiration();
       }
@@ -171,155 +185,63 @@ function AuthProvider({ children }) {
     try {
       const accessToken = getData(STORAGE_KEYS.AUTH_TOKEN);
       const refreshToken = getData(STORAGE_KEYS.AUTH_REFRESH_TOKEN);
-      const localAuth = getData(STORAGE_KEYS.AUTH);
 
-      if (accessToken && localAuth) {
+      if (accessToken && refreshToken) {
         setSession(
           accessToken,
           refreshToken,
           handleTokenExpiration,
           handleRTExpiration
         );
-
-        const userInfoResponse = await axiosGet(API_ROUTER.USER_INFO);
-        if (userInfoResponse.status) {
-          dispatch({
-            type: "INITIALIZE",
-            payload: {
-              isAuthenticated: true,
-              user: userInfoResponse.data,
-            },
-          });
-        } else {
-          dispatch({
-            type: "INITIALIZE",
-            payload: {
-              isAuthenticated: false,
-              user: null,
-            },
-          });
-        }
+        dispatch({
+          type: "INITIALIZE",
+          payload: {
+            isAuthenticated: true,
+            accessToken,
+            refreshToken,
+          },
+        });
       } else {
         dispatch({
           type: "INITIALIZE",
           payload: {
             isAuthenticated: false,
-            user: null,
+            accessToken: null,
+            refreshToken: null,
           },
         });
       }
-    } catch (err) {
+    } catch (error) {
       dispatch({
         type: "INITIALIZE",
         payload: {
           isAuthenticated: false,
-          user: null,
+          accessToken: null,
+          refreshToken: null,
         },
       });
     }
   };
+
   useEffect(() => {
     initialize();
   }, []);
 
-  const verifyregisterCode = async (email, verification_code) => {
-    // eslint-disable-next-line no-async-promise-executor
-    return new Promise(async (resolve) => {
-      try {
-        const res = await axiosPost(API_ROUTER.REGISTER_VERIFY, {
-          email,
-          verification_code,
-        });
+  const login = async (email) => {
+    try {
+      const res = await axiosPost(API_ROUTER.LOGIN_EMAIL, { email });
 
-        if (res.status) {
-          const { access, refresh } = res;
-          setSession(
-            access,
-            refresh,
-            handleTokenExpiration,
-            handleRTExpiration
-          );
-          const user = await axiosGet(API_ROUTER.USER_INFO);
-          saveData(STORAGE_KEYS.AUTH, user);
-          dispatch({
-            type: "REGISTER",
-            payload: {
-              user: { ...user },
-            },
-          });
-
-          resolve({
-            status: true,
-            data: user,
-            message: "successfully register",
-          });
-        } else {
-          resolve({
-            status: false,
-            data: "",
-            message: res?.data?.response?.data?.status,
-          });
-        }
-      } catch (error) {
-        resolve({ status: false, data: "", message: "" });
-      }
-    });
-  };
-
-  const register = (email) => {
-    return new Promise(async (resolve) => {
-      try {
-        const res = await axiosPost(API_ROUTER.REGISTER_EMAIL, {
-          email,
-        });
-
-        if (res.status) {
-          resolve({
-            status: true,
-            data: "",
-            message: "Passcode successfully sent to email.",
-          });
-        } else {
-          resolve({
-            status: false,
-            data: "",
-            message: res?.data?.response?.data?.status,
-          });
-        }
-      } catch (error) {
-        resolve({
+      if (res.status) {
+        return { status: true, message: "Login code sent to your email." };
+      } else {
+        return {
           status: false,
-          data: "",
-          message: "",
-        });
+          message: res.message || "Failed to send login code.",
+        };
       }
-    });
-  };
-
-  const login = (email) => {
-    return new Promise(async (resolve) => {
-      try {
-        const res = await axiosPost(API_ROUTER.LOGIN_EMAIL, {
-          email,
-        });
-
-        if (res.status) {
-          resolve({
-            status: true,
-            data: "",
-            message: "Passcode successfully sent to email.",
-          });
-        } else {
-          resolve({
-            status: false,
-            data: "",
-            message: "No user exists with this email.",
-          });
-        }
-      } catch (error) {
-        resolve({ status: false, data: "" });
-      }
-    });
+    } catch (error) {
+      return { status: false, message: error.message || "An error occurred" };
+    }
   };
 
   const userloginverify = async (email, verification_code) => {
@@ -330,31 +252,75 @@ function AuthProvider({ children }) {
       });
 
       if (res.status) {
-        const { access, refresh } = res;
-        setSession(access, refresh, handleTokenExpiration, handleRTExpiration);
-        const user = await axiosGet(API_ROUTER.USER_INFO);
-        saveData(STORAGE_KEYS.AUTH, user);
+        setSession(
+          res.access,
+          res.refresh,
+          handleTokenExpiration,
+          handleRTExpiration
+        );
         dispatch({
           type: "LOGIN",
           payload: {
-            user: { ...user },
+            accessToken: res.access,
+            refreshToken: res.refresh,
           },
         });
+        return { status: true, message: "Successfully logged in" };
+      } else {
+        return { status: false, message: res.message || "Verification failed" };
+      }
+    } catch (error) {
+      return { status: false, message: error.message || "An error occurred" };
+    }
+  };
 
-        return { status: true, data: user, message: "successfully login" };
+  const register = async (email) => {
+    try {
+      const res = await axiosPost(API_ROUTER.REGISTER_EMAIL, { email });
+
+      if (res.status) {
+        return {
+          status: true,
+          message: "Registration code sent to your email.",
+        };
       } else {
         return {
           status: false,
-          data: "",
-          message: res?.data?.response?.data?.status,
+          message: res.message || "Failed to send registration code.",
         };
       }
     } catch (error) {
-      return {
-        status: false,
-        data: "",
-        message: error.message || "An error occurred",
-      };
+      return { status: false, message: error.message || "An error occurred" };
+    }
+  };
+
+  const verifyregisterCode = async (email, verification_code) => {
+    try {
+      const res = await axiosPost(API_ROUTER.REGISTER_VERIFY, {
+        email,
+        verification_code,
+      });
+
+      if (res.status) {
+        setSession(
+          res.access,
+          res.refresh,
+          handleTokenExpiration,
+          handleRTExpiration
+        );
+        dispatch({
+          type: "REGISTER",
+          payload: {
+            accessToken: res.access,
+            refreshToken: res.refresh,
+          },
+        });
+        return { status: true, message: "Successfully registered" };
+      } else {
+        return { status: false, message: res.message || "Verification failed" };
+      }
+    } catch (error) {
+      return { status: false, message: error.message || "An error occurred" };
     }
   };
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useAuth } from "@/hooks";
+import { toggleBodyScroll } from "@/utils/scrollUtils";
 
 const CombinedPurposeDropdown = ({
   dropdownOpen,
@@ -276,11 +277,7 @@ const CombinedPurposeDropdown = ({
     }
   };
   useEffect(() => {
-    if (dropdownOpen) {
-      document.body.classList.add("no-scroll");
-    } else {
-      document.body.classList.remove("no-scroll");
-    }
+    toggleBodyScroll(dropdownOpen);
   }, [dropdownOpen]);
 
   return (
@@ -325,7 +322,7 @@ const CombinedPurposeDropdown = ({
                         onClick={closeDropdown}
                         aria-label="Close dropdown"
                       >
-                        <span>close</span>
+                        <span>Close</span>
                       </button>
                     </div>
                   </div>

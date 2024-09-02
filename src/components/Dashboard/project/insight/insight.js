@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import BarChart from "./charts/BarChart";
 import { useAuth } from "@/hooks";
@@ -74,10 +74,8 @@ const Insight = () => {
   const [isLifetimeClicked, setIsLifetimeClicked] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Quarterly");
+  const [selectedOptionItem, setSelectedOptionItem] = useState(null);
 
-  const [selectedOptionItem, setSelectedOptionItem] = useState(
-    getCurrentQuarter()
-  );
   const [period, setPeriod] = useState();
   const [lifetime, setLifetime] = useState(false);
 
@@ -98,6 +96,32 @@ const Insight = () => {
       console.error("Error fetching effort list:", error);
     }
   };
+  useEffect(() => {
+    if (effortsListData) {
+      if (selectedOption === "Quarterly") {
+        const filteredEfforts = effortsListData.filter(
+          (effort) =>
+            new Date(effort.created_at).getFullYear() ===
+            new Date().getFullYear()
+        );
+
+        const availableQuarters = filteredEfforts.map(
+          (effort) =>
+            `Q${Math.ceil((new Date(effort.created_at).getMonth() + 1) / 3)}`
+        );
+
+        if (availableQuarters.includes(getCurrentQuarter())) {
+          setSelectedOptionItem(getCurrentQuarter());
+        } else {
+          setSelectedOptionItem(
+            `${new Date().getFullYear()}-${
+              availableQuarters[availableQuarters.length - 1]
+            }`
+          );
+        }
+      }
+    }
+  }, [effortsListData, selectedOption]);
 
   // Function to fetch data based on the selected option
   const fetchData = async () => {
@@ -489,7 +513,7 @@ const Insight = () => {
         break;
 
       case "Quarterly":
-        const availableQuarters = effortsListData
+        let availableQuarters = effortsListData
           .filter(
             (effort) =>
               new Date(effort.created_at).getFullYear() ===
@@ -668,7 +692,7 @@ const Insight = () => {
         setSelectedOptionItem(getCurrentQuarter());
         break;
       default:
-        setSelectedOptionItem(null);
+        setSelectedOptionItem(getCurrentQuarter());
         break;
     }
   };

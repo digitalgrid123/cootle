@@ -243,7 +243,11 @@ const MemberModel = ({ activeTab, setShowPopup, showPopup }) => {
               value={emails}
               onChange={(e) => setEmails(e.target.value)}
             />
-            <button type="submit" className="send_btn">
+            <button
+              type="submit"
+              className="send_btn"
+              disabled={emails.trim() === ""}
+            >
               <span className="weight-500 f-16">Send Invite</span>
             </button>
           </div>

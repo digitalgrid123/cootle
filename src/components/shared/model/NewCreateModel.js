@@ -6,7 +6,13 @@ import { useRouter } from "next/navigation";
 import { useGlobalCompany } from "@/utils/globalState";
 import eventBus from "@/utils/eventBus";
 
-const NewCreateModel = ({ activeTab, setShowPopup, showPopup }) => {
+const NewCreateModel = ({
+  activeTab,
+  setShowPopup,
+  showPopup,
+  previous,
+  currentTab,
+}) => {
   const { createcompany, setcompany } = useAuth();
   const selectedCompany = useGlobalCompany();
 
@@ -111,7 +117,16 @@ const NewCreateModel = ({ activeTab, setShowPopup, showPopup }) => {
                   <span className="weight-600">Close</span>
                 </button>
               )}
-              <button className="update_btn" onClick={handleSave}>
+              {showPopup && currentTab && (
+                <button className="close_btn" onClick={previous}>
+                  <span className="weight-600">Back</span>
+                </button>
+              )}
+              <button
+                className="update_btn"
+                onClick={handleSave}
+                disabled={companyName.trim() === ""}
+              >
                 <span className="weight-600">Save</span>
               </button>
             </div>

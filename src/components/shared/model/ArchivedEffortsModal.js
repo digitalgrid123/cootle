@@ -1,6 +1,7 @@
 import { useAuth, useToaster } from "@/hooks";
 import { TOAST_TYPES } from "@/constants/keywords";
 import React, { useEffect, useRef, useState } from "react";
+import { toggleBodyScroll } from "@/utils/scrollUtils";
 
 const ArchivedEffortsModal = ({
   dropdownOpen,
@@ -50,12 +51,9 @@ const ArchivedEffortsModal = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownOpen]);
+
   useEffect(() => {
-    if (dropdownOpen) {
-      document.body.classList.add("no-scroll");
-    } else {
-      document.body.classList.remove("no-scroll");
-    }
+    toggleBodyScroll(dropdownOpen);
   }, [dropdownOpen]);
 
   return (
@@ -71,7 +69,7 @@ const ArchivedEffortsModal = ({
                   onClick={closeDropdown}
                   aria-label="Close dropdown"
                 >
-                  <span>close</span>
+                  <span>Close</span>
                 </button>
               </div>
               <div className="archived-efforts-list ptb-34 overflow-scroll-y ">

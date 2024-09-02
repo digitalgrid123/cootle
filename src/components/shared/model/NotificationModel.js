@@ -2,10 +2,9 @@ import React, { useCallback, useState, useEffect, useRef } from "react";
 import Title from "@/components/Dashboard/Title";
 import { useNotifications } from "@/hooks";
 import { Loader } from "@/components/shared/loader";
-import InvitationList from "./InvitationList";
 import { useAuth, useToaster } from "@/hooks";
-import useOutsideClick from "@/hooks/useOutsideClick";
 import CompanyLogo from "@/components/Dashboard/CompanyLogo";
+import { toggleBodyScroll } from "@/utils/scrollUtils";
 
 const NotificationModel = ({
   isDropdownOpen,
@@ -17,18 +16,14 @@ const NotificationModel = ({
   const { invitation, acceptinvite, acceptreject, setcompany } = useAuth();
   const [invitations, setInvitations] = useState([]);
   const { toaster } = useToaster();
+  const [showInvite, setShowInvite] = useState(false);
 
   const [initialLoading, setInitialLoading] = useState(true);
 
   const [activeTab, setActiveTab] = useState("all");
   const notificationModelRef = useRef(null);
-  const overlayRef = useRef(null);
 
-  const handleShowInvite = useCallback(() => {
-    setActiveTab("invitations");
-    setShowInvite(true);
-    setDropdownOpen(false);
-  }, [setDropdownOpen]);
+  const [hasNotifications, setHasNotifications] = useState(false);
 
   const handleClickOutside = useCallback(
     (event) => {
@@ -42,7 +37,29 @@ const NotificationModel = ({
     },
     [isDropdownOpen, setDropdownOpen]
   );
+  useEffect(() => {
+    setHasNotifications(notifications?.length > 0 || "");
+  }, [notifications]);
 
+  useEffect(() => {
+    // Adjust the height of the invitation-content based on the screen height
+    const adjustHeight = () => {
+      if (notificationModelRef.current) {
+        const screenHeight = window.innerHeight;
+        const adjustedHeight = screenHeight * 0.7;
+        notificationModelRef.current.style.height = `${adjustedHeight}px`;
+      }
+    };
+
+    adjustHeight();
+
+    // Adjust the height when the window is resized
+    window.addEventListener("resize", adjustHeight);
+
+    return () => {
+      window.removeEventListener("resize", adjustHeight);
+    };
+  }, [isDropdownOpen]);
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -140,13 +157,8 @@ const NotificationModel = ({
       toaster("Failed to process your rejection", "error");
     }
   };
-
   useEffect(() => {
-    if (isDropdownOpen) {
-      document.body.classList.add("no-scroll");
-    } else {
-      document.body.classList.remove("no-scroll");
-    }
+    toggleBodyScroll(isDropdownOpen);
   }, [isDropdownOpen]);
 
   return (
@@ -157,8 +169,8 @@ const NotificationModel = ({
           className="invitation-content"
           style={{ flex: "0" }}
         >
-          <div className="notification-container">
-            <div className="h-100 d-flex flex-column c">
+          <div className="notification-container h-100">
+            <div className="h-100 d-flex flex-column ">
               <div className="w-100 d-flex justify-content-between align-items-center border_bottom_soft-lavender pb-16">
                 <h1 className="notification-title-heading weight-600">
                   Notifications
@@ -199,11 +211,15 @@ const NotificationModel = ({
                   <button
                     className="notify-clean-btn"
                     onClick={clearAll}
-                    disabled={isLoading}
+                    disabled={isLoading || !hasNotifications}
                   >
                     <span>Mark All as Read</span>
                   </button>
-                  <button className="notify-clean-btn" onClick={removeall}>
+                  <button
+                    className="notify-clean-btn"
+                    onClick={removeall}
+                    disabled={isLoading || !hasNotifications}
+                  >
                     <span>Clear All</span>
                   </button>
                 </div>

@@ -4,8 +4,15 @@ import CompanySettingModel from "./CompanySettingModel";
 import MemberModel from "./MemberModel";
 import NewCreateModel from "./NewCreateModel";
 import { useGlobalCompany } from "@/utils/globalState";
+import { toggleBodyScroll } from "@/utils/scrollUtils";
 
-const CreateNewModel = ({ showPopup, setShowPopup, contentRef }) => {
+const CreateNewModel = ({
+  showPopup,
+  setShowPopup,
+  contentRef,
+  previous,
+  currentTab,
+}) => {
   const [activeTab, setActiveTab] = useState("settings");
   const { user } = useAuth();
   const selectedCompany = useGlobalCompany();
@@ -43,11 +50,7 @@ const CreateNewModel = ({ showPopup, setShowPopup, contentRef }) => {
       : "/assets/images/mark/member-inactive.svg";
 
   useEffect(() => {
-    if (showPopup) {
-      document.body.classList.add("no-scroll");
-    } else {
-      document.body.classList.remove("no-scroll");
-    }
+    toggleBodyScroll(showPopup);
   }, [showPopup]);
 
   return (
@@ -105,6 +108,7 @@ const CreateNewModel = ({ showPopup, setShowPopup, contentRef }) => {
                   activeTab={activeTab}
                   setShowPopup={setShowPopup}
                   showPopup={showPopup}
+                  previous={previous}
                 />
                 {/* <MemberModel
                   activeTab={activeTab}

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks";
+import { toggleBodyScroll } from "@/utils/scrollUtils";
 
 const DesignEffortModel = ({
   designdropdownOpen,
@@ -174,11 +175,7 @@ const DesignEffortModel = ({
   }));
 
   useEffect(() => {
-    if (designdropdownOpen) {
-      document.body.classList.add("no-scroll");
-    } else {
-      document.body.classList.remove("no-scroll");
-    }
+    toggleBodyScroll(designdropdownOpen);
   }, [designdropdownOpen]);
 
   return (
@@ -198,7 +195,7 @@ const DesignEffortModel = ({
                       onClick={closeDropdown}
                       aria-label="Close dropdown"
                     >
-                      <span>close</span>
+                      <span>Close</span>
                     </button>
                   </div>
                 </div>

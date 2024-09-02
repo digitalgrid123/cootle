@@ -1,6 +1,7 @@
 import { useAuth, useToaster } from "@/hooks";
 import { TOAST_TYPES } from "@/constants/keywords";
 import React, { useEffect, useRef, useState } from "react";
+import { toggleBodyScroll } from "@/utils/scrollUtils";
 
 const EffortModel = ({
   designdropdownOpen,
@@ -56,11 +57,7 @@ const EffortModel = ({
   }, [designdropdownOpen]);
 
   useEffect(() => {
-    if (designdropdownOpen) {
-      document.body.classList.add("no-scroll");
-    } else {
-      document.body.classList.remove("no-scroll");
-    }
+    toggleBodyScroll(designdropdownOpen);
   }, [designdropdownOpen]);
 
   return (
@@ -79,12 +76,13 @@ const EffortModel = ({
                     onClick={closeDropdown}
                     aria-label="Close dropdown"
                   >
-                    <span>close</span>
+                    <span>Close</span>
                   </button>
                   <button
                     type="button"
                     className="save_effort_btn"
                     onClick={handleAdd}
+                    disabled={name.trim() === ""}
                   >
                     <span>Save</span>
                   </button>

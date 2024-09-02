@@ -32,6 +32,16 @@ const EditPurposeSection = ({
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [tab, setTab] = useState("");
 
+  const areAllFieldsFilled = () => {
+    return (
+      title.trim() !== "" &&
+      description.trim() !== "" &&
+      selectedProductOutcomes.length > 0 &&
+      selectedProductOutcomes.length > 0
+    );
+  };
+  const tooltipText = "All info must be filled";
+
   const handleButtonClick = (tabName) => {
     setTab(tabName);
     setDropdownOpen((prev) => !prev);
@@ -143,7 +153,12 @@ const EditPurposeSection = ({
                 <button className="close_effort_btn" onClick={handleCancel}>
                   <span>Cancel</span>
                 </button>
-                <button className="save_effort_btn" onClick={handleSaveClick}>
+                <button
+                  className="save_effort_btn"
+                  onClick={handleSaveClick}
+                  disabled={!areAllFieldsFilled()}
+                  title={!areAllFieldsFilled() ? tooltipText : ""}
+                >
                   <span>Save</span>
                 </button>
               </div>

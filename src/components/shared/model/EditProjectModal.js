@@ -1,6 +1,7 @@
 import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 import { useAuth, useToaster } from "@/hooks";
 import useOutsideClick from "@/hooks/useOutsideClick";
+import { toggleBodyScroll } from "@/utils/scrollUtils";
 import React, { useEffect, useRef, useState } from "react";
 
 const EditProjectModal = ({
@@ -49,11 +50,7 @@ const EditProjectModal = ({
   };
 
   useEffect(() => {
-    if (showEditPopup) {
-      document.body.classList.add("no-scroll");
-    } else {
-      document.body.classList.remove("no-scroll");
-    }
+    toggleBodyScroll(showEditPopup);
   }, [showEditPopup]);
 
   return (

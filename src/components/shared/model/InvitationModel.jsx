@@ -3,6 +3,7 @@ import { TOAST_ALERTS, TOAST_TYPES } from "@/constants/keywords";
 import { useAuth, useToaster } from "@/hooks";
 import { useSharedState } from "@/hooks/useSharedState";
 import eventBus from "@/utils/eventBus";
+import { toggleBodyScroll } from "@/utils/scrollUtils";
 import React, { useEffect, useState } from "react";
 
 const InvitationModel = ({ showPopup, next, contentRef, setShowPopup }) => {
@@ -67,11 +68,7 @@ const InvitationModel = ({ showPopup, next, contentRef, setShowPopup }) => {
   };
 
   useEffect(() => {
-    if (showPopup) {
-      document.body.classList.add("no-scroll");
-    } else {
-      document.body.classList.remove("no-scroll");
-    }
+    toggleBodyScroll(showPopup);
   }, [showPopup]);
 
   return (

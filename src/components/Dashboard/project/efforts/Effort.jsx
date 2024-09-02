@@ -168,7 +168,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   useEffect(() => {
     fetchEffortData();
     fetchData();
-  }, [params.id, purposelist, effortList]);
+  }, []);
 
   useEffect(() => {
     fetchEffortData();

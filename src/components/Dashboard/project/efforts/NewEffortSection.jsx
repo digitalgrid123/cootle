@@ -28,6 +28,17 @@ const NewEffortSection = ({
     return null;
   }
 
+  const areAllFieldsFilled = () => {
+    return (
+      selectedProductOutcomes.length > 0 &&
+      selectedDesignEfforts.length > 0 &&
+      selectedPurpose
+    );
+  };
+
+  // Tooltip text
+  const tooltipText = "All info must be filled";
+
   const addLink = (url) => {
     setLinks((prevLinks) => [...prevLinks, { url }]);
   };
@@ -44,7 +55,12 @@ const NewEffortSection = ({
           <button className="close_effort_btn" onClick={handleCancel}>
             <span>Cancel</span>
           </button>
-          <button className="save_effort_btn" onClick={handleSaveEffort}>
+          <button
+            className="save_effort_btn"
+            onClick={handleSaveEffort}
+            disabled={!areAllFieldsFilled()}
+            title={!areAllFieldsFilled() ? tooltipText : ""}
+          >
             <span>Save</span>
           </button>
         </div>

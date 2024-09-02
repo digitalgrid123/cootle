@@ -16,7 +16,7 @@ export const setSelectedCompany = (company) => {
 
 export const useGlobalCompany = () => {
   const [company, setCompany] = useState(globalState.selectedCompany);
-  const { companyset, checkmember } = useAuth();
+  const { companyset, checkmember, logout } = useAuth();
   const isCurrentCompanyUpdated = useRef(false);
 
   // Add a listener to global state for updates
