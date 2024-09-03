@@ -2521,6 +2521,7 @@ textarea {
   overflow: clip;
   overflow-clip-margin: 200px;
   overflow-y: scroll; */
+
   overflow-x: hidden;
   padding: 0;
   margin: 0;
@@ -2758,11 +2759,45 @@ textarea {
   position: fixed;
   width: 100%;
 }
+.skeleton-item-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  margin-left: 12px;
+}
 
+.skeleton-icon {
+  animation: pulse 1.5s infinite ease-in-out;
+  width: 24px;
+  height: 24px;
+  background-color: #281c2e;
+  border-radius: 50%;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.skeleton-text {
+  width: 100%;
+  animation: pulse 1.5s infinite ease-in-out;
+  height: 30px;
+  background-color: #281c2e;
+  border-radius: 4px;
+}
 .skeleton-item {
   height: 50px;
   background: var(--lavender-blush);
-
+  animation: pulse 1.5s infinite ease-in-out;
   margin: 10px 0;
   border-radius: 4px;
 }

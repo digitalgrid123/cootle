@@ -18,6 +18,16 @@ import { USER_ROLES } from "@/constants/keywords";
 import { getData, saveData } from "@/utils/storage";
 import NewProjectModal from "@/components/shared/model/NewProjectModal";
 import eventBus from "@/utils/eventBus";
+import debounce from "lodash/debounce";
+
+const SkeletonLoader = () => {
+  return (
+    <div className="skeleton-item-menu">
+      <div className="skeleton-icon"></div>
+      <div className="skeleton-text"></div>
+    </div>
+  );
+};
 
 const Menus = ({ isSmallScreen }) => {
   const { companylist, projectlist } = useAuth();
@@ -36,6 +46,7 @@ const Menus = ({ isSmallScreen }) => {
   const [showProjectPopup, setShowProjectPopup] = useState(false);
   const [activeMenuItem, setActiveMenuItem] = useState("");
   const [hasScrollbar, setHasScrollbar] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const fetchCompanyList = async () => {
     try {
@@ -72,23 +83,36 @@ const Menus = ({ isSmallScreen }) => {
       eventBus.off("Accepted", handleCompanyCreated);
     };
   }, []);
-
-  const fetchProjectList = useCallback(async () => {
-    try {
-      const res = await projectlist();
-      if (res?.status) {
-        setProjectList(res.data);
-      } else {
-        console.error("Failed to fetch project list");
+  const fetchProjectList = useCallback(
+    debounce(async () => {
+      setLoading(true); // Ensure loading is true before fetching
+      setProjectList([]); // Clear previous project list
+      try {
+        const res = await projectlist();
+        if (res?.status) {
+          setProjectList(res.data);
+        } else {
+          console.error("Failed to fetch project list");
+        }
+      } catch (err) {
+        console.error("Error fetching project list:", err);
+      } finally {
+        setLoading(false); // Stop loading after fetching
       }
-    } catch (err) {
-      console.error("Error fetching project list:", err);
-    }
-  }, []);
+    }, 300),
+    [projectlist]
+  );
 
   useEffect(() => {
     fetchProjectList();
   }, [selectedCompany]);
+
+  useEffect(() => {
+    if (projectList.length > 0) {
+      const timer = setTimeout(() => setLoading(false), 60000);
+      return () => clearTimeout(timer);
+    }
+  }, [projectList]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -130,14 +154,22 @@ const Menus = ({ isSmallScreen }) => {
 
   const handleCompanySelect = useCallback(
     (company) => {
+      adjustHeight();
       setSelectedCompany(company);
       fetchProjectList();
-      localStorage.setItem("selectedCompany", JSON.stringify(company));
       setActiveMenuItem(PATH_DASHBOARD.root);
       router.push(PATH_DASHBOARD.root);
     },
     [router]
   );
+
+  // Separate effect for local storage update
+  useEffect(() => {
+    const company = selectedCompany;
+    if (company) {
+      localStorage.setItem("selectedCompany", JSON.stringify(company));
+    }
+  }, [selectedCompany]);
 
   const toggleDropdown = useCallback(() => {
     setDropdownOpen((prev) => !prev);
@@ -166,6 +198,12 @@ const Menus = ({ isSmallScreen }) => {
   );
 
   const renderProjectList = () => {
+    if (loading) {
+      // Show skeleton loaders while loading
+      return Array.from({ length: 5 }).map((_, index) => (
+        <SkeletonLoader key={index} />
+      ));
+    }
     return reversedProjectList.map((project, index) => {
       const projectPath = PATH_DASHBOARD.project.view(project.id, project.name);
       const projectBasePath = projectPath.split("?")[0];
@@ -195,39 +233,31 @@ const Menus = ({ isSmallScreen }) => {
     }
     return trimmedName;
   };
-  // Adjust height based on available viewport height
+  const adjustHeight = () => {
+    const viewportHeight = window.innerHeight;
+    console.log("🚀 ~ adjustHeight ~ viewportHeight:", viewportHeight);
+    const offset = projectListRef.current.getBoundingClientRect().top;
+    console.log("🚀 ~ adjustHeight ~ offset:", offset);
+    const maxHeight = viewportHeight - offset - 110; // 110px for padding and margins
+    projectListRef.current.style.maxHeight = `${maxHeight}px`;
+
+    // Check if the content height exceeds the maxHeight
+    const needsScrollbar = projectListRef.current.scrollHeight > maxHeight;
+    projectListRef.current.style.overflowY = needsScrollbar
+      ? "scroll"
+      : "visible";
+    setHasScrollbar(needsScrollbar); // Update the state
+  };
+
   useEffect(() => {
-    const adjustHeight = () => {
-      if (projectListRef.current) {
-        const viewportHeight = window.innerHeight;
-        const offset = projectListRef.current.getBoundingClientRect().top;
-        const maxHeight = viewportHeight - offset - 110; // 110px for padding and margins
-        projectListRef.current.style.maxHeight = `${maxHeight}px`;
+    // Initial adjustment
+    adjustHeight();
 
-        // Check if the content height exceeds the maxHeight
-        const needsScrollbar = projectListRef.current.scrollHeight > maxHeight;
-        projectListRef.current.style.overflowY = needsScrollbar
-          ? "scroll"
-          : "visible";
-        setHasScrollbar(needsScrollbar); // Update the state
-      }
-    };
+    const intervalId = setInterval(adjustHeight, 1000);
 
-    adjustHeight(); // Initial adjustment
-    window.addEventListener("resize", adjustHeight); // Adjust on resize
-
-    // Optional: Re-adjust on content changes or layout shifts
-    const observer = new MutationObserver(adjustHeight);
-    observer.observe(projectListRef.current, {
-      childList: true,
-      subtree: true,
-    });
-
-    return () => {
-      window.removeEventListener("resize", adjustHeight);
-      observer.disconnect(); // Clean up the observer
-    };
-  }, [projectList]);
+    // Clear interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
   const gapValue = isSmallScreen ? "11px" : "";
 
   return (
