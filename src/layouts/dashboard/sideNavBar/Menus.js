@@ -235,9 +235,9 @@ const Menus = ({ isSmallScreen }) => {
   };
   const adjustHeight = () => {
     const viewportHeight = window.innerHeight;
-    console.log("🚀 ~ adjustHeight ~ viewportHeight:", viewportHeight);
+
     const offset = projectListRef.current.getBoundingClientRect().top;
-    console.log("🚀 ~ adjustHeight ~ offset:", offset);
+
     const maxHeight = viewportHeight - offset - 110; // 110px for padding and margins
     projectListRef.current.style.maxHeight = `${maxHeight}px`;
 

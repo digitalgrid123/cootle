@@ -30,10 +30,11 @@ const EffortMapping = ({
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [archivedDesignEfforts, setArchivedDesignEfforts] = useState([]);
+  const selectedCompany = useGlobalCompany();
 
   useEffect(() => {
     fetchCategories();
-  }, [reset]);
+  }, [reset, selectedCompany]);
   useEffect(() => {
     fetchCategories();
 
@@ -48,7 +49,7 @@ const EffortMapping = ({
       eventBus.off("companyCreated", handleCompanyCreated);
       eventBus.off("Accepted", handleCompanyCreated);
     };
-  }, []);
+  }, [selectedCompany]);
 
   const fetchCategories = async () => {
     setLoading(true);

@@ -210,7 +210,7 @@ const ProductOutcomes = ({
 
   useEffect(() => {
     fetchObjectives();
-  }, [fetchObjectives]);
+  }, [fetchObjectives, selectedCompany]);
 
   const handleEditButtonClick = useCallback(() => {
     setEditedTitle(activeTab.title);

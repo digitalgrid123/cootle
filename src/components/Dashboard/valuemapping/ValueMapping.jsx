@@ -211,7 +211,7 @@ const ValueMapping = ({
 
   useEffect(() => {
     fetchObjectives();
-  }, [fetchObjectives]);
+  }, [fetchObjectives, selectedCompany]);
 
   const handleEditButtonClick = useCallback(() => {
     setEditedTitle(activeTab.title);
