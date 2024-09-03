@@ -92,7 +92,11 @@ const Navbar = ({
           <div className="col-lg-10 offset-lg-2">
             <div className="navbar-cootle">
               <Link href="/" passHref className="cootle-container">
-                <img src="/assets/images/mark/cootle.svg" alt="logo" />
+                <img
+                  src="/assets/images/mark/cootle.svg"
+                  alt="logo"
+                  title="Transforming ideas into elegant designs—where creativity meets functionality."
+                />
                 <h4 className="cootle-text m-0 weight-500">Cootle</h4>
               </Link>
               <div className="nav_cootle">
@@ -142,6 +146,7 @@ const Navbar = ({
                 src="/assets/images/mark/dark-logo.svg"
                 alt="logo"
                 loading="lazy"
+                title="Transforming ideas into elegant designs—where creativity meets functionality."
               />
             </div>
             <button onClick={handleCloseOverlay} className="close-mobile-btn">

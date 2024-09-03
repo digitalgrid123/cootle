@@ -47,7 +47,12 @@ const SidebarHeader = () => {
     <div className="sidebar-header mt-24">
       <div className="pb-24 d-flex align-items-center justify-content-between w-100 border_bottom_Light">
         <div className="cootle-container">
-          <img src={logoSrc} alt="logo" />
+          <img
+            src={logoSrc}
+            alt="logo"
+            style={{ cursor: "pointer" }}
+            title="Transforming ideas into elegant designs—where creativity meets functionality."
+          />
         </div>
 
         <div
