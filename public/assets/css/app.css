@@ -1027,7 +1027,7 @@ textarea {
   bottom: 0;
   display: flex;
   justify-content: center;
-  align-items: start;
+  align-items: flex-start;
   z-index: 1000;
   border-radius: 32px;
   padding: 120px 0 0 0;
@@ -1086,7 +1086,7 @@ textarea {
   bottom: 0;
   display: flex;
   justify-content: center;
-  align-items: start;
+  align-items: flex-start;
   z-index: 1000;
   padding: 120px 0 0 0;
 }
@@ -3031,7 +3031,7 @@ textarea {
   }
   .input-search-container {
     flex-direction: column;
-    align-items: start;
+    align-items: flex-start;
   }
   .space-adjust-between {
     justify-content: space-between;
@@ -3079,7 +3079,7 @@ textarea {
   }
   .input-search-container {
     flex-direction: column;
-    align-items: start;
+    align-items: flex-start;
   }
   .space-adjust-between {
     justify-content: space-between;
