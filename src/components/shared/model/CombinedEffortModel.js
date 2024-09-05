@@ -169,12 +169,7 @@ const CombinedEffortModel = ({
         setSelectedPurpose(id === selectedPurpose ? null : id);
         break;
       case "effort":
-        setSelectedDesignEfforts((prev) => {
-          const newSelection = prev?.includes(id)
-            ? prev?.filter((objId) => objId !== id)
-            : [...(prev || []), id];
-          return newSelection;
-        });
+        setSelectedDesignEfforts((prev) => (prev?.includes(id) ? [] : [id]));
         break;
       default:
         break;
@@ -333,26 +328,28 @@ const CombinedEffortModel = ({
         </h3>
         <ul className="p-0">
           <div className="grid-container">
-            {category.items.map((effort) => (
-              <div key={effort.id} className="grid-item ">
-                <li
-                  onClick={() => handleTabClick(effort.id, "effort")}
-                  className="d-flex design-tab align-items-center justify-content-between flex-nowrap text-align-left mb-16"
-                >
-                  <div className="d-flex align-items-center gap-2">
-                    <div className="dot"></div>
+            {category.items
+              .filter((effort) => !selectedDesignEfforts.includes(effort.id))
+              .map((effort) => (
+                <div key={effort.id} className="grid-item ">
+                  <li
+                    onClick={() => handleTabClick(effort.id, "effort")}
+                    className="d-flex design-tab align-items-center justify-content-between flex-nowrap text-align-left mb-16"
+                  >
+                    <div className="d-flex align-items-center gap-2">
+                      <div className="dot"></div>
 
-                    {effort.title}
-                  </div>
-                  <div>
-                    <img
-                      src="/assets/images/mark/add-design.svg"
-                      alt="add-btn"
-                    />
-                  </div>
-                </li>
-              </div>
-            ))}
+                      {effort.title}
+                    </div>
+                    <div>
+                      <img
+                        src="/assets/images/mark/add-design.svg"
+                        alt="add-btn"
+                      />
+                    </div>
+                  </li>
+                </div>
+              ))}
           </div>
         </ul>
       </div>

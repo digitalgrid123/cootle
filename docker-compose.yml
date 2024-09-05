@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - '3000:3000'           # Maps container port 3000 to localhost:3000
+    volumes:
+      - .:/app                # Mounts the entire project folder inside the container for live reloading
+      - /app/node_modules      # Prevents overwriting node_modules in the container
+    environment:
+      NODE_ENV: development    # Set environment to development
+    command: npm run dev       # Command to run the Next.js development server
+    working_dir: /app          # Working directory inside the container
