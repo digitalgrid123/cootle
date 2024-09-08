@@ -1,5 +1,9 @@
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig = withBundleAnalyzer({
   env: {
     NEXT_PUBLIC_HOST_API: process.env.NEXT_PUBLIC_HOST_API,
     SECRET_KEY: process.env.SECRET_KEY,
@@ -21,6 +25,6 @@ const nextConfig = {
 
     return config;
   },
-};
+});
 
 module.exports = nextConfig;

@@ -6,7 +6,6 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import "react-bootstrap-typeahead/css/Typeahead.css";
-import { CollapseDrawerProvider } from "@/contexts/CollapseDrawerContext";
 import { SettingsProvider } from "@/contexts/SettingContext";
 import Head from "next/head";
 
@@ -22,6 +21,10 @@ export default function RootLayout({ children }) {
           rel="icon"
           href="assets/images/mark/cootle.svg"
           type="image/svg"
+        />
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/react-quill@1.3.3/dist/quill.snow.css"
         />
         <link
           rel="stylesheet"
@@ -51,21 +54,30 @@ export default function RootLayout({ children }) {
 
         <script src="assets/js/index.js" async></script>
         <script src="assets/js/app.js" async></script>
+        <script
+          src="https://unpkg.com/react@16/umd/react.development.js"
+          crossorigin
+        ></script>
+        <script
+          src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+          crossorigin
+        ></script>
+        <script src="https://unpkg.com/react-quill@1.3.3/dist/react-quill.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <script type="text/babel" src="/my-scripts.js"></script>
         <title>Cootle</title>
       </Head>
       <body className={inter.className}>
         {
           <AuthProvider>
-            <CollapseDrawerProvider>
-              <SettingsProvider>
-                {
-                  <>
-                    <ToastWrapper />
-                    {children}
-                  </>
-                }
-              </SettingsProvider>
-            </CollapseDrawerProvider>
+            <SettingsProvider>
+              {
+                <>
+                  <ToastWrapper />
+                  {children}
+                </>
+              }
+            </SettingsProvider>
           </AuthProvider>
         }
       </body>

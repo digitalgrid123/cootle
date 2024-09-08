@@ -1,20 +1,15 @@
 "use client";
 
 import React from "react";
-import Hospital from "./Hospital";
 import Notification from "./Notification";
-import Search from "./Search";
-import SearchSurgery from "./SearchSurgery";
-import ThemeMode from "./ThemeMode";
-import UserDetail from "./UserDetail";
+
 import { USER_ROLES } from "@/constants/keywords";
-import { useAuth, useCollapseDrawer } from "@/hooks";
+import { useAuth } from "@/hooks";
 
 const Header = () => {
   const { user, selectedRole } = useAuth();
 
   const { is_superuser } = user || {};
-  const collapseDrawer = useCollapseDrawer();
 
   const handleToggleCollapse = () => {
     collapseDrawer.onToggleCollapse();

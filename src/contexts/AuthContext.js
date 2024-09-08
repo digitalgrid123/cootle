@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { createContext, useEffect, useReducer, useState } from "react";
 // utils
 import { STORAGE_KEYS, USER_ROLES } from "@/constants/keywords";
-import { useSetting } from "@/hooks";
 import { API_ROUTER } from "@/services/apiRouter";
 import {
   axiosDelete,
@@ -17,11 +16,10 @@ import {
   axiosPutFile,
 } from "@/services/axiosHelper";
 import axiosInstance from "@/utils/axios";
-import { getRole } from "@/utils/helper";
 import { setSession } from "@/utils/jwt";
 import { getData, saveData } from "@/utils/storage";
 import axios from "axios";
-import { useLocalStorage } from "usehooks-ts";
+
 import { setSelectedCompany } from "@/utils/globalState";
 
 const initialState = {

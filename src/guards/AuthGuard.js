@@ -2,8 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
-import { FullScreenLoading } from "@/components/shared/loader";
+import { useEffect } from "react";
 import { useAuth } from "@/hooks";
 
 AuthGuard.propTypes = {
@@ -12,28 +11,25 @@ AuthGuard.propTypes = {
 
 export default function AuthGuard({ children }) {
   const { isAuthenticated, isInitialized } = useAuth();
-  const { pathname, push, replace } = useRouter();
-  const [requestedLocation, setRequestedLocation] = useState(null);
+  const { pathname, replace, push } = useRouter();
 
   useEffect(() => {
-    if (requestedLocation && pathname !== requestedLocation) {
-      setRequestedLocation(null);
-      push(requestedLocation);
+    // Only check authentication when the app is initialized
+    if (isInitialized) {
+      if (!isAuthenticated) {
+        // Redirect to authentication if not authenticated
+        if (pathname !== "/authentication") {
+          replace("/authentication");
+        }
+      } else if (pathname === "/authentication") {
+        // If already authenticated and on the auth page, redirect to the requested page or home
+        push("/");
+      }
     }
-  }, [pathname, push, requestedLocation]);
+  }, [isAuthenticated, isInitialized, pathname, replace, push]);
 
-  useEffect(() => {
-    if (!isAuthenticated && isInitialized && pathname !== requestedLocation) {
-      setRequestedLocation(pathname);
-      replace("/authentication");
-    }
-  }, [isAuthenticated, isInitialized, pathname, replace, requestedLocation]);
-
-  if (!isInitialized) {
-    return <FullScreenLoading />;
-  }
-
-  if (!isAuthenticated) {
+  // Return null while checking or if unauthenticated
+  if (!isInitialized || !isAuthenticated) {
     return null;
   }
 

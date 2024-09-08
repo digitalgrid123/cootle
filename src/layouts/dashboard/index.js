@@ -1,19 +1,16 @@
 "use client";
 
 import SideNavBar from "./sideNavBar";
-import { useCollapseDrawer } from "@/hooks";
+
 
 const DashboardLayout = ({ children }) => {
-  const collapseDrawer = useCollapseDrawer();
+
   return (
     <div
-      className={`wrapper ${collapseDrawer.collapseClick ? "toggled" : ""} ${
-        collapseDrawer.collapseHover ? "sidebar-hovered" : ""
-      }`}
+      className={`wrapper`}
     >
       <div
-        onMouseEnter={collapseDrawer.onHoverEnter}
-        onMouseLeave={collapseDrawer.onHoverLeave}
+       
       >
         <SideNavBar />
       </div>

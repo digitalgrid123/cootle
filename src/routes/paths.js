@@ -29,11 +29,4 @@ export const PATH_DASHBOARD = {
     view: (id, name) =>
       path(ROOTS_DASHBOARD, `/project/${id}?name=${encodeURIComponent(name)}`),
   },
-
-  surgeries: {
-    root: path(ROOTS_DASHBOARD, "/surgeries"),
-    addSurgery: path(ROOTS_DASHBOARD, "/surgeries/addSurgery"),
-    view: (id) => path(ROOTS_DASHBOARD, `/surgeries/${id}`),
-    edit: (id) => path(ROOTS_DASHBOARD, `/surgeries/${id}/edit`),
-  },
 };
