@@ -280,6 +280,9 @@ textarea {
 .deeppurple {
   color: var(--deepPurple) !important;
 }
+.text-white {
+  color: var(--text-color) !important;
+}
 .black {
   color: var(--text-black);
 }

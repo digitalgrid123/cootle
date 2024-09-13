@@ -84,6 +84,9 @@ const Navbar = ({
   const shouldShowGetStartedButton = () => {
     return isMobileScreen ? pathname === "/login" : true;
   };
+  const handleEmailClick = () => {
+    window.open("mailto:sales@cootle.com", "_blank");
+  };
 
   return (
     <header>
@@ -100,9 +103,14 @@ const Navbar = ({
                 <h4 className="cootle-text m-0 weight-500">Cootle</h4>
               </Link>
               <div className="nav_cootle">
-                <h2 className="weight-500 hide-on-small-devices">
+                <a
+                  href="mailto:sales@cootle.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="weight-500 hide-on-small-devices text-white"
+                >
                   Contact sales
-                </h2>
+                </a>
                 {shouldShowLoginButton() && (
                   <button disabled={disableLogin} onClick={handleLoginClick}>
                     <span className="weight-500">Log in</span>
@@ -185,7 +193,7 @@ const Navbar = ({
                 <button className="nav-button" onClick={handleGetStartedClick}>
                   <span>Get Started</span>
                 </button>
-                <button className="contact-sales">
+                <button className="contact-sales" onClick={handleEmailClick}>
                   <h2>Contact sales</h2>
                 </button>
               </div>

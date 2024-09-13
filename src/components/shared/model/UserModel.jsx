@@ -94,8 +94,6 @@ const UserModel = ({
                 </button>
               </form>
             </FormProvider>
-
-            <p>You are currently logged in as yusuf@cootle.com </p>
           </div>
         </div>
       )}
