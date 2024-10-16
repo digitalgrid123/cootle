@@ -76,7 +76,6 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
     setSelectedOptionItem(null);
     setIsDropdownOpen(false);
   };
-
   const fetchUserinfoById = async (userId) => {
     try {
       const res = await userinfobyId(userId);
@@ -101,9 +100,29 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
   };
 
   useEffect(() => {
-    if (purposeListData && purposeListData.length > 0) {
-      purposeListData.forEach((purpose) => fetchUserinfoById(purpose.user));
-    }
+    const fetchUserInfos = async () => {
+      if (purposeListData && purposeListData.length > 0) {
+        const fetchedUserIds = new Set(); // To track fetched user IDs
+
+        // Filter out user IDs that have already been fetched
+        const uniqueUserIds = purposeListData
+          .map((purpose) => purpose.user)
+          .filter((userId) => {
+            if (!fetchedUserIds.has(userId)) {
+              fetchedUserIds.add(userId);
+              return true; // Keep this userId
+            }
+            return false; // Skip already fetched userId
+          });
+
+        // Fetch user info for unique IDs
+        await Promise.all(
+          uniqueUserIds.map((userId) => fetchUserinfoById(userId))
+        );
+      }
+    };
+
+    fetchUserInfos();
   }, [purposeListData, useradd]);
 
   const { toaster } = useToaster();
@@ -256,85 +275,86 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleOptionClick = (option) => {
-    // Handle lifetime reset
-    if (option === "Lifetime") {
-      handleLifetimeClick();
-      return;
-    }
+  // const handleOptionClick = (option) => {
+  //   // Handle lifetime reset
+  //   if (option === "Lifetime") {
+  //     handleLifetimeClick();
+  //     return;
+  //   }
 
-    setSelectedOption(option);
+  //   setSelectedOption(option);
 
-    const currentYear = new Date().getFullYear();
-    let selectedItem = null;
+  //   const currentYear = new Date().getFullYear();
+  //   let selectedItem = null;
 
-    switch (option) {
-      case "Monthly":
-        selectedItem = `${currentYear}-${months[new Date().getMonth()]}`;
-        break;
-      case "Weekly":
-        selectedItem = `${currentYear}-Week ${getISOWeek(new Date())}`;
-        break;
-      case "Quarterly":
-        selectedItem = getCurrentQuarter();
-        break;
-      default:
-        selectedItem = null;
-        break;
-    }
+  //   switch (option) {
+  //     case "Monthly":
+  //       selectedItem = `${currentYear}-${months[new Date().getMonth()]}`;
+  //       break;
+  //     case "Weekly":
+  //       selectedItem = `${currentYear}-Week ${getISOWeek(new Date())}`;
+  //       break;
+  //     case "Quarterly":
+  //       selectedItem = getCurrentQuarter();
+  //       break;
+  //     default:
+  //       selectedItem = null;
+  //       break;
+  //   }
 
-    // Check if the current selection exists in purposeListData
-    const currentExists = purposeListData?.some((purpose) => {
-      const createdDate = new Date(purpose.created_at);
-      const year = createdDate.getFullYear();
-      const month = months[createdDate.getMonth()];
-      const week = `Week ${getISOWeek(createdDate)}`;
-      const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+  //   // Check if the current selection exists in purposeListData
+  //   const currentExists = purposeListData?.some((purpose) => {
+  //     const createdDate = new Date(purpose.created_at);
 
-      switch (option) {
-        case "Monthly":
-          return `${year}-${month}` === selectedItem;
-        case "Weekly":
-          return `${year}-${week}` === selectedItem;
-        case "Quarterly":
-          return `${year}-${quarter}` === selectedItem;
-        default:
-          return false;
-      }
-    });
+  //     const year = createdDate.getFullYear();
+  //     const month = months[createdDate.getMonth()];
+  //     const week = `Week ${getISOWeek(createdDate)}`;
+  //     const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
 
-    // If the current selection doesn't exist, select the last available date
-    if (!currentExists) {
-      const lastAvailableItem = purposeListData
-        ?.map((purpose) => {
-          const createdDate = new Date(purpose.created_at);
-          const year = createdDate.getFullYear();
-          const month = months[createdDate.getMonth()];
-          const week = `Week ${getISOWeek(createdDate)}`;
-          const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+  //     switch (option) {
+  //       case "Monthly":
+  //         return `${year}-${month}` === selectedItem;
+  //       case "Weekly":
+  //         return `${year}-${week}` === selectedItem;
+  //       case "Quarterly":
+  //         return `${year}-${quarter}` === selectedItem;
+  //       default:
+  //         return false;
+  //     }
+  //   });
 
-          switch (option) {
-            case "Monthly":
-              return `${year}-${month}`;
-            case "Weekly":
-              return `${year}-${week}`;
-            case "Quarterly":
-              return `${year}-${quarter}`;
-            default:
-              return null;
-          }
-        })
-        .filter(Boolean)
-        .reverse()[0];
+  //   // If the current selection doesn't exist, select the last available date
+  //   if (!currentExists) {
+  //     const lastAvailableItem = purposeListData
+  //       ?.map((purpose) => {
+  //         const createdDate = new Date(purpose.created_at);
+  //         const year = createdDate.getFullYear();
+  //         const month = months[createdDate.getMonth()];
+  //         const week = `Week ${getISOWeek(createdDate)}`;
+  //         const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
 
-      setSelectedOptionItem(lastAvailableItem);
-    } else {
-      setSelectedOptionItem(selectedItem);
-    }
+  //         switch (option) {
+  //           case "Monthly":
+  //             return `${year}-${month}`;
+  //           case "Weekly":
+  //             return `${year}-${week}`;
+  //           case "Quarterly":
+  //             return `${year}-${quarter}`;
+  //           default:
+  //             return null;
+  //         }
+  //       })
+  //       .filter(Boolean)
+  //       .reverse()[0];
 
-    setIsLifetimeClicked(false);
-    setIsDropdownOpen(false);
-  };
+  //     setSelectedOptionItem(lastAvailableItem);
+  //   } else {
+  //     setSelectedOptionItem(selectedItem);
+  //   }
+
+  //   setIsLifetimeClicked(false);
+  //   setIsDropdownOpen(false);
+  // };
 
   const isActive = (year, option) => {
     return selectedOptionItem === `${year}-${option}` ? "active" : "";
@@ -456,9 +476,104 @@ const Purpose = ({ onToggleNewPurpose, showNewPurposeInput }) => {
   };
 
   useEffect(() => {
-    // Set selectedOptionItem to current quarter initially
-    setSelectedOptionItem(getCurrentQuarter());
-  }, []);
+    const initializeSelectedOption = () => {
+      let initialSelection = getCurrentQuarter();
+      const existsInData = purposeListData?.some((purpose) => {
+        const createdDate = new Date(purpose.created_at);
+        const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+        return `${createdDate.getFullYear()}-${quarter}` === initialSelection;
+      });
+
+      if (!existsInData) {
+        const lastAvailableItem = getLastAvailableItem("Quarterly");
+        initialSelection = lastAvailableItem || initialSelection;
+      }
+
+      setSelectedOptionItem(initialSelection);
+    };
+
+    initializeSelectedOption();
+  }, [purposeListData]);
+
+  const getLastAvailableItem = (option) => {
+    if (!Array.isArray(purposeListData)) return null;
+
+    const availableItems = purposeListData
+      ?.map((purpose) => {
+        const createdDate = new Date(purpose.created_at);
+        const year = createdDate.getFullYear();
+        const month = months[createdDate.getMonth()];
+        const week = `Week ${getISOWeek(createdDate)}`;
+        const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+
+        switch (option) {
+          case "Monthly":
+            return `${year}-${month}`;
+          case "Weekly":
+            return `${year}-${week}`;
+          case "Quarterly":
+            return `${year}-${quarter}`;
+          default:
+            return null;
+        }
+      })
+      .filter(Boolean);
+
+    // Return the last available item, sorted by date
+    return availableItems?.reverse()[0] || null;
+  };
+
+  const handleOptionClick = (option) => {
+    setSelectedOption(option);
+    let selectedItem;
+
+    const currentYear = new Date().getFullYear();
+    switch (option) {
+      case "Monthly":
+        selectedItem = `${currentYear}-${months[new Date().getMonth()]}`;
+        break;
+      case "Weekly":
+        selectedItem = `${currentYear}-Week ${getISOWeek(new Date())}`;
+        break;
+      case "Quarterly":
+        selectedItem = getCurrentQuarter();
+        break;
+      default:
+        selectedItem = null;
+    }
+
+    // Check if the current selection exists in purposeListData
+    const currentExists = purposeListData?.some((purpose) => {
+      const createdDate = new Date(purpose.created_at);
+      const year = createdDate.getFullYear();
+      const month = months[createdDate.getMonth()];
+      const week = `Week ${getISOWeek(createdDate)}`;
+      const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+
+      switch (option) {
+        case "Monthly":
+          return `${year}-${month}` === selectedItem;
+        case "Weekly":
+          return `${year}-${week}` === selectedItem;
+        case "Quarterly":
+          return `${year}-${quarter}` === selectedItem;
+        default:
+          return false;
+      }
+    });
+
+    // If the current selection doesn't exist, select the last available date
+    if (!currentExists) {
+      const lastAvailableItem = getLastAvailableItem(option);
+      setSelectedOptionItem(lastAvailableItem);
+    } else {
+      setSelectedOptionItem(selectedItem);
+    }
+
+    setIsLifetimeClicked(false);
+    setIsDropdownOpen(false);
+  };
+
   function getISOWeek(date) {
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);

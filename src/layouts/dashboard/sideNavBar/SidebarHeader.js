@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useNotifications } from "@/hooks";
 import NotificationModel from "@/components/shared/model/NotificationModel";
 
-const SidebarHeader = () => {
+const SidebarHeader = React.forwardRef((props, ref) => {
   const { count } = useNotifications();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -44,7 +44,7 @@ const SidebarHeader = () => {
   }, []);
 
   return (
-    <div className="sidebar-header mt-24">
+    <div className="sidebar-header mt-24" ref={ref}>
       <div className="pb-24 d-flex align-items-center justify-content-between w-100 border_bottom_Light">
         <div className="cootle-container">
           <img
@@ -72,10 +72,10 @@ const SidebarHeader = () => {
       <NotificationModel
         isDropdownOpen={isDropdownOpen}
         setDropdownOpen={setDropdownOpen}
-        dropdownRef={dropdownRef} // Pass dropdownRef to NotificationModel
+        dropdownRef={dropdownRef}
       />
     </div>
   );
-};
+});
 
 export default SidebarHeader;

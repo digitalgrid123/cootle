@@ -58,6 +58,7 @@ const Insight = () => {
     latestvalue,
     effortgraph,
     effortList,
+    purposelist
   } = useAuth();
 
   // State variables
@@ -100,28 +101,25 @@ const Insight = () => {
     if (effortsListData) {
       if (selectedOption === "Quarterly") {
         const filteredEfforts = effortsListData.filter(
-          (effort) =>
-            new Date(effort.created_at).getFullYear() ===
-            new Date().getFullYear()
+          (effort) => new Date(effort.created_at).getFullYear() === new Date().getFullYear()
         );
-
+  
         const availableQuarters = filteredEfforts.map(
-          (effort) =>
-            `Q${Math.ceil((new Date(effort.created_at).getMonth() + 1) / 3)}`
+          (effort) => `Q${Math.ceil((new Date(effort.created_at).getMonth() + 1) / 3)}`
         );
-
-        if (availableQuarters.includes(getCurrentQuarter())) {
-          setSelectedOptionItem(getCurrentQuarter());
-        } else {
+  
+        // Only update selectedOptionItem if it's currently empty or needs to be updated
+        if (!selectedOptionItem || !availableQuarters.includes(selectedOptionItem.split('-')[1])) {
           setSelectedOptionItem(
-            `${new Date().getFullYear()}-${
-              availableQuarters[availableQuarters.length - 1]
-            }`
+            availableQuarters.includes(getCurrentQuarter())
+              ? getCurrentQuarter()
+              : `${new Date().getFullYear()}-${availableQuarters[availableQuarters.length - 1]}`
           );
         }
       }
     }
   }, [effortsListData, selectedOption]);
+  
 
   // Function to fetch data based on the selected option
   const fetchData = async () => {
@@ -551,8 +549,8 @@ const Insight = () => {
   // Function to handle date click
   const handleDateClick = (year, option) => {
     setSelectedOptionItem(`${year}-${option}`);
-    setIsLifetimeClicked(false); // If a specific date is clicked, it's not lifetime anymore
-    setLifetime(false); // Reset lifetime
+    setIsLifetimeClicked(false);
+    setLifetime(false);
   };
 
   const renderDates = () => {

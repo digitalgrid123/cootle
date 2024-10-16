@@ -109,7 +109,6 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   const fetchUserinfoById = async (userId) => {
     try {
       const res = await userinfobyId(userId);
-
       if (res && res.status && res.data) {
         setUserDetail((prevDetails) => {
           const userExists = prevDetails.some(
@@ -131,7 +130,17 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
 
   useEffect(() => {
     if (purposeListData && purposeListData.length > 0) {
-      purposeListData.forEach((purpose) => fetchUserinfoById(purpose.user));
+      const fetchedUserIds = new Set(); // To track fetched user IDs
+
+      purposeListData.forEach((purpose) => {
+        const userId = purpose.user;
+
+        if (!fetchedUserIds.has(userId)) {
+          // Check if this userId has already been fetched
+          fetchUserinfoById(userId);
+          fetchedUserIds.add(userId); // Mark this userId as fetched
+        }
+      });
     }
   }, [purposeListData, useradd]);
 
@@ -168,12 +177,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
   useEffect(() => {
     fetchEffortData();
     fetchData();
-  }, []);
-
-  useEffect(() => {
-    fetchEffortData();
-    fetchData();
-  }, [params.id, purposelist, effortList, memberslist]);
+  }, [params.id]);
 
   const fetchDesignEfforts = useCallback(
     async (designEffortIds) => {
@@ -198,18 +202,28 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
         const res = await mappingList("OUT");
         if (res?.status && Array.isArray(res.data) && res.data.length > 0) {
           const objectivesData = res.data;
-          const designEffortPromises = objectivesData.map(async (obj) => {
+
+          // Using a Set to collect unique design effort IDs
+          const uniqueDesignEfforts = new Set();
+          objectivesData.forEach((obj) => {
             if (obj.design_efforts.length > 0) {
-              const designEffortData = await fetchDesignEfforts(
-                obj.design_efforts
-              );
-              return { ...obj, design_efforts: designEffortData };
+              obj.design_efforts.forEach((id) => uniqueDesignEfforts.add(id));
             }
-            return obj;
           });
-          const objectivesWithDesignEfforts = await Promise.all(
-            designEffortPromises
-          );
+
+          // Convert Set back to array for fetching
+          const designEffortIds = Array.from(uniqueDesignEfforts);
+          const designEffortData = await fetchDesignEfforts(designEffortIds);
+
+          // Map back to objectives with design efforts
+          const objectivesWithDesignEfforts = objectivesData.map((obj) => {
+            return {
+              ...obj,
+              design_efforts:
+                obj.design_efforts.length > 0 ? designEffortData : [],
+            };
+          });
+
           setObjectives(objectivesWithDesignEfforts);
         } else {
           console.error("No data found in the response");
@@ -218,6 +232,7 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
         console.error("Error fetching data:", err);
       }
     };
+
     fetchObjectives();
   }, [fetchDesignEfforts, mappingList]);
 
@@ -332,85 +347,85 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleOptionClick = (option) => {
-    // Handle lifetime reset
-    if (option === "Lifetime") {
-      handleLifetimeClick();
-      return;
-    }
+  // const handleOptionClick = (option) => {
+  //   // Handle lifetime reset
+  //   if (option === "Lifetime") {
+  //     handleLifetimeClick();
+  //     return;
+  //   }
 
-    setSelectedOption(option);
+  //   setSelectedOption(option);
 
-    const currentYear = new Date().getFullYear();
-    let selectedItem = null;
+  //   const currentYear = new Date().getFullYear();
+  //   let selectedItem = null;
 
-    switch (option) {
-      case "Monthly":
-        selectedItem = `${currentYear}-${months[new Date().getMonth()]}`;
-        break;
-      case "Weekly":
-        selectedItem = `${currentYear}-Week ${getISOWeek(new Date())}`;
-        break;
-      case "Quarterly":
-        selectedItem = getCurrentQuarter();
-        break;
-      default:
-        selectedItem = null;
-        break;
-    }
+  //   switch (option) {
+  //     case "Monthly":
+  //       selectedItem = `${currentYear}-${months[new Date().getMonth()]}`;
+  //       break;
+  //     case "Weekly":
+  //       selectedItem = `${currentYear}-Week ${getISOWeek(new Date())}`;
+  //       break;
+  //     case "Quarterly":
+  //       selectedItem = getCurrentQuarter();
+  //       break;
+  //     default:
+  //       selectedItem = null;
+  //       break;
+  //   }
 
-    // Check if the current selection exists in purposeListData
-    const currentExists = effortsListData?.some((purpose) => {
-      const createdDate = new Date(purpose.created_at);
-      const year = createdDate.getFullYear();
-      const month = months[createdDate.getMonth()];
-      const week = `Week ${getISOWeek(createdDate)}`;
-      const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+  //   // Check if the current selection exists in purposeListData
+  //   const currentExists = effortsListData?.some((purpose) => {
+  //     const createdDate = new Date(purpose.created_at);
+  //     const year = createdDate.getFullYear();
+  //     const month = months[createdDate.getMonth()];
+  //     const week = `Week ${getISOWeek(createdDate)}`;
+  //     const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
 
-      switch (option) {
-        case "Monthly":
-          return `${year}-${month}` === selectedItem;
-        case "Weekly":
-          return `${year}-${week}` === selectedItem;
-        case "Quarterly":
-          return `${year}-${quarter}` === selectedItem;
-        default:
-          return false;
-      }
-    });
+  //     switch (option) {
+  //       case "Monthly":
+  //         return `${year}-${month}` === selectedItem;
+  //       case "Weekly":
+  //         return `${year}-${week}` === selectedItem;
+  //       case "Quarterly":
+  //         return `${year}-${quarter}` === selectedItem;
+  //       default:
+  //         return false;
+  //     }
+  //   });
 
-    // If the current selection doesn't exist, select the last available date
-    if (!currentExists) {
-      const lastAvailableItem = effortsListData
-        ?.map((purpose) => {
-          const createdDate = new Date(purpose.created_at);
-          const year = createdDate.getFullYear();
-          const month = months[createdDate.getMonth()];
-          const week = `Week ${getISOWeek(createdDate)}`;
-          const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+  //   // If the current selection doesn't exist, select the last available date
+  //   if (!currentExists) {
+  //     const lastAvailableItem = effortsListData
+  //       ?.map((purpose) => {
+  //         const createdDate = new Date(purpose.created_at);
+  //         const year = createdDate.getFullYear();
+  //         const month = months[createdDate.getMonth()];
+  //         const week = `Week ${getISOWeek(createdDate)}`;
+  //         const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
 
-          switch (option) {
-            case "Monthly":
-              return `${year}-${month}`;
-            case "Weekly":
-              return `${year}-${week}`;
-            case "Quarterly":
-              return `${year}-${quarter}`;
-            default:
-              return null;
-          }
-        })
-        .filter(Boolean)
-        .reverse()[0];
+  //         switch (option) {
+  //           case "Monthly":
+  //             return `${year}-${month}`;
+  //           case "Weekly":
+  //             return `${year}-${week}`;
+  //           case "Quarterly":
+  //             return `${year}-${quarter}`;
+  //           default:
+  //             return null;
+  //         }
+  //       })
+  //       .filter(Boolean)
+  //       .reverse()[0];
 
-      setSelectedOptionItem(lastAvailableItem);
-    } else {
-      setSelectedOptionItem(selectedItem);
-    }
+  //     setSelectedOptionItem(lastAvailableItem);
+  //   } else {
+  //     setSelectedOptionItem(selectedItem);
+  //   }
 
-    setIsLifetimeClicked(false);
-    setIsDropdownOpen(false);
-  };
+  //   setIsLifetimeClicked(false);
+  //   setIsDropdownOpen(false);
+  // };
 
   const isActive = (year, option) => {
     return selectedOptionItem === `${year}-${option}` ? "active" : "";
@@ -530,11 +545,106 @@ const Effort = ({ isAdmin, onToggleNewEffort, showNewEffortInput }) => {
       </ul>
     );
   };
-
   useEffect(() => {
-    // Set selectedOptionItem to current quarter initially
-    setSelectedOptionItem(getCurrentQuarter());
-  }, []);
+    const initializeSelectedOption = () => {
+      let initialSelection = getCurrentQuarter();
+      const existsInData = effortsListData?.some((effort) => {
+        const createdDate = new Date(effort.created_at);
+        const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+        return `${createdDate.getFullYear()}-${quarter}` === initialSelection;
+      });
+
+      // If the current selection doesn't exist, find the last available option
+      if (!existsInData) {
+        const lastAvailableItem = getLastAvailableItem("Quarterly");
+        initialSelection = lastAvailableItem || initialSelection; // Fallback if no last item exists
+      }
+
+      setSelectedOptionItem(initialSelection);
+    };
+
+    initializeSelectedOption();
+  }, [effortsListData]);
+
+  const getLastAvailableItem = (option) => {
+    if (!Array.isArray(purposeListData)) return null;
+    // Check effortsListData for the most recent available item
+    const availableItems = effortsListData
+      ?.map((effort) => {
+        const createdDate = new Date(effort.created_at);
+        const year = createdDate.getFullYear();
+        const month = months[createdDate.getMonth()];
+        const week = `Week ${getISOWeek(createdDate)}`;
+        const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+
+        switch (option) {
+          case "Monthly":
+            return `${year}-${month}`;
+          case "Weekly":
+            return `${year}-${week}`;
+          case "Quarterly":
+            return `${year}-${quarter}`;
+          default:
+            return null;
+        }
+      })
+      .filter(Boolean);
+
+    // Return the last available item, sorted by date
+    return availableItems.reverse()[0] || null;
+  };
+
+  const handleOptionClick = (option) => {
+    setSelectedOption(option);
+    let selectedItem;
+
+    const currentYear = new Date().getFullYear();
+    switch (option) {
+      case "Monthly":
+        selectedItem = `${currentYear}-${months[new Date().getMonth()]}`;
+        break;
+      case "Weekly":
+        selectedItem = `${currentYear}-Week ${getISOWeek(new Date())}`;
+        break;
+      case "Quarterly":
+        selectedItem = getCurrentQuarter();
+        break;
+      default:
+        selectedItem = null;
+    }
+
+    // Check if the current selection exists in effortsListData
+    const currentExists = effortsListData?.some((effort) => {
+      const createdDate = new Date(effort.created_at);
+      const year = createdDate.getFullYear();
+      const month = months[createdDate.getMonth()];
+      const week = `Week ${getISOWeek(createdDate)}`;
+      const quarter = `Q${Math.ceil((createdDate.getMonth() + 1) / 3)}`;
+
+      switch (option) {
+        case "Monthly":
+          return `${year}-${month}` === selectedItem;
+        case "Weekly":
+          return `${year}-${week}` === selectedItem;
+        case "Quarterly":
+          return `${year}-${quarter}` === selectedItem;
+        default:
+          return false;
+      }
+    });
+
+    // If the current selection doesn't exist, select the last available date
+    if (!currentExists) {
+      const lastAvailableItem = getLastAvailableItem(option);
+      setSelectedOptionItem(lastAvailableItem);
+    } else {
+      setSelectedOptionItem(selectedItem);
+    }
+
+    setIsLifetimeClicked(false);
+    setIsDropdownOpen(false);
+  };
+
   function getISOWeek(date) {
     const d = new Date(date);
     d.setHours(0, 0, 0, 0);

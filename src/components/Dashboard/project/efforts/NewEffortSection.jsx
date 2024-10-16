@@ -30,8 +30,8 @@ const NewEffortSection = ({
 
   const areAllFieldsFilled = () => {
     return (
-      selectedProductOutcomes.length > 0 &&
-      selectedDesignEfforts.length > 0 &&
+      selectedProductOutcomes?.length > 0 &&
+      selectedDesignEfforts?.length > 0 &&
       selectedPurpose
     );
   };

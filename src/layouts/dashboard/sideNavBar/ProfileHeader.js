@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/hooks";
 import ProfileFormModel from "@/components/shared/model/ProfileFormModel";
 
-const ProfileHeader = () => {
+const ProfileHeader = React.forwardRef((props, ref) => {
   const { userinfo, useradd, logout } = useAuth();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -63,6 +63,7 @@ const ProfileHeader = () => {
       <div
         className="metismenu-profile bottom-profile d-flex align-items-center flex-row cursor-pointer justify-content-between border_top-white"
         onClick={toggleDropdown}
+        ref={ref}
       >
         <div className="d-flex align-items-center gap-2">
           <div className="profile-img relative">
@@ -135,6 +136,6 @@ const ProfileHeader = () => {
       />
     </>
   );
-};
+});
 
 export default ProfileHeader;

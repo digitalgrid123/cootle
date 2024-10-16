@@ -329,7 +329,7 @@ const CombinedEffortModel = ({
         <ul className="p-0">
           <div className="grid-container">
             {category.items
-              .filter((effort) => !selectedDesignEfforts.includes(effort.id))
+              .filter((effort) => !selectedDesignEfforts?.includes(effort.id))
               .map((effort) => (
                 <div key={effort.id} className="grid-item ">
                   <li
