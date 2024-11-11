@@ -1,3 +1,4 @@
+import Heading from "@/components/common/Heading";
 import React from "react";
 
 const CardLayout = ({ cards, customClass }) => {
@@ -82,16 +83,17 @@ const StruggleSection = () => {
   ];
 
   return (
-    <section className="struggle-section relative">
+    <section className="struggle-section relative z-2">
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-8 offset-lg-2">
             <CardLayout cards={topCards} customClass="padding-bottom-cards" />
 
-            <h1 className="struggle-heading weight-700">
-              Struggles Before Cootle
-            </h1>
-
+            <Heading
+              className="base-heading struggle-heading weight-700"
+              level={1}
+              text="Struggles Before Cootle"
+            />
             <CardLayout cards={bottomCards} customClass="padding-top-cards" />
           </div>
         </div>

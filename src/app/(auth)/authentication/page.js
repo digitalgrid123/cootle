@@ -8,6 +8,8 @@ import Navbar from "@/layouts/dashboard/header/Navbar";
 import HeroSection from "@/components/auth/LandingPage/HeroSection";
 import BenefitsSection from "@/components/auth/LandingPage/BenefitSection";
 import StruggleSection from "@/components/auth/LandingPage/StruggleSection";
+import PurposeSection from "@/components/auth/LandingPage/PurposeSection";
+import MappingSection from "@/components/auth/LandingPage/MappingSection";
 
 const AuthPage = () => {
   const { push } = useRouter();
@@ -55,8 +57,14 @@ const AuthPage = () => {
         onSignupClick={() => handleNavigation(PATH_AUTH.signup)}
         onContactClick={() => console.log("Contact us button clicked")}
       />
-      <BenefitsSection />
-      <StruggleSection />
+      <div className="merge-all-section">
+        <BenefitsSection />
+        <StruggleSection />
+        <div className="border-mixed"></div>
+        <PurposeSection />
+        <div className="border-mixed"></div>
+        <MappingSection />
+      </div>
     </>
   );
 };

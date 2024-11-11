@@ -7,7 +7,7 @@ const HeroSection = ({
   onContactClick,
 }) => {
   return (
-    <section className="bg-main min-vh-100">
+    <section className="bg-main min-vh-100 z-2">
       <img
         src="/assets/images/bg-theme/ellipse1.png"
         className="image-1"

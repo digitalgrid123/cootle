@@ -146,6 +146,9 @@ a {
 .p-0 {
   padding: 0 !important;
 }
+.z-2 {
+  z-index: 2;
+}
 .w-20 {
   width: 20%;
 }
@@ -296,6 +299,14 @@ textarea {
 .text-white {
   color: var(--text-color) !important;
 }
+.color-lavender {
+  color: #957dbd;
+}
+
+.color-rose {
+  color: #f398a5;
+}
+
 .black {
   color: var(--text-black);
 }
