@@ -53,7 +53,7 @@ const StruggleSection = () => {
       className: "rotate-15",
       content:
         "No clear way to track how design contributes to business metrics, at scale!",
-      images: ["/assets/images/mark/people.png"],
+      images: ["/assets/images/mark/people.png "],
     },
   ];
 
