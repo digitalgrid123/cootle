@@ -65,6 +65,11 @@ export default function RootLayout({ children }) {
         <script src="https://unpkg.com/react-quill@1.3.3/dist/react-quill.js"></script>
         <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
         <script type="text/babel" src="/my-scripts.js"></script>
+        <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/twemoji.min.css"
+          rel="stylesheet"
+        />
+
         <title>Cootle</title>
       </Head>
       <body className={inter.className}>

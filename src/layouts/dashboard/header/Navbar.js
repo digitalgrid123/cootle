@@ -92,7 +92,7 @@ const Navbar = ({
     <header>
       <div className="container-fluid">
         <div className="row">
-          <div className="col-lg-10 offset-lg-2">
+          <div className="col-lg-12">
             <div className="navbar-cootle">
               <Link href="/" passHref className="cootle-container">
                 <img
@@ -107,7 +107,7 @@ const Navbar = ({
                   href="mailto:sales@cootle.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="weight-500 hide-on-small-devices text-white"
+                  className="weight-500 hide-on-small-devices deeppurple"
                 >
                   Contact sales
                 </a>

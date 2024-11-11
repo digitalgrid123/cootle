@@ -5,6 +5,8 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
 :root {
   --text-color: #ffffff;
   --light-lavender: #faf6fe;
@@ -13,6 +15,7 @@
   --comic: "Comic Neue", cursive;
   --open: "OpenRunde", sans-serif;
   --antro: "AntroVectra", sans-serif;
+  --poppins: "Poppins", sans-serif;
   --semi-transparent-white: #ffffff4d;
   --greenish-blue: #1b242c1f;
   --box-shadow: 0px 1px 2px 0px var(--greenish-blue);
@@ -61,6 +64,11 @@
   --deep-purple-overlay: #1a072c80;
   --lavender-blush: #f6effd;
   --semi-transparent-white: #ffffff33;
+  --indigo-shade: #6247aa;
+  --primary-gold: #9b6402;
+  --deep-green: #10503c;
+  --rich-purple: #78276e;
+  --vibrant-pink: #cd2f7a;
 
   /* linear Gradient */
   --linear-gradient: linear-gradient(
@@ -72,6 +80,7 @@
   /* Box Shadow */
   --shadow-box: 0 2px 6px 0 rgb(218 218 253 / 65%),
     0 2px 6px 0 rgb(206 206 238 / 54%) !important;
+  --box-shadow-inset: 0px 1px 4px 0px #00000040 inset;
   /* Font wight */
   --bold: 700;
   --semi-bold: 600;
@@ -107,6 +116,7 @@ h6 {
   margin: 0;
 }
 header {
+  z-index: 9999;
   position: absolute;
   width: 100%;
 }
@@ -159,6 +169,9 @@ textarea {
 }
 .ml-12 {
   margin-left: 12px;
+}
+.mb-40 {
+  margin-bottom: 40px;
 }
 .p-80 {
   padding: 80px !important;
@@ -286,6 +299,20 @@ textarea {
 .black {
   color: var(--text-black);
 }
+.accent-text {
+  color: var(--primary-gold);
+}
+
+.vibrant-pink-text {
+  color: var(--vibrant-pink);
+}
+.rich-purple-text {
+  color: var(--rich-purple);
+}
+.deep-green-text {
+  color: var(--deep-green);
+}
+
 .bg-white {
   background: var(--text-color) !important ;
 }
@@ -424,6 +451,9 @@ textarea {
 .mb-24 {
   margin-bottom: 24px;
 }
+.mb-28 {
+  margin-bottom: 28px;
+}
 .mb-32 {
   margin-bottom: 32px;
 }
@@ -471,9 +501,9 @@ textarea {
 
 .cootle-text {
   font-size: 20px;
-  line-height: 0;
+  line-height: 24px;
   text-align: left;
-  color: var(--text-color);
+  color: var(--eerie-black);
 }
 
 .reset-dropdown {
