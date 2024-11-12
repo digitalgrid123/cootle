@@ -440,7 +440,7 @@
 .mapping-heading {
   font-size: 24px;
   line-height: 34px;
-  color: var(--eerie-black);
+  color: var(--color-dark-gray);
 }
 .mapping-graient {
   position: absolute;
@@ -449,7 +449,92 @@
   right: 174px;
   z-index: 1;
 }
+.gridalign-right {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+}
 
+.content {
+  grid-column: 1 / span 9;
+}
+.text-gradient {
+  background: linear-gradient(
+      218.09deg,
+      rgba(255, 133, 133, 0.8) 21.82%,
+      rgba(79, 45, 255, 0.8) 76.1%
+    ),
+    #ffffff;
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+.blend-text-gradient {
+  background: rgba(255, 255, 255, 1);
+  background-blend-mode: multiply;
+  background-image: radial-gradient(
+    circle at 74.42% 35.29%,
+    rgba(98, 71, 170, 0.8) 38.17%,
+    rgba(255, 211, 191, 0.8) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-blend-text {
+  background: #ffffff;
+  background-blend-mode: multiply;
+  background-image: radial-gradient(
+    126.56% 764.01% at 23.26% 26.79%,
+    rgba(98, 71, 170, 0.8) 0%,
+    rgba(255, 211, 191, 0.8) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-project {
+  position: absolute;
+  top: 50%;
+  left: 5%;
+}
+.gradient-documentation {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.insight-list {
+  padding: 0;
+  list-style: none;
+}
+
+.insight-item {
+  position: relative;
+  padding-left: 20px;
+}
+
+.insight-item::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #a66ccf;
+  font-size: 1.2em;
+}
+.gradient-insight1 {
+  position: absolute;
+  left: 0;
+  top: 26%;
+}
+.gradient-insight2 {
+  position: absolute;
+  right: 70px;
+}
 @keyframes moveTopBottom {
   0% {
     transform: translateY(0);

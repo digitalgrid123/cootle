@@ -69,6 +69,7 @@
   --deep-green: #10503c;
   --rich-purple: #78276e;
   --vibrant-pink: #cd2f7a;
+  --color-dark-gray: #343435;
 
   /* linear Gradient */
   --linear-gradient: linear-gradient(
@@ -295,6 +296,9 @@ textarea {
 }
 .deeppurple {
   color: var(--deepPurple) !important;
+}
+.dark-gray {
+  color: var(--color-dark-gray);
 }
 .text-white {
   color: var(--text-color) !important;

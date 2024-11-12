@@ -10,6 +10,9 @@ import BenefitsSection from "@/components/auth/LandingPage/BenefitSection";
 import StruggleSection from "@/components/auth/LandingPage/StruggleSection";
 import PurposeSection from "@/components/auth/LandingPage/PurposeSection";
 import MappingSection from "@/components/auth/LandingPage/MappingSection";
+import ProjectSection from "@/components/auth/LandingPage/ProjectSection";
+import DocumentationSection from "@/components/auth/LandingPage/DocumentationSection";
+import InsightSection from "@/components/auth/LandingPage/InsightSection";
 
 const AuthPage = () => {
   const { push } = useRouter();
@@ -64,6 +67,12 @@ const AuthPage = () => {
         <PurposeSection />
         <div className="border-mixed"></div>
         <MappingSection />
+        <div className="border-mixed"></div>
+        <ProjectSection />
+        <div className="border-mixed"></div>
+        <DocumentationSection />
+        <div className="border-mixed"></div>
+        <InsightSection />
       </div>
     </>
   );

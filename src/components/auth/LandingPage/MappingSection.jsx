@@ -23,7 +23,7 @@ const MappingSection = () => {
                 predefined product tasks—like user testing
               </span>{" "}
               , to{" "}
-              <span className="color-lavender weight-600">
+              <span className="gradient-blend-text weight-600">
                 specific business goals—such as revenue growth
               </span>
               , ensuring that every action contributes directly to an overall
