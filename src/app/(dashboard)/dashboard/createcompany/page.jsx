@@ -3,6 +3,7 @@ import Title from "@/components/Dashboard/Title";
 import CompanyModel from "@/components/shared/model/CompanyModel";
 
 import MemberModel from "@/components/shared/model/MemberModel";
+import PageTitle from "@/components/shared/PageTitle";
 import { useAuth } from "@/hooks";
 import { useGlobalCompany } from "@/utils/globalState";
 import React, { useEffect, useState } from "react";
@@ -20,6 +21,7 @@ const createcompany = () => {
 
   return (
     <div className="h-100 d-flex flex-column">
+      <PageTitle title="Company" />
       <div className="mb-20 title-content-container custom-padding ">
         <Title title="Company" />
       </div>

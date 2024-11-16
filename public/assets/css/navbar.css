@@ -27,7 +27,7 @@
 .nav_cootle > button > span {
   font-size: 14px;
   line-height: 16.94px;
-  color: var(--text-color);
+  color: var(--white);
   transition: color 0.3s;
 }
 
@@ -63,7 +63,7 @@
 }
 
 .nav_cootle > button:disabled > span {
-  color: var(--text-color);
+  color: var(--white);
 }
 .overlay {
   position: fixed;
@@ -180,7 +180,7 @@
   font-size: 20px;
   font-weight: 600;
   line-height: 24.2px;
-  color: var(--text-color);
+  color: var(--white);
 }
 
 .contact-sales h2 {

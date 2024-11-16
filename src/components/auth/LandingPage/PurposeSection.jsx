@@ -1,39 +1,13 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import Heading from "@/components/common/Heading";
+import { cards } from "@/utils/constants";
+import { useSmoothScroll } from "@/hooks";
 
 const CardLayout = ({ cards, customClass }) => {
   const scrollContainerRef = useRef(null);
 
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    let scrollDirection = 1; // 1 for forward, -1 for backward
-
-    const smoothScroll = () => {
-      if (scrollContainer) {
-        const scrollWidth = scrollContainer.scrollWidth;
-        const scrollLeft = scrollContainer.scrollLeft;
-
-        // Scroll forward or backward based on direction
-        if (scrollDirection === 1) {
-          if (scrollLeft < scrollWidth - scrollContainer.clientWidth) {
-            scrollContainer.scrollLeft += 2; // Scroll at a smooth rate
-          } else {
-            scrollDirection = -1; // Switch to backward scrolling
-          }
-        } else {
-          if (scrollLeft > 0) {
-            scrollContainer.scrollLeft -= 2;
-          } else {
-            scrollDirection = 1; // Switch to forward scrolling
-          }
-        }
-      }
-    };
-
-    const interval = setInterval(smoothScroll, 16); // 60 FPS (16ms interval)
-
-    return () => clearInterval(interval); // Cleanup on component unmount
-  }, []);
+  // Use the custom hook for smooth scrolling
+  useSmoothScroll(scrollContainerRef);
 
   return (
     <div
@@ -67,37 +41,6 @@ const CardLayout = ({ cards, customClass }) => {
 };
 
 const PurposeSection = () => {
-  const cards = [
-    {
-      label: "Clear Purpose for Every Task",
-      content:
-        "Each design task starts with a defined purpose, aligning teams and eliminating vague feedback.",
-      className: "purpose-clear-purpose",
-      img: "/assets/images/mark/task.svg",
-    },
-    {
-      label: "Aligned Outcomes",
-      content:
-        "Value Mapping fosters a shared vision, reducing misunderstandings and keeping projects on track.",
-      className: "purpose-aligned-outcomes",
-      img: "/assets/images/mark/outcome.svg",
-    },
-    {
-      label: "Strategic, High-Impact Design",
-      content:
-        "Designers focus on strategic projects, moving beyond surface-level work to deliver measurable value.",
-      className: "purpose-strategic-design",
-      img: "/assets/images/mark/impact.svg",
-    },
-    {
-      label: "Measurable Design Impact",
-      content:
-        "Track design's impact on key metrics like revenue and customer satisfaction, proving ROI, at scale.",
-      className: "purpose-measurable-impact",
-      img: "/assets/images/mark/measurable.svg",
-    },
-  ];
-
   return (
     <section className="purpose-section relative">
       <div className="container-fluid">

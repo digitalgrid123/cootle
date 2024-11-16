@@ -11,6 +11,7 @@ import { getData } from "@/utils/storage";
 
 const MainMap = () => {
   const [selectedMapping, setSelectedMapping] = useState("effort");
+
   const [openDropdown, setOpenDropdown] = useState(false);
   const [reset, setReset] = useState(false);
   const { toaster } = useToaster();

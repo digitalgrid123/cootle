@@ -4,11 +4,12 @@ import { useAuth } from "@/hooks"; // Adjust import path as per your project str
 import CreateModel from "@/components/shared/model/CreateModel";
 import DesignEffortModel from "@/components/shared/model/DesignEffortModel";
 import { useGlobalCompany } from "@/utils/globalState";
-import { Loader } from "@/components/shared/loader";
+
 import ArchievedModel from "@/components/shared/model/ArchievedModel";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 import "../../../../public/assets/css/quill.css";
+import Loader from "@/components/common/Loader";
 
 const TABS = {
   DEFINITION: "Definition",
@@ -297,9 +298,9 @@ const ObjectiveMapping = ({
 
   if (loading)
     return (
-      <div>
-        <Loader />
-      </div>
+      <>
+        <Loader isLoading={loading} />
+      </>
     );
   if (error) return <div>{error}</div>;
 

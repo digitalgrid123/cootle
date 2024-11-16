@@ -1,25 +1,8 @@
 import Heading from "@/components/common/Heading";
+import { data } from "@/utils/constants";
 import React from "react";
 
 const InsightSection = () => {
-  const data = [
-    {
-      label: "Value Proportion Analysis",
-      description:
-        "Understand how design efforts support Identity, Functional, Financial, and Experiential Value.",
-    },
-    {
-      label: "Design Effort Focus Ratio",
-      description:
-        "Track the distribution of effort across key design areas—User Research, Usability, Information Architecture, and more.",
-    },
-    {
-      label: "Business Objectives Proportion Analysis",
-      description:
-        "See how design contributes to business goals like revenue growth, innovation, and operational efficiency.",
-    },
-  ];
-
   return (
     <section className="purpose-section relative">
       <div className="container-fluid">

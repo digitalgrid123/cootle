@@ -7,6 +7,7 @@ import VerifyEmail from "@/components/auth/VerifyEmail";
 import Navbar from "@/layouts/dashboard/header/Navbar";
 import VerifyPassCode from "@/components/auth/VerifyPassCode";
 import { backgroundImages } from "@/utils/constants";
+import PageTitle from "@/components/shared/PageTitle";
 
 const Signup = () => {
   const { push } = useRouter();
@@ -38,6 +39,7 @@ const Signup = () => {
 
   return (
     <>
+      <PageTitle title="Signup" />
       <Navbar
         disableGetStarted={pathname === PATH_AUTH.signup}
         onLogin={handlelogin}

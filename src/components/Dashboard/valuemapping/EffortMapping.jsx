@@ -9,6 +9,7 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 import "../../../../public/assets/css/quill.css";
 import eventBus from "@/utils/eventBus";
+import Loader from "@/components/common/Loader";
 
 const EffortMapping = ({
   reset,
@@ -255,6 +256,12 @@ const EffortMapping = ({
     ),
     [categoriesList, activeCategory, handleCategoryClick]
   );
+  if (loading)
+    return (
+      <>
+        <Loader isLoading={loading} />
+      </>
+    );
 
   return (
     <>

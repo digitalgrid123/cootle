@@ -19,6 +19,10 @@ export const useGlobalCompany = () => {
   const isCurrentCompanyUpdated = useRef(false);
 
   useEffect(() => {
+    // Clear the saved company on the first mount
+    globalState.selectedCompany = null;
+    setCompany(null);
+
     const listener = (newCompany) => {
       setCompany(newCompany);
     };
@@ -29,7 +33,7 @@ export const useGlobalCompany = () => {
         (l) => l !== listener
       );
     };
-  }, []);
+  }, []); // Runs only on the initial mount
 
   // Reset the ref when company ID changes
   useEffect(() => {

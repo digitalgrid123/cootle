@@ -7,6 +7,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Purpose from "@/components/Dashboard/project/purpose/Purpose";
 import Effort from "@/components/Dashboard/project/efforts/Effort";
 import Insight from "@/components/Dashboard/project/insight/insight";
+import PageTitle from "@/components/shared/PageTitle";
 
 const Page = () => {
   const searchParams = useSearchParams();
@@ -102,6 +103,7 @@ const Page = () => {
 
   return (
     <div className="h-100 d-flex flex-column">
+      <PageTitle title="Projects" />
       <Header
         title={name}
         selectedMapping={selectedMapping}

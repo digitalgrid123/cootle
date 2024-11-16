@@ -7,6 +7,7 @@ import VerifyEmail from "@/components/auth/VerifyEmail";
 import Navbar from "@/layouts/dashboard/header/Navbar";
 import VerifyPassCode from "@/components/auth/VerifyPassCode";
 import { backgroundImages } from "@/utils/constants";
+import PageTitle from "@/components/shared/PageTitle";
 
 const login = () => {
   const { push } = useRouter();
@@ -38,6 +39,7 @@ const login = () => {
 
   return (
     <>
+      <PageTitle title="Login" />
       <Navbar
         disableLogin={pathname === PATH_AUTH.login}
         onSignup={handleSignup}
