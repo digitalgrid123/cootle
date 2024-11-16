@@ -13,6 +13,7 @@ import MappingSection from "@/components/auth/LandingPage/MappingSection";
 import ProjectSection from "@/components/auth/LandingPage/ProjectSection";
 import DocumentationSection from "@/components/auth/LandingPage/DocumentationSection";
 import InsightSection from "@/components/auth/LandingPage/InsightSection";
+import Footer from "@/components/auth/LandingPage/Footer";
 
 const AuthPage = () => {
   const { push } = useRouter();
@@ -43,6 +44,24 @@ const AuthPage = () => {
       push(path);
     }
   };
+  const sections = [
+    BenefitsSection,
+    StruggleSection,
+    PurposeSection,
+    MappingSection,
+    ProjectSection,
+    DocumentationSection,
+    InsightSection,
+  ];
+
+  const renderSections = () => {
+    return sections.map((SectionComponent, index) => (
+      <React.Fragment key={index}>
+        <SectionComponent />
+        {index < sections.length - 1 && <div className="border-mixed"></div>}
+      </React.Fragment>
+    ));
+  };
 
   return (
     <>
@@ -61,18 +80,11 @@ const AuthPage = () => {
         onContactClick={() => console.log("Contact us button clicked")}
       />
       <div className="merge-all-section">
-        <BenefitsSection />
-        <StruggleSection />
-        <div className="border-mixed"></div>
-        <PurposeSection />
-        <div className="border-mixed"></div>
-        <MappingSection />
-        <div className="border-mixed"></div>
-        <ProjectSection />
-        <div className="border-mixed"></div>
-        <DocumentationSection />
-        <div className="border-mixed"></div>
-        <InsightSection />
+        {renderSections()}
+        <Footer
+          onSignupClick={handleNavigation(PATH_AUTH.signup)}
+          onContactClick={() => console.log("Contact us button clicked")}
+        />
       </div>
     </>
   );

@@ -103,13 +103,13 @@ const PurposeSection = () => {
       <div className="container-fluid">
         <img
           src="/assets/images/bg-theme/ellipse8.png"
-          className="purpose-gradient"
+          className="purpose-gradient animated"
           alt="background ellipse"
         />
         <div className="row">
           <div className="col-lg-8 offset-lg-2">
             <Heading
-              className="base-heading purpose-heading weight-700 mb-32"
+              className="base-heading text-start weight-700 mb-32"
               level={1}
               text="How Cootle Transforms Product Teams"
             />

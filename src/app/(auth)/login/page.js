@@ -6,6 +6,7 @@ import { useTabs } from "@/hooks";
 import VerifyEmail from "@/components/auth/VerifyEmail";
 import Navbar from "@/layouts/dashboard/header/Navbar";
 import VerifyPassCode from "@/components/auth/VerifyPassCode";
+import { backgroundImages } from "@/utils/constants";
 
 const login = () => {
   const { push } = useRouter();
@@ -42,7 +43,15 @@ const login = () => {
         onSignup={handleSignup}
         disableGetStarted={false}
       />
-      <section className="bg-main min-vh-100 d-flex justify-content-center pt-270 pb-270">
+      <section className="bg-image  min-vh-100 d-flex justify-content-center pt-270 pb-270 ">
+        {backgroundImages.map((src, index) => (
+          <img
+            key={index}
+            src={src}
+            className={`image-${index + 1} animated`}
+            alt={`background ellipse ${index + 1}`}
+          />
+        ))}
         <div className="container-fluid">
           <div className="row">
             <div className="padding-24 col-lg-6 offset-lg-3 d-flex justify-content-center">

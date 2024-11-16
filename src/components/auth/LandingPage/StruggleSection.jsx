@@ -90,7 +90,7 @@ const StruggleSection = () => {
             <CardLayout cards={topCards} customClass="padding-bottom-cards" />
 
             <Heading
-              className="base-heading struggle-heading weight-700"
+              className="base-heading struggle-heading weight-700 text-center"
               level={1}
               text="Struggles Before Cootle"
             />

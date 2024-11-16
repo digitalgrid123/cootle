@@ -4,18 +4,18 @@ const BenefitsSection = () => {
   return (
     <section className="product-benefits-section relative">
       <img
-        src="/assets/images/bg-theme/ellipse7.png"
-        className="productbg-1"
+        src="/assets/images/bg-theme/ellipse8.png"
+        className="productbg-1 animated"
         alt="background ellipse"
       />
       <img
-        src="/assets/images/bg-theme/ellipse6.png"
-        className="productbg-2"
+        src="/assets/images/bg-theme/ellipse8.png"
+        className="productbg-2 animated"
         alt="background ellipse"
       />
       <img
         src="/assets/images/bg-theme/ellipse5.png"
-        className="productbg-3"
+        className="productbg-3 animated"
         alt="background ellipse"
       />
       <div className="container-fluid">

@@ -1,3 +1,4 @@
+import { backgroundImages } from "@/utils/constants";
 import React from "react";
 
 const HeroSection = ({
@@ -8,31 +9,14 @@ const HeroSection = ({
 }) => {
   return (
     <section className="bg-main min-vh-100 z-2">
-      <img
-        src="/assets/images/bg-theme/ellipse1.png"
-        className="image-1"
-        alt="background ellipse"
-      />
-      <img
-        src="/assets/images/bg-theme/ellipse2.png"
-        className="image-2"
-        alt="background ellipse"
-      />
-      <img
-        src="/assets/images/bg-theme/ellipse1.png"
-        className="image-3"
-        alt="background ellipse"
-      />
-      <img
-        src="/assets/images/bg-theme/ellipse3.png"
-        className="image-4"
-        alt="background ellipse"
-      />
-      <img
-        src="/assets/images/bg-theme/ellipse3.png"
-        className="image-5"
-        alt="background ellipse"
-      />
+      {backgroundImages.map((src, index) => (
+        <img
+          key={index}
+          src={src}
+          className={`image-${index + 1} animated`}
+          alt={`background ellipse ${index + 1}`}
+        />
+      ))}
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-8 offset-lg-2">
@@ -41,14 +25,12 @@ const HeroSection = ({
                 className="auth_main_heading weight-700 mb-28"
                 id="main-heading"
               >
-                {mainHeading ||
-                  "Designer-Friendly Workload Management, Purpose-Built for Product Teams"}
+                {mainHeading}
               </h1>
               <div className="row">
                 <div className="col-lg-10 offset-lg-1">
                   <p className="auth_main_paragraph weight-500">
-                    {paragraphText ||
-                      "Align product team efforts with business goals, outcomes, and values—starting where it all begins: design."}
+                    {paragraphText}
                   </p>
                 </div>
               </div>

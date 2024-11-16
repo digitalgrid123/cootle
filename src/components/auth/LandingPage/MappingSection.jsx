@@ -8,22 +8,22 @@ const MappingSection = () => {
         <div className="row">
           <div className="col-lg-8 offset-lg-2">
             <img
-              src="/assets/images/bg-theme/ellipse9.png"
+              src="/assets/images/bg-theme/ellipse8.png"
               alt="background gradient"
-              className="mapping-graient"
+              className="mapping-graient animated"
             />
             <Heading
-              className="base-heading purpose-heading weight-700 mb-24"
+              className="base-heading text-start weight-700 mb-24"
               level={1}
               text="Value Mapping"
             />
             <p className="mapping-heading mb-32 weight-500">
               Cootle's Value Mapping helps teams map{" "}
-              <span className="color-rose weight-600">
+              <span className="gradient-red-linear   weight-600">
                 predefined product tasks—like user testing
               </span>{" "}
               , to{" "}
-              <span className="gradient-blend-text weight-600">
+              <span className="gradient-purple-radial   weight-600">
                 specific business goals—such as revenue growth
               </span>
               , ensuring that every action contributes directly to an overall

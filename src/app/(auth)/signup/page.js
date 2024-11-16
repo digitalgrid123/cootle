@@ -6,10 +6,11 @@ import { useTabs } from "@/hooks";
 import VerifyEmail from "@/components/auth/VerifyEmail";
 import Navbar from "@/layouts/dashboard/header/Navbar";
 import VerifyPassCode from "@/components/auth/VerifyPassCode";
+import { backgroundImages } from "@/utils/constants";
 
 const Signup = () => {
   const { push } = useRouter();
-  const pathname = usePathname(); // Correct usage here
+  const pathname = usePathname();
   const { currentTab, setCurrentTab } = useTabs(1);
 
   const [userEmail, setUserEmail] = useState("");
@@ -41,7 +42,15 @@ const Signup = () => {
         disableGetStarted={pathname === PATH_AUTH.signup}
         onLogin={handlelogin}
       />
-      <section className="bg-main min-vh-100 d-flex  justify-content-center pt-270 pb-270">
+      <section className="bg-image  min-vh-100 d-flex justify-content-center pt-270 pb-270 ">
+        {backgroundImages.map((src, index) => (
+          <img
+            key={index}
+            src={src}
+            className={`image-${index + 1} animated`}
+            alt={`background ellipse ${index + 1}`}
+          />
+        ))}
         <div className="container-fluid">
           <div className="col-lg-6 padding-24  offset-lg-3 d-flex justify-content-center">
             <div className="authentication-box">

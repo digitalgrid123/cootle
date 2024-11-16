@@ -1,7 +1,5 @@
 import Heading from "@/components/common/Heading";
 import React from "react";
-import Ellipse2 from "./Ellipses/Ellipse2";
-import Ellipse3 from "./Ellipses/Ellipse3";
 
 const InsightSection = () => {
   const data = [
@@ -21,22 +19,27 @@ const InsightSection = () => {
         "See how design contributes to business goals like revenue growth, innovation, and operational efficiency.",
     },
   ];
+
   return (
     <section className="purpose-section relative">
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-8 offset-lg-2">
-            <div className="gradient-insight1">
-              <Ellipse2 />
-            </div>
-            <div className="gradient-insight2">
-              <Ellipse3 width={300} height={300} />
-            </div>
-
             <div className="gridalign-right">
               <div className="content">
+                <img
+                  src="/assets/images/bg-theme/ellipse1.png"
+                  alt="background gradient"
+                  className="gradient-insight1 animated"
+                />
+                <img
+                  src="/assets/images/bg-theme/ellipse5.png"
+                  alt="background gradient"
+                  className="gradient-insight2 animated"
+                />
+
                 <Heading
-                  className="base-heading purpose-heading weight-700 mb-24"
+                  className="base-heading text-start weight-700 mb-24"
                   level={1}
                   text="Insight on Design Impact"
                 />
@@ -47,9 +50,15 @@ const InsightSection = () => {
                 </p>
                 <ul className="insight-list mb-32">
                   {data.map((item, index) => (
-                    <li key={index} className="insight-item ">
+                    <li key={index} className="insight-item">
                       <div className="mapping-heading">
-                        <strong style={{ color: "#a66ccf" }}>
+                        <strong
+                          className={
+                            index === 0
+                              ? "gradient-purple-lavender-right "
+                              : "gradient-purple-lavender-image "
+                          }
+                        >
                           {item.label}
                         </strong>
                         : {item.description}

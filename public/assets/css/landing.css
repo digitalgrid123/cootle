@@ -5,53 +5,100 @@
   border-bottom-right-radius: 100px;
   position: relative;
 }
+/* Common animation properties for animated elements */
+.animated {
+  z-index: 999;
 
+  position: absolute;
+}
+
+/* Grouping for images with common animation */
 .image-1,
 .image-2,
 .image-3,
 .image-4,
-.image-5 {
-  /* pointer-events: none;
-  user-select: none;
-  -webkit-user-drag: none; */
+.image-5,
+.productbg-1,
+.productbg-2,
+.productbg-3,
+.purpose-gradient {
   z-index: 999;
-  animation: moveAround 4s ease-in-out infinite;
 }
 
+/* Individual positioning */
 .image-1 {
-  position: absolute;
-  width: 18%;
   top: 12%;
-  left: 2%;
+  left: -3%;
 }
-
 .image-2 {
-  position: absolute;
-  right: 0;
-  width: 20%;
   top: 18%;
+  right: 0;
 }
-
 .image-3 {
-  position: absolute;
-  right: 8%;
-  width: 16%;
   top: 15%;
-}
-
-.image-4 {
-  position: absolute;
-  width: 16%;
-  top: 55%;
-  left: 3%;
-}
-
-.image-5 {
-  position: absolute;
-  width: 18%;
   right: 8%;
-  top: 22%;
 }
+.image-4 {
+  top: 48%;
+  left: -3%;
+}
+.image-5 {
+  top: 22%;
+  right: 8%;
+}
+
+.productbg-1 {
+  bottom: -30%;
+  left: -8%;
+}
+.productbg-2 {
+  bottom: -7%;
+  right: -7%;
+}
+.productbg-3 {
+  bottom: -30%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.purpose-gradient {
+  top: 34%;
+  left: -8%;
+}
+
+/* Gradient elements */
+.mapping-graient {
+  bottom: -70px;
+  right: 103px;
+  z-index: 1;
+}
+.footer-gradient1 {
+  top: 25%;
+  left: -57px;
+}
+.footer-gradient2 {
+  top: 28%;
+  right: 0;
+}
+.footer-gradient3 {
+  bottom: -27%;
+  right: 8%;
+}
+.footer-gradient4 {
+  bottom: -1%;
+  right: 10%;
+}
+
+.gradient-insight1 {
+  top: 8%;
+  right: 0;
+}
+.gradient-insight2 {
+  top: 26%;
+  left: 0;
+  z-index: 1;
+}
+
 .auth_main_heading {
   padding: 0 65px;
   font-size: 60px;
@@ -75,7 +122,7 @@
   border: none;
   cursor: pointer;
   border-radius: 8px;
-  padding: 15px 20px;
+
   font-size: 14px;
   line-height: 16.94px;
   text-align: center;
@@ -84,10 +131,12 @@
 
 .contact_btn {
   background-color: var(--indigo-shade);
+  padding: 15px 45px;
 }
 
 .started_btn {
   background-color: var(--eerie-black);
+  padding: 15px 20px;
 }
 
 .img-software {
@@ -99,19 +148,20 @@
   width: 100%;
 }
 
-/* .thanks-text {
+.thanks-text {
   font-family: var(--antro);
-  font-size: 60px;
-  line-height: 100px;
-  letter-spacing: -1.5px;
-  text-align: left;
-  margin-top: 41px;
+  color: var(--deepPurple);
+  margin-top: 61px;
   text-align: center;
-} */
+  font-style: normal;
+  font-weight: 700;
+  font-size: 53px;
+  letter-spacing: -1.5px;
+}
 .base-heading {
   font-size: 56px;
   line-height: 67.77px;
-  text-align: center;
+
   color: var(--eerie-black);
 }
 
@@ -121,13 +171,16 @@
   color: var(--deepPurple);
 }
 
-.purpose-heading {
-  text-align: left;
-}
+.copyright-text {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 29px;
 
-.struggle-heading {
+  text-align: center;
+  letter-spacing: -0.01em;
+  color: var(--dark-purple-gray);
 }
-
 .verify-box {
   border-radius: 24px;
   border: none;
@@ -240,35 +293,9 @@
 
   margin-top: 4px;
 }
-.productbg-2 {
-  position: absolute;
-  right: 0;
-  bottom: -7%;
-  width: 20%;
-  z-index: 999;
-  animation: moveAround 4s ease-in-out infinite;
-}
-.productbg-3 {
-  position: absolute;
-  bottom: -30%;
-  z-index: 1;
-  left: 50%;
-  width: 65%;
-  z-index: 999;
-  animation: moveAround 4s ease-in-out infinite;
-  transform: translateX(-50%);
-}
 
-.productbg-1 {
-  position: absolute;
-
-  bottom: -30%;
-  width: 16%;
-  z-index: 999;
-  animation: moveAround 4s ease-in-out infinite;
-}
 .struggle-section {
-  background-color: #f3f3f347;
+  background-color: var(--light-gray-overlay);
   border-bottom: 10px solid var(--light-lavender);
   border-top-left-radius: 100px;
   border-top-right-radius: 100px;
@@ -286,7 +313,7 @@
 .card {
   border-radius: 30px;
   background-color: var(--text-color);
-  box-shadow: 0px 0px 0px 3px #e2e2e240;
+  box-shadow: 0px 0px 0px 3px var(--light-gray-transparent);
   padding: 20px 24px;
   min-width: 285px;
   min-height: 194px;
@@ -305,7 +332,7 @@
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 8px 12px var(--shadow-light);
 }
 
 .rotate-10-46 {
@@ -352,7 +379,7 @@
 }
 
 .purpose-section {
-  background-color: #f3f3f347;
+  background-color: var(--light-gray-overlay);
   padding: 136px 0;
   border-width: 10px 0px 10px 0px;
 
@@ -375,7 +402,7 @@
 }
 .purpose-card {
   background-color: var(--text-color);
-  box-shadow: 0px 0px 0px 3px #e2e2e240;
+  box-shadow: 0px 0px 0px 3px var(--light-gray-transparent);
 
   border-radius: 30px;
   min-width: 435px;
@@ -385,7 +412,7 @@
 }
 
 .purpose-card:hover {
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 20px var(--shadow-light);
   transform: translateY(-5px);
 }
 
@@ -415,40 +442,24 @@
   object-fit: contain;
 }
 .purpose-clear-purpose {
-  color: #9b6402;
+  color: var(--earthy-brown);
 }
 
 .purpose-aligned-outcomes {
-  color: #cd2f7a;
+  color: var(--vibrant-pink);
 }
 
-.purpose-strategic-design {
-  color: #10503c;
-}
-
+.purpose-strategic-design,
 .purpose-measurable-impact {
-  color: #10503c;
+  color: var(--dark-forest-green);
 }
-.purpose-gradient {
-  position: absolute;
-  left: -20px;
-  top: 34%;
-  width: 15%;
-  z-index: 999;
-  animation: moveAround 4s ease-in-out infinite;
-}
+
 .mapping-heading {
   font-size: 24px;
   line-height: 34px;
   color: var(--color-dark-gray);
 }
-.mapping-graient {
-  position: absolute;
-  width: 18%;
-  bottom: 17px;
-  right: 174px;
-  z-index: 1;
-}
+
 .gridalign-right {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
@@ -458,54 +469,155 @@
   grid-column: 1 / span 9;
 }
 .text-gradient {
-  background: linear-gradient(
-      218.09deg,
-      rgba(255, 133, 133, 0.8) 21.82%,
-      rgba(79, 45, 255, 0.8) 76.1%
-    ),
-    #ffffff;
-
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  color: transparent;
+  text-fill-color: transparent;
 }
+
+/* Gradient styles using root variables */
+.gradient-red-linear {
+  background: linear-gradient(
+      218.09deg,
+      var(--red-gradient-start) 21.82%,
+      var(--red-gradient-end) 76.1%
+    ),
+    var(--image-path), var(--text-color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.gradient-purple-radial {
+  background: radial-gradient(
+      126.56% 764.01% at 23.26% 26.79%,
+      var(--purple-gradient-start) 0%,
+      var(--purple-gradient-end) 100%
+    ),
+    var(--image-path), var(--text-color);
+  background-blend-mode: multiply, normal, normal;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.gradient-purple-lavender-image {
+  background: linear-gradient(
+      to right,
+      var(--lavender-gradient-start) 103%,
+      var(--lavender-gradient-end) 22%
+    ),
+    var(--image-path), var(--text-color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.gradient-purple-lavender-right {
+  background: linear-gradient(
+      to right,
+      var(--lavender-gradient-start) 71%,
+      var(--lavender-gradient-end) 22%
+    ),
+    var(--image-path), var(--text-color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.gradient-blue-pink-left {
+  background: linear-gradient(
+      to left,
+      var(--blue-pink-gradient-start) 16%,
+      var(--blue-pink-gradient-end) 29%
+    ),
+    var(--image-path), var(--text-color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.gradient-purple-fade-pink {
+  background: linear-gradient(
+      to right,
+      var(--purple-fade-pink-start) 0%,
+      var(--purple-fade-pink-middle) 25%,
+      var(--purple-fade-pink-middle) 50%,
+      var(--purple-fade-pink-end) 100%
+    ),
+    var(--image-path), var(--text-color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.gradient-purple-solid {
+  background: linear-gradient(
+      to right,
+      var(--solid-purple),
+      var(--solid-purple)
+    ),
+    var(--image-path), var(--text-color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.gradient-purple-pink-linear {
+  background: linear-gradient(
+      to right,
+      var(--purple-pink-start) 10.82%,
+      var(--purple-pink-end) 90.1%
+    ),
+    var(--image-path), var(--text-color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
 .blend-text-gradient {
   background: rgba(255, 255, 255, 1);
   background-blend-mode: multiply;
   background-image: radial-gradient(
     circle at 74.42% 35.29%,
-    rgba(98, 71, 170, 0.8) 38.17%,
-    rgba(255, 211, 191, 0.8) 100%
+    var(--purple-gradient-start) 38.17%,
+    var(--purple-gradient-end) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  color: transparent;
+  text-fill-color: transparent;
 }
 
 .gradient-blend-text {
-  background: #ffffff;
+  background: var(--text-color);
   background-blend-mode: multiply;
   background-image: radial-gradient(
     126.56% 764.01% at 23.26% 26.79%,
-    rgba(98, 71, 170, 0.8) 0%,
-    rgba(255, 211, 191, 0.8) 100%
+    var(--purple-gradient-start) 0%,
+    var(--purple-gradient-end) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  color: transparent;
+  text-fill-color: transparent;
 }
-
 .gradient-project {
   position: absolute;
-  top: 50%;
+  bottom: 30px;
   left: 5%;
 }
 .gradient-documentation {
   position: absolute;
-  top: 20%;
+  top: 22%;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -523,35 +635,37 @@
   content: "•";
   position: absolute;
   left: 0;
-  color: #a66ccf;
+  color: var(--theme-highlight-color);
   font-size: 1.2em;
 }
-.gradient-insight1 {
-  position: absolute;
-  left: 0;
-  top: 26%;
+
+.bg-footer {
+  background-image: url("../images/bg-theme/bg-footer.webp");
+  background-position: center;
+  background-size: cover;
+  padding-top: 80px;
+  padding-bottom: 65px;
+  border-bottom-left-radius: 100px;
+  border-bottom-right-radius: 100px;
 }
-.gradient-insight2 {
-  position: absolute;
-  right: 70px;
+
+.footer-heading {
+  font-size: 60px;
+  color: var(--eerie-black);
+  line-height: 70px;
+  text-align: center;
 }
-@keyframes moveTopBottom {
-  0% {
-    transform: translateY(0);
-  }
-  25% {
-    transform: translateY(-5px);
-  }
-  50% {
-    transform: translateY(5px);
-  }
-  75% {
-    transform: translateY(-5px);
-  }
-  100% {
-    transform: translateY(0);
-  }
+
+.footer-paragraph {
+  font-style: normal;
+  font-size: 21px;
+  line-height: 29px;
+  text-align: center;
+  letter-spacing: -0.01em;
+  color: var(--text-black);
+  padding: 0 140px;
 }
+
 /* iPhone 14 / 15 (Standard and Plus) */
 @media only screen and (min-device-width: 375px) and (max-device-width: 430px) and (-webkit-min-device-pixel-ratio: 3) {
   .bg-main {
