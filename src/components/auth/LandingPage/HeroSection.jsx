@@ -8,7 +8,7 @@ const HeroSection = ({
   onContactClick,
 }) => {
   return (
-    <section className="bg-main min-vh-100 z-2">
+    <section className="bg-main min-vh-100 ">
       {backgroundImages.map((src, index) => (
         <img
           key={index}
@@ -20,7 +20,7 @@ const HeroSection = ({
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-8 offset-lg-2">
-            <div className="heading">
+            <div className="content-paddingtop">
               <h1
                 className="auth_main_heading weight-700 mb-28"
                 id="main-heading"
@@ -34,7 +34,7 @@ const HeroSection = ({
                   </p>
                 </div>
               </div>
-              <div className="d-flex justify-content-center align-items-center gap-4 mt-40">
+              <div className="d-flex justify-content-center align-items-center gap-4 mt-40 mt-32-mobile">
                 <button
                   className="started_btn btn-base weight-600"
                   onClick={onSignupClick}

@@ -21,18 +21,18 @@ const BenefitsSection = () => {
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-8 offset-lg-2">
-            <p className="benefit-description weight-600">
+            <p className="benefit-description weight-600 spaced-text">
               With Cootle, teams can effortlessly
               <span className="accent-text"> define Product outcomes </span>,
               seamlessly
               <span className="deep-green-text"> track design efforts </span>
-              toward them, and
+              toward them, and&nbsp;
               <span className="rich-purple-text">
-                improve the overall value{" "}
+                improve the overall value&nbsp;
               </span>
               of the
-              <span className="vibrant-pink-text"> product team </span> across
-              the organisation.
+              <span className="vibrant-pink-text"> product team </span>
+              across the organisation.
             </p>
           </div>
         </div>

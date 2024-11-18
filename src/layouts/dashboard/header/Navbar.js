@@ -124,7 +124,7 @@ const Navbar = ({
                     <span className="weight-500">Get started for free</span>
                   </button>
                 )}
-                <button
+                {/* <button
                   className="outline-btn"
                   onMouseEnter={() => setHovered(true)}
                   onMouseLeave={() => setHovered(false)}
@@ -140,7 +140,7 @@ const Navbar = ({
                     loading="lazy"
                     className="hover-image"
                   />
-                </button>
+                </button> */}
               </div>
             </div>
           </div>

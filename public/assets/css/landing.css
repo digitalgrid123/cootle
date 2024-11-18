@@ -1,9 +1,30 @@
 .bg-main {
   background-color: var(--white);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.bg-main::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   border: 10px solid var(--light-lavender);
   border-bottom-left-radius: 100px;
   border-bottom-right-radius: 100px;
-  position: relative;
+  z-index: -1;
+}
+
+.image-1,
+.image-2,
+.image-3,
+.image-4,
+.image-5 {
+  position: absolute;
+  z-index: 2;
 }
 /* Common animation properties for animated elements */
 .animated {
@@ -114,7 +135,7 @@
   text-align: center;
   color: var(--eerie-black);
 }
-.heading {
+.content-paddingtop {
   padding: 256px 30px 0 30px;
 }
 
@@ -671,14 +692,14 @@
 /* iPhone 14 / 15 (Standard and Plus) */
 @media only screen and (min-device-width: 375px) and (max-device-width: 430px) and (-webkit-min-device-pixel-ratio: 3) {
   .bg-main {
-    overflow: hidden;
+    /* overflow: hidden; */
   }
   .auth_main_heading {
     font-size: 28px;
     line-height: 32px;
     text-align: left;
   }
-  .heading {
+  .content-paddingtop {
     padding: 134px 8px 0 8px;
   }
 
@@ -690,11 +711,11 @@
     font-size: 20px;
   }
   .img-software {
-    padding-top: 40px;
+    padding: 59px 0px 59px;
   }
   .software-icon {
-    width: 670px !important;
-    max-width: none;
+    /* width: 670px !important;
+    max-width: none; */
   }
   .thanks-text {
     font-size: 35px;
@@ -711,7 +732,7 @@
 /* iPhone 14 Pro Max / 15 Pro Max */
 @media only screen and (min-device-width: 428px) and (max-device-width: 430px) and (-webkit-min-device-pixel-ratio: 3) {
   .bg-main {
-    overflow: hidden;
+    /* overflow: hidden; */
   }
   .auth_main_heading {
     font-size: 28px;
@@ -724,11 +745,11 @@
     margin-left: 0;
   }
   .img-software {
-    padding-top: 40px;
+    padding: 59px 0px 59px;
   }
   .software-icon {
-    width: 670px !important;
-    max-width: none;
+    /* width: 670px !important;
+    max-width: none; */
   }
   .thanks-text {
     font-size: 35px;
@@ -757,39 +778,103 @@
     width: 100%;
   }
   .software-icon {
-    width: 885px !important;
-    max-width: none;
+    /* width: 885px !important;
+    max-width: none; */
   }
 }
 @media only screen and (max-width: 768px) {
+  .benefit-description::before,
+  .benefit-description::after {
+    content: "“";
+    font-size: 112px;
+  }
+  .image-1 {
+    top: 6%;
+    left: -42%;
+  }
+  .image-2 {
+    top: 6%;
+    right: -57%;
+  }
+  .image-3 {
+    top: -2%;
+    right: -24%;
+  }
+  .image-4 {
+    top: 57%;
+    left: -50%;
+  }
+  .image-5 {
+    top: 16%;
+    right: -24%;
+  }
+  .benefit-description {
+    font-size: 27px;
+    line-height: 39px;
+    padding: 0 55px;
+  }
+  .benefit-description::before {
+    top: -40px;
+    left: 1%;
+  }
+  .product-benefits-section {
+    padding: 121px 0 142px;
+  }
+  .productbg-2 {
+    right: -52%;
+  }
+  .productbg-1 {
+    bottom: -30%;
+    left: -46%;
+  }
+  .bg-main {
+    padding: 0 10px;
+  }
+  .bg-main::before {
+    border: 6px solid var(--light-lavender);
+    border-bottom-left-radius: 60px;
+    border-bottom-right-radius: 60px;
+  }
+
+  .mt-32-mobile {
+    margin-top: 32px;
+  }
+  .auth_main_paragraph {
+    padding: 0;
+  }
   .span-started_btn {
     width: 100%;
   }
   .bg-main {
-    overflow: hidden;
+    /* overflow: hidden; */
   }
   .auth_main_heading {
-    font-size: 28px;
-    line-height: 32px;
-    text-align: left;
+    padding: 0;
+    font-size: 36px;
+    line-height: 46px;
+    text-align: center;
   }
-  .heading {
-    padding: 134px 8px 0 8px;
+  .content-paddingtop {
+    padding: 160px 0px 0 0px;
   }
 
   .started_btn {
     width: 100%;
     margin-left: 0;
-    padding: 12px 34px;
-    line-height: 24.2px;
-    font-size: 20px;
+    padding: 14px 22px;
+    line-height: 16.94px;
+    font-size: 14px;
+  }
+  .contact_btn {
+    padding: 14px 55px;
+    white-space: nowrap;
   }
   .img-software {
-    padding-top: 40px;
+    padding: 59px 0px 59px;
   }
   .software-icon {
-    width: 670px !important;
-    max-width: none;
+    /* width: 670px !important;
+    max-width: none; */
   }
   .thanks-text {
     font-size: 35px;
