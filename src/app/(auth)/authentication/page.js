@@ -46,12 +46,12 @@ const AuthPage = () => {
   };
   const sections = [
     BenefitsSection,
-    // StruggleSection,
-    // PurposeSection,
-    // MappingSection,
-    // ProjectSection,
-    // DocumentationSection,
-    // InsightSection,
+    StruggleSection,
+    PurposeSection,
+    MappingSection,
+    ProjectSection,
+    DocumentationSection,
+    InsightSection,
   ];
 
   const renderSections = () => {
@@ -81,10 +81,10 @@ const AuthPage = () => {
       />
       <div className="merge-all-section">
         {renderSections()}
-        {/* <Footer
+        <Footer
           onSignupClick={handleNavigation(PATH_AUTH.signup)}
           onContactClick={() => console.log("Contact us button clicked")}
-        /> */}
+        />
       </div>
     </>
   );
