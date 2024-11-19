@@ -108,6 +108,7 @@
     0 2px 6px 0 rgb(206 206 238 / 54%) !important;
   --box-shadow-inset: 0px 1px 4px 0px #00000040 inset;
   --box-shadow: 0px 1px 2px 0px var(--greenish-blue);
+  --soft-outline: 0px 0px 0px 3px var(--light-gray-transparent);
 
   /* =================== Font Weights =================== */
   --bold: 700;

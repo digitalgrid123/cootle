@@ -18,7 +18,7 @@ const InsightSection = () => {
                 <img
                   src="/assets/images/bg-theme/ellipse5.png"
                   alt="background gradient"
-                  className="gradient-insight2 animated"
+                  className="gradient-insight2 animated hide-on-small-devices"
                 />
 
                 <Heading
@@ -54,7 +54,7 @@ const InsightSection = () => {
             <img
               src="/assets/images/bg-theme/insight.png"
               alt="project section"
-              className="z-2 relative"
+              className="z-2 relative image-max-width"
             />
           </div>
         </div>

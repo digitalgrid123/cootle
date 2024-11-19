@@ -35,15 +35,20 @@ const StruggleSection = () => {
     <section className="struggle-section relative z-2">
       <div className="container-fluid">
         <div className="row">
-          <div className="col-lg-8 offset-lg-2">
-            <CardLayout cards={topCards} customClass="padding-bottom-cards" />
-
-            <Heading
-              className="base-heading struggle-heading weight-700 text-center"
-              level={1}
-              text="Struggles Before Cootle"
-            />
-            <CardLayout cards={bottomCards} customClass="padding-top-cards" />
+          <div className="col-lg-8 offset-lg-2 struggle-content">
+            <div className="top-cards-container">
+              <CardLayout cards={topCards} customClass="padding-bottom-cards" />
+            </div>
+            <div className="heading-container">
+              <Heading
+                className="base-heading struggle-heading weight-700 text-center"
+                level={1}
+                text="Struggles Before Cootle"
+              />
+            </div>
+            <div className="bottom-cards-container">
+              <CardLayout cards={bottomCards} customClass="padding-top-cards" />
+            </div>
           </div>
         </div>
       </div>

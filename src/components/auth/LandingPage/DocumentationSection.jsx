@@ -9,9 +9,14 @@ const DocumentationSection = () => {
           <div className="col-lg-8 offset-lg-2">
             <div className="gridalign-right">
               <img
+                src="/assets/images/bg-theme/ellipse3.png"
+                alt="background gradient"
+                className="gradient-documentation2"
+              />
+              <img
                 src="/assets/images/bg-theme/ellipse5.png"
                 alt="background gradient"
-                className="gradient-documentation "
+                className="gradient-documentation hide-on-small-devices"
               />
 
               <div className="content">
@@ -23,9 +28,9 @@ const DocumentationSection = () => {
                 <p className="mapping-heading mb-32 weight-500 ">
                   <span className="gradient-purple-fade-pink  weight-600">
                     Transparent and Accountable Workflows
-                  </span>{" "}
-                  Our streamlined process lets designers easily document task
-                  outcomes, enabling product managers to{" "}
+                  </span>
+                  &nbsp; - Our streamlined process lets designers easily
+                  document task outcomes, enabling product managers to&nbsp;
                   <span className="gradient-blue-pink-left   weight-600">
                     assess impact and value
                   </span>
@@ -37,7 +42,7 @@ const DocumentationSection = () => {
             <img
               src="/assets/images/bg-theme/documenation.png"
               alt="project section"
-              className="z-2 relative"
+              className="z-2 relative image-max-width"
             />
           </div>
         </div>

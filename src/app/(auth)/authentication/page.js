@@ -23,23 +23,18 @@ const AuthPage = () => {
   // Update the isMobile state based on the viewport width
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); // Adjust this threshold as needed
+      setIsMobile(window.innerWidth <= 768);
     };
-
-    // Set initial state
     handleResize();
-
-    // Attach event listener
     window.addEventListener("resize", handleResize);
 
-    // Clean up event listener
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const handleNavigation = (path) => (event) => {
     if (isMobile) {
       setShowContent(true);
-      event.preventDefault(); // Prevent navigation on mobile
+      event.preventDefault();
     } else {
       push(path);
     }

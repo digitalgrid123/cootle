@@ -294,14 +294,13 @@
 .benefit-description::after {
   content: "“";
   font-size: 200px;
-  line-height: 250px;
   font-weight: 600;
   position: absolute;
 }
 
 .benefit-description::before {
   left: -9%;
-  transform: translateY(-16%);
+  transform: translateY(-54%);
 }
 
 .benefit-description::after {
@@ -336,7 +335,7 @@
 .card {
   border-radius: 30px;
   background-color: var(--white);
-  box-shadow: 0px 0px 0px 3px var(--light-gray-transparent);
+  box-shadow: var(--soft-outline);
   padding: 20px 24px;
   min-width: 285px;
   min-height: 194px;
@@ -392,8 +391,6 @@
   border-top-left-radius: 100px;
   border-top-right-radius: 100px;
   min-height: 100vh;
-  position: relative;
-  top: -50px;
 }
 
 .border-mixed {
@@ -425,7 +422,7 @@
 }
 .purpose-card {
   background-color: var(--white);
-  box-shadow: 0px 0px 0px 3px var(--light-gray-transparent);
+  box-shadow: var(--soft-outline);
 
   border-radius: 30px;
   min-width: 435px;
@@ -453,7 +450,7 @@
 .purpose-card-label {
   font-size: 24px;
   line-height: 34px;
-  font-weight: 600;
+  font-weight: 700;
   color: inherit;
   font-family: var(--open);
 }
@@ -663,11 +660,8 @@
 }
 
 .bg-footer {
-  background-image: url("../images/bg-theme/bg-footer.webp");
-  background-position: center;
-  background-size: cover;
-  padding-top: 80px;
-  padding-bottom: 65px;
+  background: url("../images/bg-theme/bg-footer.webp") center / cover;
+  padding: 80px 0 65px;
   border-bottom-left-radius: 100px;
   border-bottom-right-radius: 100px;
 }
@@ -687,6 +681,9 @@
   letter-spacing: -0.01em;
   color: var(--black);
   padding: 0 140px;
+}
+.gradient-documentation2 {
+  display: none;
 }
 
 /* iPhone 14 / 15 (Standard and Plus) */
@@ -709,6 +706,7 @@
     padding: 12px 34px;
     line-height: 24.2px;
     font-size: 20px;
+    white-space: nowrap;
   }
   .img-software {
     padding: 59px 0px 59px;
@@ -783,6 +781,107 @@
   }
 }
 @media only screen and (max-width: 768px) {
+  .bg-footer {
+    padding: 40px 28px 70px 28px;
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+  }
+
+  .mobile-m-0 {
+    margin: 0 !important;
+  }
+  .mobile-mb-24 {
+    margin-bottom: 24px !important;
+  }
+  .gradient-documentation2 {
+    display: block;
+    position: absolute;
+    bottom: -91px;
+    left: -148px;
+  }
+  .hide-on-small-devices {
+    display: none;
+  }
+  .mapping-graient {
+    bottom: -90px;
+    right: -77px;
+    z-index: 1;
+  }
+  .gradient-insight1 {
+    top: 14%;
+    right: -151px;
+  }
+  .footer-heading {
+    font-size: 36px;
+    line-height: 44px;
+  }
+  .footer-paragraph {
+    padding: 0;
+  }
+  .image-max-width {
+    max-width: 800px;
+  }
+  .productbg-3 {
+    bottom: -36%;
+    left: 50%;
+    transform: translateX(-33%);
+    z-index: 2;
+  }
+  .base-heading {
+    font-size: 26px;
+    line-height: 31.37px;
+  }
+  .struggle-content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  .heading-container {
+    order: 1;
+  }
+  .top-cards-container {
+    order: 2;
+  }
+  .bottom-cards-container {
+    order: 3;
+  }
+  .card-container {
+    flex-direction: column;
+    justify-content: start;
+    gap: 70px;
+  }
+  .purpose-section {
+    padding: 60px 20px;
+  }
+  .purpose-card-label {
+    font-size: 18px;
+    line-height: 26px;
+  }
+  .purpose-card-content {
+    font-size: 18px;
+    line-height: 26px;
+    gap: 8px;
+    position: relative;
+    z-index: 2;
+  }
+  .mapping-heading {
+    font-size: 18px;
+    line-height: 26px;
+  }
+  .purpose-gradient {
+    top: 16%;
+    left: -55%;
+    z-index: 1;
+  }
+  .purpose-card {
+    min-width: 289px;
+    min-height: 196px;
+  }
+  .struggle-section {
+    border-top-left-radius: 60px;
+    border-top-right-radius: 60px;
+    padding: 60px 20px;
+  }
   .benefit-description::before,
   .benefit-description::after {
     content: "“";
@@ -800,6 +899,9 @@
     top: -2%;
     right: -24%;
   }
+  .merge-all-section {
+    overflow: hidden;
+  }
   .image-4 {
     top: 57%;
     left: -50%;
@@ -814,21 +916,22 @@
     padding: 0 55px;
   }
   .benefit-description::before {
-    top: -40px;
+    top: 48px;
     left: 1%;
   }
   .product-benefits-section {
-    padding: 121px 0 142px;
+    padding: 60px 20px 60px;
   }
   .productbg-2 {
+    bottom: 11%;
     right: -52%;
   }
   .productbg-1 {
-    bottom: -30%;
-    left: -46%;
+    bottom: -57%;
+    left: -38%;
   }
   .bg-main {
-    padding: 0 10px;
+    padding: 0 20px;
   }
   .bg-main::before {
     border: 6px solid var(--light-lavender);

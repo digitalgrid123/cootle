@@ -12,7 +12,7 @@ const CardLayout = ({ cards, customClass }) => {
   return (
     <div
       ref={scrollContainerRef}
-      className={`purpose-card-container ${customClass}`}
+      className={`purpose-card-container z-2 relative ${customClass}`}
       style={{
         display: "flex",
         overflowX: "auto",

@@ -22,16 +22,16 @@ const ProjectSection = () => {
                 <p className="mapping-heading mb-32 weight-500 ">
                   <span className="gradient-purple-pink-linear   weight-600">
                     Purpose-Driven Task Assignment
-                  </span>{" "}
-                  keeps everyone aligned with the{" "}
+                  </span>
+                  &nbsp; keeps everyone aligned with the&nbsp;
                   <span className="blend-text-gradient   weight-600">
                     "why"
-                  </span>{" "}
-                  behind each design effort. Every task{" "}
+                  </span>
+                  &nbsp; behind each design effort. Every task&nbsp;
                   <span className="gradient-purple-solid   weight-600">
-                    starts with Purpose{" "}
-                  </span>{" "}
-                  , ensuring that each product team member strategically
+                    starts with Purpose&nbsp;
+                  </span>
+                  &nbsp; , ensuring that each product team member strategically
                   contributes to the company’s overall goals and vision.
                 </p>
               </div>
@@ -39,7 +39,7 @@ const ProjectSection = () => {
             <img
               src="/assets/images/bg-theme/project.png"
               alt="project section"
-              className="z-2 relative"
+              className="z-2 relative image-max-width"
             />
           </div>
         </div>

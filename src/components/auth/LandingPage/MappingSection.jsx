@@ -18,11 +18,11 @@ const MappingSection = () => {
               text="Value Mapping"
             />
             <p className="mapping-heading mb-32 weight-500">
-              Cootle's Value Mapping helps teams map{" "}
+              Cootle's Value Mapping helps teams map&nbsp;
               <span className="gradient-red-linear   weight-600">
                 predefined product tasks—like user testing
-              </span>{" "}
-              , to{" "}
+              </span>
+              &nbsp; , to&nbsp;
               <span className="gradient-purple-radial   weight-600">
                 specific business goals—such as revenue growth
               </span>
@@ -33,7 +33,7 @@ const MappingSection = () => {
             <img
               src="/assets/images/bg-theme/mapping.png"
               alt="mapping section"
-              className="z-2 relative"
+              className="z-2 relative image-max-width"
             />
           </div>
         </div>
