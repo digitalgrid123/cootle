@@ -4,4 +4,4 @@ export { default as useMetaData } from "./useMetaData";
 export { default as useSetting } from "./useSetting";
 export { default as useNotifications } from "./useNotifications";
 export { default as useTabs } from "./useTabs";
-export { default as useSmoothScroll } from "./useSmoothScroll";
+export { default as useScrollHandler } from "./useScrollHandler";
