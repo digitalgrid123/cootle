@@ -53,6 +53,7 @@ const CardLayout = ({ cards, customClass }) => {
                 <span className={`purpose-card-label ${card.className}`}>
                   {card.label}:
                 </span>
+                &nbsp;
                 {card.content}
               </p>
             </div>
@@ -61,7 +62,7 @@ const CardLayout = ({ cards, customClass }) => {
       </div>
 
       <div className="col-lg-10 offset-lg-1">
-        <div className="d-flex justify-content-end align-items-center negative-margin-end-12">
+        <div className="d-flex justify-content-end align-items-center negative-margin-end-12 mt-28">
           <ArrowButton direction="left" isDisabled={isLeftDisabled} />
           <ArrowButton direction="right" isDisabled={isRightDisabled} />
         </div>
@@ -77,6 +78,11 @@ const PurposeSection = () => {
         <img
           src="/assets/images/bg-theme/ellipse8.png"
           className="purpose-gradient animated"
+          alt="background ellipse"
+        />
+        <img
+          src="/assets/images/bg-theme/ellipse5.png"
+          className="purpose-gradient2 animated"
           alt="background ellipse"
         />
         <div className="row">

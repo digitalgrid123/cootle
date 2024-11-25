@@ -23,15 +23,15 @@ const ProjectSection = () => {
                   <span className="gradient-purple-pink-linear   weight-600">
                     Purpose-Driven Task Assignment
                   </span>
-                  &nbsp; keeps everyone aligned with the&nbsp;
+                  &nbsp;keeps everyone aligned with the&nbsp;
                   <span className="blend-text-gradient   weight-600">
                     "why"
                   </span>
                   &nbsp; behind each design effort. Every task&nbsp;
                   <span className="gradient-purple-solid   weight-600">
-                    starts with Purpose&nbsp;
+                    starts with Purpose
                   </span>
-                  &nbsp; , ensuring that each product team member strategically
+                  , ensuring that each product team member strategically
                   contributes to the company’s overall goals and vision.
                 </p>
               </div>

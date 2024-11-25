@@ -370,8 +370,7 @@ textarea {
 .mr-12 {
   margin-right: 12px;
 }
-.mr-112
-{
+.mr-112 {
   margin-right: 112px;
 }
 .pl-12 {
@@ -479,6 +478,9 @@ textarea {
 }
 .mt-24 {
   margin-top: 24px;
+}
+.mt-28 {
+  margin-top: 28px;
 }
 .pt-11 {
   padding-top: 11px;

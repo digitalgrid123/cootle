@@ -8,8 +8,7 @@ const CardLayout = ({ cards, customClass }) => {
       {cards.map((card, index) => (
         <div key={index} className={`card ${card.className}`}>
           <div className="card-text">
-            <span>{card.label}:</span>
-            {card.content}
+            <span>{card.label}</span>: {card.content}
             <span>
               {card.images.map((image, idx) => (
                 <img

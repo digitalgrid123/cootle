@@ -23,7 +23,7 @@ const BenefitsSection = () => {
           <div className="col-lg-8 offset-lg-2">
             <p className="benefit-description weight-600 spaced-text">
               With Cootle, teams can effortlessly
-              <span className="accent-text"> define Product outcomes </span>,
+              <span className="accent-text"> define Product outcomes</span>,
               seamlessly
               <span className="deep-green-text"> track design efforts </span>
               toward them, and&nbsp;

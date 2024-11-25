@@ -45,6 +45,12 @@
 .purpose-gradient {
   z-index: 999;
 }
+.purpose-gradient2 {
+  top: 121px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
 
 /* Individual positioning */
 .image-1 {
@@ -180,7 +186,7 @@
   letter-spacing: -1.5px;
 }
 .base-heading {
-  font-size: 56px;
+  font-size: 54px;
   line-height: 67.77px;
 
   color: var(--eerie-black);
@@ -300,7 +306,7 @@
 
 .benefit-description::before {
   left: -9%;
-  transform: translateY(-54%);
+  transform: translateY(45%);
 }
 
 .benefit-description::after {
@@ -337,7 +343,8 @@
   background-color: var(--white);
   box-shadow: var(--soft-outline);
   padding: 20px 24px;
-  min-width: 285px;
+
+  max-width: 313px;
   min-height: 194px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -349,7 +356,7 @@
 }
 
 .card-text span {
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .card:hover {
@@ -446,11 +453,18 @@
   flex-direction: column;
   gap: 28px;
 }
+.purpose-card-content p {
+  font-size: 24px;
+  line-height: 34px;
+  font-weight: 500;
+  color: inherit;
+  font-family: var(--open);
+}
 
 .purpose-card-label {
   font-size: 24px;
   line-height: 34px;
-  font-weight: 700;
+  font-weight: 600;
   color: inherit;
   font-family: var(--open);
 }

@@ -27,10 +27,10 @@ const DocumentationSection = () => {
                 />
                 <p className="mapping-heading mb-32 weight-500 ">
                   <span className="gradient-purple-fade-pink  weight-600">
-                    Transparent and Accountable Workflows
+                    Transparent and Accountable Workflows&nbsp;
                   </span>
-                  &nbsp; - Our streamlined process lets designers easily
-                  document task outcomes, enabling product managers to&nbsp;
+                  - Our streamlined process lets designers easily document task
+                  outcomes, enabling product managers to&nbsp;
                   <span className="gradient-blue-pink-left   weight-600">
                     assess impact and value
                   </span>

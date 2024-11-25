@@ -22,7 +22,7 @@ const MappingSection = () => {
               <span className="gradient-red-linear   weight-600">
                 predefined product tasks—like user testing
               </span>
-              &nbsp; , to&nbsp;
+              , to&nbsp;
               <span className="gradient-purple-radial   weight-600">
                 specific business goals—such as revenue growth
               </span>
