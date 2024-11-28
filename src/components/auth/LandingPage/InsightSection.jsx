@@ -52,7 +52,7 @@ const InsightSection = () => {
               </div>
             </div>
             <img
-              src="/assets/images/bg-theme/insight.png"
+              src="/assets/images/bg-theme/insight.webp"
               alt="project section"
               className="z-2 relative image-max-width"
             />

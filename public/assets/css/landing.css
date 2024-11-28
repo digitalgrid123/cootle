@@ -293,26 +293,23 @@
   font-size: 50px;
   line-height: 79px;
   color: var(--eerie-black);
-  position: relative;
 }
 
-.benefit-description::before,
-.benefit-description::after {
-  content: "“";
+.quote-before,
+.quote-after {
   font-size: 200px;
   font-weight: 600;
   position: absolute;
 }
 
-.benefit-description::before {
-  left: -9%;
-  transform: translateY(45%);
+.quote-before {
+  top: 50%;
+  left: -100px;
 }
 
-.benefit-description::after {
-  content: "”";
-  top: 100%;
-  transform: translateY(-50%);
+.quote-after {
+  top: 50%;
+  right: -100px;
 }
 
 .product-benefits-section {
@@ -422,6 +419,7 @@
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  padding: 3px;
 }
 
 .purpose-card-container::-webkit-scrollbar {
@@ -439,7 +437,7 @@
 }
 
 .purpose-card:hover {
-  box-shadow: 0 6px 20px var(--shadow-light);
+  box-shadow: var(--soft-outline);
   transform: translateY(-5px);
 }
 

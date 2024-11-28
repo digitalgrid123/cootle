@@ -11,7 +11,7 @@ export const topCards = [
     label: "Unclear Design Expectations",
     className: "rotate-10-46",
     content:
-      "Vague feedback ('Make it better or Make it more intuitive') leads to misaligned design outcomes and team frustrations!",
+      "Vague feedback ('Make it better or Make it more intuitive') leads to misaligned design outcomes and team frustrations!😕",
     images: [
       "/assets/images/mark/sad.png",
       "/assets/images/mark/eye.png",
@@ -22,14 +22,14 @@ export const topCards = [
     label: "Outcome Misalignment",
     className: "rotate-0",
     content:
-      "Lack of shared understanding between product teams, resulting in divergent goals and misaligned priorities! ",
+      "Lack of shared understanding between product teams, resulting in divergent goals and misaligned priorities!🔄",
     images: ["/assets/images/mark/recycle.png"],
   },
   {
     label: "Difficulty Measuring Design Impact",
     className: "rotate-15",
     content:
-      "No clear way to track how design contributes to business metrics, at scale!",
+      "No clear way to track how design contributes to business metrics, at scale!🤷",
     images: ["/assets/images/mark/people.png "],
   },
 ];
@@ -39,21 +39,21 @@ export const bottomCards = [
     label: "Surface-level Design Work",
     className: "rotate-7-11",
     content:
-      "Designers limited to visual tweaks and pixel adjustments, unable to contribute to strategic, high-impact work!",
+      "Designers limited to visual tweaks and pixel adjustments, unable to contribute to strategic, high-impact work!🖌️",
     images: ["/assets/images/mark/pencil.png"],
   },
   {
     label: "Disconnect Between Leadership and Product Teams",
     className: "rotate--1-64",
     content:
-      "Leadership lacks visibility into design's business impact, hindering advocacy and executive support!",
+      "Leadership lacks visibility into design's business impact, hindering advocacy and executive support!🚫",
     images: ["/assets/images/mark/cancel.png"],
   },
   {
     label: "Limited Resource Visibility",
     className: "rotate--10-47",
     content:
-      "Teams lack clarity on how design resources are allocated across research, usability, and visual design, making optimisation difficult!",
+      "Teams lack clarity on how design resources are allocated across research, usability, and visual design, making optimisation difficult!👀",
     images: ["/assets/images/mark/doubleeye.png"],
   },
 ];

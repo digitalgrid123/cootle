@@ -36,10 +36,6 @@ const CardLayout = ({ cards, customClass }) => {
       <div
         ref={scrollContainerRef}
         className="purpose-card-container z-2 relative"
-        style={{
-          display: "flex",
-          overflowX: "auto",
-        }}
       >
         {cards.map((card, index) => (
           <div key={index} className={`purpose-card ${card.className}`}>

@@ -40,7 +40,7 @@ const DocumentationSection = () => {
               </div>
             </div>
             <img
-              src="/assets/images/bg-theme/documenation.png"
+              src="/assets/images/bg-theme/documentation.webp"
               alt="project section"
               className="z-2 relative image-max-width"
             />

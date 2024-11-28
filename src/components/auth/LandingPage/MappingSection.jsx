@@ -31,7 +31,7 @@ const MappingSection = () => {
               deliver measurable, valuable results.
             </p>
             <img
-              src="/assets/images/bg-theme/mapping.png"
+              src="/assets/images/bg-theme/mapping.webp"
               alt="mapping section"
               className="z-2 relative image-max-width"
             />

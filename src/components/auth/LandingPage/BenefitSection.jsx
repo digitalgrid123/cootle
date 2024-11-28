@@ -22,7 +22,11 @@ const BenefitsSection = () => {
         <div className="row">
           <div className="col-lg-8 offset-lg-2">
             <p className="benefit-description weight-600 spaced-text">
-              With Cootle, teams can effortlessly
+              <span className="relative">
+                <span class="quote-before">“</span>
+                With Cootle,
+              </span>
+              teams can effortlessly
               <span className="accent-text"> define Product outcomes</span>,
               seamlessly
               <span className="deep-green-text"> track design efforts </span>
@@ -32,7 +36,11 @@ const BenefitsSection = () => {
               </span>
               of the
               <span className="vibrant-pink-text"> product team </span>
-              across the organisation.
+              across the&nbsp;
+              <span className="relative">
+                organisation.
+                <span class="quote-after">”</span>
+              </span>
             </p>
           </div>
         </div>
