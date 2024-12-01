@@ -71,7 +71,7 @@ const AuthPage = () => {
       <HeroSection
         mainHeading=" Designer-Friendly Workload Management, Purpose-Built for Product Teams"
         paragraphText="Align product team efforts with business goals, outcomes, and values—starting where it all begins: design."
-        onSignupClick={() => handleNavigation(PATH_AUTH.signup)}
+        onSignupClick={handleNavigation(PATH_AUTH.signup)}
         onContactClick={() => console.log("Contact us button clicked")}
       />
       <div className="merge-all-section">

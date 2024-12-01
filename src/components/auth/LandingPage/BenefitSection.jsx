@@ -24,7 +24,7 @@ const BenefitsSection = () => {
             <p className="benefit-description weight-600 spaced-text">
               <span className="relative">
                 <span class="quote-before">“</span>
-                With Cootle,
+                With Cootle,&nbsp;
               </span>
               teams can effortlessly
               <span className="accent-text"> define Product outcomes</span>,
