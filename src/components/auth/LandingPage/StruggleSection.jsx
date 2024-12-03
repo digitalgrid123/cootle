@@ -6,7 +6,7 @@ const CardLayout = ({ cards, customClass }) => {
   return (
     <div className={`card-container ${customClass}`}>
       {cards.map((card, index) => (
-        <div key={index} className={`card ${card.className}`}>
+        <div key={index} className={`card-layout ${card.className}`}>
           <div className="card-text">
             <span>{card.label}</span>: {card.content}
             {/* <span>

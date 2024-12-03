@@ -34,7 +34,7 @@ const HeroSection = ({
                   </p>
                 </div>
               </div>
-              <div className="d-flex justify-content-center align-items-center gap-4 mt-40 mt-32-mobile">
+              <div className="d-flex justify-content-center align-items-center gap-4 mt-40 mobile-m-0 flex-mobile-column gap-mobile-2  gap-mobie-3">
                 <button
                   className="started_btn btn-base weight-600"
                   onClick={onSignupClick}

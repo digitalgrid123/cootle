@@ -50,7 +50,7 @@ const CardLayout = ({ cards, customClass }) => {
                   {card.label}:
                 </span>
                 &nbsp;
-                {card.content}
+                <span className="purpose-card-content">{card.content}</span>
               </p>
             </div>
           </div>

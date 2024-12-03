@@ -149,7 +149,7 @@
   border: none;
   cursor: pointer;
   border-radius: 8px;
-
+  white-space: nowrap;
   font-size: 14px;
   line-height: 16.94px;
   text-align: center;
@@ -315,7 +315,6 @@
 .product-benefits-section {
   padding: 160px 0 142px;
   background-color: var(--white);
-
 }
 
 .struggle-section {
@@ -334,7 +333,7 @@
   position: relative;
 }
 
-.card {
+.card-layout {
   border-radius: 30px;
   background-color: var(--white);
   box-shadow: var(--soft-outline);
@@ -719,6 +718,15 @@
   cursor: not-allowed;
 }
 
+@media (min-width: 0px) and (max-width: 445px) {
+  .flex-mobile-column {
+    flex-direction: column;
+  }
+  .gap-mobile-2 {
+    gap: 8px !important;
+  }
+}
+
 /* iPhone 14 / 15 (Standard and Plus) */
 @media only screen and (min-device-width: 375px) and (max-device-width: 430px) and (-webkit-min-device-pixel-ratio: 3) {
   .bg-main {
@@ -814,6 +822,12 @@
   }
 }
 @media only screen and (max-width: 768px) {
+  .width-100-mobile {
+    width: 100%;
+  }
+  .gap-mobie-3 {
+    gap: 12px !important;
+  }
   .bg-footer {
     padding: 40px 28px 70px 28px;
     border-bottom-left-radius: 50px;
@@ -878,22 +892,52 @@
   .bottom-cards-container {
     order: 3;
   }
+  .rotate-0 {
+    margin-top: 35px;
+  }
+  .quote-before,
+  .quote-after {
+    font-size: 112px;
+  }
+  .quote-before {
+    top: 28%;
+    left: -58px;
+  }
+  .merge-all-section {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  .quote-after {
+    top: 50%;
+    right: -58px;
+  }
+
   .card-container {
     flex-direction: column;
-    justify-content: start;
-    gap: 70px;
+    justify-content: center;
+    align-items: center;
+    padding: 0 !important;
+    gap: 35px;
+  }
+  .rotate--1-64 {
+    transform: rotate(-1.64deg) translateY(0);
+  }
+  .card-text {
+    font-size: 16px;
+    line-height: 22px;
   }
   .purpose-section {
     padding: 60px 20px;
   }
-  .purpose-card-label {
+  .purpose-card-label,
+  .purpose-card-content {
     font-size: 18px;
-    line-height: 26px;
   }
+
   .purpose-card-content {
     font-size: 18px;
     line-height: 26px;
-    gap: 8px;
+    gap: 0px;
     position: relative;
     z-index: 2;
   }
@@ -906,8 +950,13 @@
     left: -55%;
     z-index: 1;
   }
+  .purpose-card-image {
+    width: 28px;
+    height: 28px;
+  }
   .purpose-card {
-    min-width: 289px;
+    padding: 20px 13px 0 13px;
+    min-width: 304px;
     min-height: 196px;
   }
   .struggle-section {
@@ -915,11 +964,7 @@
     border-top-right-radius: 60px;
     padding: 60px 20px;
   }
-  .benefit-description::before,
-  .benefit-description::after {
-    content: "“";
-    font-size: 112px;
-  }
+
   .image-1 {
     top: 6%;
     left: -42%;
@@ -946,12 +991,9 @@
   .benefit-description {
     font-size: 27px;
     line-height: 39px;
-    padding: 0 55px;
+    padding: 0 38px;
   }
-  .benefit-description::before {
-    top: 48px;
-    left: 1%;
-  }
+
   .product-benefits-section {
     padding: 60px 20px 60px;
   }
@@ -1002,6 +1044,7 @@
     font-size: 14px;
   }
   .contact_btn {
+    width: 100%;
     padding: 14px 55px;
     white-space: nowrap;
   }
