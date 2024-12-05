@@ -39,6 +39,10 @@ const AuthPage = () => {
       push(path);
     }
   };
+
+  const handleEmailClick = () => {
+    window.open("mailto:sales@cootle.com", "_blank");
+  };
   const sections = [
     BenefitsSection,
     StruggleSection,
@@ -53,7 +57,10 @@ const AuthPage = () => {
     return sections.map((SectionComponent, index) => (
       <React.Fragment key={index}>
         <SectionComponent />
-        {index < sections.length - 1 && <div className="border-mixed"></div>}
+        {index < sections.length - 1 &&
+          SectionComponent !== BenefitsSection && (
+            <div className="border-mixed"></div>
+          )}
       </React.Fragment>
     ));
   };
@@ -67,18 +74,19 @@ const AuthPage = () => {
         disableGetStarted={false}
         onLogin={handleNavigation(PATH_AUTH.login)}
         onSignup={handleNavigation(PATH_AUTH.signup)}
+        handleEmailClick={handleEmailClick}
       />
       <HeroSection
         mainHeading=" Designer-Friendly Workload Management, Purpose-Built for Product Teams"
         paragraphText="Align product team efforts with business goals, outcomes, and values—starting where it all begins: design."
         onSignupClick={handleNavigation(PATH_AUTH.signup)}
-        onContactClick={() => console.log("Contact us button clicked")}
+        onContactClick={handleEmailClick}
       />
       <div className="merge-all-section">
         {renderSections()}
         <Footer
           onSignupClick={handleNavigation(PATH_AUTH.signup)}
-          onContactClick={() => console.log("Contact us button clicked")}
+          onContactClick={handleEmailClick}
         />
       </div>
     </>

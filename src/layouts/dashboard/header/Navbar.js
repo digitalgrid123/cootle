@@ -10,6 +10,7 @@ const Navbar = ({
   disableLogin,
   showContent,
   setShowContent,
+  handleEmailClick,
 }) => {
   const [hovered, setHovered] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
@@ -83,9 +84,6 @@ const Navbar = ({
 
   const shouldShowGetStartedButton = () => {
     return isMobileScreen ? pathname === "/login" : true;
-  };
-  const handleEmailClick = () => {
-    window.open("mailto:sales@cootle.com", "_blank");
   };
 
   return (

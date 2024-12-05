@@ -49,7 +49,7 @@ const Footer = ({ onSignupClick, onContactClick }) => {
                   values—starting where it all begins: design.
                 </p>
 
-                <div className="d-flex justify-content-center align-items-center gap-4 mt-40 mobile-m-0 flex-mobile-column width-100-mobile  gap-mobile-2 gap-mobie-3">
+                <div className="d-flex justify-content-center align-items-center gap-4 mt-40 mobile-mt-20 flex-mobile-column width-100-mobile  gap-mobile-2 gap-mobie-3">
                   <button
                     className="started_btn btn-base weight-600"
                     onClick={onSignupClick}
